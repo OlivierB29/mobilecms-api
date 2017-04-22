@@ -111,10 +111,39 @@ class ContentService
     public function putById( string $type, string $keyname, string $recordStr)
     {
         //TODO : throw an exception if existing file
-        return $this->postById($this->databasedir, $type, $keyname, $recordStr);
+        return $this->post($type, $keyname, $recordStr);
     }
 
-		public function postItem( string $type, string $keyname, string $recordStr)
+		private function getItemFileName(string $type, string $id) {
+			if(!isset($type)) {
+				throw new Exception("empty type", 1);
+			}
+			if(!isset($id)) {
+				throw new Exception("empty id", 1);
+			}
+
+			return  $this->databasedir . '/' . $type . '/' . $id . '.json';
+		}
+
+		private function getIndexFileName(string $type) {
+			if(!isset($type)) {
+				throw new Exception("empty type", 1);
+			}
+
+			return  $this->databasedir . '/' . $type . '/index.json';
+		}
+
+
+
+		private function getBackupIndexFileName(string $type) {
+			if(!isset($type)) {
+				throw new Exception("empty type", 1);
+			}
+
+			return  $this->databasedir . '/' . $type . '/history/index-' . time() . '.json';
+		}
+
+		public function post( string $type, string $keyname, string $recordStr)
 		{
 			$response = new Response();
 			$response->setCode(400);
@@ -124,16 +153,21 @@ class ContentService
 				try {
 						if (isset($recordStr)) {
 
-						//Decode JSON (and check if correct structure)
+						//Decode JSON
 						$myobjectJson = json_decode($recordStr);
+						unset($recordStr);
 
 						//detect id
 						$id = $myobjectJson->{$keyname};
 
 
-						//create file name
-						$file = $this->databasedir . '/' . $type . '/' . $id . '.json';
+						//file name
+						$file = $this->getItemFileName($type, $id);
+
+
+						//write to file
             JsonUtils::writeJsonFile($file, $myobjectJson);
+						unset($myobjectJson);
 						$response->setCode(200);
 
 						} else {
@@ -147,93 +181,53 @@ class ContentService
 				}
 		}
 
-    /**
-     * basic controls and save a single element
-     * $this->databasedir : database Directory
-     * $type
-     * $filename : JSON data filename
-     * $keyname : primary key inside the file
-     * @return : Response object with a JSON object
-     */
-    public function postById( string $type, string $keyname, string $recordStr)
-    {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage("Bad parameters");
-        $response->setResult("{}");
-
-        try {
-            if (isset($recordStr)) {
-                $responseSave = $this->save($type, $keyname, $recordStr);
-
-                if (isset($responseSave)) {
-                    $response = $responseSave;
-                }
-            } else {
-                $response->setMessage("Bad parameters : id, object");
-            }
-        } catch (Exception $e) {
-            $response->setCode(520);
-            $response->setMessage($e->getMessage());
-        } finally {
-            return $response;
-        }
+		private function mycopy($s1,$s2) {
+    $path = pathinfo($s2);
+    if (!file_exists($path['dirname'])) {
+        mkdir($path['dirname'], 0777, true);
     }
-    /**
-     * TODO : save a single element, into a JSON array file. eg : [ {"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar"} ]
-     * $type : name of object (and subdirectory)
-     * $filename : JSON data filename
-     * $keyname : primary key inside the file
-     * @return : Response object with a JSON object
-     */
-    private function save( string $type, string $keyname, string $recordStr)
-    {
-        $response = new Response();
-        $response->setCode(400);
-        //$response->setMessage('{"save" : "' . $this->databasedir . ' ' . $type . ' ' . $keyname . ' ' . $recordStr . '"}');
-				$response->setMessage('');
-        $response->setResult('{}');
-
-        if (isset($this->databasedir) && isset($type) && isset($keyname)) {
-            $response->setResult("isset OK");
-
-            $myobjectJson = json_decode($recordStr);
-
-            $id = $myobjectJson->{$keyname};
-
-            $response->setResult("json_decode OK " . $id);
-
-            // Read the JSON file
-            $file = $this->databasedir . '/' . $type . '/' . $id . '.json';
-
-            // $file = '/public/' . $type . '/' . $id . '.json' ;
-
-            $response->setResult("file OK " . $file);
-            $data = JsonUtils::readJsonFile($file);
-
-            if (isset($data)) {
-
-                // debug
-                $response->appendMessage('debugging ...');
-
-                JsonUtils::writeJsonFile($file, $recordStr);
-
-                $response->appendMessage($file . " : saved, ");
-
-
-                $response->setCode(200);
-            } else {
-                $response->appendMessage('not found ' . $id);
-                $response->setCode(404);
-            }
-        } else {
-            $response->appendMessage('empty params !');
-        }
-
-        return $response;
+    if (!copy($s1,$s2)) {
+        throw new Exception("copy failed ", 1);
     }
+}
 
+		/**
+		* Add object id to index
+		*/
+		public function publish( string $type, string $keyname, string $keyvalue)
+		{
+			$response = new Response();
+			$response->setCode(400);
+			$response->setMessage("Bad parameters");
+			$response->setResult("{}");
 
+				try {
+						//file name eg: index.json
+						$file = $this->getIndexFileName($type);
+
+						//create a backup of previous index file eg: history/index-TIMESTAMP.json
+						$backupDone = $this->mycopy($file , $this->getBackupIndexFileName($type));
+						$response->setMessage("backup " . $backupDone);
+
+						//get index data
+						$data = JsonUtils::readJsonFile($file);
+
+						//TODO : better index with multiple fields
+						$item = json_decode('{}');
+						$item->{$keyname} = $keyvalue;
+						$data = JsonUtils::put($data, $keyname, $item);
+
+						//write to file
+						JsonUtils::writeJsonFile($file, $data);
+
+						$response->setCode(200);
+				} catch (Exception $e) {
+						$response->setCode(520);
+						$response->setMessage($e->getMessage());
+				} finally {
+						return $response;
+				}
+		}
 
 
 }

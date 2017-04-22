@@ -29,31 +29,26 @@ class Response implements JsonSerializable {
 		$this->result = "";
 		$this->message = "";
 	}
-	public function setResult($newval) {
+	public function setResult(string $newval) {
 		$this->result = $newval;
 	}
-	public function getResult() {
+	public function getResult() : string {
 		return $this->result;
 	}
-	public function setMessage($newval) {
+	public function setMessage(string $newval) {
 		$this->message = $newval;
 	}
 	public function getMessage() : string {
 		return $this->message;
 	}
-	public function setName($newval) {
-		$this->name = $newval;
-	}
-	public function getName() : string {
-		return $this->name;
-	}
-	public function setCode($newval) {
+
+	public function setCode(int $newval) {
 		$this->code = $newval;
 	}
-	public function getCode() {
+	public function getCode() : int {
 		return $this->code;
 	}
-	public function appendMessage($newval) {
+	public function appendMessage(string $newval) {
 		$this->message .= $newval;
 	}
 }

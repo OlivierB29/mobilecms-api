@@ -40,11 +40,11 @@ final class ContentServiceTest extends TestCase
       );
     }
 
-    public function testSaveItem()
+    public function testPost()
     {
         $recordStr = '{"id":"10","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
-        $response = $service->postItem('calendar', 'id', $recordStr);
+        $response = $service->post('calendar', 'id', $recordStr);
 
         $file = $this->dir . '/calendar/10.json';
 
@@ -54,6 +54,19 @@ final class ContentServiceTest extends TestCase
         $this->assertJsonStringEqualsJsonFile(
             $file , $recordStr
         );
+    }
+
+    public function testPublish()
+    {
+
+        $service = new ContentService($this->dir);
+        $response = $service->publish('calendar', 'id', '10');
+        echo $response->getMessage();
+        echo $response->getResult();
+        $this->assertEquals($response->getCode(), 200);
+
+
+
     }
 
 
