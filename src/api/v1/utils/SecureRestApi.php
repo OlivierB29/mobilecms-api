@@ -16,15 +16,35 @@ class SecureRestApi extends RestApi
 
 
 
-    public function authorize($headers, $SERVER)
+    public function authorize(array $headers = null, array $SERVER = null)
     {
+        if ($SERVER===null) {
+            $SERVER=&$_SERVER;
+        }
+
+        if ($headers===null) {
+            $headers=getallheaders();
+        }
+
+
         //
         //API KEY
         //
 
 
+
         //api key provided ?
         if (array_key_exists('apiKey', $this->request) || array_key_exists('apiKey', $headers)) {
+            $origin = '';
+            if (array_key_exists('HTTP_ORIGIN', $SERVER)) {
+                $origin = $SERVER['HTTP_ORIGIN'];
+            }
+            if (strlen($origin) == 0) {
+                $origin = $SERVER['SERVER_NAME'];
+            }
+
+
+
             $apiKeyValue = '';
 
             //from request or header
@@ -41,7 +61,7 @@ class SecureRestApi extends RestApi
 
             //verify key
             $APIKey = new ApiKey();
-            $verifyKeyResult = $APIKey->verifyKey($this->conf->{'apikeyfile'}, $apiKeyValue, $SERVER['HTTP_ORIGIN']);
+            $verifyKeyResult = $APIKey->verifyKey($this->conf->{'apikeyfile'}, $apiKeyValue, $origin);
             unset($APIKey);
             if (!$verifyKeyResult) {
                 throw new Exception('Invalid API Key');
@@ -54,7 +74,7 @@ class SecureRestApi extends RestApi
         //
         //USER TOKEN
         //
-        if (array_key_exists('Authorization', $this->request) || array_key_exists('Authorization', $headers)) {
+        if ((isset($this->request) && array_key_exists('Authorization', $this->request)) || (isset($headers) && array_key_exists('Authorization', $headers))) {
             $bearerTokenValue = '';
             //from request or header
             if (array_key_exists('Authorization', $this->request)) {

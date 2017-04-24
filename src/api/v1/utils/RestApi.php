@@ -112,8 +112,7 @@ abstract class RestApi
     {
 
 
-        //Useful for tests
-        //http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
+        //Useful for tests http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
 
         //set reference to avoid objet clone
         if ($SERVER===null) {
@@ -133,7 +132,7 @@ abstract class RestApi
         //Parse URI
         //
         //$this->setRequestUri($SERVER['REQUEST_URI']);
-        $this->setRequestUri($REQUEST['request']);
+        $this->setRequestUri($REQUEST['path']);
 
 
         //
@@ -176,6 +175,7 @@ abstract class RestApi
 */
 public function processAPI() : string
 {
+     echo '!!!!!!!!!!!!!!!!!! processAPI ' . $this->endpoint;
     if (method_exists($this, $this->endpoint)) {
         return $this->_response($this->{$this->endpoint}($this->args));
     }
