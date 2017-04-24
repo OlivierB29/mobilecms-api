@@ -45,7 +45,7 @@ final class CmsApiTest extends TestCase
      $API->setRequest($REQUEST, $SERVER, $GET, $POST);
      $API->authorize($headers, $SERVER);
      $result = $API->processAPI();
-     echo $result;
+
      $this->assertTrue(
        $result != null && $result != ''
      );
@@ -84,7 +84,7 @@ final class CmsApiTest extends TestCase
         $API->authorize($headers, $SERVER);
 
         $result = $API->processAPI();
-
+        echo $result;
 
         $this->assertTrue(
           $result != null && $result != ''

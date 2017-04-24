@@ -32,7 +32,8 @@ class CmsApi extends SecureRestApi
          if(isset($datatype) && strlen($datatype) >0 ) {
            if ($this->method === 'GET') {
 
-               $response = $service->getAll($datatype . CmsApi::INDEX_JSON);
+               //$response = $service->getAll($datatype . CmsApi::INDEX_JSON);
+               $response = $service->getAllObjects($datatype);
 
                return $response->getResult();
            } elseif ($this->method === 'POST') {

@@ -76,8 +76,45 @@ class ContentService
         }
     }
 
+		public function getAllObjects($type)
+    {
+        $response = new Response();
+        $response->setCode(400);
+        $response->setMessage("Bad parameters");
+        $response->setResult('{}');
+				$thelist = array();
+        try {
+
+
+					if ($handle = opendir($this->databasedir . '/' . $type)) {
+					    while (false !== ($file = readdir($handle)))
+					    {
+									$fileObject = json_decode('{}');
+					        if ($file != "." && $file != ".." && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json')
+					        {
+											//echo $file;
+											$fileObject->{'filename'} = $file;
+											array_push($thelist, $fileObject);
+					        }
+					    }
+					    closedir($handle);
+					}
+
+					$response->setResult(json_encode($thelist));
+
+        } catch (Exception $e) {
+            $response->setCode(520);
+            $response->setMessage($e->getMessage());
+            $response->setResult('{ "result":"' . $e->getMessage() .'"}');
+        } finally {
+            return $response;
+        }
+
+
+    }
+
     /**
-    * get all elements
+    * get all elements from an array, contained in a single file
      * $filename : JSON data filename
      * $keyname : primary key inside the file
      * @return : Response object with a JSON array
