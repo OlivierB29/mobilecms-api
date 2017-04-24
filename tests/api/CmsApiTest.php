@@ -24,21 +24,48 @@ final class CmsApiTest extends TestCase
    $this->token = 'Bearer ' . $response->getResult();
  }
 
+ public function testOptions()
+ {
+     $path = '/api/v1/content';
+
+     $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
+
+     $REQUEST = ['path' => $path];
+
+     $SERVER = [
+     'REQUEST_URI' => $path,
+     'REQUEST_METHOD' => 'GET',
+     'HTTP_ORIGIN' => 'foobar'
+   ];
+
+     $GET = [ 'requestbody' => '{}'];
+     $POST = null;
+
+     $API = new CmsApi($this->conf);
+     $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+     $API->authorize($headers, $SERVER);
+     $result = $API->processAPI();
+     echo $result;
+     $this->assertTrue(
+       $result != null && $result != ''
+     );
+ }
+
+
     public function testGet1()
     {
-
-
+        $path = '/api/v1/content/calendar';
         $headers = ['Authorization' => $this->token,
                     'apiKey' => '123'];
 
 
-        $REQUEST = ['path' => '/api/v1/list/calendar'];
+        $REQUEST = ['path' => $path];
 
 
 
 
         $SERVER = [
-        'REQUEST_URI' => '/api/v1/list/calendar',
+        'REQUEST_URI' => $path,
         'REQUEST_METHOD' => 'GET',
         'HTTP_ORIGIN' => 'foobar'
       ];
@@ -58,6 +85,7 @@ final class CmsApiTest extends TestCase
 
         $result = $API->processAPI();
 
+
         $this->assertTrue(
           $result != null && $result != ''
         );
@@ -65,9 +93,10 @@ final class CmsApiTest extends TestCase
 
     public function testPost1()
     {
-      $recordStr = '{"id":"10","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+      $path = '/api/v1/content/calendar';
+      $recordStr = '{"id":"10","type" : "calendar","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
 
-      $REQUEST = ['path' => '/api/v1/save/calendar'];
+      $REQUEST = ['path' => $path];
 
 
 
@@ -75,7 +104,7 @@ final class CmsApiTest extends TestCase
                   'apiKey' => '123'];
 
         $SERVER = [
-        'REQUEST_URI' => '/api/v1/save/calendar',
+        'REQUEST_URI' => $path,
         'REQUEST_METHOD' => 'POST',
         'HTTP_ORIGIN' => 'foobar'
 

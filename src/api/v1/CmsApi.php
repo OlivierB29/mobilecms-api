@@ -10,6 +10,10 @@ class CmsApi extends SecureRestApi
 
     const REQUESTBODY = 'requestbody';
 
+    const ID = 'id';
+
+    const TYPE = 'type';
+
 
     public function __construct($conf)
     {
@@ -17,45 +21,37 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * /api/v1/content/list
+     * /api/v1/content
      */
-     protected function list()
+     protected function content()
      {
          $this->checkConfiguration();
 
          $datatype = $this->getDataType();
+         $service = new ContentService($this->conf->{'publicdir'});
+         if(isset($datatype) && strlen($datatype) >0 ) {
+           if ($this->method === 'GET') {
+
+               $response = $service->getAll($datatype . CmsApi::INDEX_JSON);
+
+               return $response->getResult();
+           } elseif ($this->method === 'POST') {
 
 
-         if ($this->method === 'GET') {
-             $service = new ContentService($this->conf->{'publicdir'});
-             $response = $service->getAll($datatype . CmsApi::INDEX_JSON);
+               $response = $service->post($datatype, CmsApi::ID, $this->request['requestbody']);
 
-             return $response->getResult();
-         } elseif ($this->method === 'POST') {
+               return $response->getResult();
+           }
+         } else {
+           if ($this->method === 'GET') {
+             return $service->options('types.json');
+           }
          }
+
+
      }
 
 
-     /**
-      * /api/v1/content/save
-      */
-     protected function save()
-     {
-         echo '!!!!!!!!!!!!!!!!!!';
-         $this->checkConfiguration();
-
-         $datatype = $this->getDataType();
-
-         if ($this->method === 'POST') {
-             $service = new ContentService($this->conf->{'publicdir'});
-
-             echo '!!!!!!!!!!!!!!!!!!' . $this->request['requestbody'];
-
-             $response = $service->post( $datatype, 'id', $this->request['requestbody']);
-
-             return $response->getResult();
-         }
-     }
 
 
     private function getDataType() : string

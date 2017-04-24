@@ -25,6 +25,12 @@ class ContentService
 		$this->databasedir = $databasedir;
 	}
 
+	public function options(string $filename)
+	{
+		$file = $this->databasedir . '/' . $filename;
+		return JsonUtils::readJsonFile($file);
+	}
+
     /**
     * return a single element
      * $filename : JSON data filename

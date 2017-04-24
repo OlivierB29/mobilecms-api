@@ -52,6 +52,7 @@ abstract class RestApi
      protected $file = null;
 
      /**
+     *      /api/v1/content/save
      * eg : /api/v1/recipe/cake/foo/bar
      */
      public function setRequestUri($request)
@@ -175,7 +176,6 @@ abstract class RestApi
 */
 public function processAPI() : string
 {
-     echo '!!!!!!!!!!!!!!!!!! processAPI ' . $this->endpoint;
     if (method_exists($this, $this->endpoint)) {
         return $this->_response($this->{$this->endpoint}($this->args));
     }
