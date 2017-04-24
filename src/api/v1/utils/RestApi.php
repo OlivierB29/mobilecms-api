@@ -108,26 +108,32 @@ abstract class RestApi
     /**
     * initialize parameters with request
     */
-    public function setRequest($request, $SERVER, $GET, $POST) 
+    public function setRequest(array $REQUEST = null, array $SERVER = null, array $GET = null, array $POST = null)
     {
 
 
         //Useful for tests
         //http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
+
+        //set reference to avoid objet clone
         if ($SERVER===null) {
-            $SERVER=$_SERVER;
+            $SERVER=&$_SERVER;
         }
         if ($GET===null) {
-            $GET=$_GET;
+            $GET=&$_GET;
         }
         if ($POST===null) {
-            $POST=$_POST;
+            $POST=&$_POST;
+        }
+        if ($REQUEST===null) {
+            $REQUEST=&$_REQUEST;
         }
 
         //
         //Parse URI
         //
-        $this->setRequestUri($request);
+        //$this->setRequestUri($SERVER['REQUEST_URI']);
+        $this->setRequestUri($REQUEST['request']);
 
 
         //
