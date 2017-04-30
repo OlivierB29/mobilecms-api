@@ -7,13 +7,15 @@ final class ContentServiceTest extends TestCase
 {
     private $dir = 'tests-data/public';
 
+    private $indexfile = 'calendar/index/index.json';
+
     public function testGetAll()
     {
         $service = new ContentService($this->dir);
-        $response = $service->getAll('calendar/index.json');
+        $response = $service->getAll($this->indexfile);
 
 
-        $this->assertEquals($response->getCode(), 200);
+        $this->assertEquals(200, $response->getCode());
 
         $this->assertTrue(
           strstr($response->getResult(), '"id":"1"') != ''
@@ -30,9 +32,9 @@ final class ContentServiceTest extends TestCase
     public function testGetItemFromList()
     {
         $service = new ContentService($this->dir);
-        $response = $service->get('calendar/index.json', 'id', '1');
+        $response = $service->get($this->indexfile, 'id', '1');
 
-        $this->assertEquals($response->getCode(), 200);
+        $this->assertEquals(200, $response->getCode());
 
         $this->assertJsonStringEqualsJsonString(
         json_encode(json_decode('{"id":"1","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}')),
@@ -48,7 +50,7 @@ final class ContentServiceTest extends TestCase
 
         $file = $this->dir . '/calendar/10.json';
 
-        $this->assertEquals($response->getCode(), 200);
+        $this->assertEquals(200, $response->getCode());
 
 
         $this->assertJsonStringEqualsJsonFile(
@@ -60,10 +62,8 @@ final class ContentServiceTest extends TestCase
     {
 
         $service = new ContentService($this->dir);
-        $response = $service->publish('calendar', 'id', '10');
-        echo $response->getMessage();
-        echo $response->getResult();
-        $this->assertEquals($response->getCode(), 200);
+        $response = $service->publishById('calendar', 'id', '10');
+        $this->assertEquals(200, $response->getCode());
 
 
 

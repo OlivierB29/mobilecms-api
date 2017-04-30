@@ -32,10 +32,11 @@ class ContentService
 	}
 
     /**
-    * return a single element
-     * $filename : JSON data filename
-     * $keyname : primary key inside the file
-     * @return : Response object with a JSON object
+    * return a single element, from a JSON array stored in file.
+     * $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}]
+		 * $keyname : primary key inside the file eg : id
+		 * $keyvalue : eg :  1
+     * @return : Response object with a JSON object eg : {"id":"1", "foo":"bar"}
      */
     public function get( string $filename, string $keyname, string $keyvalue)
     {
@@ -115,8 +116,7 @@ class ContentService
 
     /**
     * get all elements from an array, contained in a single file
-     * $filename : JSON data filename
-     * $keyname : primary key inside the file
+		* $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}]
      * @return : Response object with a JSON array
      */
     public function getAll( string $filename)
@@ -173,7 +173,7 @@ class ContentService
 				throw new Exception("empty type", 1);
 			}
 
-			return  $this->databasedir . '/' . $type . '/index.json';
+			return  $this->databasedir . '/' . $type . '/index/index.json';
 		}
 
 
@@ -237,7 +237,7 @@ class ContentService
 		/**
 		* Add object id to index
 		*/
-		public function publish( string $type, string $keyname, string $keyvalue)
+		public function publishById( string $type, string $keyname, string $keyvalue)
 		{
 			$response = new Response();
 			$response->setCode(400);

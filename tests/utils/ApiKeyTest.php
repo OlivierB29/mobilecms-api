@@ -5,6 +5,8 @@ use PHPUnit\Framework\TestCase;
 
 final class ApiKeyTest extends TestCase
 {
+
+
     public function testOk()
     {
         $apikey = new ApiKey();
