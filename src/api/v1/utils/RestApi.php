@@ -133,6 +133,7 @@ abstract class RestApi
         //Parse URI
         //
         //$this->setRequestUri($SERVER['REQUEST_URI']);
+      
         $this->setRequestUri($REQUEST['path']);
 
 
