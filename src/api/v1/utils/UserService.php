@@ -5,6 +5,7 @@
  */
 include_once 'JsonUtils.php';
 include_once 'JwtToken.php';
+include_once 'Response.php';
 /*
  * User management Utility.
  * Each user is stored in a separate JSON file.
@@ -256,6 +257,7 @@ class UserService {
 		}
 		return $loginmsg;
 	}
+
 
 	/**
 	 * authenticate

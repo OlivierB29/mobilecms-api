@@ -15,6 +15,7 @@ final class UserServiceTest extends TestCase
 
     public function testLoginOk()
     {
+
         $service = new UserService('tests-data/userservice');
         $result = $service->login('test@example.com', 'Sample#123456');
         $this->assertTrue($result === '');
@@ -22,6 +23,7 @@ final class UserServiceTest extends TestCase
 
     public function testGetToken()
     {
+    
         $service = new UserService('tests-data/userservice');
         $result = $service->getToken('test@example.com', 'Sample#123456');
         $this->assertTrue($result->getCode() === 200);
