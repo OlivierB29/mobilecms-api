@@ -18,17 +18,25 @@ final class UserServiceTest extends TestCase
 
         $service = new UserService('tests-data/userservice');
         $result = $service->login('test@example.com', 'Sample#123456');
-        $this->assertTrue($result === '');
+
+        $this->assertTrue('' === $result);
     }
 
     public function testGetToken()
     {
-    
+
         $service = new UserService('tests-data/userservice');
         $result = $service->getToken('test@example.com', 'Sample#123456');
         $this->assertTrue($result->getCode() === 200);
-        $this->assertTrue($result->getResult() != '');
-        $this->assertTrue(strlen($result->getResult())>100);
+        $this->assertTrue(null != $result->getResult() );
+
+        $user = json_decode($result->getResult());
+
+        $this->assertTrue($user->{'username'} === 'test@example.com' );
+        $this->assertTrue($user->{'email'} === 'test@example.com' );
+        $this->assertTrue(strlen($user->{'token'}) > 100 );
+
+
     }
 
     public function testVerifyToken()
@@ -36,7 +44,10 @@ final class UserServiceTest extends TestCase
         $service = new UserService('tests-data/userservice');
         $getTokenResponse = $service->getToken('test@example.com', 'Sample#123456');
 
-        $result = $service->verifyToken($getTokenResponse->getResult());
+        $user = json_decode($getTokenResponse->getResult());
+
+        $result = $service->verifyToken($user->{'token'});
+
         $this->assertTrue($result->getCode() === 200);
     }
 
