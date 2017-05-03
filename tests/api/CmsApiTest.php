@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 final class CmsApiTest extends TestCase
 {
 
+  private $user;
+
   private $token;
 
   private $conf;
@@ -14,14 +16,16 @@ final class CmsApiTest extends TestCase
  protected function setUp()
  {
 
-   $this->conf = json_decode('{"enableheaders" : "false", "publicdir":"'.HOME.'/tests-data/public", "privatedir":"'.HOME.'/tests-data/private" , "apikeyfile" : "tests-data/private/apikeys/key1.json" }');
+   $this->conf = json_decode('{"enableheaders" : "false", "enableapikey" : "true", "publicdir":"'.HOME.'/tests-data/public", "privatedir":"'.HOME.'/tests-data/private" , "apikeyfile" : "tests-data/private/apikeys/key1.json" }');
 
 
 
    $service = new UserService('tests-data/userservice');
    $response = $service->getToken('test@example.com', 'Sample#123456');
 
-   $this->token = 'Bearer ' . $response->getResult();
+   $this->user = json_decode($response->getResult());
+
+   $this->token = 'Bearer ' . $this->user->{'token'};
  }
 
  public function testOptions()
