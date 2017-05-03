@@ -23,7 +23,7 @@ try {
 	$status = 400;
 	$statusMsg = '';
 	$response = '{}';
-	
+
 	if ($_SERVER ['REQUEST_METHOD'] === 'POST') {
 		if (array_key_exists ( 'requestbody', $_POST )) {
 			$service = new UserService ( HOME . '/tests-data/userservice' );
@@ -32,7 +32,7 @@ try {
 			//
 			$logindata = json_decode ( $_POST ['requestbody'] );
 			$result = $service->getToken ( $logindata->{'user'}, $logindata->{'password'} );
-			
+
 			$status = $result->getCode ();
 			$response = $result->getResult ();
 			// free variables before response
@@ -41,14 +41,14 @@ try {
 			unset ( $service );
 		} else {
 			$status = 401;
-			$statusMsg = 'wrong login';
+			$statusMsg = 'Wrong Login' ;
 		}
 	}
 } catch ( Exception $e ) {
 	$status = 500;
 	$statusMsg = 'auth error';
 	$response = json_encode ( array (
-			'error' => $e->getMessage () 
+			'error' => $e->getMessage ()
 	) );
 } finally {
 	header ( "HTTP/1.1 " . $status . " " . $statusMsg );

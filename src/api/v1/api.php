@@ -17,23 +17,25 @@ if (! array_key_exists ( 'HTTP_ORIGIN', $_SERVER )) {
 }
 
 try {
-	
-	$conf = json_decode ( '{"enableheaders" : "true", "publicdir":"' . HOME . '/public", "privatedir":"' . HOME . '/private" , "apikeyfile" : "' . HOME . '/private/apikeys/key1.json" }' );
-	
+
+	$conf = json_decode ( '{"enableheaders" : "true","enableapikey" : "true", "publicdir":"' . HOME . '/public", "privatedir":"' . HOME . '/private" , "apikeyfile" : "' . HOME . '/private/apikeys/key1.json" }' );
+
+	$conf->{'enableapikey'} = 'false';
+
 	// echo print_r($_REQUEST);
-	
+
 	$API = new CmsApi ( $conf );
-	
+
 	// $API->setRequest($_REQUEST, $_SERVER, $_GET, $_POST);
 	$API->setRequest ();
 	$API->authorize ();
-	
+
 	$result = $API->processAPI ();
-	
+
 	echo $result;
 } catch ( Exception $e ) {
 	echo json_encode ( Array (
-			'error' => $e->getMessage () 
+			'error' => $e->getMessage ()
 	) );
 }
 

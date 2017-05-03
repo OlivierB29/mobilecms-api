@@ -15,50 +15,51 @@ class SecureRestApi extends RestApi {
 		if ($SERVER === null) {
 			$SERVER = &$_SERVER;
 		}
-		
+
 		if ($headers === null) {
 			$headers = getallheaders ();
 		}
-		
+
 		//
 		// API KEY
 		//
-		
+
 		// api key provided ?
-		if (array_key_exists ( 'apiKey', $this->request ) || array_key_exists ( 'apiKey', $headers )) {
-			$origin = '';
-			if (array_key_exists ( 'HTTP_ORIGIN', $SERVER )) {
-				$origin = $SERVER ['HTTP_ORIGIN'];
+		if($this->conf->{'enableapikey'} === 'true') {
+			if (array_key_exists ( 'apiKey', $this->request ) || array_key_exists ( 'apiKey', $headers )) {
+				$origin = '';
+				if (array_key_exists ( 'HTTP_ORIGIN', $SERVER )) {
+					$origin = $SERVER ['HTTP_ORIGIN'];
+				}
+				if (strlen ( $origin ) == 0) {
+					$origin = $SERVER ['SERVER_NAME'];
+				}
+
+				$apiKeyValue = '';
+
+				// from request or header
+				if (array_key_exists ( 'apiKey', $this->request )) {
+					$apiKeyValue = $this->request ['apiKey'];
+				} elseif (array_key_exists ( 'apiKey', $headers )) {
+					$apiKeyValue = $headers ['apiKey'];
+				}
+
+				// api key not empty
+				if (strlen ( $apiKeyValue ) === 0) {
+					throw new Exception ( 'Empty API Key' );
+				}
+
+				// verify key
+				$APIKey = new ApiKey ();
+				$verifyKeyResult = $APIKey->verifyKey ( $this->conf->{'apikeyfile'}, $apiKeyValue, $origin );
+				unset ( $APIKey );
+				if (! $verifyKeyResult) {
+					throw new Exception ( 'Invalid API Key' );
+				}
+			} else {
+				throw new Exception ( 'No API Key provided' );
 			}
-			if (strlen ( $origin ) == 0) {
-				$origin = $SERVER ['SERVER_NAME'];
-			}
-			
-			$apiKeyValue = '';
-			
-			// from request or header
-			if (array_key_exists ( 'apiKey', $this->request )) {
-				$apiKeyValue = $this->request ['apiKey'];
-			} elseif (array_key_exists ( 'apiKey', $headers )) {
-				$apiKeyValue = $headers ['apiKey'];
-			}
-			
-			// api key not empty
-			if (strlen ( $apiKeyValue ) === 0) {
-				throw new Exception ( 'Empty API Key' );
-			}
-			
-			// verify key
-			$APIKey = new ApiKey ();
-			$verifyKeyResult = $APIKey->verifyKey ( $this->conf->{'apikeyfile'}, $apiKeyValue, $origin );
-			unset ( $APIKey );
-			if (! $verifyKeyResult) {
-				throw new Exception ( 'Invalid API Key' );
-			}
-		} else {
-			throw new Exception ( 'No API Key provided' );
 		}
-		
 		//
 		// USER TOKEN
 		//
@@ -70,15 +71,16 @@ class SecureRestApi extends RestApi {
 			} elseif (array_key_exists ( 'Authorization', $headers )) {
 				$bearerTokenValue = $headers ['Authorization'];
 			}
-			
+
+	
 			if (strlen ( $bearerTokenValue ) === 0) {
 				throw new Exception ( 'empty token' );
 			}
-			
+
 			$tokenValue = $this->getBearerTokenValue ( $bearerTokenValue );
-			
+
 			// verify token
-			
+
 			$service = new UserService ( $this->conf->{'privatedir'} . '/users' );
 			$response = $service->verifyToken ( $tokenValue );
 			unset ( $service );
@@ -90,7 +92,7 @@ class SecureRestApi extends RestApi {
 		}
 	}
 	private function getBearerTokenValue($headers) {
-		
+
 		// HEADER: Get the access token from the header
 		if (! empty ( $headers )) {
 			if (preg_match ( '/Bearer\s(\S+)/', $headers, $matches )) {
@@ -99,7 +101,7 @@ class SecureRestApi extends RestApi {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get hearder Authorization
 	 */
@@ -120,7 +122,7 @@ class SecureRestApi extends RestApi {
 		}
 		return $headers;
 	}
-	
+
 	/**
 	 * get access token from header
 	 */
