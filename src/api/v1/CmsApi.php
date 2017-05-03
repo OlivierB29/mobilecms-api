@@ -12,26 +12,26 @@ class CmsApi extends SecureRestApi {
 	public function __construct($conf) {
 		parent::__construct ( $conf );
 	}
-	
+
 	/**
 	 * /api/v1/content
 	 */
 	protected function content() {
 		$this->checkConfiguration ();
-		
+
 		$datatype = $this->getDataType ();
 		$service = new ContentService ( $this->conf->{'publicdir'} );
 		if (isset ( $datatype ) && strlen ( $datatype ) > 0) {
 			if ($this->method === 'GET') {
-				
+
 				// $response = $service->getAll($datatype . CmsApi::INDEX_JSON);
 				$response = $service->getAllObjects ( $datatype );
-				
+
 				return $response->getResult ();
 			} elseif ($this->method === 'POST') {
-				
+
 				$response = $service->post ( $datatype, CmsApi::ID, $this->request ['requestbody'] );
-				
+
 				return $response->getResult ();
 			}
 		} else {
@@ -55,4 +55,13 @@ class CmsApi extends SecureRestApi {
 			throw new Exception ( 'Empty publicdir' );
 		}
 	}
+
+	/**
+	* http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr
+	*/
+	public function options() {
+		header ( "Access-Control-Allow-Methods: *" );
+		header ( "Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With" );
+	}
+
 }

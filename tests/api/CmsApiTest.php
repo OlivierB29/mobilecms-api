@@ -25,7 +25,8 @@ final class CmsApiTest extends TestCase
 
    $this->user = json_decode($response->getResult());
 
-   $this->token = 'Bearer ' . $this->user->{'token'};
+   //$this->token = 'Bearer ' . $this->user->{'token'};
+   $this->token = 'Bearer eyAiYWxnIjogInNoYTUxMiIsInR5cCI6ICJKV1QifQ==.eyAic3ViIjogInRlc3RAZXhhbXBsZS5jb20iLCAibmFtZSI6ICJ0ZXN0QGV4YW1wbGUuY29tIiwgInJvbGUiOiAiZ3Vlc3QifQ==.323e61c62712ceef6e31cfe113afddbc172a515c88d20577612aab96c5bbabccc9edfa4364e5d81ad99f3539adae9ce655c6ce1ba498e50b7684f832a16a12a5';
  }
 
  public function testOptions()

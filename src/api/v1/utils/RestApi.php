@@ -9,12 +9,12 @@ abstract class RestApi {
 	 * JSON object with configuration
 	 */
 	protected $conf;
-	
+
 	/**
 	 * set to false when unit testing
 	 */
 	private $enableHeaders = true;
-	
+
 	/**
 	 * Property: method
 	 * The HTTP method this request was made in, either GET, POST, PUT or DELETE
@@ -33,7 +33,7 @@ abstract class RestApi {
 	 * eg: /files/process
 	 */
 	protected $verb = '';
-	
+
 	/**
 	 * Property: apiversion
 	 * eg : v1
@@ -52,7 +52,7 @@ abstract class RestApi {
 	 * Stores the input of the PUT request
 	 */
 	protected $file = null;
-	
+
 	/**
 	 * /api/v1/content/save
 	 * eg : /api/v1/recipe/cake/foo/bar
@@ -61,22 +61,22 @@ abstract class RestApi {
 		$this->args = explode ( '/', rtrim ( ltrim ( $request, '/' ), '/' ) );
 		// eg : api
 		array_shift ( $this->args );
-		
+
 		// eg : v1
 		if (array_key_exists ( 0, $this->args )) {
 			$this->apiversion = array_shift ( $this->args );
 		}
-		
+
 		// eg : recipe
 		if (array_key_exists ( 0, $this->args )) {
 			$this->endpoint = array_shift ( $this->args );
 		}
-		
+
 		// eg : cake
 		if (array_key_exists ( 0, $this->args )) {
 			$this->verb = array_shift ( $this->args );
 		}
-		
+
 		// $this->args contains the remaining elements
 		// eg:
 		// [0] => foo
@@ -88,26 +88,26 @@ abstract class RestApi {
 		} else {
 			throw new Exception ( "Empty conf" );
 		}
-		
+
 		// Default value is true
 		if ('false' === $this->conf->{'enableheaders'}) {
 			$this->enableHeaders = false;
 		}
-		
+
 		// Default headers for RESTful API
 		if ($this->enableHeaders) {
 			header ( "Access-Control-Allow-Methods: *" );
 			header ( "Content-Type: application/json" );
 		}
 	}
-	
+
 	/**
 	 * initialize parameters with request
 	 */
 	public function setRequest(array $REQUEST = null, array $SERVER = null, array $GET = null, array $POST = null) {
-		
+
 		// Useful for tests http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
-		
+
 		// set reference to avoid objet clone
 		if ($SERVER === null) {
 			$SERVER = &$_SERVER;
@@ -121,14 +121,14 @@ abstract class RestApi {
 		if ($REQUEST === null) {
 			$REQUEST = &$_REQUEST;
 		}
-		
+
 		//
 		// Parse URI
 		//
 		// $this->setRequestUri($SERVER['REQUEST_URI']);
-		
+
 		$this->setRequestUri ( $REQUEST ['path'] );
-		
+
 		//
 		// detect method
 		//
@@ -142,12 +142,14 @@ abstract class RestApi {
 				throw new Exception ( "Unexpected Header" );
 			}
 		}
-		
+
 		switch ($this->method) {
 			case 'DELETE' :
 			case 'POST' :
 				$this->request = $this->_cleanInputs ( $POST );
 				break;
+			case 'OPTIONS' :
+					$this->options();
 			case 'GET' :
 				$this->request = $this->_cleanInputs ( $GET );
 				break;
@@ -160,10 +162,13 @@ abstract class RestApi {
 				$this->_response ( 'Invalid Method', 405 );
 				break;
 		}
-		
+
 		return;
 	}
-	
+
+	public abstract function options();
+
+
 	/**
 	 * Parse class, and call the method with the endpoint name
 	 */
@@ -173,7 +178,7 @@ abstract class RestApi {
 		}
 		return $this->_response ( "No Endpoint: $this->endpoint", 404 );
 	}
-	
+
 	/**
 	 * send JSON response
 	 */
@@ -181,7 +186,7 @@ abstract class RestApi {
 		if ($this->enableHeaders) {
 			header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
 		}
-		
+
 		return json_encode ( $data );
 	}
 	private function _cleanInputs($data) {
@@ -200,7 +205,7 @@ abstract class RestApi {
 				200 => 'OK',
 				404 => 'Not Found',
 				405 => 'Method Not Allowed',
-				500 => 'Internal Server Error' 
+				500 => 'Internal Server Error'
 		);
 		return ($status [$code]) ? $status [$code] : $status [500];
 	}

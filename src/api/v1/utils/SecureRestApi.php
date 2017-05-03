@@ -1,13 +1,14 @@
 <?php
 require_once 'RestApi.php';
 require_once 'ApiKey.php';
+require_once 'UserService.php';
 
 /**
  * Secure implementation of a REST api.
  * - apikey management
  * - JWT
  */
-class SecureRestApi extends RestApi {
+abstract class SecureRestApi extends RestApi {
 	public function __construct($conf) {
 		parent::__construct ( $conf );
 	}
@@ -72,7 +73,7 @@ class SecureRestApi extends RestApi {
 				$bearerTokenValue = $headers ['Authorization'];
 			}
 
-	
+
 			if (strlen ( $bearerTokenValue ) === 0) {
 				throw new Exception ( 'empty token' );
 			}
@@ -85,7 +86,7 @@ class SecureRestApi extends RestApi {
 			$response = $service->verifyToken ( $tokenValue );
 			unset ( $service );
 			if ($response->getCode () !== 200) {
-				throw new Exception ( 'Invalid User Token' );
+				throw new Exception ( 'Invalid User Token' . $response->getCode () . $response->getMessage () );
 			}
 		} else {
 			throw new Exception ( 'No User Token provided' );
