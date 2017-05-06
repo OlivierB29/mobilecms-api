@@ -182,12 +182,13 @@ abstract class RestApi {
 	/**
 	 * send JSON response
 	 */
-	private function _response($data, $status = 200): string {
+	private function _response($data  = "", $status = 200): string {
 		if ($this->enableHeaders) {
 			header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
 		}
 
-		return json_encode ( $data );
+		//each endpoint should prepare an encoded response
+		return $data;
 	}
 	private function _cleanInputs($data) {
 		$clean_input = array ();

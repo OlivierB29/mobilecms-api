@@ -32,7 +32,10 @@ class CmsApi extends SecureRestApi {
 
 				$response = $service->post ( $datatype, CmsApi::ID, $this->request ['requestbody'] );
 
-				return $response->getResult ();
+				$debug = json_decode("{}");
+				$debug->{'msg'} = $response->getMessage();
+				return json_encode($debug);
+
 			}
 		} else {
 			if ($this->method === 'GET') {

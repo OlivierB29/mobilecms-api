@@ -33,9 +33,8 @@ try {
 	$API->setRequest ();
 	$API->authorize ();
 
-	$result = $API->processAPI ();
+	echo $API->processAPI ();
 
-	echo $result;
 } catch ( Exception $e ) {
 	echo json_encode ( Array (
 			'error' => $e->getMessage ()
