@@ -129,7 +129,7 @@ class CmsApi extends SecureRestApi
     /**
   	* http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr
   	*/
-  	public function preflight : string ()
+  	public function preflight() : string 
   	{
   			header("Access-Control-Allow-Methods: *");
   			header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");

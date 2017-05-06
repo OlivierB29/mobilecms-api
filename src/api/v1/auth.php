@@ -24,9 +24,23 @@ try {
 	$statusMsg = '';
 	$response = '{}';
 
+
+		if($_SERVER ['REQUEST_METHOD'] === 'OPTIONS')
+		{
+				header("Access-Control-Allow-Methods: *");
+				header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+				return '{}';
+		}
+
+
 	if ($_SERVER ['REQUEST_METHOD'] === 'POST') {
 		if (array_key_exists ( 'requestbody', $_POST )) {
-			$service = new UserService ( HOME . '/tests-data/userservice' );
+			$service = new UserService ( PRIVATEDIR . '/users' );
+
+			$method = $SERVER ['REQUEST_METHOD'];
+
+
+
 			//
 			// eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
 			//
@@ -46,7 +60,7 @@ try {
 	}
 } catch ( Exception $e ) {
 	$status = 500;
-	$statusMsg = 'auth error';
+	$statusMsg = 'auth error ' . $e->getMessage ();
 	$response = json_encode ( array (
 			'error' => $e->getMessage ()
 	) );
