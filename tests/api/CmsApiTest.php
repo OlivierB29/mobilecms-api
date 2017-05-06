@@ -6,55 +6,58 @@ use PHPUnit\Framework\TestCase;
 
 final class CmsApiTest extends TestCase
 {
+    private $user;
 
-  private $user;
+    private $token;
 
-  private $token;
+    private $conf;
 
-  private $conf;
+    protected function setUp()
+    {
+        $this->conf = json_decode('{}');
+        $this->conf->{"enableheaders"} = "false";
+        $this->conf->{"enableapikey"} = "false";
+        $this->conf->{"publicdir"} = HOME . "/tests-data/public";
+        $this->conf->{"privatedir"} = HOME.'/tests-data/private';
+        $this->conf->{"apikeyfile"} = HOME.'/tests-data/private/apikeys/key1.json';
 
- protected function setUp()
- {
-
-   $this->conf = json_decode('{"enableheaders" : "false", "enableapikey" : "true", "publicdir":"'.HOME.'/tests-data/public", "privatedir":"'.HOME.'/tests-data/private" , "apikeyfile" : "tests-data/private/apikeys/key1.json" }');
 
 
 
-   $service = new UserService('tests-data/userservice');
-   $response = $service->getToken('test@example.com', 'Sample#123456');
+        $service = new UserService('tests-data/userservice');
+        $response = $service->getToken('test@example.com', 'Sample#123456');
 
-   $this->user = json_decode($response->getResult());
+        $this->user = json_decode($response->getResult());
 
-   //$this->token = 'Bearer ' . $this->user->{'token'};
-   $this->token = 'Bearer eyAiYWxnIjogInNoYTUxMiIsInR5cCI6ICJKV1QifQ==.eyAic3ViIjogInRlc3RAZXhhbXBsZS5jb20iLCAibmFtZSI6ICJ0ZXN0QGV4YW1wbGUuY29tIiwgInJvbGUiOiAiZ3Vlc3QifQ==.323e61c62712ceef6e31cfe113afddbc172a515c88d20577612aab96c5bbabccc9edfa4364e5d81ad99f3539adae9ce655c6ce1ba498e50b7684f832a16a12a5';
- }
+        $this->token = 'Bearer ' . $this->user->{'token'};
+    }
 
- public function testOptions()
- {
-     $path = '/api/v1/content';
+    public function testOptions()
+    {
+        $path = '/api/v1/content';
 
-     $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
+        $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
 
-     $REQUEST = ['path' => $path];
+        $REQUEST = ['path' => $path];
 
-     $SERVER = [
+        $SERVER = [
      'REQUEST_URI' => $path,
      'REQUEST_METHOD' => 'GET',
      'HTTP_ORIGIN' => 'foobar'
    ];
 
-     $GET = [ 'requestbody' => '{}'];
-     $POST = null;
+        $GET = [ 'requestbody' => '{}'];
+        $POST = null;
 
-     $API = new CmsApi($this->conf);
-     $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-     $API->authorize($headers, $SERVER);
-     $result = $API->processAPI();
+        $API = new CmsApi($this->conf);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+        $API->authorize($headers, $SERVER);
+        $result = $API->processAPI();
 
-     $this->assertTrue(
-       $result != null && $result != ''
+        $this->assertTrue(
+       $result != null && $result === '[{"type":"calendar"},{"type":"news"}]'
      );
- }
+    }
 
 
     public function testGet1()
@@ -98,14 +101,14 @@ final class CmsApiTest extends TestCase
 
     public function testPost1()
     {
-      $path = '/api/v1/content/calendar';
-      $recordStr = '{"id":"10","type" : "calendar","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $path = '/api/v1/content/calendar';
+        $recordStr = '{"id":"10","type" : "calendar","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
 
-      $REQUEST = ['path' => $path];
+        $REQUEST = ['path' => $path];
 
 
 
-      $headers = ['Authorization' => $this->token,
+        $headers = ['Authorization' => $this->token,
                   'apiKey' => '123'];
 
         $SERVER = [

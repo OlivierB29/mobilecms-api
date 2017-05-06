@@ -294,7 +294,7 @@ class UserService {
 			}
 		} else {
 			// wrong user
-			$loginmsg = 'wrong user';
+			$loginmsg = 'wrong user ' . $email;
 			$debugmsg .= $email;
 		}
 
@@ -307,29 +307,43 @@ class UserService {
 	public function verifyToken($token): Response {
 		$response = new Response ();
 		$response->setCode ( 401 );
-		$response->setMessage ( "Wrong token" );
+		$response->setMessage ( "bad parameters" );
 		$response->setResult ( "{}" );
 
 		try {
+			if(!isset($token)) {
+				throw new Exception ( 'empty token' );
+			}
+			$response->setMessage ( "init" );
 			$jwt = new JwtToken ();
 
 			// get payload and convert to JSON
+			$response->setMessage ( "json_decode token" );
 			$payloadJson = json_decode ( $jwt->getPayload ( $token ) );
 
+
 			// get the existing user
+			$response->setMessage ( "getJsonUser" );
 			$user = $this->getJsonUser ( $payloadJson->{'sub'} );
+
 
 			// verify token with secret
 			if ($jwt->verifyToken ( $token, $user->{'salt'} )) {
 				$response->setCode ( 200 );
+				$response->setMessage ( "" );
+			} else {
+				$response->setMessage ( "JwtToken.verifyToken is false" );
 			}
+
+
 		} catch ( Exception $e ) {
 			$response->setCode ( 500 );
 			$response->setMessage ( $e->getMessage () );
 		} finally {
+				return $response;
 		}
 
-		return $response;
+
 	}
 
 	//
