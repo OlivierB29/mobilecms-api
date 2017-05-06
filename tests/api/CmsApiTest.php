@@ -81,7 +81,7 @@ final class CmsApiTest extends TestCase {
 		$headers = [ 'Authorization' => $this->token, 'apiKey' => '123' ];
 		$REQUEST = [ 'path' => $path ];
 		$SERVER = [ 'REQUEST_URI' => $path,'REQUEST_METHOD' => 'GET','HTTP_ORIGIN' => 'foobar' ];
-		$GET = [ 'requestbody' => '{}' ];
+		$GET = [];
 		$POST = null;
 
 		$API = new CmsApi ( $this->conf );
@@ -96,6 +96,28 @@ final class CmsApiTest extends TestCase {
 		$this->assertTrue(strpos($result, '"title"') !== FALSE);
 
 	}
+
+	public function testGetFile() {
+		$path = '/api/v1/file';
+		$headers = [ 'Authorization' => $this->token, 'apiKey' => '123' ];
+		$REQUEST = [ 'path' => $path ];
+		$SERVER = [ 'REQUEST_URI' => $path,'REQUEST_METHOD' => 'GET','HTTP_ORIGIN' => 'foobar' ];
+		$GET = [ 'file' => 'calendar/index/metadata.json' ];
+		$POST = null;
+
+		$API = new CmsApi ( $this->conf );
+		$API->setRequest ( $REQUEST, $SERVER, $GET, $POST );
+		$API->authorize ( $headers, $SERVER );
+		$result = $API->processAPI ();
+
+		$this->assertTrue ( $result != null && $result != '' );
+		$this->assertTrue(strpos($result, '"id"') !== FALSE);
+		$this->assertTrue(strpos($result, '"organization"') !== FALSE);
+		$this->assertTrue(strpos($result, '"date"') !== FALSE);
+		$this->assertTrue(strpos($result, '"title"') !== FALSE);
+
+	}
+
 
 
 }

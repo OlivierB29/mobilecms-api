@@ -10,6 +10,7 @@ class CmsApi extends SecureRestApi
     const REQUESTBODY = 'requestbody';
     const ID = 'id';
     const TYPE = 'type';
+    const FILE = 'file';
     public function __construct($conf)
     {
         parent::__construct($conf);
@@ -35,7 +36,7 @@ class CmsApi extends SecureRestApi
                 if (array_key_exists(0, $this->args)) {
                     //this
 
-                    $response = $service->getRecord($datatype, CmsApi::ID, $this->args[0]);
+                    $response = $service->getRecord($datatype, $this->args[0]);
 
                     return $response->getResult();
                 } else {
@@ -60,6 +61,42 @@ class CmsApi extends SecureRestApi
             }
         }
     }
+
+    protected function file()
+    {
+        $this->checkConfiguration();
+
+
+        $service = new ContentService($this->conf->{'publicdir'});
+
+            //eg : /api/v1/file?filename
+            if ($this->method === 'GET') {
+
+                //$this->args contains the remaining path parameters
+                //eg : /api/v1/file?file=/calendar/1/foo/bar/sample.json
+
+
+                if (array_key_exists(CmsApi::FILE, $this->getRequest())) {
+                    //this
+
+                    $response = $service->getFilePath($this->getRequest()[CmsApi::FILE]);
+                    if($response->getCode() === 200) {
+                      
+                      return file_get_contents($response->getResult());
+                    } else {
+                      return $response->getMessage();
+                    }
+
+                } else {
+                  return "";
+                }
+            } else {
+              throw new Exception("bad request");
+            }
+
+    }
+
+
     private function getDataType(): string
     {
         $datatype = null;

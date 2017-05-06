@@ -25,7 +25,13 @@ class ContentService {
 		return json_encode(JsonUtils::readJsonFile ( $file ));
 	}
 
-	public function getRecord(string $type, string $keyname, string $keyvalue) {
+	/**
+	* get a single record
+	* $type eg : calendar
+	* $keyname : unique id
+	* $keyvalue : id value, eg :1
+	*/
+	public function getRecord(string $type, string $keyvalue) {
 		$response = new Response ();
 		$response->setCode ( 400 );
 		$response->setMessage ( "Bad parameters" );
@@ -44,6 +50,35 @@ class ContentService {
 
 			} else {
 				$response->appendMessage ( 'not found ' . $keyname . ' : ' . $keyvalue );
+				$response->setCode ( 404 );
+			}
+		} catch ( Exception $e ) {
+			$response->setCode ( 520 );
+			$response->setMessage ( $e->getMessage () );
+		} finally {
+			return $response;
+		}
+	}
+
+	public function getFilePath(string $filename) : Response {
+		$response = new Response ();
+		$response->setCode ( 400 );
+		$response->setMessage ( "Bad parameters" );
+		$response->setResult ( "{}" );
+
+		try {
+
+			// Read the JSON file
+			$file = $this->databasedir . '/' . $filename;
+
+			// get one element
+			if (file_exists ( $file )) {
+
+				$response->setResult ( $file  );
+				$response->setCode ( 200 );
+
+			} else {
+				$response->appendMessage ( 'not found ' . $file );
 				$response->setCode ( 404 );
 			}
 		} catch ( Exception $e ) {

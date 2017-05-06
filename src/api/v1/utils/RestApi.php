@@ -53,6 +53,8 @@ abstract class RestApi {
 	 */
 	protected $file = null;
 
+	protected $request = null;
+
 	/**
 	 * /api/v1/content/save
 	 * eg : /api/v1/recipe/cake/foo/bar
@@ -125,8 +127,6 @@ abstract class RestApi {
 		//
 		// Parse URI
 		//
-		// $this->setRequestUri($SERVER['REQUEST_URI']);
-
 		$this->setRequestUri ( $REQUEST ['path'] );
 
 		//
@@ -164,6 +164,10 @@ abstract class RestApi {
 		}
 
 		return;
+	}
+
+	public function getRequest() {
+		return $this->request;
 	}
 
 	public abstract function options();
