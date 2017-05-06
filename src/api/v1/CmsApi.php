@@ -25,6 +25,15 @@ class CmsApi extends SecureRestApi
 
         $datatype = $this->getDataType();
         $service = new ContentService($this->conf->{'publicdir'});
+
+        //
+        //Preflight requests are send by Angular
+        //
+        if ($this->method === 'OPTIONS') {
+            //eg : /api/v1/content
+            return $this->preflight();
+        }
+
         //
         if (isset($datatype) && strlen($datatype) > 0) {
             //eg : /api/v1/content/calendar
@@ -55,10 +64,12 @@ class CmsApi extends SecureRestApi
                 return json_encode($debug);
             }
         } else {
-            if ($this->method === 'GET' || $this->method === 'OPTIONS') {
+            if ($this->method === 'GET') {
                 //eg : /api/v1/content
                 return $service->options('types.json');
             }
+
+
         }
     }
 
@@ -81,7 +92,7 @@ class CmsApi extends SecureRestApi
 
                     $response = $service->getFilePath($this->getRequest()[CmsApi::FILE]);
                     if($response->getCode() === 200) {
-                      
+
                       return file_get_contents($response->getResult());
                     } else {
                       return $response->getMessage();
@@ -116,11 +127,13 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-    * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr
-    */
-    public function options()
-    {
-        header("Access-Control-Allow-Methods: *");
-        header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-    }
+  	* http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr
+  	*/
+  	public function preflight : string ()
+  	{
+  			header("Access-Control-Allow-Methods: *");
+  			header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+  			return '{}';
+  	}
+
 }

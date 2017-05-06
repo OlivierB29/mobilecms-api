@@ -149,7 +149,7 @@ abstract class RestApi {
 				$this->request = $this->_cleanInputs ( $POST );
 				break;
 			case 'OPTIONS' :
-					$this->options();
+					$this->preflight();
 			case 'GET' :
 				$this->request = $this->_cleanInputs ( $GET );
 				break;
@@ -170,13 +170,20 @@ abstract class RestApi {
 		return $this->request;
 	}
 
-	public abstract function options();
+	/**
+	* Preflight requests are send by client framework, such as Angular
+	* Example :
+	* header("Access-Control-Allow-Methods: *");
+	* header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+	*/
+	public abstract function preflight(): string;
 
 
 	/**
 	 * Parse class, and call the method with the endpoint name
 	 */
 	public function processAPI(): string {
+
 		if (method_exists ( $this, $this->endpoint )) {
 			return $this->_response ( $this->{$this->endpoint} ( $this->args ) );
 		}

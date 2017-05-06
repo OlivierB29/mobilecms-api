@@ -13,6 +13,28 @@ abstract class SecureRestApi extends RestApi {
 		parent::__construct ( $conf );
 	}
 	public function authorize(array $headers = null, array $SERVER = null) {
+
+	switch ($this->method) {
+		case 'DELETE' :
+		case 'POST' :
+		case 'PUT' :
+			$this->doAuthorize($headers, $SERVER);
+			break;
+		case 'OPTIONS' :
+			break;
+		case 'GET' :
+			$this->doAuthorize($headers, $SERVER);
+			break;
+		default :
+			$this->_response ( 'Invalid Method', 405 );
+			break;
+	}
+}
+	public function doAuthorize(array $headers = null, array $SERVER = null) {
+
+
+
+
 		if ($SERVER === null) {
 			$SERVER = &$_SERVER;
 		}
