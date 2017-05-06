@@ -33,7 +33,21 @@ gulp.task('test-utils', function() {
 
   var run = require('gulp-run');
 
-  return run('phpunit --configuration phpunit-utils.xml --testsuite utils').exec()
+  return run('phpunit --configuration phpunit-utils.xml').exec()
+    .pipe(gulp.dest('output'))
+  ;
+
+});
+
+gulp.task('test-api', function() {
+
+  console.log('phpunit tests :');
+
+
+
+  var run = require('gulp-run');
+
+  return run('phpunit --configuration phpunit-api.xml').exec()
     .pipe(gulp.dest('output'))
   ;
 

@@ -25,6 +25,36 @@ class ContentService {
 		return json_encode(JsonUtils::readJsonFile ( $file ));
 	}
 
+	public function getRecord(string $type, string $keyname, string $keyvalue) {
+		$response = new Response ();
+		$response->setCode ( 400 );
+		$response->setMessage ( "Bad parameters" );
+		$response->setResult ( "{}" );
+
+		try {
+
+			// Read the JSON file
+			$file = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
+
+			// get one element
+			if (file_exists ( $file )) {
+
+				$response->setResult ( file_get_contents($file) );
+				$response->setCode ( 200 );
+
+			} else {
+				$response->appendMessage ( 'not found ' . $keyname . ' : ' . $keyvalue );
+				$response->setCode ( 404 );
+			}
+		} catch ( Exception $e ) {
+			$response->setCode ( 520 );
+			$response->setMessage ( $e->getMessage () );
+		} finally {
+			return $response;
+		}
+	}
+
+
 	/**
 	 * return a single element, from a JSON array stored in file.
 	 * $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}]
