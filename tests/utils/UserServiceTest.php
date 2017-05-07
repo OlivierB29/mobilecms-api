@@ -96,7 +96,7 @@ final class UserServiceTest extends TestCase
           $service->updateUser('updateuser@example.com', 'updated', 'pass', 'salt', 'admin')
         );
     }
-/*
+
     public function testCreateUser() {
 
 
@@ -109,5 +109,5 @@ final class UserServiceTest extends TestCase
         $this->assertTrue( $result === null
         );
     }
-*/
+
 }

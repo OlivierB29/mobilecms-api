@@ -60,6 +60,25 @@ final class CmsApiTest extends TestCase {
 		$this->assertTrue ( $result != null && $result != '' );
 	}
 
+	public function testPut1() {
+		$path = '/api/v1/content/calendar';
+		$id = "test_" . rand(0, 999999);
+		$recordStr = '{"id":"'.$id.'","type" : "calendar","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+
+		$REQUEST = [ 'path' => $path ];
+		$headers = [ 'Authorization' => $this->token, 'apiKey' => '123' ];
+		$SERVER = [ 'REQUEST_URI' => $path, 'REQUEST_METHOD' => 'PUT','HTTP_ORIGIN' => 'foobar' ];
+		$GET = null;
+		$POST = [ 'requestbody' => $recordStr ];
+
+		$API = new CmsApi ( $this->conf );
+
+		$API->setRequest ( $REQUEST, $SERVER, $GET, $POST );
+		$API->authorize ( $headers, $SERVER );
+		$result = $API->processAPI ();
+		$this->assertTrue ( $result != null && $result != '' );
+	}
+
 	public function testGetCalendarList() {
 		$path = '/api/v1/content/calendar';
 		$headers = [ 'Authorization' => $this->token, 'apiKey' => '123' ];
