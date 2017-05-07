@@ -25,10 +25,14 @@ if (! array_key_exists('HTTP_ORIGIN', $_SERVER)) {
     $_SERVER ['HTTP_ORIGIN'] = $_SERVER ['SERVER_NAME'];
 }
 
-try {
-    $conf = json_decode('{"enableheaders" : "true","enableapikey" : "true", "publicdir":"' . HOME . '/public", "privatedir":"' . HOME . '/private" , "apikeyfile" : "' . HOME . '/private/apikeys/key1.json" }');
-
+try {//PRIVATEDIR . '/users'
+    $conf = json_decode('{"enableheaders" : "","enableapikey" : "true", "publicdir":"", "privatedir":"" , "apikeyfile" : "" }');
+    $conf->{'enableheaders'} = 'true';
     $conf->{'enableapikey'} = 'false';
+    $conf->{'publicdir'} = HOME . '/public';
+    $conf->{'privatedir'} = PRIVATEDIR ;
+    //$conf->{'apikeyfile'} = HOME . '/private/apikeys/key1.json';
+
 
     // echo print_r($_REQUEST);
 

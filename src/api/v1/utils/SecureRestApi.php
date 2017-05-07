@@ -1,5 +1,4 @@
 <?php
-require_once 'Headers.php';
 require_once 'RestApi.php';
 require_once 'ApiKey.php';
 require_once 'UserService.php';
@@ -11,9 +10,26 @@ require_once 'UserService.php';
  * - JWT
  */
 abstract class SecureRestApi extends RestApi {
+
+	/**
+	* Authorization token value
+	*/
+	const AUTHORIZATION = 'Authorization';
+
+	/**
+	* HTTP_AUTHORIZATION token value
+	*/
+	const HTTP_AUTHORIZATION = 'HTTP_AUTHORIZATION';
+
 	public function __construct($conf) {
 		parent::__construct ( $conf );
 	}
+	/**
+	* $headers : array containing result of apache_request_headers() and getallheaders(), if available.
+	* Or send by test units
+	*
+	* $SERVER : send by test units.
+	*/
 	public function authorize(array $headers = null, array $SERVER = null) {
 
 	switch ($this->method) {
@@ -32,18 +48,18 @@ abstract class SecureRestApi extends RestApi {
 			break;
 	}
 }
+
+/**
+* $headers : array containing result of apache_request_headers() and getallheaders(), if available.
+* Or send by test units
+*
+* $SERVER : send by test units.
+*/
 	public function doAuthorize(array $headers = null, array $SERVER = null) {
-
-
-
 
 
 		if (!isset($SERVER)) {
 			$SERVER = &$_SERVER;
-		}
-
-		if (!isset($headers)) {
-			$headers = getallheaders ();
 		}
 
 		//
@@ -51,7 +67,7 @@ abstract class SecureRestApi extends RestApi {
 		//
 
 		// api key provided ?
-		if($this->conf->{'enableapikey'} === 'true') {
+		if($this->conf->{'enableapikey'} === 'true' && isset($headers)) {
 			if (array_key_exists ( 'apiKey', $this->request ) || array_key_exists ( 'apiKey', $headers )) {
 				$origin = '';
 				if (array_key_exists ( 'HTTP_ORIGIN', $SERVER )) {
@@ -86,24 +102,27 @@ abstract class SecureRestApi extends RestApi {
 				throw new Exception ( 'No API Key provided' );
 			}
 		}
+
 		//
 		// USER TOKEN
+		//string containing Bearer prefix and value eg : Bearer abcdef.abcdef....
 		//
-		if ((isset ( $this->request ) && array_key_exists ( 'Authorization', $this->request )) || (isset ( $headers ) && array_key_exists ( 'Authorization', $headers ))) {
-			$bearerTokenValue = '';
-			// from request or header
-			if (array_key_exists ( 'Authorization', $this->request )) {
-				$bearerTokenValue = $this->request ['Authorization'];
-			} elseif (array_key_exists ( 'Authorization', $headers )) {
-				$bearerTokenValue = $headers ['Authorization'];
-			}
+		$bearerTokenValue = $this->getAuthorizationHeader();
 
+		//for unit tests
+		if(!empty($headers)) {
+			$bearerTokenValue = $headers [SecureRestApi::AUTHORIZATION];
+		}
 
-			if (strlen ( $bearerTokenValue ) === 0) {
-				throw new Exception ( 'empty token' );
-			}
+		if (!empty( $bearerTokenValue )) {
 
 			$tokenValue = $this->getBearerTokenValue ( $bearerTokenValue );
+
+			if ( empty( $tokenValue )) {
+				throw new Exception ( 'Empty token !'.$bearerTokenValue);
+			}
+			unset($bearerTokenValue);
+
 
 			// verify token
 
@@ -117,11 +136,46 @@ abstract class SecureRestApi extends RestApi {
 			throw new Exception ( 'No User Token provided' );
 		}
 	}
-	private function getBearerTokenValue($headers) {
+
+
+	/**
+	 * Get header Authorization
+	 * When apache_request_headers() and getallheaders() functions are not defined
+	 * http://stackoverflow.com/questions/2916232/call-to-undefined-function-apache-request-headers
+	 *
+	 *
+	 * Use a .htaccess file for generating HTTP_AUTHORIZATION :
+	 * http://php.net/manual/en/function.apache-request-headers.php
+	 */
+	private function getAuthorizationHeader($SERVER = null) {
+		if (!isset($SERVER)) {
+			$SERVER = &$_SERVER;
+		}
+
+		$headers = null;
+		if (isset ( $SERVER [SecureRestApi::AUTHORIZATION] )) {
+			$headers = trim ( $SERVER [SecureRestApi::AUTHORIZATION] );
+		} elseif (isset ( $SERVER [SecureRestApi::HTTP_AUTHORIZATION] )) { // Nginx or fast CGI
+			$headers = trim ( $SERVER [SecureRestApi::HTTP_AUTHORIZATION] );
+		} elseif (function_exists ( 'apache_request_headers' )) {
+			$requestHeaders = apache_request_headers ();
+			// Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
+			$requestHeaders = array_combine ( array_map ( 'ucwords', array_keys ( $requestHeaders ) ), array_values ( $requestHeaders ) );
+			// print_r($requestHeaders);
+			if (isset ( $requestHeaders [SecureRestApi::AUTHORIZATION] )) {
+				$headers = trim ( $requestHeaders [SecureRestApi::AUTHORIZATION] );
+			}
+		}
+
+		return $headers;
+	}
+
+
+	private function getBearerTokenValue($headerValue) {
 
 		// HEADER: Get the access token from the header
-		if (! empty ( $headers )) {
-			if (preg_match ( '/Bearer\s(\S+)/', $headers, $matches )) {
+		if (! empty ( $headerValue )) {
+			if (preg_match ( '/Bearer\s(\S+)/', $headerValue, $matches )) {
 				return $matches [1];
 			}
 		}
@@ -129,30 +183,9 @@ abstract class SecureRestApi extends RestApi {
 	}
 
 	/**
-	 * Get hearder Authorization
-	 */
-	private function getAuthorizationHeader($SERVER) {
-		$headers = null;
-		if (isset ( $SERVER ['Authorization'] )) {
-			$headers = trim ( $SERVER ["Authorization"] );
-		} elseif (isset ( $SERVER ['HTTP_AUTHORIZATION'] )) { // Nginx or fast CGI
-			$headers = trim ( $SERVER ["HTTP_AUTHORIZATION"] );
-		} elseif (function_exists ( 'apache_request_headers' )) {
-			$requestHeaders = apache_request_headers ();
-			// Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
-			$requestHeaders = array_combine ( array_map ( 'ucwords', array_keys ( $requestHeaders ) ), array_values ( $requestHeaders ) );
-			// print_r($requestHeaders);
-			if (isset ( $requestHeaders ['Authorization'] )) {
-				$headers = trim ( $requestHeaders ['Authorization'] );
-			}
-		}
-		return $headers;
-	}
-
-	/**
 	 * get access token from header
 	 */
-	private function getBearerToken($SERVER) {
+	private function getBearerToken($SERVER = null) {
 		$headers = $this->getAuthorizationHeader ( $SERVER );
 		// HEADER: Get the access token from the header
 		if (! empty ( $headers )) {

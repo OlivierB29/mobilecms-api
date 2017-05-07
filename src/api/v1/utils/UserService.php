@@ -324,6 +324,9 @@ class UserService {
 			if(!isset($token)) {
 				throw new Exception ( 'empty token' );
 			}
+
+
+
 			$response->setMessage ( "init" );
 			$jwt = new JwtToken ();
 
