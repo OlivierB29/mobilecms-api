@@ -57,6 +57,6 @@ gulp.task('test-api', function() {
 gulp.task('default', function() {
 
   console.log('Server : check directories, and then \n gulp deploy');
-
+  console.log('Tests :\n gulp test-utils test-api');
 
 });

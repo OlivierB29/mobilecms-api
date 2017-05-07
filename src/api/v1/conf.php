@@ -1,7 +1,9 @@
 <?php
 
+define('ERROR_LOG' , 'true');
+
 // Only for development
-define ( 'ALLOW_CROSS_DOMAIN', 'true' );
+define ( 'ALLOW_CROSS_DOMAIN', 'false' );
 
 
 //eg : /var/www/html

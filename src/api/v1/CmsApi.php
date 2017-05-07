@@ -14,6 +14,12 @@ class CmsApi extends SecureRestApi
     public function __construct($conf)
     {
         parent::__construct($conf);
+
+        // Default headers for RESTful API
+        if ($this->enableHeaders) {
+          header ( "Access-Control-Allow-Methods: *" );
+          header ( "Content-Type: application/json" );
+        }
     }
 
     /**
@@ -21,6 +27,13 @@ class CmsApi extends SecureRestApi
      */
     protected function content()
     {
+      $response = new Response ();
+      $response->setCode ( 400 );
+      $response->setMessage ( "Bad parameters" );
+      $response->setResult ( "{}" );
+
+      try {
+
         $this->checkConfiguration();
 
         $datatype = $this->getDataType();
@@ -31,7 +44,7 @@ class CmsApi extends SecureRestApi
         //
         if ($this->method === 'OPTIONS') {
             //eg : /api/v1/content
-            return $this->preflight();
+            $response->setResult( $this->preflight());
         }
 
         //
@@ -47,11 +60,11 @@ class CmsApi extends SecureRestApi
 
                     $response = $service->getRecord($datatype, $this->args[0]);
 
-                    return $response->getResult();
+                    $response->setResult( $response->getResult());
                 } else {
                     $response = $service->getAllObjects($datatype);
 
-                    return $response->getResult();
+                    $response->setResult( $response->getResult());
                 }
             } elseif ($this->method === 'POST') {
 
@@ -61,16 +74,28 @@ class CmsApi extends SecureRestApi
 
                 $debug = json_decode("{}");
                 $debug->{'msg'} = $response->getMessage();
-                return json_encode($debug);
+                $response->setResult( json_encode($debug));
             }
         } else {
             if ($this->method === 'GET') {
                 //eg : /api/v1/content
-                return $service->options('types.json');
+                $response->setResult($service->options('types.json'));
             }
 
 
         }
+
+      } catch ( Exception $e ) {
+        $response->setCode ( 520 );
+        $response->setMessage ( $e->getMessage () );
+        $response->setResult ( $this->errorToJson($e->getMessage ()));
+      } finally {
+        /*if ($this->enableHeaders) {
+          header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
+        }
+*/
+        return $response->getResult();
+      }
     }
 
     protected function file()

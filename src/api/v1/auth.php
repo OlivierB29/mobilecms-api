@@ -37,22 +37,30 @@ try {
 		if (array_key_exists ( 'requestbody', $_POST )) {
 			$service = new UserService ( PRIVATEDIR . '/users' );
 
-			$method = $SERVER ['REQUEST_METHOD'];
-
-
+			$method = $_SERVER ['REQUEST_METHOD'];
 
 			//
-			// eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
+			//Preflight requests are send by Angular
 			//
-			$logindata = json_decode ( $_POST ['requestbody'] );
-			$result = $service->getToken ( $logindata->{'user'}, $logindata->{'password'} );
+			if ($method === 'OPTIONS') {
+					//eg : /api/v1/content
+					$response =  $service->preflight();
+			} else {
+				//
+				// eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
+				//
+				$logindata = json_decode ( $_POST ['requestbody'] );
+				$result = $service->getToken ( $logindata->{'user'}, $logindata->{'password'} );
 
-			$status = $result->getCode ();
-			$response = $result->getResult ();
-			// free variables before response
-			unset ( $logindata );
-			unset ( $result );
+				$status = $result->getCode ();
+				$response = $result->getResult ();
+				// free variables before response
+				unset ( $logindata );
+				unset ( $result );
+
+			}
 			unset ( $service );
+
 		} else {
 			$status = 401;
 			$statusMsg = 'Wrong Login' ;

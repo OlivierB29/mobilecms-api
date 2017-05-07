@@ -13,7 +13,7 @@ abstract class RestApi {
 	/**
 	 * set to false when unit testing
 	 */
-	private $enableHeaders = true;
+	protected $enableHeaders = true;
 
 	/**
 	 * Property: method
@@ -96,11 +96,7 @@ abstract class RestApi {
 			$this->enableHeaders = false;
 		}
 
-		// Default headers for RESTful API
-		if ($this->enableHeaders) {
-			header ( "Access-Control-Allow-Methods: *" );
-			header ( "Content-Type: application/json" );
-		}
+
 	}
 
 	/**
@@ -185,6 +181,7 @@ abstract class RestApi {
 	public function processAPI(): string {
 
 		if (method_exists ( $this, $this->endpoint )) {
+
 			return $this->_response ( $this->{$this->endpoint} ( $this->args ) );
 		}
 		return $this->_response ( "No Endpoint: $this->endpoint", 404 );
@@ -193,8 +190,10 @@ abstract class RestApi {
 	/**
 	 * send JSON response
 	 */
-	private function _response($data  = "", $status = 200): string {
-		if ($this->enableHeaders) {
+	private function _response($data  = "", $status = 0): string {
+
+		
+		if ($this->enableHeaders && $status > 0) {
 			header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
 		}
 
@@ -221,4 +220,14 @@ abstract class RestApi {
 		);
 		return ($status [$code]) ? $status [$code] : $status [500];
 	}
+
+	public function errorToJson(string $msg) : string {
+		$json = json_decode('{}');
+
+		$json->{'error'} = $msg;
+
+		return json_decode($json);
+
+	}
+
 }

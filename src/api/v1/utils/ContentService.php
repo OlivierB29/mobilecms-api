@@ -12,7 +12,7 @@ require_once 'JsonUtils.php';
  * - post : update an existing item
  */
 class ContentService {
-
+	
 	/**
 	 * main directory (eg: /opt/foobar/data )
 	 */
@@ -22,32 +22,31 @@ class ContentService {
 	}
 	public function options(string $filename) {
 		$file = $this->databasedir . '/' . $filename;
-		return json_encode(JsonUtils::readJsonFile ( $file ));
+		return json_encode ( JsonUtils::readJsonFile ( $file ) );
 	}
-
+	
 	/**
-	* get a single record
-	* $type eg : calendar
-	* $keyname : unique id
-	* $keyvalue : id value, eg :1
-	*/
+	 * get a single record
+	 * $type eg : calendar
+	 * $keyname : unique id
+	 * $keyvalue : id value, eg :1
+	 */
 	public function getRecord(string $type, string $keyvalue) {
 		$response = new Response ();
 		$response->setCode ( 400 );
 		$response->setMessage ( "Bad parameters" );
 		$response->setResult ( "{}" );
-
+		
 		try {
-
+			
 			// Read the JSON file
 			$file = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
-
+			
 			// get one element
 			if (file_exists ( $file )) {
-
-				$response->setResult ( file_get_contents($file) );
+				
+				$response->setResult ( file_get_contents ( $file ) );
 				$response->setCode ( 200 );
-
 			} else {
 				$response->appendMessage ( 'not found ' . $keyname . ' : ' . $keyvalue );
 				$response->setCode ( 404 );
@@ -59,24 +58,22 @@ class ContentService {
 			return $response;
 		}
 	}
-
-	public function getFilePath(string $filename) : Response {
+	public function getFilePath(string $filename): Response {
 		$response = new Response ();
 		$response->setCode ( 400 );
 		$response->setMessage ( "Bad parameters" );
 		$response->setResult ( "{}" );
-
+		
 		try {
-
+			
 			// Read the JSON file
 			$file = $this->databasedir . '/' . $filename;
-
+			
 			// get one element
 			if (file_exists ( $file )) {
-
-				$response->setResult ( $file  );
+				
+				$response->setResult ( $file );
 				$response->setCode ( 200 );
-
 			} else {
 				$response->appendMessage ( 'not found ' . $file );
 				$response->setCode ( 404 );
@@ -88,7 +85,7 @@ class ContentService {
 			return $response;
 		}
 	}
-
+	
 
 	/**
 	 * return a single element, from a JSON array stored in file.
@@ -103,16 +100,16 @@ class ContentService {
 		$response->setCode ( 400 );
 		$response->setMessage ( "Bad parameters" );
 		$response->setResult ( "{}" );
-
+		
 		try {
-
+			
 			// Read the JSON file
 			$file = $this->databasedir . '/' . $filename;
 			$data = JsonUtils::readJsonFile ( $file );
-
+			
 			// get one element
 			if (isset ( $keyvalue )) {
-
+				
 				// extract element data
 				$existingObject = JsonUtils::getByKey ( $data, $keyname, $keyvalue );
 				if (isset ( $existingObject )) {
@@ -136,8 +133,7 @@ class ContentService {
 		}
 	}
 	/**
-	*
-	*/
+	 */
 	public function getAllObjects($type) {
 		$response = new Response ();
 		$response->setCode ( 400 );
@@ -145,22 +141,21 @@ class ContentService {
 		$response->setResult ( '{}' );
 		$thelist = array ();
 		try {
-
+			
 			if ($handle = opendir ( $this->databasedir . '/' . $type )) {
 				while ( false !== ($file = readdir ( $handle )) ) {
 					$fileObject = json_decode ( '{}' );
 					if ($file != "." && $file != ".." && strtolower ( substr ( $file, strrpos ( $file, '.' ) + 1 ) ) == 'json') {
 						// echo $file;
 						$fileObject->{'filename'} = $file;
-						$fileObject->{'id'} = str_replace('.json', '', $file);
+						$fileObject->{'id'} = str_replace ( '.json', '', $file );
 						array_push ( $thelist, $fileObject );
 					}
 				}
 				closedir ( $handle );
 			}
-
+			
 			$response->setResult ( json_encode ( $thelist ) );
-
 		} catch ( Exception $e ) {
 			$response->setCode ( 520 );
 			$response->setMessage ( $e->getMessage () );
@@ -169,7 +164,7 @@ class ContentService {
 			return $response;
 		}
 	}
-
+	
 	/**
 	 * get all elements from an array, contained in a single file
 	 * $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}]
@@ -181,9 +176,9 @@ class ContentService {
 		$response->setCode ( 400 );
 		$response->setMessage ( "Bad parameters" );
 		$response->setResult ( '{}' );
-
+		
 		try {
-
+			
 			// Read the JSON file
 			$file = $this->databasedir . '/' . $filename;
 			$data = JsonUtils::readJsonFile ( $file );
@@ -199,7 +194,7 @@ class ContentService {
 			return $response;
 		}
 	}
-
+	
 	/**
 	 * create a single element
 	 * $type : object type (eg : calendar)
@@ -219,21 +214,21 @@ class ContentService {
 		if (! isset ( $id )) {
 			throw new Exception ( "empty id", 1 );
 		}
-
+		
 		return $this->databasedir . '/' . $type . '/' . $id . '.json';
 	}
 	private function getIndexFileName(string $type) {
 		if (! isset ( $type )) {
 			throw new Exception ( "empty type", 1 );
 		}
-
+		
 		return $this->databasedir . '/' . $type . '/index/index.json';
 	}
 	private function getBackupIndexFileName(string $type) {
 		if (! isset ( $type )) {
 			throw new Exception ( "empty type", 1 );
 		}
-
+		
 		return $this->databasedir . '/' . $type . '/history/index-' . time () . '.json';
 	}
 	public function post(string $type, string $keyname, string $recordStr) {
@@ -241,31 +236,29 @@ class ContentService {
 		$response->setCode ( 400 );
 		$response->setMessage ( "Bad parameters" );
 		$response->setResult ( "{}" );
-
-
-			if (isset ( $recordStr )) {
-
-				// Decode JSON
-				$myobjectJson = json_decode ( $recordStr );
-				unset ( $recordStr );
-
-				// detect id
-				$id = $myobjectJson->{$keyname};
-
-				// file name
-				$file = $this->getItemFileName ( $type, $id );
-
-				// write to file
-				JsonUtils::writeJsonFile ( $file, $myobjectJson );
-				unset ( $myobjectJson );
-				$response->setCode ( 200 );
-				$response->setMessage ( "OK" );
-			} else {
-				$response->setMessage ( "Bad parameters object" );
-			}
-
-			return $response;
-
+		
+		if (isset ( $recordStr )) {
+			
+			// Decode JSON
+			$myobjectJson = json_decode ( $recordStr );
+			unset ( $recordStr );
+			
+			// detect id
+			$id = $myobjectJson->{$keyname};
+			
+			// file name
+			$file = $this->getItemFileName ( $type, $id );
+			
+			// write to file
+			JsonUtils::writeJsonFile ( $file, $myobjectJson );
+			unset ( $myobjectJson );
+			$response->setCode ( 200 );
+			$response->setMessage ( "OK" );
+		} else {
+			$response->setMessage ( "Bad parameters object" );
+		}
+		
+		return $response;
 	}
 	private function mycopy($s1, $s2) {
 		$path = pathinfo ( $s2 );
@@ -276,7 +269,7 @@ class ContentService {
 			throw new Exception ( "copy failed ", 1 );
 		}
 	}
-
+	
 	/**
 	 * Add object id to index
 	 */
@@ -285,26 +278,26 @@ class ContentService {
 		$response->setCode ( 400 );
 		$response->setMessage ( "Bad parameters" );
 		$response->setResult ( "{}" );
-
+		
 		try {
 			// file name eg: index.json
 			$file = $this->getIndexFileName ( $type );
-
+			
 			// create a backup of previous index file eg: history/index-TIMESTAMP.json
 			$backupDone = $this->mycopy ( $file, $this->getBackupIndexFileName ( $type ) );
 			$response->setMessage ( "backup " . $backupDone );
-
+			
 			// get index data
 			$data = JsonUtils::readJsonFile ( $file );
-
+			
 			// TODO : better index with multiple fields
 			$item = json_decode ( '{}' );
 			$item->{$keyname} = $keyvalue;
 			$data = JsonUtils::put ( $data, $keyname, $item );
-
+			
 			// write to file
 			JsonUtils::writeJsonFile ( $file, $data );
-
+			
 			$response->setCode ( 200 );
 		} catch ( Exception $e ) {
 			$response->setCode ( 520 );

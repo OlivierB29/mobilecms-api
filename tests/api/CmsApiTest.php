@@ -24,20 +24,21 @@ final class CmsApiTest extends TestCase {
 		$this->token = 'Bearer ' . $this->user->{'token'};
 	}
 
-	public function testOptions() {
+	public function testTypes() {
 		$path = '/api/v1/content';
 
 		$headers = [ 'Authorization' => $this->token,	'apiKey' => '123' ];
 		$REQUEST = [ 'path' => $path ];
 		$SERVER = [ 'REQUEST_URI' => $path,	'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-		$GET = [ 'requestbody' => '{}' ];
+		$GET = [ ];
 		$POST = null;
 
 		$API = new CmsApi ( $this->conf );
 		$API->setRequest ( $REQUEST, $SERVER, $GET, $POST );
 		$API->authorize ( $headers, $SERVER );
 		$result = $API->processAPI ();
-		$this->assertTrue ( $result != null && $result === '[{"type":"calendar"},{"type":"news"}]' );
+		$this->assertTrue ( $result != null );
+		$this->assertJsonStringEqualsJsonString('[{"type":"calendar"},{"type":"news"}]',$result );
 	}
 
 	public function testPost1() {
@@ -94,6 +95,24 @@ final class CmsApiTest extends TestCase {
 		$this->assertTrue(strpos($result, '"type"') !== FALSE);
 		$this->assertTrue(strpos($result, '"date"') !== FALSE);
 		$this->assertTrue(strpos($result, '"title"') !== FALSE);
+
+	}
+
+	public function testGetCalendarError() {
+		$path = '/api/v1/content/calendar/999999999';
+		$headers = [ 'Authorization' => $this->token, 'apiKey' => '123' ];
+		$REQUEST = [ 'path' => $path ];
+		$SERVER = [ 'REQUEST_URI' => $path,'REQUEST_METHOD' => 'GET','HTTP_ORIGIN' => 'foobar' ];
+		$GET = [];
+		$POST = null;
+
+		$API = new CmsApi ( $this->conf );
+		$API->setRequest ( $REQUEST, $SERVER, $GET, $POST );
+		$API->authorize ( $headers, $SERVER );
+		$result = $API->processAPI ();
+
+		$this->assertTrue ( $result != null && $result === '{}' );
+
 
 	}
 

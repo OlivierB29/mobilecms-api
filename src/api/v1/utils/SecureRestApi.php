@@ -1,7 +1,9 @@
 <?php
+require_once 'Headers.php';
 require_once 'RestApi.php';
 require_once 'ApiKey.php';
 require_once 'UserService.php';
+
 
 /**
  * Secure implementation of a REST api.
@@ -35,11 +37,12 @@ abstract class SecureRestApi extends RestApi {
 
 
 
-		if ($SERVER === null) {
+
+		if (!isset($SERVER)) {
 			$SERVER = &$_SERVER;
 		}
 
-		if ($headers === null) {
+		if (!isset($headers)) {
 			$headers = getallheaders ();
 		}
 
