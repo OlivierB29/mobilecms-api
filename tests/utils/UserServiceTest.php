@@ -56,19 +56,7 @@ final class UserServiceTest extends TestCase
         $this->assertTrue($result->getResult() === '{}');
     }
 
-    public function testCreatePasswordAndLogin()
-    {
-        $service = new UserService('tests-data/temp');
-        $mail = 'test'.time().'@example.com';
-        $password = 'Sample#123456';
 
-        $createresult = $service->createUserWithSecret($mail, $mail, $password, 'some secret', 'secret response');
-        $this->assertTrue($createresult === null);
-
-        $result = $service->login($mail, $password);
-
-        $this->assertTrue($result === '');
-    }
 
     public function testWrongLogin1()
     {
@@ -96,7 +84,16 @@ final class UserServiceTest extends TestCase
         );
     }
 
+    public function testCreateUser()
+    {
+        $service = new UserService('tests-data/temp');
+        $mail = 'test'.time().'@example.com';
+        $password = 'Sample#123456';
 
+        $createresult = $service->createUserWithSecret($mail, $mail, $password, 'some secret', 'secret response');
+        $this->assertTrue($createresult === null);
+
+    }
 
 
 }
