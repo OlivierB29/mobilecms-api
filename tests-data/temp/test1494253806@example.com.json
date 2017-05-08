@@ -1,0 +1,9 @@
+{
+    "name": "test1494253806@example.com",
+    "email": "test1494253806@example.com",
+    "password": "$2y$12$qeiEhruGvNV66POWzvEg7uHaMi2Kj\/8O9lyJJxtoXocQxd8Wn3RCC",
+    "salt": "XvYJbYfNMH4XtH3rEpeasKuAKzjCkmiXzGlsIkb1pOY5TYpcZmCoFCbIBh4QDUCD46WIkDKYLqDQ54n3n6cWowr8FKsxPSrHmEUr8jhUrlgNfZq\/0ZDCWBKejorED2bhpy+1hSWqt2spadOiS4YvGPV\/3qAknq8tVmraja19EvI=",
+    "secretQuestion": "some secret",
+    "secretResponse": "$2y$12$3h4wyPAK\/qI22xpNgCYBp.C7KAaPwo6B9.Gs.lHqga2FLZQXQdEEq",
+    "role": "guest"
+}

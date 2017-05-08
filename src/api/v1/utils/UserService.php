@@ -192,7 +192,7 @@ class UserService
             // store a salted password
 
             $options = [
-                    'cost' => $this->passwordHashCost
+                    'cost' => $this->passwordHashCost,
             ];
             $saltpassword = password_hash($password, PASSWORD_BCRYPT, $options);
 
