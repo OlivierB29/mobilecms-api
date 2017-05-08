@@ -99,7 +99,7 @@ final class UserServiceTest extends TestCase
         $service = new UserService('tests-data/temp');
         $mail = 'test'.rand(0, 999999).'@example.com';
 
-        echo 'creating user'.$mail;
+
         $result = $service->createUserWithSecret($mail, $mail, 'Sample#123456', 'some secret', 'secret response');
         $this->assertTrue($result === null
         );
