@@ -233,6 +233,6 @@ abstract class RestApi
 
         $json->{'error'} = $msg;
 
-        return json_decode($json);
+        return json_encode($json);
     }
 }
