@@ -1,17 +1,17 @@
 {
-  "name": "mobilecms-services",
+  "name": "mobilecms-api",
   "version": "1.0.0",
-  "description": "mobilecms-services",
+  "description": "mobilecms-api",
   "main": "gulp.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test-utils test-api"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/OlivierB29/mobilecms-services"
+    "url": "https://github.com/OlivierB29/mobilecms-api"
   },
   "author": "OlivierB29",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-run": "^1.7.1"
