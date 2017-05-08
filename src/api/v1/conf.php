@@ -3,7 +3,7 @@
 define('ERROR_LOG' , 'true');
 
 // Only for development
-define ( 'ALLOW_CROSS_DOMAIN', 'false' );
+define ( 'ALLOW_CROSS_DOMAIN', 'true' );
 
 
 //eg : /var/www/html

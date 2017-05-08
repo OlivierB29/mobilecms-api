@@ -21,7 +21,7 @@ class CmsApi extends SecureRestApi {
 	}
 
 	/**
-	 * /api/v1/content
+	 * base API path /api/v1/content
 	 */
 	protected function content() {
 		$response = new Response ();
@@ -48,29 +48,36 @@ class CmsApi extends SecureRestApi {
 				// eg : /api/v1/content/calendar
 				if ($this->method === 'GET') {
 
-					// $this->args contains the remaining path parameters
-					// eg : /api/v1/content/calendar/1/foo/bar
-					// ['1', 'foo', 'bar']
+
+
 					if (array_key_exists ( 0, $this->args )) {
-						// this
+						//
+						//get the full data of a single record
+						//
+
+						// $this->args contains the remaining path parameters
+						// eg : /api/v1/content/calendar/1/foo/bar
+						// ['1', 'foo', 'bar']
 
 						$response = $service->getRecord ( $datatype, $this->args [0] );
-
-						$response->setResult ( $response->getResult () );
 					} else {
+						//
+						//get all records in index
+						//
 						$response = $service->getAllObjects ( $datatype );
-
-						$response->setResult ( $response->getResult () );
 					}
 				} elseif ($this->method === 'POST') {
-
-					// eg : /api/v1/content/calendar
+					//
+					// save a record and update the index
+					//
+					// path eg : /api/v1/content/calendar
 
 					//
 					// step 1 : update Record
 					//
 					$putResponse = $service->post ( $datatype, CmsApi::ID, $this->request ['requestbody'] );
 					$myobjectJson = json_decode ( $putResponse->getResult () );
+					//TODO manage errors
 					unset ( $putResponse );
 
 					//
@@ -78,19 +85,18 @@ class CmsApi extends SecureRestApi {
 					//
 					$id = $myobjectJson->{CmsApi::ID};
 					unset ( $myobjectJson );
-					$publishResponse = $service->publishById ( $datatype, CmsApi::ID, $id );
+					$response = $service->publishById ( $datatype, CmsApi::ID, $id );
 
-
-					$response->setResult ( $publishResponse->getResult() );
-					$response->setCode ( $publishResponse->getCode () );
-          $response->setMessage ( $publishResponse->getMessage());
-          unset($publishResponse);
 				} elseif ($this->method === 'PUT') {
-
+					//TODO PUT
 				}
 			} else {
 				if ($this->method === 'GET') {
-					// eg : /api/v1/content
+					//
+					//return the list of editable types
+					//
+					// path eg : /api/v1/content/
+
 					$response->setResult ( $service->options ( 'types.json' ) );
 				}
 			}

@@ -149,6 +149,7 @@ final class CmsApiTest extends TestCase {
 		$result = $API->processAPI ();
 
 		$this->assertTrue ( $result != null && $result != '' );
+
 		$this->assertTrue(strpos($result, '"id"') !== FALSE);
 		$this->assertTrue(strpos($result, '"organization"') !== FALSE);
 		$this->assertTrue(strpos($result, '"date"') !== FALSE);

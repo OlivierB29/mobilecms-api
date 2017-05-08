@@ -13,22 +13,27 @@ require_once 'JsonUtils.php';
  */
 class ContentService {
 
+	/**
+	* create backup of history file
+	*/
 	private $enableIndexHistory = false;
 
 	/**
 	 * main directory (eg: /opt/foobar/data )
 	 */
 	private $databasedir;
+
+	/**
+	* constructor
+	*/
 	function __construct($databasedir) {
 		$this->databasedir = $databasedir;
 	}
-	public function options(string $filename) {
-		$file = $this->databasedir . '/' . $filename;
-		return json_encode ( JsonUtils::readJsonFile ( $file ) );
-	}
+
 
 	/**
-	 * get a single record
+	 * Get a single record
+	 *
 	 * $type eg : calendar
 	 * $keyname : unique id
 	 * $keyvalue : id value, eg :1
@@ -60,6 +65,17 @@ class ContentService {
 			return $response;
 		}
 	}
+
+	/**
+	* Return a filepath from a single filename, only contained in the public databasedir.
+	* Valid path :
+	*	calendar/1.json , new/foobar.json, index/index.json , ...
+	* Invalid path :
+	* /var/www/private/somefile.sh
+	*
+	* $filename : calendar/1.json , new/foobar.json, index/index.json , ...
+	* @return calendar/index/index.json
+	*/
 	public function getFilePath(string $filename): Response {
 		$response = new Response ();
 		$response->setCode ( 400 );
@@ -68,7 +84,14 @@ class ContentService {
 
 		try {
 
-			// Read the JSON file
+			//
+			//forbid upper directory
+			//
+			if(strpos($filename, '..') !== FALSE) {
+				throw new Exception("Invalid path " . $filename, 1);
+
+			}
+
 			$file = $this->databasedir . '/' . $filename;
 
 			// get one element
@@ -135,6 +158,8 @@ class ContentService {
 		}
 	}
 	/**
+	* get all JSON files list of a directory
+	* eg: [{"id":"1", "filename": "1.json"}, {"id":"2", "filename": "2.json"}]
 	 */
 	public function getAllObjects($type) {
 		$response = new Response ();
@@ -212,7 +237,12 @@ class ContentService {
 
 
 
-
+	/**
+	* return a record file path
+	* $type : name of type eg : calendar
+	* $id : unique id of record eg : 1
+	* @return /foobar/calendar/index.json
+	*/
 	private function getItemFileName(string $type, string $id) : string  {
 		if (! isset ( $type )) {
 			throw new Exception ( "empty type", 1 );
@@ -223,7 +253,13 @@ class ContentService {
 
 		return $this->databasedir . '/' . $type . '/' . $id . '.json';
 	}
-	private function getIndexFileName(string $type) : string {
+
+	/**
+	* return an index file path
+	* $type : eg : calendar
+	* @return /foobar/calendar/index.json
+	*/
+	public function getIndexFileName(string $type) : string {
 		if (! isset ( $type )) {
 			throw new Exception ( "empty type", 1 );
 		}
@@ -231,6 +267,12 @@ class ContentService {
 		return $this->databasedir . '/' . $type . '/index/index.json';
 	}
 
+
+		/**
+		* return an template index file path
+		* $type : eg : calendar
+		* @return /foobar/calendar/index.json
+		*/
 	private function getIndexTemplateFileName(string $type) : string {
 		if (! isset ( $type )) {
 			throw new Exception ( "empty type", 1 );
@@ -240,24 +282,8 @@ class ContentService {
 	}
 
 
-		private function getRecordFileName(string $type, string $keyvalue) : string {
-			if (! isset ( $type )) {
-				throw new Exception ( "empty type", 1 );
-			}
-
-			return $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';;
-		}
 
 
-
-
-	private function getBackupIndexFileName(string $type) : string {
-		if (! isset ( $type )) {
-			throw new Exception ( "empty type", 1 );
-		}
-
-		return $this->databasedir . '/' . $type . '/history/index-' . time () . '.json';
-	}
 	public function post(string $type, string $keyname, string $recordStr) {
 		$response = new Response ();
 		$response->setCode ( 400 );
@@ -288,15 +314,6 @@ class ContentService {
 
 		return $response;
 	}
-	private function mycopy( string $s1, string $s2) {
-		$path = pathinfo ( $s2 );
-		if (! file_exists ( $path ['dirname'] )) {
-			mkdir ( $path ['dirname'], 0777, true );
-		}
-		if (! copy ( $s1, $s2 )) {
-			throw new Exception ( "copy failed ", 1 );
-		}
-	}
 
 	/**
 	 * Add object id to index
@@ -309,6 +326,7 @@ class ContentService {
 
 		try {
 			// file name eg: index.json
+			$response->setMessage ( "getIndexFileName" );
 			$file = $this->getIndexFileName ( $type );
 
 			// create a backup of previous index file eg: history/index-TIMESTAMP.json
@@ -323,25 +341,33 @@ class ContentService {
 			eg :
 				{ "id": "", "date": "",  "activity": "", "title": "" }
 			*/
+			$response->setMessage ( "getIndexTemplateFileName" . $this->getIndexTemplateFileName($type) );
 			$indexValue = JsonUtils::readJsonFile ( $this->getIndexTemplateFileName($type) );
 
 			// Read the full JSON record
+
 			$recordFile = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
+			$response->setMessage ( "readJsonFile" . $recordFile );
 			$record = JsonUtils::readJsonFile ( $recordFile );
 
 			//
 			//copy some fields to index
 			//
+			$response->setMessage ( "copy values to index"  );
 			JsonUtils::copy($record  , $indexValue);
 			unset($record);
 
 
 			// get index data
+			$response->setMessage ( "get index data"  );
 			$data = JsonUtils::readJsonFile ( $file );
 
+			$response->setMessage ( "put"  );
 			$data = JsonUtils::put ( $data, $keyname, $indexValue );
 
+
 			// write to file
+			$response->setMessage ( "write to file" );
 			JsonUtils::writeJsonFile ( $file, $data );
 			unset($data);
 			$response->setMessage ( "done" );
@@ -352,6 +378,38 @@ class ContentService {
 		} finally {
 			return $response;
 		}
+	}
+
+	/**
+	* generate a backup index file name
+	*/
+	private function getBackupIndexFileName(string $type) : string {
+		if (! isset ( $type )) {
+			throw new Exception ( "empty type", 1 );
+		}
+
+		return $this->databasedir . '/' . $type . '/history/index-' . time () . '.json';
+	}
+
+	/**
+	* copy a file and create directory if necessary
+	*/
+	private function mycopy( string $s1, string $s2) {
+		$path = pathinfo ( $s2 );
+		if (! file_exists ( $path ['dirname'] )) {
+			mkdir ( $path ['dirname'], 0777, true );
+		}
+		if (! copy ( $s1, $s2 )) {
+			throw new Exception ( "copy failed ", 1 );
+		}
+	}
+
+	/**
+	* returns options files content
+	*/
+	public function options(string $filename) {
+		$file = $this->databasedir . '/' . $filename;
+		return json_encode ( JsonUtils::readJsonFile ( $file ) );
 	}
 
 
