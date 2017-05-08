@@ -1,5 +1,5 @@
 # mobilecms-api
-This project is a RESTful API for reading and writing content with JSON files.
+This project is a REST API for reading and writing content with JSON files.
 It is initially intended to manage a small sport organization : News, calendar events, public pages
 
 
@@ -57,6 +57,33 @@ $ phpunit --configuration phpunit-api.xml
 - edit code
 ```bash
 $ gulp  deploy # deploy code to /var/www/html
+```
+- use a tool like [HttpRequester](https://addons.mozilla.org/en-US/firefox/addon/httprequester)
+
+### Authentication
+
+- URL : http://localhost/adminapp/api/v1/auth.php
+Content Type : application/x-www-form-urlencoded
+Content : requestbody={ "user": "test@example.com", "password":"..."}
+
+- POST
+
+- Sample Response
+```json
+{"username":"test@example.com","email":"test@example.com","role":"guest","token":"..."}
+```
+
+- Copy paste the token value
+
+### Get content
+- URL : http://localhost/adminapp/api/v1/api.php?path=/api/v1/content/calendar
+- Headers :
+Add a Authorization header, with value : Bearer [token]
+- GET
+
+- Sample Response
+```json
+[{"filename":"5.json","id":"5"},{"filename":"1.json","id":"1"},{"filename":"4.json","id":"4"},{"filename":"2.json","id":"2"},{"filename":"3.json","id":"3"},{"filename":"6.json","id":"6"},{"filename":"10.json","id":"10"}]
 ```
 
 ## FAQ
