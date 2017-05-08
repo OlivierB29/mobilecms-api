@@ -86,7 +86,12 @@ final class UserServiceTest extends TestCase
 
     public function testCreateUser()
     {
-        $service = new UserService('tests-data/temp');
+        $tempdir = 'tests-data/temp';
+        if (!file_exists($tempdir)) {
+            mkdir($tempdir, 0777, true);
+        }
+
+        $service = new UserService($tempdir);
         $mail = 'test'.time().'@example.com';
         $password = 'Sample#123456';
 
