@@ -1,0 +1,10 @@
+{
+    "name": "test@example.com",
+    "email": "test@example.com",
+    "password": "$2y$10$RnoyL1Z1OFI0QmVxSktpYeI.L9Ze06xBMsQXRLMp\/kJZGO1lG.07e",
+    "salt": "Fz2\/Vu8R4BeqJKibq\/Eyg\/6LTWi6HN0KM5F+fkfK1\/cAUdZWAy+Iq9Lfp88eUWAL3D8rpIMNDZpDvw\/EQd2MezTHOYgTMLwUFh2O+1tA9j7dAOnpn6pS9H9Wgfn4ZWpULXg0gFX92BJ2hL1xVbclcakegUiHJiQWnmU77uSY4gg=",
+    "secretQuestion": "some secret",
+    "secretResponse": "f8d680f15e92b4f48a60611f4ab3425b9ef7d744313f6c0656b50eb5bdefee860a54ef918c58b4a546f81a8f52844655b73f65d8e7bd7c5396eecce82e3ea5a9",
+    "role": "guest"
+
+}
