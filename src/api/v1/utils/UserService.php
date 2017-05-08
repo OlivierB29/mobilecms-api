@@ -192,13 +192,12 @@ class UserService
             // store a salted password
 
             $options = [
-                    'cost' => $this->passwordHashCost,
-                    'salt' => $random_salt,
+                    'cost' => $this->passwordHashCost
             ];
             $saltpassword = password_hash($password, PASSWORD_BCRYPT, $options);
 
             // store a salted response
-            $saltresponse = $this->hash($this->algorithm, $this->concat($random_salt, $secretResponse));
+            $saltresponse = password_hash($secretResponse, PASSWORD_BCRYPT, $options);
 
             // create user
             $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
@@ -207,21 +206,8 @@ class UserService
         return $error_msg;
     }
 
-    /*
-     * Hash a string, such as a password
-     */
-    private function hash($algorithm, $str)
-    {
-        return hash($this->algorithm, $str);
-    }
 
-    /**
-     * Concat a secret salt and a password.
-     */
-    private function concat($random_salt, $password)
-    {
-        return $password.'.'.$random_salt;
-    }
+
 
     /**
      * authenticate

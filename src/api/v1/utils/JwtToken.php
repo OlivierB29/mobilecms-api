@@ -72,7 +72,7 @@ class JwtToken
         return base64_encode('{ "alg": "'.$this->algorithm.'","typ": "JWT"}');
     }
 
-    private function initPayload($username, $email, $role): string
+    private function initPayload(string $username, string $email, string $role): string
     {
         return base64_encode('{ "sub": "'.$email.'", "name": "'.$username.'", "role": "'.$role.'"}');
     }
@@ -80,7 +80,7 @@ class JwtToken
     /**
      * Concat token fields.
      */
-    private function createToken($header, $payload, $secretKey): string
+    private function createToken(string $header, string $payload, string $secretKey): string
     {
         return $header.'.'.$payload.'.'.$this->createSignature($header, $payload, $secretKey);
     }
@@ -88,7 +88,7 @@ class JwtToken
     /**
      * create a signature.
      */
-    private function createSignature($header, $payload, $secretKey): string
+    private function createSignature(string $header, string $payload, string $secretKey): string
     {
         return hash_hmac($this->algorithm, $header.'.'.$payload, $this->createSecret($secretKey));
     }
@@ -97,17 +97,17 @@ class JwtToken
      * create secret.
      * This implementation create a valid secret for the current day.
      */
-    private function createSecret($secret): string
+    private function createSecret(string $secret): string
     {
         return $secret.date('Yz');
     }
 
-    private function parseHeader($payload): string
+    private function parseHeader(string $payload): string
     {
         return json_decode(base64_decode($payload));
     }
 
-    private function parsePayload($payload): string
+    private function parsePayload(string $payload): string
     {
         return json_decode(base64_decode($payload));
     }

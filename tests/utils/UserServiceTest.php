@@ -63,6 +63,8 @@ final class UserServiceTest extends TestCase
         $password = 'Sample#123456';
 
         $createresult = $service->createUserWithSecret($mail, $mail, $password, 'some secret', 'secret response');
+        $this->assertTrue($createresult === null);
+
         $result = $service->login($mail, $password);
 
         $this->assertTrue($result === '');
@@ -94,14 +96,7 @@ final class UserServiceTest extends TestCase
         );
     }
 
-    public function testCreateUser()
-    {
-        $service = new UserService('tests-data/temp');
-        $mail = 'test'.rand(0, 999999).'@example.com';
 
 
-        $result = $service->createUserWithSecret($mail, $mail, 'Sample#123456', 'some secret', 'secret response');
-        $this->assertTrue($result === null
-        );
-    }
+
 }
