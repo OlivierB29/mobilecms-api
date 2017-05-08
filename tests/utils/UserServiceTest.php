@@ -31,7 +31,7 @@ final class UserServiceTest extends TestCase
 
         $user = json_decode($result->getResult());
 
-        $this->assertTrue($user->{'username'} === 'test@example.com');
+        $this->assertTrue($user->{'name'} === 'test@example.com');
         $this->assertTrue($user->{'email'} === 'test@example.com');
         $this->assertTrue(strlen($user->{'token'}) > 100);
     }
