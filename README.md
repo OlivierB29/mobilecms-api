@@ -1,9 +1,8 @@
 # mobilecms-api
-This project is a REST API for reading and writing content with JSON files.
-It is initially intended to manage a small sport organization : News, calendar events, public pages
+This project is a REST API for reading and writing content stored in JSON files.
+It is initially intended to manage a sport organization, with such content : News, calendar events, public pages, documents, ...
 
-
-- Hosted on a cheap server, with no database available (more info in FAQ)
+- Hosted on a cheap server, with no database available (see explanation in FAQ)
 - Authentication with JSON web tokens
 - Password encryption
 - All the data is public, by default. (except users)
