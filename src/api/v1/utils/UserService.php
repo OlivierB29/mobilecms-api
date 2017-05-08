@@ -205,7 +205,7 @@ class UserService
 
         return $error_msg;
     }
-    
+
     /**
      * authenticate
      * return an empty string if success.

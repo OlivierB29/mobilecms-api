@@ -95,8 +95,5 @@ final class UserServiceTest extends TestCase
 
         $createresult = $service->createUserWithSecret($mail, $mail, $password, 'some secret', 'secret response');
         $this->assertTrue($createresult === null);
-
     }
-
-
 }
