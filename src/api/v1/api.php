@@ -12,6 +12,22 @@ if (null !== ERROR_LOG && ERROR_LOG === 'true') {
     ini_set('log_errors', 'On');
 }
 
+
+//
+// HTTPS
+//
+if (null !== ACTIVATE_HTTPS && ACTIVATE_HTTPS === 'true') {
+	//http://stackoverflow.com/questions/85816/how-can-i-force-users-to-access-my-page-over-https-instead-of-http/12145293#12145293
+	// iis sets HTTPS to 'off' for non-SSL requests
+	if ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+	    header('Strict-Transport-Security: max-age=31536000');
+	} else {
+	    header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], true, 301);
+	    // we are in cleartext at the moment, prevent further execution and output
+			die();
+	}
+}
+
 // cross domain !
 if (null !== ALLOW_CROSS_DOMAIN && ALLOW_CROSS_DOMAIN === 'true') {
     header('Access-Control-Allow-Origin: *');
