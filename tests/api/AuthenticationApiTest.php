@@ -11,11 +11,11 @@ final class AuthenticationApiTest extends TestCase
 
     protected function setUp()
     {
-      $this->conf = json_decode('{}');
-      $this->conf->{'enableheaders'} = 'false';
-      $this->conf->{'enableapikey'} = 'false';
-      $this->conf->{'privatedir'} = HOME.'/tests-data/private';
-      $this->conf->{'apikeyfile'} = HOME.'/tests-data/private/apikeys/key1.json';
+        $this->conf = json_decode('{}');
+        $this->conf->{'enableheaders'} = 'false';
+        $this->conf->{'enableapikey'} = 'false';
+        $this->conf->{'privatedir'} = HOME.'/tests-data/private';
+        $this->conf->{'apikeyfile'} = HOME.'/tests-data/private/apikeys/key1.json';
     }
 
     public function testLogin()
@@ -39,16 +39,15 @@ final class AuthenticationApiTest extends TestCase
         $userObject = json_decode($result);
 
         $this->assertTrue($userObject->{'email'} === 'test@example.com');
-        $this->assertTrue(strlen($userObject->{'token'}) > 150 );
-
+        $this->assertTrue(strlen($userObject->{'token'}) > 150);
     }
 
     public function testRegister()
     {
-        $email = "testregister@example.com";
-        $file = $this->conf->{'privatedir'} . '/users/' . $email;
-        if(file_exists($file)) {
-          unlink($file);
+        $email = 'testregister@example.com';
+        $file = $this->conf->{'privatedir'}.'/users/'.$email;
+        if (file_exists($file)) {
+            unlink($file);
         }
 
         $path = '/api/v1/register';
@@ -66,7 +65,5 @@ final class AuthenticationApiTest extends TestCase
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
         $result = $API->processAPI();
         $this->assertTrue($result != null && $result != '');
-
     }
-
 }
