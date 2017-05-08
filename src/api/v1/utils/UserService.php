@@ -143,37 +143,37 @@ class UserService
     /**
      * create a new user.
      */
-    public function createUserWithSecret($emailParam, $username, $password, $secretQuestion, $secretResponse)
+    public function createUserWithSecret($username, $emailParam, $password, $secretQuestion, $secretResponse)
     {
         $email = strtolower($emailParam);
 
         $error_msg = null;
 
         if (empty($username)) {
-            $error_msg .= 'InvalidUser';
+            $error_msg .= 'InvalidUser ';
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             // invalid email
-            $error_msg .= 'InvalidEmail';
+            $error_msg .= 'InvalidEmail ';
         }
 
         if (empty($password)) {
-            $error_msg .= 'EmptyPassword';
+            $error_msg .= 'EmptyPassword ';
         }
 
         if (empty($secretQuestion)) {
-            $error_msg .= 'EmptySecretQuestion';
+            $error_msg .= 'EmptySecretQuestion ';
         }
 
         if (empty($secretResponse)) {
-            $error_msg .= 'EmptySecretResponse';
+            $error_msg .= 'EmptySecretResponse ';
         }
 
         // Cf forms.js
         // Ensure password length
         if (strlen($password) > 128) {
-            $error_msg .= 'InvalidPassword';
+            $error_msg .= 'InvalidPassword ';
         }
 
         $file = $this->getJsonUserFile($email);

@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-include 'conf.php';
+require_once 'conf.php';
 
 use PHPUnit\Framework\TestCase;
 
