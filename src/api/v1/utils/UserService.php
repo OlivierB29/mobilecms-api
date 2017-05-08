@@ -280,7 +280,7 @@ class UserService
                 if (isset($token)) {
                     $response->setCode(200);
                     $userResponse = json_decode('{"username":"", "email":"",  "role":"", "token":""}');
-                    $userResponse->{'username'} = $user->{'name'};
+                    $userResponse->{'name'} = $user->{'name'};
                     $userResponse->{'email'} = $user->{'email'};
                     $userResponse->{'role'} = $user->{'role'};
                     $userResponse->{'token'} = $token;

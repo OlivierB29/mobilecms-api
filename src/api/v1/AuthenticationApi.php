@@ -52,6 +52,7 @@ class AuthenticationApi extends RestApi
                 //
                 $logindata = json_decode($this->request['requestbody']);
 
+                //TODO : user contains either email of name
                 $response = $service->getToken($logindata->{'user'}, $logindata->{'password'});
                 unset($logindata);
                 // free variables before response
