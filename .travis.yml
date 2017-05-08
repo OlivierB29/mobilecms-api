@@ -1,4 +1,6 @@
 language: php
 php:
   - '7.0'
-script: phpunit --configuration phpunit-utils.xml
+script:
+- phpunit --configuration phpunit-utils.xml
+- phpunit --configuration phpunit-api.xml
