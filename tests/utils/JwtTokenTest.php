@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
@@ -10,10 +11,8 @@ final class JwtTokenTest extends TestCase
         $t = new JwtToken();
         $token = $t->createTokenFromUser('test', 'test@example.com', 'guest', 'secret');
         $this->assertTrue(
-          $token != null && strlen($token)>100
+          $token != null && strlen($token) > 100
         );
-
-
     }
 
     public function testVerifyToken()
@@ -24,8 +23,6 @@ final class JwtTokenTest extends TestCase
         $this->assertTrue(
           $t->verifyToken($token, 'secret')
         );
-
-
     }
 
     public function testVerifyWrongSecret()
@@ -36,9 +33,5 @@ final class JwtTokenTest extends TestCase
         $this->assertFalse(
           $t->verifyToken($token, 'wrongsecret')
         );
-
-
     }
-
-
 }
