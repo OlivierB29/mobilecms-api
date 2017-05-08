@@ -56,8 +56,6 @@ final class UserServiceTest extends TestCase
         $this->assertTrue($result->getResult() === '{}');
     }
 
-
-
     public function testWrongLogin1()
     {
         $service = new UserService('tests-data/userservice');
