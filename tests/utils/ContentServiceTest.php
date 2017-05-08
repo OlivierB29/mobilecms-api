@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
@@ -14,19 +15,15 @@ final class ContentServiceTest extends TestCase
         $service = new ContentService($this->dir);
         $response = $service->getAll($this->indexfile);
 
-
         $this->assertEquals(200, $response->getCode());
 
         $this->assertTrue(
           strstr($response->getResult(), '"id":"1"') != ''
         );
 
-
         $this->assertTrue(
           strstr($response->getResult(), '"id":"2"') != ''
         );
-
-
     }
 
     public function testGetItemFromList()
@@ -48,30 +45,25 @@ final class ContentServiceTest extends TestCase
         $service = new ContentService($this->dir);
         $response = $service->post('calendar', 'id', $recordStr);
 
-        $file = $this->dir . '/calendar/10.json';
+        $file = $this->dir.'/calendar/10.json';
 
         $this->assertEquals(200, $response->getCode());
 
-
         $this->assertJsonStringEqualsJsonFile(
-            $file , $recordStr
+            $file, $recordStr
         );
     }
 
     public function testPublish()
     {
-
         $service = new ContentService($this->dir);
         $response = $service->publishById('calendar', 'id', '10');
 
-        if($response->getCode() !== 200) {
-          echo $response->getResult();
-          echo $response->getMessage();
+        if ($response->getCode() !== 200) {
+            echo $response->getResult();
+            echo $response->getMessage();
         }
 
         $this->assertEquals(200, $response->getCode());
-
     }
-
-
 }

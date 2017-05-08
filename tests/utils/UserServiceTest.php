@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
@@ -15,7 +16,6 @@ final class UserServiceTest extends TestCase
 
     public function testLoginOk()
     {
-
         $service = new UserService('tests-data/userservice');
         $result = $service->login('test@example.com', 'Sample#123456');
 
@@ -24,19 +24,16 @@ final class UserServiceTest extends TestCase
 
     public function testGetToken()
     {
-
         $service = new UserService('tests-data/userservice');
         $result = $service->getToken('test@example.com', 'Sample#123456');
         $this->assertTrue($result->getCode() === 200);
-        $this->assertTrue(null != $result->getResult() );
+        $this->assertTrue(null != $result->getResult());
 
         $user = json_decode($result->getResult());
 
-        $this->assertTrue($user->{'username'} === 'test@example.com' );
-        $this->assertTrue($user->{'email'} === 'test@example.com' );
-        $this->assertTrue(strlen($user->{'token'}) > 100 );
-
-
+        $this->assertTrue($user->{'username'} === 'test@example.com');
+        $this->assertTrue($user->{'email'} === 'test@example.com');
+        $this->assertTrue(strlen($user->{'token'}) > 100);
     }
 
     public function testVerifyToken()
@@ -62,10 +59,10 @@ final class UserServiceTest extends TestCase
     public function testCreatePasswordAndLogin()
     {
         $service = new UserService('tests-data/temp');
-        $mail = 'test' . time() . '@example.com';
+        $mail = 'test'.time().'@example.com';
         $password = 'Sample#123456';
 
-        $createresult = $service->createUserWithSecret($mail, $mail, $password, 'some secret', 'secret response') ;
+        $createresult = $service->createUserWithSecret($mail, $mail, $password, 'some secret', 'secret response');
         $result = $service->login($mail, $password);
 
         $this->assertTrue($result === '');
@@ -97,17 +94,14 @@ final class UserServiceTest extends TestCase
         );
     }
 
-    public function testCreateUser() {
+    public function testCreateUser()
+    {
+        $service = new UserService('tests-data/temp');
+        $mail = 'test'.rand(0, 999999).'@example.com';
 
-
-
-       $service = new UserService('tests-data/temp');
-       $mail = 'test' . rand(0, 999999) . '@example.com';
-
-       echo 'creating user' . $mail;
-       $result = $service->createUserWithSecret($mail, $mail, 'Sample#123456', 'some secret', 'secret response') ;
-        $this->assertTrue( $result === null
+        echo 'creating user'.$mail;
+        $result = $service->createUserWithSecret($mail, $mail, 'Sample#123456', 'some secret', 'secret response');
+        $this->assertTrue($result === null
         );
     }
-
 }
