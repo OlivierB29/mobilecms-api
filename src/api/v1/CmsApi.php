@@ -24,6 +24,62 @@ class CmsApi extends SecureRestApi
         }
     }
 
+
+    protected function index()
+    {
+      $response = new Response();
+      $response->setCode(400);
+      $response->setMessage('Bad parameters');
+      $response->setResult('{}');
+
+      try {
+          $this->checkConfiguration();
+
+          $datatype = $this->getDataType();
+          $service = new ContentService($this->conf->{'publicdir'});
+
+          //
+          // Preflight requests are send by Angular
+          //
+          if ($this->method === 'OPTIONS') {
+              // eg : /api/v1/content
+              $response->setResult($this->preflight());
+          }
+
+          //
+          if (isset($datatype) && strlen($datatype) > 0) {
+              // eg : /api/v1/content/calendar
+              if ($this->method === 'GET') {
+                  if (array_key_exists(0, $this->args)) {
+                    //TODO get single index value
+                  } else {
+                      //
+                      //TODO get all records in index
+                      //
+                  }
+              } elseif ($this->method === 'POST') {
+                $response = $service->rebuildIndex($datatype, self::ID);
+
+              } elseif ($this->method === 'PUT') {
+                  //TODO PUT
+              }
+          } else {
+
+          }
+      } catch (Exception $e) {
+          $response->setCode(520);
+          $response->setMessage($e->getMessage());
+          $response->setResult($this->errorToJson($e->getMessage()));
+      } finally {
+          /*
+           * if ($this->enableHeaders) {
+           * header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
+           * }
+           */
+          return $response->getResult();
+      }
+    }
+
     /**
      * base API path /api/v1/content.
      */
@@ -167,7 +223,7 @@ class CmsApi extends SecureRestApi
     /**
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      */
-    protected function preflight(): string
+    public function preflight(): string
     {
         header('Access-Control-Allow-Methods: *');
         header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
