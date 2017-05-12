@@ -3,6 +3,14 @@
 require_once 'Response.php';
 require_once 'JsonUtils.php';
 
+function compareIndex($key) {
+
+    return function ($a, $b) use ($key) {
+
+      return strnatcmp($a->{$key}, $b->{$key});
+    };
+}
+
 /**
  * Read and save data from JSON files.
  * Future plans : consider http://stackoverflow.com/questions/13899342/can-we-use-json-as-a-database
@@ -382,6 +390,74 @@ class ContentService
             return $response;
         }
     }
+
+    public function rebuildIndex(string $type, string $keyname)
+    {
+        $response = new Response();
+        $response->setCode(400);
+        $response->setMessage('Bad parameters');
+        $response->setResult('{}');
+
+          $data = array();
+          // file name eg: index.json
+          $response->setMessage('getIndexFileName');
+          $indexFile = $this->getIndexFileName($type);
+
+          /*
+          Load a template for index.
+          eg :
+              { "id": "", "date": "",  "activity": "", "title": "" }
+          */
+          $response->setMessage('getIndexTemplateFileName'.$this->getIndexTemplateFileName($type));
+          $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
+
+
+        try {
+          if ($handle = opendir($this->databasedir.'/'.$type)) {
+              while (false !== ($file = readdir($handle))) {
+
+                  if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
+                      // Read the full JSON record
+                      $record = JsonUtils::readJsonFile($this->databasedir.'/'.$type.'/'.$file);
+
+                      //
+                      //copy some fields to index
+                      //
+                      $indexValue = clone $indexTemplate;
+                      $response->setMessage('copy values to index');
+                      JsonUtils::copy($record, $indexValue);
+                      unset($record);
+                      $response->setMessage('put');
+                      array_push($data, $indexValue);
+                      unset($indexValue);
+
+                  }
+              }
+              closedir($handle);
+          }
+
+            //sort
+            $response->setMessage('sort');
+            usort($data, compareIndex($keyname));
+
+
+            // write to file
+
+            $response->setMessage('write to file');
+            JsonUtils::writeJsonFile($indexFile, $data);
+            unset($data);
+            $response->setMessage('done');
+            $response->setCode(200);
+        } catch (Exception $e) {
+            $response->setCode(520);
+            $response->setMessage($e->getMessage());
+        } finally {
+            return $response;
+        }
+    }
+
+
+
 
     /**
      * generate a backup index file name.

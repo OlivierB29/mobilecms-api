@@ -34,7 +34,7 @@ final class ContentServiceTest extends TestCase
         $this->assertEquals(200, $response->getCode());
 
         $this->assertJsonStringEqualsJsonString(
-        json_encode(json_decode('{"id":"1","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}')),
+        json_encode(json_decode('    { "id": "1","date": "201509", "activity": "activitya", "title": "some seminar of activity A"}')),
         $response->getResult()
       );
     }
@@ -62,6 +62,19 @@ final class ContentServiceTest extends TestCase
         if ($response->getCode() !== 200) {
             echo $response->getResult();
             echo $response->getMessage();
+        }
+
+        $this->assertEquals(200, $response->getCode());
+    }
+
+    public function testRebuildIndex()
+    {
+        $service = new ContentService($this->dir);
+        $response = $service->rebuildIndex('calendar', 'id');
+
+        if ($response->getCode() !== 200) {
+            echo  "!!!!!!!!!!!" . $response->getResult();
+            echo "!!!!!!!!!!!" . $response->getMessage();
         }
 
         $this->assertEquals(200, $response->getCode());

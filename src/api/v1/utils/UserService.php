@@ -281,6 +281,7 @@ class UserService
                     $response->setCode(200);
                     $userResponse = json_decode('{"username":"", "email":"",  "role":"", "token":""}');
                     $userResponse->{'name'} = $user->{'name'};
+                    $userResponse->{'username'} = $user->{'name'};
                     $userResponse->{'email'} = $user->{'email'};
                     $userResponse->{'role'} = $user->{'role'};
                     $userResponse->{'token'} = $token;
