@@ -133,7 +133,7 @@ class CmsApi extends SecureRestApi
                     //
                     // step 1 : update Record
                     //
-                    $putResponse = $service->post($datatype, self::ID, $this->request[REQUESTBODY]);
+                    $putResponse = $service->post($datatype, self::ID, $this->request[self::REQUESTBODY]);
                     $myobjectJson = json_decode($putResponse->getResult());
                     //TODO manage errors
                     unset($putResponse);
