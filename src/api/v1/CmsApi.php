@@ -133,7 +133,7 @@ class CmsApi extends SecureRestApi
                     //
                     // step 1 : update Record
                     //
-                    $putResponse = $service->post($datatype, self::ID, $this->request['requestbody']);
+                    $putResponse = $service->post($datatype, self::ID, $this->request[REQUESTBODY]);
                     $myobjectJson = json_decode($putResponse->getResult());
                     //TODO manage errors
                     unset($putResponse);
@@ -145,7 +145,25 @@ class CmsApi extends SecureRestApi
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::ID, $id);
                 } elseif ($this->method === 'PUT') {
-                    //TODO PUT
+                  //
+                  // save a record and update the index
+                  //
+                  // path eg : /api/v1/content/calendar
+
+                  //
+                  // step 1 : update Record
+                  //
+                  $putResponse = $service->post($datatype, self::ID, $this->request);
+                  $myobjectJson = json_decode($putResponse->getResult());
+                  //TODO manage errors
+                  unset($putResponse);
+
+                  //
+                  // step 2 : publish to index
+                  //
+                  $id = $myobjectJson->{self::ID};
+                  unset($myobjectJson);
+                  $response = $service->publishById($datatype, self::ID, $id);
                 }
             } else {
                 if ($this->method === 'GET') {

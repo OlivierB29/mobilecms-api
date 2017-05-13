@@ -66,6 +66,54 @@ class AuthenticationApi extends RestApi
         }
     }
 
+
+    /**
+     * base API path /api/v1/authenticate.
+     */
+    protected function changepassword()
+    {
+        $response = new Response();
+        $response->setCode(400);
+        $response->setMessage('Bad parameters');
+        $response->setResult('{}');
+
+        try {
+            //throw error if wrong configuration, such as empty directory
+            $this->checkConfiguration();
+
+            $service = new UserService($this->conf->{'privatedir'}.'/users');
+
+            //
+            // Preflight requests are send by Angular
+            //
+            if ($this->method === 'OPTIONS') {
+                // eg : /api/v1/auth
+                $response->setResult($service->preflight());
+            }
+
+            if ($this->method === 'POST') {
+
+                // login and get token
+                //
+                // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
+                //
+                $logindata = json_decode($this->request['requestbody']);
+
+                //TODO : user contains either email of name
+
+                // free variables before response
+                $response = $service->changePassword($logindata->{'email'}, $logindata->{'password'}, $logindata->{'newpassword'});
+                unset($logindata);
+
+            }
+        } catch (Exception $e) {
+            $response->setCode(520);
+            $response->setMessage($e->getMessage());
+            $response->setResult($this->errorToJson($e->getMessage()));
+        } finally {
+            return $response->getResult();
+        }
+    }
     /**
      * /api/v1/register.
      */
@@ -94,7 +142,7 @@ class AuthenticationApi extends RestApi
             if ($this->method === 'POST') {
                 $user = json_decode($this->request['requestbody']);
                 //returns a empty string if success, a string with the message otherwise
-                $createresult = $service->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'});
+                $createresult = $service->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
                 if ($createresult === null) {
                     $response->setMessage('');
                     $response->setCode(200);

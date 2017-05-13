@@ -41,7 +41,7 @@ final class ContentServiceTest extends TestCase
 
     public function testPost()
     {
-        $recordStr = '{"id":"10","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $recordStr = '{"id":"10","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
         $response = $service->post('calendar', 'id', $recordStr);
 

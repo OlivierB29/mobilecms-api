@@ -143,15 +143,12 @@ class UserService
     /**
      * create a new user.
      */
-    public function createUserWithSecret($username, $emailParam, $password, $secretQuestion, $secretResponse)
+    public function createUserWithSecret($username, $emailParam, $password, $secretQuestion, $secretResponse, $mode)
     {
         $email = strtolower($emailParam);
 
         $error_msg = null;
 
-        if (empty($username)) {
-            $error_msg .= 'InvalidUser ';
-        }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             // invalid email
@@ -178,10 +175,19 @@ class UserService
 
         $file = $this->getJsonUserFile($email);
 
-        if (file_exists($file)) {
-            // user already exists
-            $error_msg .= 'AlreadyExists.';
+        if($mode === 'create') {
+
+          if (empty($username)) {
+                      $error_msg .= 'InvalidUser ';
+          }
+
+          if (file_exists($file)) {
+              // user already exists
+              $error_msg .= 'AlreadyExists.';
+
+          }
         }
+
 
         if (empty($error_msg)) {
             // create a random for this user
@@ -199,8 +205,13 @@ class UserService
             // store a salted response
             $saltresponse = password_hash($secretResponse, PASSWORD_BCRYPT, $options);
 
-            // create user
-            $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
+            if($mode === 'create') {
+              // create user
+              $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
+            } else {
+              //role is not modified
+              $this->updateUser($email, '', $saltpassword, $salt, '');
+            }
         }
 
         return $error_msg;
@@ -225,9 +236,8 @@ class UserService
 
         // user found
         if (!empty($user)) {
-            $db_password = $user->{'password'};
 
-            if (password_verify($password, $db_password)) {
+            if (password_verify($password, $user->{'password'})) {
                 // success
                 $loginmsg = '';
             } else {
@@ -289,7 +299,60 @@ class UserService
                     $response->setResult(json_encode($userResponse));
                     // success
                     $loginmsg = '';
+                    $response->setMessage('success');
                 }
+            } else {
+                // incorrect password
+                $loginmsg = 'wrong passsword';
+            }
+        } else {
+            // wrong user
+            $loginmsg = 'wrong user '.$email;
+            $debugmsg .= $email;
+        }
+
+        // return an empty string on success, so if debug is enabled, it's impossible to connect
+        if ($debug) {
+            $loginmsg .= $debugmsg;
+        }
+
+        return $response;
+    }
+
+    /**
+     * authenticate and return a User object with a token.
+     */
+    public function changePassword($emailParam, $password, $newPassword): Response
+    {
+        // initialize Response
+        $response = new Response();
+        $response->setCode(401);
+        $response->setMessage('Wrong login');
+        $response->setResult('{}');
+
+        $loginmsg = '';
+
+        $debug = false;
+        $debugmsg = 'debugmsg ';
+
+        // if someone forgot to do this before
+        $email = strtolower($emailParam);
+
+        // return the existing user
+        $user = $this->getJsonUser($email);
+
+        // user found
+        if (!empty($user)) {
+            if ($this->login($emailParam, $password) === '') {
+
+              $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
+              if ($updateMsg === '') {
+                  $response->setCode(200);
+              } else {
+                $response->setCode(500);
+              }
+
+
             } else {
                 // incorrect password
                 $loginmsg = 'wrong passsword';

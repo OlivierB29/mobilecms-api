@@ -93,7 +93,32 @@ final class UserServiceTest extends TestCase
         $mail = 'test'.time().'@example.com';
         $password = 'Sample#123456';
 
-        $createresult = $service->createUserWithSecret($mail, $mail, $password, 'some secret', 'secret response');
+        $createresult = $service->createUserWithSecret($mail, $mail, $password, 'some secret', 'secret response', 'create');
         $this->assertTrue($createresult === null);
+    }
+
+
+    public function testModifyPassword()
+    {
+        $userdir = 'tests-data/userservice';
+        $email = 'modifypasssword@example.com';
+
+        copy($userdir . '/' . $email . '.backup.json' , $userdir . '/' . $email . '.json');
+
+        $oldPassword = 'Sample#123456';
+
+        $service = new UserService($userdir);
+
+
+        //change password
+        $newPassword = 'somethingnew';
+        $createresult = $service->changePassword($email, $oldPassword, $newPassword);
+
+        $this->assertTrue($createresult->getCode() === 200);
+
+        //login
+        $result = $service->login($email, $newPassword);
+
+        $this->assertTrue('' === $result);
     }
 }
