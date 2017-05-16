@@ -24,19 +24,18 @@ class CmsApi extends SecureRestApi
         }
     }
 
-
     protected function index()
     {
-      $response = new Response();
-      $response->setCode(400);
-      $response->setMessage('Bad parameters');
-      $response->setResult('{}');
+        $response = new Response();
+        $response->setCode(400);
+        $response->setMessage('Bad parameters');
+        $response->setResult('{}');
 
-      try {
-          $this->checkConfiguration();
+        try {
+            $this->checkConfiguration();
 
-          $datatype = $this->getDataType();
-          $service = new ContentService($this->conf->{'publicdir'});
+            $datatype = $this->getDataType();
+            $service = new ContentService($this->conf->{'publicdir'});
 
           //
           // Preflight requests are send by Angular
@@ -51,33 +50,31 @@ class CmsApi extends SecureRestApi
               // eg : /api/v1/content/calendar
               if ($this->method === 'GET') {
                   if (array_key_exists(0, $this->args)) {
-                    //TODO get single index value
+                      //TODO get single index value
                   } else {
                       //
                       //TODO get all records in index
                       //
                   }
               } elseif ($this->method === 'POST') {
-                $response = $service->rebuildIndex($datatype, self::ID);
-
+                  $response = $service->rebuildIndex($datatype, self::ID);
               } elseif ($this->method === 'PUT') {
                   //TODO PUT
               }
           } else {
-
           }
-      } catch (Exception $e) {
-          $response->setCode(520);
-          $response->setMessage($e->getMessage());
-          $response->setResult($this->errorToJson($e->getMessage()));
-      } finally {
-          /*
+        } catch (Exception $e) {
+            $response->setCode(520);
+            $response->setMessage($e->getMessage());
+            $response->setResult($this->errorToJson($e->getMessage()));
+        } finally {
+            /*
            * if ($this->enableHeaders) {
            * header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
            * }
            */
           return $response->getResult();
-      }
+        }
     }
 
     /**
@@ -145,7 +142,7 @@ class CmsApi extends SecureRestApi
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::ID, $id);
                 } elseif ($this->method === 'PUT') {
-                  //
+                    //
                   // save a record and update the index
                   //
                   // path eg : /api/v1/content/calendar
@@ -154,7 +151,7 @@ class CmsApi extends SecureRestApi
                   // step 1 : update Record
                   //
                   $putResponse = $service->post($datatype, self::ID, $this->request);
-                  $myobjectJson = json_decode($putResponse->getResult());
+                    $myobjectJson = json_decode($putResponse->getResult());
                   //TODO manage errors
                   unset($putResponse);
 
@@ -162,8 +159,8 @@ class CmsApi extends SecureRestApi
                   // step 2 : publish to index
                   //
                   $id = $myobjectJson->{self::ID};
-                  unset($myobjectJson);
-                  $response = $service->publishById($datatype, self::ID, $id);
+                    unset($myobjectJson);
+                    $response = $service->publishById($datatype, self::ID, $id);
                 }
             } else {
                 if ($this->method === 'GET') {

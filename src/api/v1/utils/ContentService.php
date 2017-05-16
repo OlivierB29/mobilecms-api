@@ -3,11 +3,10 @@
 require_once 'Response.php';
 require_once 'JsonUtils.php';
 
-function compareIndex($key) {
-
+function compareIndex($key)
+{
     return function ($a, $b) use ($key) {
-
-      return strnatcmp($a->{$key}, $b->{$key});
+        return strnatcmp($a->{$key}, $b->{$key});
     };
 }
 
@@ -398,10 +397,10 @@ class ContentService
         $response->setMessage('Bad parameters');
         $response->setResult('{}');
 
-          $data = array();
+        $data = [];
           // file name eg: index.json
           $response->setMessage('getIndexFileName');
-          $indexFile = $this->getIndexFileName($type);
+        $indexFile = $this->getIndexFileName($type);
 
           /*
           Load a template for index.
@@ -409,37 +408,33 @@ class ContentService
               { "id": "", "date": "",  "activity": "", "title": "" }
           */
           $response->setMessage('getIndexTemplateFileName'.$this->getIndexTemplateFileName($type));
-          $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
-
+        $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
         try {
-          if ($handle = opendir($this->databasedir.'/'.$type)) {
-              while (false !== ($file = readdir($handle))) {
-
-                  if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
-                      // Read the full JSON record
+            if ($handle = opendir($this->databasedir.'/'.$type)) {
+                while (false !== ($file = readdir($handle))) {
+                    if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
+                        // Read the full JSON record
                       $record = JsonUtils::readJsonFile($this->databasedir.'/'.$type.'/'.$file);
 
                       //
                       //copy some fields to index
                       //
                       $indexValue = clone $indexTemplate;
-                      $response->setMessage('copy values to index');
-                      JsonUtils::copy($record, $indexValue);
-                      unset($record);
-                      $response->setMessage('put');
-                      array_push($data, $indexValue);
-                      unset($indexValue);
-
-                  }
-              }
-              closedir($handle);
-          }
+                        $response->setMessage('copy values to index');
+                        JsonUtils::copy($record, $indexValue);
+                        unset($record);
+                        $response->setMessage('put');
+                        array_push($data, $indexValue);
+                        unset($indexValue);
+                    }
+                }
+                closedir($handle);
+            }
 
             //sort
             $response->setMessage('sort');
             usort($data, compareIndex($keyname));
-
 
             // write to file
 
@@ -455,9 +450,6 @@ class ContentService
             return $response;
         }
     }
-
-
-
 
     /**
      * generate a backup index file name.

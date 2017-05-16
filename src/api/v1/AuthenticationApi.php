@@ -66,7 +66,6 @@ class AuthenticationApi extends RestApi
         }
     }
 
-
     /**
      * base API path /api/v1/authenticate.
      */
@@ -104,7 +103,6 @@ class AuthenticationApi extends RestApi
                 // free variables before response
                 $response = $service->changePassword($logindata->{'email'}, $logindata->{'password'}, $logindata->{'newpassword'});
                 unset($logindata);
-
             }
         } catch (Exception $e) {
             $response->setCode(520);
@@ -114,6 +112,7 @@ class AuthenticationApi extends RestApi
             return $response->getResult();
         }
     }
+
     /**
      * /api/v1/register.
      */
