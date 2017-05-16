@@ -149,7 +149,6 @@ class UserService
 
         $error_msg = null;
 
-
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             // invalid email
             $error_msg .= 'InvalidEmail ';
@@ -175,19 +174,16 @@ class UserService
 
         $file = $this->getJsonUserFile($email);
 
-        if($mode === 'create') {
+        if ($mode === 'create') {
+            if (empty($username)) {
+                $error_msg .= 'InvalidUser ';
+            }
 
-          if (empty($username)) {
-                      $error_msg .= 'InvalidUser ';
-          }
-
-          if (file_exists($file)) {
-              // user already exists
+            if (file_exists($file)) {
+                // user already exists
               $error_msg .= 'AlreadyExists.';
-
-          }
+            }
         }
-
 
         if (empty($error_msg)) {
             // create a random for this user
@@ -205,11 +201,11 @@ class UserService
             // store a salted response
             $saltresponse = password_hash($secretResponse, PASSWORD_BCRYPT, $options);
 
-            if($mode === 'create') {
-              // create user
+            if ($mode === 'create') {
+                // create user
               $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
             } else {
-              //role is not modified
+                //role is not modified
               $this->updateUser($email, '', $saltpassword, $salt, '');
             }
         }
@@ -236,7 +232,6 @@ class UserService
 
         // user found
         if (!empty($user)) {
-
             if (password_verify($password, $user->{'password'})) {
                 // success
                 $loginmsg = '';
@@ -344,15 +339,12 @@ class UserService
         // user found
         if (!empty($user)) {
             if ($this->login($emailParam, $password) === '') {
-
-              $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
-              if ($updateMsg === '') {
-                  $response->setCode(200);
-              } else {
-                $response->setCode(500);
-              }
-
-
+                $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
+                if ($updateMsg === '') {
+                    $response->setCode(200);
+                } else {
+                    $response->setCode(500);
+                }
             } else {
                 // incorrect password
                 $loginmsg = 'wrong passsword';

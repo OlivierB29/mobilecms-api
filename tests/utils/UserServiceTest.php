@@ -97,18 +97,16 @@ final class UserServiceTest extends TestCase
         $this->assertTrue($createresult === null);
     }
 
-
     public function testModifyPassword()
     {
         $userdir = 'tests-data/userservice';
         $email = 'modifypasssword@example.com';
 
-        copy($userdir . '/' . $email . '.backup.json' , $userdir . '/' . $email . '.json');
+        copy($userdir.'/'.$email.'.backup.json', $userdir.'/'.$email.'.json');
 
         $oldPassword = 'Sample#123456';
 
         $service = new UserService($userdir);
-
 
         //change password
         $newPassword = 'somethingnew';
