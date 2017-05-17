@@ -158,8 +158,6 @@ class UserService
             $error_msg .= 'EmptyPassword ';
         }
 
-
-
         // Cf forms.js
         // Ensure password length
         if (strlen($password) > 128) {
@@ -342,7 +340,7 @@ class UserService
         if (!empty($user)) {
             if ($this->login($emailParam, $password) === '') {
                 $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
-                
+
                 if (empty($updateMsg)) {
                     $response->setCode(200);
                     $response->setMessage('');
