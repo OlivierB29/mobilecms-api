@@ -158,13 +158,7 @@ class UserService
             $error_msg .= 'EmptyPassword ';
         }
 
-        if (empty($secretQuestion)) {
-            $error_msg .= 'EmptySecretQuestion ';
-        }
 
-        if (empty($secretResponse)) {
-            $error_msg .= 'EmptySecretResponse ';
-        }
 
         // Cf forms.js
         // Ensure password length
@@ -182,6 +176,14 @@ class UserService
             if (file_exists($file)) {
                 // user already exists
               $error_msg .= 'AlreadyExists.';
+            }
+
+            if (empty($secretQuestion)) {
+                $error_msg .= 'EmptySecretQuestion ';
+            }
+
+            if (empty($secretResponse)) {
+                $error_msg .= 'EmptySecretResponse ';
             }
         }
 
@@ -206,7 +208,7 @@ class UserService
               $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
             } else {
                 //role is not modified
-              $this->updateUser($email, '', $saltpassword, $salt, '');
+              $this->updateUser($email, '', $saltpassword, $random_salt, '');
             }
         }
 
@@ -340,10 +342,13 @@ class UserService
         if (!empty($user)) {
             if ($this->login($emailParam, $password) === '') {
                 $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
-                if ($updateMsg === '') {
+                
+                if (empty($updateMsg)) {
                     $response->setCode(200);
+                    $response->setMessage('');
                 } else {
                     $response->setCode(500);
+                    $response->setMessage('createUserWithSecret error');
                 }
             } else {
                 // incorrect password

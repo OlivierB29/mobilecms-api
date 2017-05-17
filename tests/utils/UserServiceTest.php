@@ -112,11 +112,12 @@ final class UserServiceTest extends TestCase
         $newPassword = 'somethingnew';
         $createresult = $service->changePassword($email, $oldPassword, $newPassword);
 
-        //$this->assertTrue($createresult->getCode() === 200);
+
+        $this->assertTrue($createresult->getCode() === 200);
 
         //login
         $result = $service->login($email, $newPassword);
-
+        echo '!!!!!'.$result;
         $this->assertTrue('' === $result);
     }
 }
