@@ -58,10 +58,7 @@ class CmsApi extends SecureRestApi
                   }
               } elseif ($this->method === 'POST') {
                   $response = $service->rebuildIndex($datatype, self::ID);
-              } elseif ($this->method === 'PUT') {
-                  //TODO PUT
               }
-          } else {
           }
         } catch (Exception $e) {
             $response->setCode(520);
@@ -161,6 +158,21 @@ class CmsApi extends SecureRestApi
                   $id = $myobjectJson->{self::ID};
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::ID, $id);
+                } elseif ($this->method === 'DELETE') {
+
+                  // delete a record and update the index. eg : /api/v1/content/calendar/1.json
+
+                  // step 1 : update Record
+                  $myobjectJson = json_decode($this->request[self::REQUESTBODY]);
+                  $id = $myobjectJson->{self::ID};
+                  unset($myobjectJson);
+
+                  $response = $service->deleteRecord($datatype, $id);
+                  if ($response->getCode() === 200) {
+                    // step 2 : publish to index
+                    $response = $service->publishById($datatype, self::ID, $id);
+                  }
+
                 }
             } else {
                 if ($this->method === 'GET') {

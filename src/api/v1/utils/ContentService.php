@@ -74,6 +74,41 @@ class ContentService
         }
     }
 
+    public function deleteRecord(string $type, string $keyvalue)
+    {
+        $response = new Response();
+        $response->setCode(400);
+        $response->setMessage('Bad parameters');
+        $response->setResult('{}');
+
+        try {
+
+            // Read the JSON file
+            $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
+
+
+            $destfile = $this->databasedir.'/'.$type.'/archives/'.$keyvalue.'.json';
+  echo "!!!!!!!!!!!!!!!!!!!!!!!" . $destfile;
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!" . $file;
+            // get one element
+            if (file_exists($file)) {
+
+
+                rename($file, $destfile);
+
+                $response->setCode(200);
+            } else {
+                $response->appendMessage('not found '.$keyname.' : '.$keyvalue);
+                $response->setCode(404);
+            }
+        } catch (Exception $e) {
+            $response->setCode(520);
+            $response->setMessage($e->getMessage());
+        } finally {
+            return $response;
+        }
+    }
+
     /**
      * Return a filepath from a single filename, only contained in the public databasedir.
      * Valid path :
@@ -165,6 +200,8 @@ class ContentService
             return $response;
         }
     }
+
+
 
     /**
      * get all JSON files list of a directory
@@ -326,6 +363,8 @@ class ContentService
 
         return $response;
     }
+
+
 
     /**
      * Add object id to index.
