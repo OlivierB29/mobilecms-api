@@ -86,14 +86,11 @@ class ContentService
             // Read the JSON file
             $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
 
-
             $destfile = $this->databasedir.'/'.$type.'/archives/'.$keyvalue.'.json';
-  echo "!!!!!!!!!!!!!!!!!!!!!!!" . $destfile;
-  echo "!!!!!!!!!!!!!!!!!!!!!!!!" . $file;
+            echo '!!!!!!!!!!!!!!!!!!!!!!!'.$destfile;
+            echo '!!!!!!!!!!!!!!!!!!!!!!!!'.$file;
             // get one element
             if (file_exists($file)) {
-
-
                 rename($file, $destfile);
 
                 $response->setCode(200);
@@ -200,8 +197,6 @@ class ContentService
             return $response;
         }
     }
-
-
 
     /**
      * get all JSON files list of a directory
@@ -363,8 +358,6 @@ class ContentService
 
         return $response;
     }
-
-
 
     /**
      * Add object id to index.

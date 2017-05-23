@@ -164,15 +164,14 @@ class CmsApi extends SecureRestApi
 
                   // step 1 : update Record
                   $myobjectJson = json_decode($this->request[self::REQUESTBODY]);
-                  $id = $myobjectJson->{self::ID};
-                  unset($myobjectJson);
+                    $id = $myobjectJson->{self::ID};
+                    unset($myobjectJson);
 
-                  $response = $service->deleteRecord($datatype, $id);
-                  if ($response->getCode() === 200) {
-                    // step 2 : publish to index
+                    $response = $service->deleteRecord($datatype, $id);
+                    if ($response->getCode() === 200) {
+                        // step 2 : publish to index
                     $response = $service->publishById($datatype, self::ID, $id);
-                  }
-
+                    }
                 }
             } else {
                 if ($this->method === 'GET') {
