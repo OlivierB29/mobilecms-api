@@ -86,7 +86,6 @@ class ContentService
             // Read the JSON file
             $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
 
-
             if (file_exists($file)) {
                 unlink($file);
 

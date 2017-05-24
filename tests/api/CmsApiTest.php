@@ -47,9 +47,6 @@ final class CmsApiTest extends TestCase
           {"type":"calendar", "labels": [ {"i18n":"en", "label":"Calendar"}, {"i18n":"fr", "label":"Calendrier"}]},
           {"type":"news", "labels": [ {"i18n":"en", "label":"News"}, {"i18n":"fr", "label":"Actualités"}]}
         ]', $result);
-
-
-
     }
 
     public function testPost1()
