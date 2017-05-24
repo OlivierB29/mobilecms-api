@@ -41,7 +41,7 @@ try {
     $response = '{}';
 
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-      
+
         // http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
         header('Access-Control-Allow-Methods: *');
         header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
