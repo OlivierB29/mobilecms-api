@@ -19,7 +19,8 @@ class CmsApi extends SecureRestApi
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {
-            //            header('Content-Type: application/json');
+            header('Access-Control-Allow-Methods: *');
+            header('Content-Type: application/json');
         }
     }
 
@@ -210,12 +211,17 @@ class CmsApi extends SecureRestApi
 
         $service = new ContentService($this->conf->{'publicdir'});
 
-        // eg : /api/v1/file?filename
-        if ($this->method === 'GET') {
-
+        //
+        // Preflight requests are send by Angular
+        //
+        if ($this->method === 'OPTIONS') {
+            // eg : /api/v1/content
+            $response->setResult($this->preflight());
+        } elseif ($this->method === 'GET') {
+    // eg : /api/v1/file?filename
             // $this->args contains the remaining path parameters
             // eg : /api/v1/file?file=/calendar/1/foo/bar/sample.json
-
+                error_log("!!!!!!!!!!!!!!!!!!!!!" . print_r($this->getRequest()));
             if (array_key_exists(self::FILE, $this->getRequest())) {
                 // this
 

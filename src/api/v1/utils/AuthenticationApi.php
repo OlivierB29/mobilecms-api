@@ -4,8 +4,8 @@ require_once 'RestApi.php';
 require_once 'UserService.php';
 /*
  * Login and creates users
- * /api/v1/auth
- * /api/v1/register
+ * /authapi/v1/auth
+ * /authapi/v1/register
  */
 class AuthenticationApi extends RestApi
 {
@@ -15,7 +15,7 @@ class AuthenticationApi extends RestApi
     }
 
     /**
-     * base API path /api/v1/authenticate.
+     * base API path /authapi/v1/authenticate.
      */
     protected function authenticate()
     {
@@ -34,7 +34,7 @@ class AuthenticationApi extends RestApi
             // Preflight requests are send by Angular
             //
             if ($this->method === 'OPTIONS') {
-                // eg : /api/v1/auth
+                // eg : /authapi/v1/auth
                 $response->setResult($service->preflight());
             }
 
@@ -61,7 +61,7 @@ class AuthenticationApi extends RestApi
     }
 
     /**
-     * base API path /api/v1/authenticate.
+     * base API path /authapi/v1/authenticate.
      */
     protected function changepassword()
     {
@@ -80,7 +80,7 @@ class AuthenticationApi extends RestApi
             // Preflight requests are send by Angular
             //
             if ($this->method === 'OPTIONS') {
-                // eg : /api/v1/auth
+                // eg : /authapi/v1/auth
                 $response->setResult($service->preflight());
             }
 
@@ -108,7 +108,7 @@ class AuthenticationApi extends RestApi
     }
 
     /**
-     * /api/v1/register.
+     * /authapi/v1/register.
      */
     protected function register()
     {

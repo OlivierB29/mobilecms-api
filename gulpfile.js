@@ -4,7 +4,7 @@ var gulp = require('gulp');
 * Sample API endpoint for adminapp API :
 * http://localhost/adminapp/api/v1/
 */
-var projectName = 'adminapp';
+var projectName = '';
 
 /**
 * Local web server directory
@@ -27,7 +27,7 @@ var basedir = '.';
  */
 gulp.task('deploy', function() {
 
-  var srcPath = basedir + '/src/**';
+  var srcPath = basedir + '/src/**/.*';
   var destPath = serverDeployDir + '/' + projectName;
 
   console.log('Deploying server : ' + srcPath + ' --> ' + destPath);

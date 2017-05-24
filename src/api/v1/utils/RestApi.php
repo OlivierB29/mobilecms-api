@@ -58,7 +58,8 @@ abstract class RestApi
 
     /**
      * /api/v1/content/save
-     * eg : /api/v1/recipe/cake/foo/bar.
+     * eg : /restapi/v1/recipe/cake/foo/bar.
+     * http://localhost/restapi/v1/file/?file=news/index/metadata.json
      */
     public function setRequestUri($request)
     {
@@ -71,6 +72,10 @@ abstract class RestApi
             $this->apiversion = array_shift($this->args);
         }
 
+        //TODO better parse.
+        // issue when restapi/v1/file?file=news/index/metadata.json
+        // instead, use restapi/v1/file/?file=news/index/metadata.json
+        //
         // eg : recipe
         if (array_key_exists(0, $this->args)) {
             $this->endpoint = array_shift($this->args);
@@ -126,8 +131,9 @@ abstract class RestApi
         //
         // Parse URI
         //
-        $this->setRequestUri($REQUEST['path']);
+        // deprecated $this->setRequestUri($REQUEST['path']);
 
+        $this->setRequestUri($SERVER['REQUEST_URI']);
         //
         // detect method
         //
