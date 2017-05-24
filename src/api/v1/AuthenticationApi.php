@@ -12,8 +12,6 @@ class AuthenticationApi extends RestApi
     public function __construct($conf)
     {
         parent::__construct($conf);
-
-
     }
 
     /**
