@@ -41,13 +41,13 @@ try {
     $response = '{}';
 
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+      
+        // http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
         header('Access-Control-Allow-Methods: *');
         header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
         return '{}';
-    }
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (array_key_exists('requestbody', $_POST)) {
             $service = new UserService(PRIVATEDIR.'/users');
 
@@ -56,22 +56,19 @@ try {
             //
             //Preflight requests are send by Angular
             //
-            if ($method === 'OPTIONS') {
-                //eg : /api/v1/content
-                    $response = $service->preflight();
-            } else {
+
                 //
                 // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
                 //
                 $logindata = json_decode($_POST['requestbody']);
-                $result = $service->getToken($logindata->{'user'}, $logindata->{'password'});
+            $result = $service->getToken($logindata->{'user'}, $logindata->{'password'});
 
-                $status = $result->getCode();
-                $response = $result->getResult();
+            $status = $result->getCode();
+            $response = $result->getResult();
                 // free variables before response
                 unset($logindata);
-                unset($result);
-            }
+            unset($result);
+
             unset($service);
         } else {
             $status = 401;

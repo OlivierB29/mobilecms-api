@@ -19,8 +19,7 @@ class CmsApi extends SecureRestApi
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {
-            header('Access-Control-Allow-Methods: *');
-            header('Content-Type: application/json');
+//            header('Content-Type: application/json');
         }
     }
 
@@ -160,18 +159,30 @@ class CmsApi extends SecureRestApi
                     $response = $service->publishById($datatype, self::ID, $id);
                 } elseif ($this->method === 'DELETE') {
 
+                  if (array_key_exists(0, $this->args)) {
+                      //
+                      //get the full data of a single record
+                      //
+
+                      // $this->args contains the remaining path parameters
+                      // eg : /api/v1/content/calendar/1/foo/bar
+                      // ['1', 'foo', 'bar']
+
+
+                          $id = $this->args[0];
+                          $response = $service->deleteRecord($datatype, $id);
+                          // step 1 : update Record
+
+                            if ($response->getCode() === 200) {
+
+                                // step 2 : publish to index
+                              $response = $service->rebuildIndex($datatype, self::ID);
+                            }
+                    }
+
                   // delete a record and update the index. eg : /api/v1/content/calendar/1.json
 
-                  // step 1 : update Record
-                  $myobjectJson = json_decode($this->request[self::REQUESTBODY]);
-                    $id = $myobjectJson->{self::ID};
-                    unset($myobjectJson);
 
-                    $response = $service->deleteRecord($datatype, $id);
-                    if ($response->getCode() === 200) {
-                        // step 2 : publish to index
-                    $response = $service->publishById($datatype, self::ID, $id);
-                    }
                 }
             } else {
                 if ($this->method === 'GET') {
@@ -251,7 +262,7 @@ class CmsApi extends SecureRestApi
      */
     public function preflight(): string
     {
-        header('Access-Control-Allow-Methods: *');
+        header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
         return '{}';

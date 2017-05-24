@@ -31,8 +31,6 @@ if (null !== ACTIVATE_HTTPS && ACTIVATE_HTTPS === 'true') {
 if (null !== ALLOW_CROSS_DOMAIN && ALLOW_CROSS_DOMAIN === 'true') {
     header('Access-Control-Allow-Origin: *');
 }
-header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
 
 // Requests from the same server don't have a HTTP_ORIGIN header
 if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {

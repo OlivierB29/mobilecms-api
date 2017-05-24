@@ -13,11 +13,7 @@ class AuthenticationApi extends RestApi
     {
         parent::__construct($conf);
 
-        // Default headers for RESTful API
-        if ($this->enableHeaders) {
-            header('Access-Control-Allow-Methods: *');
-            header('Content-Type: application/json');
-        }
+
     }
 
     /**

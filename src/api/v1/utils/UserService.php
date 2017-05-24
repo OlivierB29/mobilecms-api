@@ -30,16 +30,6 @@ class UserService
         $this->databasedir = $databasedir;
     }
 
-    /**
-     * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
-     */
-    public function preflight() : string
-    {
-        header('Access-Control-Allow-Methods: *');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-
-        return '{}';
-    }
 
     /**
      * return the users directory.

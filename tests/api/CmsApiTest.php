@@ -166,19 +166,23 @@ final class CmsApiTest extends TestCase
 
     public function testDelete()
     {
+        $id = "exampleid";
+
         $dir = $this->conf->{'publicdir'};
 
-        copy($dir.'/calendar/delete.backup.json', $dir.'/calendar/delete.json');
+        //clone backup to directory
+        $recordfile = $dir.'/calendar/'. $id .'.json';
+        copy($dir.'/calendar/backup/'. $id .'.json', $recordfile);
 
-        $path = '/api/v1/content/calendar';
+        $path = '/api/v1/content/calendar/' . $id;
 
-        $recordStr = '{"id":"delete","type" : "calendar","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $recordStr = '';
 
         $REQUEST = ['path' => $path];
         $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'DELETE', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
-        $POST = ['requestbody' => $recordStr];
+        $GET = [];
+        $POST = null;
 
         $API = new CmsApi($this->conf);
 
@@ -187,6 +191,13 @@ final class CmsApiTest extends TestCase
         $result = $API->processAPI();
         $this->assertTrue($result != null && $result != '');
 
-        $this->assertTrue(!file_exists($dir.'/calendar/delete.json'));
+        $this->assertTrue(!file_exists($recordfile));
+
+
+        $index_data = file_get_contents($dir.'/calendar/index/index.json');
+
+        $this->assertTrue(!strpos($index_data, $id));
+
+
     }
 }
