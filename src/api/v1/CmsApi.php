@@ -19,7 +19,7 @@ class CmsApi extends SecureRestApi
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {
-//            header('Content-Type: application/json');
+            //            header('Content-Type: application/json');
         }
     }
 
@@ -158,9 +158,8 @@ class CmsApi extends SecureRestApi
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::ID, $id);
                 } elseif ($this->method === 'DELETE') {
-
-                  if (array_key_exists(0, $this->args)) {
-                      //
+                    if (array_key_exists(0, $this->args)) {
+                        //
                       //get the full data of a single record
                       //
 
@@ -168,9 +167,8 @@ class CmsApi extends SecureRestApi
                       // eg : /api/v1/content/calendar/1/foo/bar
                       // ['1', 'foo', 'bar']
 
-
                           $id = $this->args[0];
-                          $response = $service->deleteRecord($datatype, $id);
+                        $response = $service->deleteRecord($datatype, $id);
                           // step 1 : update Record
 
                             if ($response->getCode() === 200) {
@@ -181,8 +179,6 @@ class CmsApi extends SecureRestApi
                     }
 
                   // delete a record and update the index. eg : /api/v1/content/calendar/1.json
-
-
                 }
             } else {
                 if ($this->method === 'GET') {

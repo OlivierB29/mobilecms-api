@@ -30,7 +30,6 @@ class UserService
         $this->databasedir = $databasedir;
     }
 
-
     /**
      * return the users directory.
      */

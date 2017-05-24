@@ -166,15 +166,15 @@ final class CmsApiTest extends TestCase
 
     public function testDelete()
     {
-        $id = "exampleid";
+        $id = 'exampleid';
 
         $dir = $this->conf->{'publicdir'};
 
         //clone backup to directory
-        $recordfile = $dir.'/calendar/'. $id .'.json';
-        copy($dir.'/calendar/backup/'. $id .'.json', $recordfile);
+        $recordfile = $dir.'/calendar/'.$id.'.json';
+        copy($dir.'/calendar/backup/'.$id.'.json', $recordfile);
 
-        $path = '/api/v1/content/calendar/' . $id;
+        $path = '/api/v1/content/calendar/'.$id;
 
         $recordStr = '';
 
@@ -193,11 +193,8 @@ final class CmsApiTest extends TestCase
 
         $this->assertTrue(!file_exists($recordfile));
 
-
         $index_data = file_get_contents($dir.'/calendar/index/index.json');
 
         $this->assertTrue(!strpos($index_data, $id));
-
-
     }
 }
