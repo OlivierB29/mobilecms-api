@@ -170,9 +170,11 @@ class AuthenticationApi extends RestApi
      */
     public function preflight(): string
     {
-        header('Access-Control-Allow-Methods: *');
+        header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
 
         return '{}';
     }
+
+
 }

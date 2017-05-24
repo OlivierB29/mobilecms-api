@@ -85,14 +85,9 @@ class ContentService
 
             // Read the JSON file
             $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
-            $destdir = $this->databasedir.'/'.$type.'/archives';
-            $destfile = $destdir.'/'.$keyvalue.'.json';
 
-            // create backup ?
 
             if (file_exists($file)) {
-                rename($file, $destfile);
-
                 unlink($file);
 
                 $response->setCode(200);
