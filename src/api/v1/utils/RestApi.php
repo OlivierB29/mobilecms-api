@@ -59,7 +59,7 @@ abstract class RestApi
     /**
      * /api/v1/content/save
      * eg : /restapi/v1/recipe/cake/foo/bar.
-     * http://localhost/restapi/v1/file/?file=news/index/metadata.json
+     * http://localhost/restapi/v1/file/?file=news/index/metadata.json.
      */
     public function setRequestUri($request)
     {
