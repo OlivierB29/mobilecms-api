@@ -4,6 +4,6 @@
     "password": "pass",
     "salt": "salt",
     "secretQuestion": "some secret",
-    "secretResponse": "f8d680f15e92b4f48a60611f4ab3425b9ef7d744313f6c0656b50eb5bdefee860a54ef918c58b4a546f81a8f52844655b73f65d8e7bd7c5396eecce82e3ea5a9",
+    "secretResponse": "$2y$12$JFA5Vs\/Zg9Vxt2hLSctWR.xrojdfVMSqmRNbs67tBCTYnx\/L6z4l.",
     "role": "admin"
 }

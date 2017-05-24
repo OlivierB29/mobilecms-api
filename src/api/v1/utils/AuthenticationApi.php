@@ -1,7 +1,7 @@
 <?php
 
-require_once 'utils/RestApi.php';
-require_once 'utils/UserService.php';
+require_once 'RestApi.php';
+require_once 'UserService.php';
 /*
  * Login and creates users
  * /api/v1/auth

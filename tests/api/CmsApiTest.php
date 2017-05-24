@@ -43,7 +43,13 @@ final class CmsApiTest extends TestCase
         $API->authorize($headers, $SERVER);
         $result = $API->processAPI();
         $this->assertTrue($result != null);
-        $this->assertJsonStringEqualsJsonString('[{"type":"calendar"},{"type":"news"}]', $result);
+        $this->assertJsonStringEqualsJsonString('[
+          {"type":"calendar", "labels": [ {"i18n":"en", "label":"Calendar"}, {"i18n":"fr", "label":"Calendrier"}]},
+          {"type":"news", "labels": [ {"i18n":"en", "label":"News"}, {"i18n":"fr", "label":"Actualités"}]}
+        ]', $result);
+
+
+
     }
 
     public function testPost1()

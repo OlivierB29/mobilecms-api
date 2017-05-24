@@ -4,7 +4,7 @@
  * based on http://coreymaynard.com/blog/creating-a-restful-api-with-php/
  */
 require_once 'conf.php';
-require_once 'AuthenticationApi.php';
+require_once 'utils/AuthenticationApi.php';
 
 if (null !== ERROR_LOG && ERROR_LOG === 'true') {
     error_reporting(E_ALL);

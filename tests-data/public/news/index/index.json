@@ -1,12 +1,20 @@
 [
     {
-        "id" : "1"
+        "id": "a-new-seminar-of-tennis",
+        "date": "2015-09-02",
+        "activity": "activitya",
+        "title": "a new seminar of tennis"
     },
     {
-        "id" : "2"
+        "id": "basketball-championship",
+        "date": "2015-09-10",
+        "activity": "activitya",
+        "title": "basketball championship"
     },
     {
-        "id" : "3"
+        "id": "some-basketball-event-for-kids",
+        "date": "2015-09-11",
+        "activity": "activitya",
+        "title": "some basketball event for kids"
     }
-
 ]

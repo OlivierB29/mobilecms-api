@@ -4,7 +4,7 @@
  * based on http://coreymaynard.com/blog/creating-a-restful-api-with-php/
  */
 include 'conf.php';
-include 'CmsApi.php';
+include 'utils/CmsApi.php';
 
 if (null !== ERROR_LOG && ERROR_LOG === 'true') {
     error_reporting(E_ALL);

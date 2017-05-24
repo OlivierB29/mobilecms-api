@@ -40,5 +40,23 @@
         "date": "201509",
         "activity": "activitya",
         "title": "some seminar of activity A"
+    },
+    {
+        "id": "basketball-championship",
+        "date": "2015-09-02",
+        "activity": "activitya",
+        "title": "basketball championship"
+    },
+    {
+        "id": "some-seminar-of-golf",
+        "date": "2015-10-02",
+        "activity": "activitya",
+        "title": "some seminar of golf"
+    },
+    {
+        "id": "some-seminar-of-tennis",
+        "date": "2015-09-02",
+        "activity": "activitya",
+        "title": "some seminar of tennis"
     }
 ]

@@ -1,9 +1,9 @@
 {
-    "id": "10",
+    "id": "some-seminar-of-tennis",
     "type": "calendar",
-    "date": "201509",
+    "date": "2015-09-02",
     "activity": "activitya",
-    "title": "some seminar of activity A",
+    "title": "some seminar of tennis",
     "organization": "Some org",
     "description": "some infos",
     "url": "",
@@ -11,5 +11,7 @@
     "startdate": "",
     "enddate": "",
     "updated": "",
-    "updatedby": ""
+    "updatedby": "",
+    "images": [],
+    "attachments": []
 }
