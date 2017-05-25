@@ -1,0 +1,22 @@
+[
+    {
+        "id": "CITY--Golf-Club",
+        "activity": "golf"
+    },
+    {
+        "id": "CITY--chess-club",
+        "activity": "chess"
+    },
+    {
+        "id": "CITY--curling-club",
+        "activity": "curling"
+    },
+    {
+        "id": "Some-Tennis-Club",
+        "activity": "tennis"
+    },
+    {
+        "id": "basketball-club",
+        "activity": "basketball"
+    }
+]

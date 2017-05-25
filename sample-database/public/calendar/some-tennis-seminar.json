@@ -1,0 +1,42 @@
+{
+    "id": "some-tennis-seminar",
+    "date": "2016-02-25",
+    "activity": "tennis",
+    "title": "some tennis seminar",
+    "organization": "Some org",
+    "description": "some infos",
+    "url": "",
+    "location": "some place",
+    "startdate": "",
+    "enddate": "",
+    "updated": "",
+    "updatedby": "",
+    "images": [
+        {
+            "url": "https:\/\/angular.io\/resources\/images\/logos\/angular\/angular.png",
+            "title": "angular logo 1"
+        },
+        {
+            "url": "https:\/\/angular.io\/resources\/images\/logos\/angular\/angular.png",
+            "title": "angular logo 2"
+        },
+        {
+            "url": "",
+            "title": ""
+        }
+    ],
+    "attachments": [
+        {
+            "url": "https:\/\/angular.io\/resources\/images\/logos\/angular\/angular_solidBlack.svg",
+            "title": "angular SVG logo 1"
+        },
+        {
+            "url": "https:\/\/angular.io\/resources\/images\/logos\/angular\/angular_solidBlack.svg",
+            "title": "angular SVG logo 2"
+        },
+        {
+            "url": "https:\/\/angular.io\/resources\/images\/logos\/angular\/angular_solidBlack.svg",
+            "title": "angular SVG logo 3"
+        }
+    ]
+}

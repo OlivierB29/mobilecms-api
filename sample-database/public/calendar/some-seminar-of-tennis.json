@@ -1,0 +1,42 @@
+{
+    "id": "some-seminar-of-tennis",
+    "date": "2015-09-01",
+    "activity": "tennis",
+    "title": "some seminar of tennis",
+    "organization": "Some org",
+    "description": "some infos",
+    "url": "",
+    "location": "some place",
+    "startdate": "",
+    "enddate": "",
+    "updated": "",
+    "updatedby": "",
+    "images": [
+        {
+            "url": "https:\/\/cdn.pixabay.com\/photo\/2017\/02\/06\/11\/57\/tennis-2042725_960_720.jpg",
+            "title": "tennis ball"
+        },
+        {
+            "url": "https:\/\/cdn.pixabay.com\/photo\/2017\/04\/25\/11\/06\/wilson-2259352_960_720.jpg",
+            "title": "a tennis racket"
+        },
+        {
+            "url": "https:\/\/cdn.pixabay.com\/photo\/2016\/09\/04\/17\/26\/tennis-1644616_960_720.jpg",
+            "title": "fun"
+        }
+    ],
+    "attachments": [
+        {
+            "url": "https:\/\/pixabay.com\/en\/tennis-racket-tennis-ball-tennis-2259356\/",
+            "title": "tennis-racket-tennis-ball-tennis-2259356"
+        },
+        {
+            "url": "https:\/\/pixabay.com\/en\/tennis-clay-clay-court-tennis-court-1042860\/",
+            "title": "tennis court"
+        },
+        {
+            "url": "https:\/\/pixabay.com\/en\/tennis-frog-leisure-sporty-cute-1644616\/",
+            "title": "fun"
+        }
+    ]
+}

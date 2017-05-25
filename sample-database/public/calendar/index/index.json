@@ -1,0 +1,38 @@
+[
+    {
+        "id": "another-basketball-tournament",
+        "date": "2017-11-17",
+        "activity": "basketball",
+        "title": "another basketball tournament"
+    },
+    {
+        "id": "golf-tournament",
+        "date": "2015-09-01",
+        "activity": "tennis",
+        "title": "golf tournament"
+    },
+    {
+        "id": "some-seminar-of-tennis",
+        "date": "2015-09-01",
+        "activity": "tennis",
+        "title": "some seminar of tennis"
+    },
+    {
+        "id": "some-seminar-of-tennis-2",
+        "date": "2015-09-01",
+        "activity": "tennis",
+        "title": "some seminar of tennis 2"
+    },
+    {
+        "id": "some-seminar-of-tennis-3",
+        "date": "2017-09-01",
+        "activity": "tennis",
+        "title": "some seminar of tennis 3"
+    },
+    {
+        "id": "some-tennis-seminar",
+        "date": "2016-02-25",
+        "activity": "tennis",
+        "title": "some tennis seminar"
+    }
+]

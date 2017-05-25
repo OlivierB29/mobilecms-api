@@ -1,0 +1,20 @@
+[
+    {
+        "id": "2015-some-event",
+        "date": "2015-09-01",
+        "activity": "tennis",
+        "title": "2015 some event"
+    },
+    {
+        "id": "2015-some-event-of-golf",
+        "date": "2015-09-01",
+        "activity": "golf",
+        "title": "2015 some event of golf"
+    },
+    {
+        "id": "yet-another-event",
+        "date": "2017-04-12",
+        "activity": "basketball",
+        "title": "yet another event..."
+    }
+]

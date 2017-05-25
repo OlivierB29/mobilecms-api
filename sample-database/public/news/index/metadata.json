@@ -1,0 +1,11 @@
+[
+
+    {"name" : "id" , "primary" : "true", "type" : "string",  "editor":"line"},
+    {"name" : "title" , "primary" : "false", "type" : "string",  "editor":"line"},
+    {"name" : "date" , "primary" : "false", "type" : "string",  "editor":"date"},
+    {"name" : "activity" , "primary" : "false", "type" : "text",  "editor":"choice", "choices" : ["tennis", "golf", "basketball", "curling", "chess"]},
+    {"name" : "description" , "primary" : "false", "type" : "string",  "editor":"text"},
+    {"name" : "images" , "primary" : "false", "type" : "array",  "editor":"imagelist"},
+    {"name" : "attachments" , "primary" : "false", "type" : "array",  "editor":"attachmentlist"}
+
+]

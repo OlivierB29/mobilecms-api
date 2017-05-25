@@ -1,0 +1,9 @@
+[
+    {"name" : "id" , "primary" : "true", "type" : "string",  "editor":"line"},
+    {"name" : "title" , "primary" : "false", "type" : "string",  "editor":"line"},
+    {"name" : "activity" , "primary" : "false", "type" : "text",  "editor":"choice", "choices" : ["tennis", "golf", "basketball", "curling", "chess"]},
+    {"name" : "description" , "primary" : "false", "type" : "string",  "editor":"text"},
+    {"name" : "department" , "primary" : "false", "type" : "string",  "editor":"choice", "choices" : ["29", "22", "35", "56"]},
+    {"name" : "url" , "primary" : "false", "type" : "string", "editor":"line"}
+    
+]
