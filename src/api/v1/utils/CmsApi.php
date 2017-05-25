@@ -221,7 +221,7 @@ class CmsApi extends SecureRestApi
             // eg : /api/v1/file?filename
             // $this->args contains the remaining path parameters
             // eg : /api/v1/file?file=/calendar/1/foo/bar/sample.json
-                error_log('!!!!!!!!!!!!!!!!!!!!!'.print_r($this->getRequest()));
+
             if (array_key_exists(self::FILE, $this->getRequest())) {
                 // this
 
