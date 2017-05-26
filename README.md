@@ -7,6 +7,16 @@ It is initially intended to manage a sport organization, with such content : New
 - Password encryption
 - All the data is public, by default. (except users)
 
+## Internal database
+Take a look : [sample-database](https://github.com/OlivierB29/mobilecms-api/tree/master/sample-database)
+
+* public/calendar/record.json : a record of a calendar object
+
+Special files in public/calendar/index
+* metadata.json : properties of a record
+* new.json : default values of a new record
+* index.json : index list of records, and some fields.
+* index_template.json : index properties
 
 ## Runtime Requirements
 - PHP 7
