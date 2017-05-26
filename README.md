@@ -12,13 +12,14 @@ It is initially intended to manage a sport organization, with such content : New
 - PHP 7
 
 ## Manual install
-- copy src/api to web server to the web directory eg: www/adminapp/api
-- copy sample tests-data/public to /var/www/html/adminapp/public
-- copy sample tests-data/private to a non readable directory, such as /var/www/private
-- If needed, edit additional configuration and directories : edit api/v1/conf.php
+- copy src/api to web server to the web directory eg: /var/www/html/api
+- copy src/.htaccess file to the web server root (or edit your own custom file)
+- copy sample sample-database/public to /var/www/html/public
+- copy sample sample-database/private outsite the web server documents, such as /var/www/private
+- If needed, edit additional configuration and directories : api/v1/conf.php (see config dir for examples)
 
 ## Gulp install
-When editing the API and live testing.
+When editing the API and live testing to a local web server.
 
 ```bash
 $ npm install
@@ -61,7 +62,7 @@ $ gulp  deploy # deploy code to /var/www/html
 
 ### Authentication
 
-- URL : http://localhost/adminapp/api/v1/auth.php
+- URL : http://localhost/authapi/v1 (see src/.htaccess for RESTful rewrite rules)
 Content Type : application/x-www-form-urlencoded
 Content : requestbody={ "user": "test@example.com", "password":"..."}
 
@@ -75,9 +76,10 @@ Content : requestbody={ "user": "test@example.com", "password":"..."}
 - Copy paste the token value
 
 ### Get content
-- URL : http://localhost/adminapp/api/v1/api.php?path=/api/v1/content/calendar
+- URL : http://localhost/adminapp/restapi/v1/content/calendar
 - Headers :
 Add a Authorization header, with value : Bearer [token]
+
 - GET
 
 - Sample Response

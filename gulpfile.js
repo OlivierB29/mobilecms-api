@@ -2,7 +2,8 @@ var gulp = require('gulp');
 
 /**
 * Sample API endpoint for adminapp API :
-* http://localhost/adminapp/api/v1/
+* if empty : http://localhost/api/v1/
+* eg : foobar -> http://localhost/foobar/api/v1/ (and edit .htacess)
 */
 var projectName = '';
 
@@ -41,7 +42,7 @@ gulp.task('deploy', function() {
  */
 gulp.task('samplepublic', function() {
 
-  var srcPath = basedir + '/tests-data/public/**';
+  var srcPath = basedir + '/sample-database/public/**';
   var destPath = serverDeployDir + '/public';
 
   console.log('Deploying sampledata : ' + srcPath + ' --> ' + destPath);
@@ -54,7 +55,7 @@ gulp.task('samplepublic', function() {
  */
 gulp.task('sampleprivate', function() {
 
-  var srcPath = basedir + '/tests-data/private/**';
+  var srcPath = basedir + '/sample-database/private/**';
   var destPath = privateDeployDir;
 
   console.log('Deploying sampleprivate : ' + srcPath + ' --> ' + destPath);
