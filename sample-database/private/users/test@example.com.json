@@ -5,5 +5,5 @@
     "salt": "dT2QmuQtKgJHVR40Nyn6OXD8m4q0k4gAWOja7fy\/6NvMxlpqe5yFnPZPQeCyzOEKb32XKGged87sakop5ZgRK\/TcCs8CwllI5iWFECnK0RtPWPRpsJHOXWjGnkge6fNUaUTMdXF3WLkAJBxGcX\/r8ZBftpJO7XiWMVIemQu4qqs=",
     "secretQuestion": "some secret",
     "secretResponse": "$2y$12$dtPDkgDMx7eP6VpAm1qWe.uXnwmLWJjTAyKUqzs05kEy2unPLvhja",
-    "role": "guest"
+    "role": "editor"
 }
