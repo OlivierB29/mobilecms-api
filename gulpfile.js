@@ -28,7 +28,8 @@ var basedir = '.';
  */
 gulp.task('deploy', function() {
 
-  var srcPath = basedir + '/src/**/.*';
+  // copy PHP and .htaccess
+  var srcPath = [basedir + '/src/**/.*', basedir + '/src/**'];
   var destPath = serverDeployDir + '/' + projectName;
 
   console.log('Deploying server : ' + srcPath + ' --> ' + destPath);
