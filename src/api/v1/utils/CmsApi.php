@@ -127,7 +127,7 @@ class CmsApi extends SecureRestApi
                     //
                     // step 1 : update Record
                     //
-                    $putResponse = $service->post($datatype, self::ID, $this->request[self::REQUESTBODY]);
+                    $putResponse = $service->post($datatype, self::ID, urldecode($this->request[self::REQUESTBODY]));
                     $myobjectJson = json_decode($putResponse->getResult());
                     //TODO manage errors
                     unset($putResponse);
@@ -207,6 +207,11 @@ class CmsApi extends SecureRestApi
 
     protected function file()
     {
+        $response = new Response();
+        $response->setCode(400);
+        $response->setMessage('Bad parameters');
+        $response->setResult('{}');
+
         $this->checkConfiguration();
 
         $service = new ContentService($this->conf->{'publicdir'});
@@ -216,6 +221,8 @@ class CmsApi extends SecureRestApi
         //
         if ($this->method === 'OPTIONS') {
             // eg : /api/v1/content
+            $response->setCode(200);
+            $response->setMessage('');
             $response->setResult($this->preflight());
         } elseif ($this->method === 'GET') {
             // eg : /api/v1/file?filename
@@ -231,12 +238,11 @@ class CmsApi extends SecureRestApi
                 } else {
                     return $response->getMessage();
                 }
-            } else {
-                return '';
             }
         } else {
             throw new Exception('bad request');
         }
+        return $response->getResult();
     }
 
     private function getDataType(): string
