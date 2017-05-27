@@ -91,7 +91,7 @@ class ContentService
 
                 $response->setCode(200);
             } else {
-                $response->appendMessage('not found '. $type.' : '.$keyvalue);
+                $response->appendMessage('not found '.$type.' : '.$keyvalue);
                 $response->setCode(404);
             }
         } catch (Exception $e) {
