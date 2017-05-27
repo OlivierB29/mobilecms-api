@@ -242,6 +242,7 @@ class CmsApi extends SecureRestApi
         } else {
             throw new Exception('bad request');
         }
+
         return $response->getResult();
     }
 
