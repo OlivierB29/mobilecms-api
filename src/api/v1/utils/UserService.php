@@ -382,22 +382,15 @@ class UserService
             if ($jwt->verifyToken($token, $user->{'salt'})) {
 
               // verify user role
-              if ( $user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
-
-                $response->setCode(200);
-                $response->setMessage('');
+              if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
+                  $response->setCode(200);
+                  $response->setMessage('');
               } else {
-
-                $response->setMessage('wrong role');
+                  $response->setMessage('wrong role');
               }
-
             } else {
-
                 $response->setMessage('JwtToken.verifyToken is false');
             }
-
-
-
         } catch (Exception $e) {
             $response->setCode(500);
             $response->setMessage($e->getMessage());

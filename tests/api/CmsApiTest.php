@@ -14,7 +14,6 @@ final class CmsApiTest extends TestCase
     private $guest;
     private $guesttoken;
 
-
     protected function setUp()
     {
         $this->conf = json_decode('{}');
@@ -24,20 +23,15 @@ final class CmsApiTest extends TestCase
         $this->conf->{'privatedir'} = HOME.'/tests-data/private';
         $this->conf->{'apikeyfile'} = HOME.'/tests-data/private/apikeys/key1.json';
 
-        $service = new UserService($this->conf->{'privatedir'} . '/users');
+        $service = new UserService($this->conf->{'privatedir'}.'/users');
 
         $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
         $this->token = 'Bearer '.$this->user->{'token'};
 
-
-
         $response = $service->getToken('test@example.com', 'Sample#123456');
         $this->guest = json_decode($response->getResult());
         $this->guesttoken = 'Bearer '.$this->guest->{'token'};
-
-
-
     }
 
     public function testTypes()
@@ -80,8 +74,6 @@ final class CmsApiTest extends TestCase
         $result = $API->processAPI();
         $this->assertTrue($result != null && $result != '');
     }
-
-
 
     public function testPut1()
     {
@@ -136,8 +128,6 @@ final class CmsApiTest extends TestCase
         $API->authorize($headers, $SERVER);
 
         $result = $API->processAPI();
-
-
     }
 
     public function testGetCalendarRecord()
