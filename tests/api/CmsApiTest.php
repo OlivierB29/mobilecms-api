@@ -11,6 +11,10 @@ final class CmsApiTest extends TestCase
     private $token;
     private $conf;
 
+    private $guest;
+    private $guesttoken;
+
+
     protected function setUp()
     {
         $this->conf = json_decode('{}');
@@ -20,12 +24,20 @@ final class CmsApiTest extends TestCase
         $this->conf->{'privatedir'} = HOME.'/tests-data/private';
         $this->conf->{'apikeyfile'} = HOME.'/tests-data/private/apikeys/key1.json';
 
-        $service = new UserService('tests-data/userservice');
-        $response = $service->getToken('test@example.com', 'Sample#123456');
+        $service = new UserService($this->conf->{'privatedir'} . '/users');
 
+        $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
-
         $this->token = 'Bearer '.$this->user->{'token'};
+
+
+
+        $response = $service->getToken('test@example.com', 'Sample#123456');
+        $this->guest = json_decode($response->getResult());
+        $this->guesttoken = 'Bearer '.$this->guest->{'token'};
+
+
+
     }
 
     public function testTypes()
@@ -49,14 +61,14 @@ final class CmsApiTest extends TestCase
         ]', $result);
     }
 
-    public function testPost1()
+    public function testPostSuccess()
     {
         $path = '/restapi/v1/content/calendar';
 
         $recordStr = '{"id":"10","type" : "calendar","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
 
         $REQUEST = []; // $REQUEST = ['path' => $path];
-        $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
+        $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
         $POST = ['requestbody' => $recordStr];
@@ -69,6 +81,8 @@ final class CmsApiTest extends TestCase
         $this->assertTrue($result != null && $result != '');
     }
 
+
+
     public function testPut1()
     {
         $path = '/restapi/v1/content/calendar';
@@ -76,7 +90,7 @@ final class CmsApiTest extends TestCase
         $recordStr = '{"id":"'.$id.'","type" : "calendar","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
 
         $REQUEST = []; // $REQUEST = ['path' => $path];
-        $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
+        $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'PUT', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
         $POST = ['requestbody' => $recordStr];
@@ -92,7 +106,7 @@ final class CmsApiTest extends TestCase
     public function testGetCalendarList()
     {
         $path = '/restapi/v1/content/calendar';
-        $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
+        $headers = ['Authorization' => $this->token];
         $REQUEST = []; // $REQUEST = ['path' => $path];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
         $GET = ['requestbody' => '{}'];
@@ -107,10 +121,29 @@ final class CmsApiTest extends TestCase
         $this->assertTrue(strpos($result, '{"filename":"1.json","id":"1"}') !== false);
     }
 
+    public function testGetByGuest()
+    {
+        $this->expectException(Exception::class);
+        $path = '/restapi/v1/content/calendar/1';
+        $headers = ['Authorization' => $this->guesttoken];
+        $REQUEST = [];
+        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $GET = [];
+        $POST = null;
+
+        $API = new CmsApi($this->conf);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+        $API->authorize($headers, $SERVER);
+
+        $result = $API->processAPI();
+
+
+    }
+
     public function testGetCalendarRecord()
     {
         $path = '/restapi/v1/content/calendar/1';
-        $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
+        $headers = ['Authorization' => $this->token];
         $REQUEST = []; // $REQUEST = ['path' => $path];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
         $GET = [];
@@ -131,7 +164,7 @@ final class CmsApiTest extends TestCase
     public function testGetCalendarError()
     {
         $path = '/restapi/v1/content/calendar/999999999';
-        $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
+        $headers = ['Authorization' => $this->token];
         $REQUEST = []; // $REQUEST = ['path' => $path];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
         $GET = [];
@@ -148,7 +181,7 @@ final class CmsApiTest extends TestCase
     public function testGetFile()
     {
         $path = '/restapi/v1/file';
-        $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
+        $headers = ['Authorization' => $this->token];
         $REQUEST = []; // $REQUEST = ['path' => $path];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
         $GET = ['file' => 'calendar/index/metadata.json'];
@@ -182,7 +215,7 @@ final class CmsApiTest extends TestCase
         $recordStr = '';
 
         $REQUEST = []; // $REQUEST = ['path' => $path];
-        $headers = ['Authorization' => $this->token, 'apiKey' => '123'];
+        $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'DELETE', 'HTTP_ORIGIN' => 'foobar'];
         $GET = [];
         $POST = null;
