@@ -1,11 +1,10 @@
 {
     "id": "10",
-    "type": "calendar",
     "date": "201509",
     "activity": "activitya",
     "title": "some seminar of activity A",
     "organization": "Some org",
-    "description": "some infos",
+    "description": "<some infos",
     "url": "",
     "location": "",
     "startdate": "",
