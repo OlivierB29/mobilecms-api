@@ -101,9 +101,7 @@ class CmsApi extends SecureRestApi
                 // eg : /api/v1/content/calendar
                 if ($this->method === 'GET') {
                     if (array_key_exists(0, $this->args)) {
-                        //
                         //get the full data of a single record
-                        //
 
                         // $this->args contains the remaining path parameters
                         // eg : /api/v1/content/calendar/1/foo/bar
@@ -111,56 +109,41 @@ class CmsApi extends SecureRestApi
 
                         $response = $service->getRecord($datatype, $this->args[0]);
                     } else {
-                        //
                         //get all records in index
-                        //
                         $response = $service->getAllObjects($datatype);
                     }
                 } elseif ($this->method === 'POST') {
-                    //
                     // save a record and update the index
-                    //
                     // path eg : /api/v1/content/calendar
 
-                    //
                     // step 1 : update Record
-                    //
                     $putResponse = $service->post($datatype, self::ID, urldecode($this->request[self::REQUESTBODY]));
                     $myobjectJson = json_decode($putResponse->getResult());
                     //TODO manage errors
                     unset($putResponse);
 
-                    //
                     // step 2 : publish to index
-                    //
                     $id = $myobjectJson->{self::ID};
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::ID, $id);
+
                 } elseif ($this->method === 'PUT') {
-                    //
                   // save a record and update the index
-                  //
                   // path eg : /api/v1/content/calendar
 
-                  //
                   // step 1 : update Record
-                  //
                   $putResponse = $service->post($datatype, self::ID, $this->request);
                     $myobjectJson = json_decode($putResponse->getResult());
                   //TODO manage errors
                   unset($putResponse);
 
-                  //
                   // step 2 : publish to index
-                  //
                   $id = $myobjectJson->{self::ID};
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::ID, $id);
                 } elseif ($this->method === 'DELETE') {
                     if (array_key_exists(0, $this->args)) {
-                        //
                       //get the full data of a single record
-                      //
 
                       // $this->args contains the remaining path parameters
                       // eg : /api/v1/content/calendar/1/foo/bar
@@ -181,9 +164,7 @@ class CmsApi extends SecureRestApi
                 }
             } else {
                 if ($this->method === 'GET') {
-                    //
                     //return the list of editable types
-                    //
                     // path eg : /api/v1/content/
 
                     $response->setResult($service->options('types.json'));
@@ -199,6 +180,7 @@ class CmsApi extends SecureRestApi
              * header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
              * }
              */
+
             return $response->getResult();
         }
     }

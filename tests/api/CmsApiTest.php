@@ -95,6 +95,8 @@ final class CmsApiTest extends TestCase
         $result = $API->processAPI();
         // echo 'processAPI: ' . $this->memory();
         $this->assertTrue($result != null && $result != '');
+        $jsonResult = json_decode($result);
+        $this->assertTrue($jsonResult->{'timestamp'} != '');
     }
 
     public function testPut1()
@@ -115,6 +117,7 @@ final class CmsApiTest extends TestCase
         $API->authorize($headers, $SERVER);
         $result = $API->processAPI();
         $this->assertTrue($result != null && $result != '');
+
     }
 
     public function testGetCalendarList()

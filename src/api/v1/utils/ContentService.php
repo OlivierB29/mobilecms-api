@@ -408,8 +408,13 @@ class ContentService
             $response->setMessage('write to file');
             JsonUtils::writeJsonFile($file, $data);
             unset($data);
+
             $response->setMessage('done');
             $response->setCode(200);
+            // set a timestamp response
+            $tempResponse = json_decode($response->getResult());
+            $tempResponse->{'timestamp'} = '' . time();
+            $response->setResult(json_encode($tempResponse));
         } catch (Exception $e) {
             $response->setCode(520);
             $response->setMessage($e->getMessage());
