@@ -18,6 +18,9 @@ Special files in public/calendar/index
 * index.json : index list of records, and some fields.
 * index_template.json : index properties
 
+Media files
+* media/calendar/id1/foobar.jpg
+
 ## Runtime Requirements
 - PHP 7
 
@@ -25,27 +28,23 @@ Special files in public/calendar/index
 - copy src/api to web server to the web directory eg: /var/www/html/api
 - copy src/.htaccess file to the web server root (or edit your own custom file)
 - copy sample sample-database/public to /var/www/html/public
+- give access rights to the apache service `sudo chown -R www-data:www-data /var/www/html/public`
 - copy sample sample-database/private outsite the web server documents, such as /var/www/private
-- If needed, edit additional configuration and directories : api/v1/conf.php (see config dir for examples)
+- if needed, edit additional configuration and directories : api/v1/conf.php (see config dir for examples)
 
 ## Gulp install
 When editing the API and live testing to a local web server.
 
-```bash
-$ npm install
-```
-```bash
-$ gulp #Print available gulp tasks
-```
+`npm install`
+`gulp` Print available gulp tasks
 
 Configure local directories gulpfile.js
 var serverDeployDir = '/var/www/html';
 var privateDeployDir = '/var/www/private';
 
 Copy code and sample data
-```bash
-$ gulp samplepublic sampleprivate deploy
-```
+`gulp` samplepublic sampleprivate deploy
+
 
 ## Build
 - copy src/api to web server to the web directory eg: www/adminapp/api
@@ -53,21 +52,16 @@ $ gulp samplepublic sampleprivate deploy
 ## Running unit tests
 Requirements : [phpunit](https://phpunit.de)  (6.1+)
 
-```bash
-$ npm test
-```
+`npm test`
 OR
-```bash
-$ phpunit --configuration phpunit-utils.xml
-$ phpunit --configuration phpunit-api.xml
-```
+`phpunit --configuration phpunit-utils.xml`
+`phpunit --configuration phpunit-api.xml`
 
 ## Running end-to-end tests
 - deploy to a local server
 - edit code
-```bash
-$ gulp  deploy # deploy code to /var/www/html
-```
+`gulp  deploy`  deploy code to /var/www/html
+
 - use a tool like [HttpRequester](https://addons.mozilla.org/en-US/firefox/addon/httprequester)
 
 ### Authentication
