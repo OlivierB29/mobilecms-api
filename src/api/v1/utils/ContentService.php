@@ -413,7 +413,7 @@ class ContentService
             $response->setCode(200);
             // set a timestamp response
             $tempResponse = json_decode($response->getResult());
-            $tempResponse->{'timestamp'} = '' . time();
+            $tempResponse->{'timestamp'} = ''.time();
             $response->setResult(json_encode($tempResponse));
         } catch (Exception $e) {
             $response->setCode(520);

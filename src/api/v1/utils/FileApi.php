@@ -8,13 +8,12 @@ require_once 'SecureRestApi.php';
  */
 class FileApi extends SecureRestApi
 {
-
-  /**
+    /**
    * media directory (eg: media ).
    */
   private $media;
 
-  private $homedir;
+    private $homedir;
 
   /**
    * media directory (eg: /var/www/html/media ).
@@ -29,16 +28,16 @@ class FileApi extends SecureRestApi
         if ($this->enableHeaders) {
             header('Access-Control-Allow-Methods: *');
         }
-        $this->homedir =  $this->conf->{'homedir'};
+        $this->homedir = $this->conf->{'homedir'};
 
         $this->media = $this->conf->{'media'};
 
-        $this->mediadir = $this->conf->{'homedir'} . '/' . $this->media;
+        $this->mediadir = $this->conf->{'homedir'}.'/'.$this->media;
     }
 
     /**
-    * basic file upload
-    */
+     * basic file upload.
+     */
     protected function basicupload()
     {
         $response = new Response();
@@ -63,20 +62,16 @@ class FileApi extends SecureRestApi
           if (isset($datatype) && strlen($datatype) > 0) {
               // eg : /api/v1/content/calendar
               if ($this->method === 'GET') {
-                // TODO get file
+                  // TODO get file
               } elseif ($this->method === 'POST') {
-
-                if (array_key_exists(0, $this->args)) {
-                    //get the full data of a single record $this->args contains the remaining path parameters
+                  if (array_key_exists(0, $this->args)) {
+                      //get the full data of a single record $this->args contains the remaining path parameters
                     // eg : /api/v1/file/calendar/1
                     $uploadResult = $this->uploadFiles($datatype, $this->args[0]);
-                    $response->setCode(200);
-                    $response->setMessage('');
-                    $response->setResult(json_encode($uploadResult));
-
-                }
-
-
+                      $response->setCode(200);
+                      $response->setMessage('');
+                      $response->setResult(json_encode($uploadResult));
+                  }
               }
           }
         } catch (Exception $e) {
@@ -84,16 +79,13 @@ class FileApi extends SecureRestApi
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {
-
-          return $response->getResult();
+            return $response->getResult();
         }
     }
 
-
-
     private function uploadFiles($type, $id)
     {
-      /*
+        /*
       File properties example
       - name:1.jpg
       - type:image/jpeg
@@ -102,14 +94,13 @@ class FileApi extends SecureRestApi
       - size:700
         */
       $result = json_decode('[]');
-      foreach ($_FILES as $formKey => $file) {
-
+        foreach ($_FILES as $formKey => $file) {
 
             // media/calendar/1
-            $uridir = $this->media. '/' . $type. '/' . $id  ;
+            $uridir = $this->media.'/'.$type.'/'.$id;
 
             // /var/www/html/media/calendar/1
-            $destdir = $this->homedir. '/' . $uridir;
+            $destdir = $this->homedir.'/'.$uridir;
 
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
@@ -118,31 +109,29 @@ class FileApi extends SecureRestApi
 
             // upload
             if (isset($file['tmp_name']) && isset($file['name'])) {
-              $destfile = $destdir . '/' . $file['name'];
-              if(move_uploaded_file($file['tmp_name'], $destfile)) {
-
-                $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
+                $destfile = $destdir.'/'.$file['name'];
+                if (move_uploaded_file($file['tmp_name'], $destfile)) {
+                    $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
                 $mimetype = finfo_file($finfo, $destfile);
-                finfo_close($finfo);
+                    finfo_close($finfo);
 
-                  $fileResult = json_decode('{}');
-                  $fileResult->{'title'} = $file['name'];
-                  $fileResult->{'url'} = '/' . $uridir . '/' . $file['name'];
-                  $fileResult->{'size'} = $file['size'];
-                  $fileResult->{'mimetype'} = $mimetype;
-                  array_push($result, $fileResult);
-              } else {
-                  throw new Exception($file['name'] . " KO");
-              }
+                    $fileResult = json_decode('{}');
+                    $fileResult->{'title'} = $file['name'];
+                    $fileResult->{'url'} = '/'.$uridir.'/'.$file['name'];
+                    $fileResult->{'size'} = $file['size'];
+                    $fileResult->{'mimetype'} = $mimetype;
+                    array_push($result, $fileResult);
+                } else {
+                    throw new Exception($file['name'].' KO');
+                }
             }
+        }
 
-    }
+        if (count($result) === 0) {
+            throw new Exception('no files');
+        }
 
-    if (count($result) === 0) {
-      throw new Exception("no files");
-    }
-
-    return $result;
+        return $result;
     }
 
     private function getDataType(): string
@@ -176,4 +165,3 @@ class FileApi extends SecureRestApi
         return '{}';
     }
 }
-?>

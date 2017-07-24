@@ -42,11 +42,13 @@ final class CmsApiTest extends TestCase
         $this->memory();
     }
 
-    private function memory(){
-      $this->memory1 = $this->memory2;
+    private function memory()
+    {
+        $this->memory1 = $this->memory2;
 
-      $this->memory2 =  memory_get_usage();
-      return $this->memory2 - $this->memory1;
+        $this->memory2 = memory_get_usage();
+
+        return $this->memory2 - $this->memory1;
     }
 
     public function testTypes()
@@ -79,7 +81,7 @@ final class CmsApiTest extends TestCase
         $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
-        $recordStr = file_get_contents($this->conf->{'publicdir'} .'/big.json');
+        $recordStr = file_get_contents($this->conf->{'publicdir'}.'/big.json');
         //$recordStr = '{"id":"10","type" : "calendar","date":"201509","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         // echo 'recordStr: ' . $this->memory();
         $POST = ['requestbody' => $recordStr];
@@ -117,7 +119,6 @@ final class CmsApiTest extends TestCase
         $API->authorize($headers, $SERVER);
         $result = $API->processAPI();
         $this->assertTrue($result != null && $result != '');
-
     }
 
     public function testGetCalendarList()
@@ -153,7 +154,6 @@ final class CmsApiTest extends TestCase
         $API->authorize($headers, $SERVER);
 
         $result = $API->processAPI();
-
     }
 
     public function testGetCalendarRecord()
@@ -175,7 +175,6 @@ final class CmsApiTest extends TestCase
         $this->assertTrue(strpos($result, '"type"') !== false);
         $this->assertTrue(strpos($result, '"date"') !== false);
         $this->assertTrue(strpos($result, '"title"') !== false);
-
     }
 
     public function testGetCalendarError()
@@ -193,7 +192,6 @@ final class CmsApiTest extends TestCase
         $result = $API->processAPI();
 
         $this->assertTrue($result != null && $result === '{}');
-
     }
 
     public function testGetFile()
@@ -216,7 +214,6 @@ final class CmsApiTest extends TestCase
         $this->assertTrue(strpos($result, '"organization"') !== false);
         $this->assertTrue(strpos($result, '"date"') !== false);
         $this->assertTrue(strpos($result, '"title"') !== false);
-
     }
 
     public function testDelete()
@@ -251,6 +248,5 @@ final class CmsApiTest extends TestCase
         $index_data = file_get_contents($dir.'/calendar/index/index.json');
 
         $this->assertTrue(!strpos($index_data, $id));
-
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 include 'conf.php';
 include 'utils/FileApi.php';
 
@@ -17,19 +18,12 @@ try {
 
     $API = new FileApi($conf);
 
-
     $API->setRequest();
     $API->authorize();
 
     echo $API->processAPI();
-
 } catch (Exception $e) {
     echo json_encode([
             'error' => $e->getMessage(),
     ]);
 }
-
-
-
-
-?>
