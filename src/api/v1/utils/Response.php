@@ -69,3 +69,4 @@ class Response implements JsonSerializable
         $this->message .= $newval;
     }
 }
+?>

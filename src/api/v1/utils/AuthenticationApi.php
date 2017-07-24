@@ -176,3 +176,4 @@ class AuthenticationApi extends RestApi
         return '{}';
     }
 }
+?>

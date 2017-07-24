@@ -242,3 +242,4 @@ abstract class RestApi
         return json_encode($json);
     }
 }
+?>
