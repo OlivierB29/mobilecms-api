@@ -30,4 +30,3 @@ class StringUtils
         return substr($haystack, -$length) === $needle;
     }
 }
-?>

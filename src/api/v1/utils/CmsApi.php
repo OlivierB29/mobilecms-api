@@ -52,7 +52,7 @@ class CmsApi extends SecureRestApi
                   if (array_key_exists(0, $this->args)) {
                       //TODO get single index value
                   } else {
-                      $response = $service->getAll($datatype . '/index/index.json');
+                      $response = $service->getAll($datatype.'/index/index.json');
                   }
               } elseif ($this->method === 'POST') {
                   $response = $service->rebuildIndex($datatype, self::ID);
@@ -126,9 +126,8 @@ class CmsApi extends SecureRestApi
                     $id = $myobjectJson->{self::ID};
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::ID, $id);
-
                 } elseif ($this->method === 'PUT') {
-                  // save a record and update the index
+                    // save a record and update the index
                   // path eg : /api/v1/content/calendar
 
                   // step 1 : update Record
@@ -143,7 +142,7 @@ class CmsApi extends SecureRestApi
                     $response = $service->publishById($datatype, self::ID, $id);
                 } elseif ($this->method === 'DELETE') {
                     if (array_key_exists(0, $this->args)) {
-                      //get the full data of a single record
+                        //get the full data of a single record
 
                       // $this->args contains the remaining path parameters
                       // eg : /api/v1/content/calendar/1/foo/bar

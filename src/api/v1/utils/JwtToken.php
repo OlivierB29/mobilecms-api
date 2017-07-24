@@ -112,4 +112,3 @@ class JwtToken
         return json_decode(base64_decode($payload));
     }
 }
-?>
