@@ -6,6 +6,7 @@
     {"name" : "activity" , "primary" : "false", "type" : "text",  "editor":"choice", "choices" : ["kendo", "iaido", "chanbara"]},
     {"name" : "description" , "primary" : "false", "type" : "string",  "editor":"text"},
     {"name" : "images" , "primary" : "false", "type" : "array",  "editor":"imagelist"},
-    {"name" : "attachments" , "primary" : "false", "type" : "array",  "editor":"attachmentlist"}
+    {"name" : "attachments" , "primary" : "false", "type" : "array",  "editor":"attachmentlist"},
+    {"name" : "media" , "primary" : "false", "type" : "array",  "editor":"medialist"}
 
 ]
