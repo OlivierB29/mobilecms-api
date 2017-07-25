@@ -1,0 +1,9 @@
+{
+    "name": "updated",
+    "email": "modifypasssword@example.com",
+    "password": "$2y$12$BiGXHVyE9g2qp3T8sBiub.k7FDmflSbQpv6WmPdNkoBhSowci8PFu",
+    "salt": "HsDJeFerVCu8Qkx1H+mpst4RNNFQKb9MAFel\/vUOqGuSZHErleFCZ8J8m8boeOORjeU+UhBcWDm6U9RHmjPkSzMXbRP1rDpmUSqcKkoa\/f07HvllEp9JwTD4ZHBnL4ENnCEbcQFts2KM6YVxtLjTogXq66cbddn8mlK+dr\/VJTI=",
+    "secretQuestion": "some secret",
+    "secretResponse": "$2y$12$JFA5Vs\/Zg9Vxt2hLSctWR.xrojdfVMSqmRNbs67tBCTYnx\/L6z4l.",
+    "role": "guest"
+}

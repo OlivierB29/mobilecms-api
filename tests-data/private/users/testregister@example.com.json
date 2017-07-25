@@ -1,0 +1,9 @@
+{
+    "name": "test register",
+    "email": "testregister@example.com",
+    "password": "$2y$12$83CRPsj0rm67b3PoqExYFeUz9EfMj7sPrdIZz5JA5zuD3Zr\/rwRnG",
+    "salt": "LI6b5q+mWydjvpWc\/xK9rM3l1sSieUBSl8NEoqUK6sBpI4AWxZ4nHVpV07fqbY48Hku6WJkQZkoPzZHR+PifpfHcNV20NAi4CAMbeyS8GZmxgrdgD4rjDVsJ0sflRE4KVY8CUwASgW9TOKwjUF1HI1X1V2iH+oIVq1j3hiyE0mE=",
+    "secretQuestion": "some secret",
+    "secretResponse": "$2y$12$LfUWJVqp64xRry77XzN6RulT6H7lh9qiyY7NnrTnr85nTUy0sAwA6",
+    "role": "guest"
+}
