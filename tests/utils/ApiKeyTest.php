@@ -6,8 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 final class ApiKeyTest extends TestCase
 {
-  // TODO implement API key
-
+    // TODO implement API key
 
     public function testOk()
     {
@@ -17,6 +16,7 @@ final class ApiKeyTest extends TestCase
           $apikey->verifyKey('tests-data/apikey/key1.json', '123', 'foobar')
         );
     }
+
 /*
     public function testWrongKey()
     {
