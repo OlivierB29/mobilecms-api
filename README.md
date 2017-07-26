@@ -24,6 +24,9 @@ Media files
 ## Runtime Requirements
 - PHP 7
 
+## Dev dependencies
+
+
 ## Manual install
 - copy src/api to web server to the web directory eg: /var/www/html/api
 - copy src/.htaccess file to the web server root (or edit your own custom file)
@@ -50,17 +53,15 @@ Copy code and sample data
 - copy src/api to web server to the web directory eg: www/adminapp/api
 
 ## Running unit tests
-Requirements : [phpunit](https://phpunit.de)  (6.1+)
+- [phpunit](https://phpunit.de) 6.1+
 
-`npm test`
-OR
 `phpunit --configuration phpunit-utils.xml`
 `phpunit --configuration phpunit-api.xml`
 
 ## Running end-to-end tests
 - deploy to a local server
 - edit code
-`gulp  deploy`  deploy code to /var/www/html
+`gulp  deploy` or manually deploy code to /var/www/html
 
 - use a tool like [HttpRequester](https://addons.mozilla.org/en-US/firefox/addon/httprequester)
 
