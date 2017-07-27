@@ -1,4 +1,5 @@
 <?php
+
 require_once 'Response.php';
 
 /*
@@ -192,13 +193,11 @@ abstract class RestApi
         $apiResponse = null;
         if (method_exists($this, $this->endpoint)) {
             $apiResponse = $this->{$this->endpoint} ($this->args);
-            if (isset($apiResponse) && $apiResponse instanceOf Response) {
-
-              return $this->_responseObj($apiResponse);
+            if (isset($apiResponse) && $apiResponse instanceof Response) {
+                return $this->_responseObj($apiResponse);
             } else {
-              return $this->_response("Empty response : $this->endpoint", 503);
+                return $this->_response("Empty response : $this->endpoint", 503);
             }
-
         }
 
         return $this->_response("No Endpoint: $this->endpoint", 404);

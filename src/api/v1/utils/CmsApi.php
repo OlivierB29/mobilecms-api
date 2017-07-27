@@ -216,7 +216,6 @@ class CmsApi extends SecureRestApi
                 if ($filePathResponse->getCode() === 200) {
                     $response->setResult(file_get_contents($filePathResponse->getResult()));
                     $response->setCode(200);
-
                 } else {
                     $response = $filePathResponse;
                 }
@@ -253,9 +252,9 @@ class CmsApi extends SecureRestApi
      */
     public function preflight(): Response
     {
-      $response = new Response();
-      $response->setCode(200);
-      $response->setResult('{}');
+        $response = new Response();
+        $response->setCode(200);
+        $response->setResult('{}');
 
         header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
