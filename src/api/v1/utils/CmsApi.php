@@ -24,7 +24,7 @@ class CmsApi extends SecureRestApi
         }
     }
 
-    protected function index()
+    protected function index() : Response
     {
         $response = new Response();
         $response->setCode(400);
@@ -42,7 +42,7 @@ class CmsApi extends SecureRestApi
           //
           if ($this->method === 'OPTIONS') {
               // eg : /api/v1/content
-              $response->setResult($this->preflight());
+              $response = $this->preflight();
           }
 
           //
@@ -68,14 +68,14 @@ class CmsApi extends SecureRestApi
            * header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
            * }
            */
-          return $response->getResult();
+          return $response;
         }
     }
 
     /**
      * base API path /api/v1/content.
      */
-    protected function content()
+    protected function content() : Response
     {
         $response = new Response();
         $response->setCode(400);
@@ -93,7 +93,7 @@ class CmsApi extends SecureRestApi
             //
             if ($this->method === 'OPTIONS') {
                 // eg : /api/v1/content
-                $response->setResult($this->preflight());
+                $response = $this->preflight();
             }
 
             //
@@ -167,6 +167,7 @@ class CmsApi extends SecureRestApi
                     // path eg : /api/v1/content/
 
                     $response->setResult($service->options('types.json'));
+                    $response->setCode(200);
                 }
             }
         } catch (Exception $e) {
@@ -180,11 +181,11 @@ class CmsApi extends SecureRestApi
              * }
              */
 
-            return $response->getResult();
+            return $response;
         }
     }
 
-    protected function file()
+    protected function file() : Response
     {
         $response = new Response();
         $response->setCode(400);
@@ -202,7 +203,7 @@ class CmsApi extends SecureRestApi
             // eg : /api/v1/content
             $response->setCode(200);
             $response->setMessage('');
-            $response->setResult($this->preflight());
+            $response = $this->preflight();
         } elseif ($this->method === 'GET') {
             // eg : /api/v1/file?filename
             // $this->args contains the remaining path parameters
@@ -211,18 +212,20 @@ class CmsApi extends SecureRestApi
             if (array_key_exists(self::FILE, $this->getRequest())) {
                 // this
 
-                $response = $service->getFilePath($this->getRequest()[self::FILE]);
-                if ($response->getCode() === 200) {
-                    return file_get_contents($response->getResult());
+                $filePathResponse = $service->getFilePath($this->getRequest()[self::FILE]);
+                if ($filePathResponse->getCode() === 200) {
+                    $response->setResult(file_get_contents($filePathResponse->getResult()));
+                    $response->setCode(200);
+
                 } else {
-                    return $response->getMessage();
+                    $response = $filePathResponse;
                 }
             }
         } else {
             throw new Exception('bad request');
         }
 
-        return $response->getResult();
+        return $response;
     }
 
     private function getDataType(): string
@@ -248,11 +251,15 @@ class CmsApi extends SecureRestApi
     /**
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      */
-    public function preflight(): string
+    public function preflight(): Response
     {
+      $response = new Response();
+      $response->setCode(200);
+      $response->setResult('{}');
+
         header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
-        return '{}';
+        return $response;
     }
 }

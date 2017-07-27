@@ -17,7 +17,7 @@ class AuthenticationApi extends RestApi
     /**
      * base API path /authapi/v1/authenticate.
      */
-    protected function authenticate()
+    protected function authenticate() : Response
     {
         $response = new Response();
         $response->setCode(400);
@@ -35,7 +35,7 @@ class AuthenticationApi extends RestApi
             //
             if ($this->method === 'OPTIONS') {
                 // eg : /authapi/v1/auth
-                $response->setResult($service->preflight());
+                $response = $service->preflight();
             }
 
             if ($this->method === 'POST') {
@@ -56,14 +56,14 @@ class AuthenticationApi extends RestApi
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {
-            return $response->getResult();
+            return $response;
         }
     }
 
     /**
      * base API path /authapi/v1/authenticate.
      */
-    protected function changepassword()
+    protected function changepassword() : Response
     {
         $response = new Response();
         $response->setCode(400);
@@ -103,14 +103,14 @@ class AuthenticationApi extends RestApi
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {
-            return $response->getResult();
+            return $response;
         }
     }
 
     /**
      * /authapi/v1/register.
      */
-    protected function register()
+    protected function register() : Response
     {
         $response = new Response();
         $response->setCode(400);
@@ -151,7 +151,7 @@ class AuthenticationApi extends RestApi
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {
-            return $response->getResult();
+            return $response;
         }
     }
 
@@ -168,11 +168,15 @@ class AuthenticationApi extends RestApi
     /**
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      */
-    public function preflight(): string
+    public function preflight(): Response
     {
+      $response = new Response();
+      $response->setCode(200);
+      $response->setResult('{}');
+
         header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
 
-        return '{}';
+        return $response;
     }
 }

@@ -1,4 +1,6 @@
 <?php
+require_once 'Response.php';
+
 /*
  * Core REST Api without Authentication or API Key
  * (Authentication : see SecureRestApi)
@@ -180,15 +182,23 @@ abstract class RestApi
      * header("Access-Control-Allow-Methods: *");
      * header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");.
      */
-    abstract public function preflight(): string;
+    abstract public function preflight(): Response;
 
     /**
      * Parse class, and call the method with the endpoint name.
      */
     public function processAPI(): string
     {
+        $apiResponse = null;
         if (method_exists($this, $this->endpoint)) {
-            return $this->_response($this->{$this->endpoint} ($this->args));
+            $apiResponse = $this->{$this->endpoint} ($this->args);
+            if (isset($apiResponse) && $apiResponse instanceOf Response) {
+
+              return $this->_responseObj($apiResponse);
+            } else {
+              return $this->_response("Empty response : $this->endpoint", 503);
+            }
+
         }
 
         return $this->_response("No Endpoint: $this->endpoint", 404);
@@ -205,6 +215,16 @@ abstract class RestApi
 
         //each endpoint should prepare an encoded response
         return $data;
+    }
+
+    private function _responseObj($response): string
+    {
+        if ($this->enableHeaders && $response->getCode() > 0) {
+            header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
+        }
+
+        //each endpoint should prepare an encoded response
+        return $response->getResult();
     }
 
     private function _cleanInputs($data)
@@ -225,9 +245,11 @@ abstract class RestApi
     {
         $status = [
                 200 => 'OK',
+                400 => 'Bad Request',
                 404 => 'Not Found',
                 405 => 'Method Not Allowed',
                 500 => 'Internal Server Error',
+                503 => 'Service unavailable',
         ];
 
         return ($status[$code]) ? $status[$code] : $status[500];

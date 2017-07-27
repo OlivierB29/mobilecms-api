@@ -220,6 +220,7 @@ class ContentService
             }
 
             $response->setResult(json_encode($thelist));
+            $response->setCode(200);
         } catch (Exception $e) {
             $response->setCode(520);
             $response->setMessage($e->getMessage());
