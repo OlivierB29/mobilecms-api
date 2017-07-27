@@ -170,9 +170,9 @@ class AuthenticationApi extends RestApi
      */
     public function preflight(): Response
     {
-      $response = new Response();
-      $response->setCode(200);
-      $response->setResult('{}');
+        $response = new Response();
+        $response->setCode(200);
+        $response->setResult('{}');
 
         header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');

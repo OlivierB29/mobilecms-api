@@ -8,10 +8,9 @@ require_once 'SecureRestApi.php';
  */
 class FileApi extends SecureRestApi
 {
+    const REQUESTBODY = 'requestbody';
 
-      const REQUESTBODY = 'requestbody';
-
-    /**
+  /**
    * media directory (eg: media ).
    */
   private $media;
@@ -87,9 +86,9 @@ class FileApi extends SecureRestApi
     }
 
     /**
-    * Sample request body :
-    * [{ "url": "http://wwww.example.com/foobar.pdf", "title":"Foobar.pdf"}]
-    */
+     * Sample request body :
+     * [{ "url": "http://wwww.example.com/foobar.pdf", "title":"Foobar.pdf"}].
+     */
     protected function download()
     {
         $response = new Response();
@@ -117,8 +116,7 @@ class FileApi extends SecureRestApi
                   // TODO get file
               } elseif ($this->method === 'POST') {
                   if (array_key_exists(0, $this->args)) {
-
-                    $uploadResult = $this->downloadFiles($datatype, $this->args[0], urldecode($this->request[self::REQUESTBODY]));
+                      $uploadResult = $this->downloadFiles($datatype, $this->args[0], urldecode($this->request[self::REQUESTBODY]));
                       $response->setCode(200);
                       $response->setMessage('');
                       $response->setResult(json_encode($uploadResult));
@@ -185,17 +183,16 @@ class FileApi extends SecureRestApi
         return $result;
     }
 
-
     private function downloadFiles($type, $id, $filesStr)
     {
-      $response = new Response();
-      $response->setCode(400);
-      $response->setMessage('Bad parameters');
-      $response->setResult('{}');
+        $response = new Response();
+        $response->setCode(400);
+        $response->setMessage('Bad parameters');
+        $response->setResult('{}');
 
-      $files = json_decode($filesStr);
+        $files = json_decode($filesStr);
 
-      $result = json_decode('[]');
+        $result = json_decode('[]');
         foreach ($files as $formKey => $file) {
 
             // media/calendar/1
@@ -208,7 +205,6 @@ class FileApi extends SecureRestApi
             if (!file_exists($destdir)) {
                 mkdir($destdir, 0777, true);
             }
-
 
             // upload
             if (isset($file->{'url'})) {
@@ -240,6 +236,7 @@ class FileApi extends SecureRestApi
 
         $response->setResult(json_encode($result));
         $response->setCode(200);
+
         return $response;
     }
 
@@ -263,19 +260,17 @@ class FileApi extends SecureRestApi
         }
     }
 
-
-    /**
+/**
  * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
  */
 public function preflight(): Response
 {
-  $response = new Response();
-  $response->setCode(200);
-  $response->setResult('{}');
+    $response = new Response();
+    $response->setCode(200);
+    $response->setResult('{}');
 
-  header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
-  header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-
+    header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
     return $response;
 }
