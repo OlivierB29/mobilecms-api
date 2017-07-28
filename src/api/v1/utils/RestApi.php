@@ -251,7 +251,7 @@ abstract class RestApi
                 503 => 'Service unavailable',
         ];
 
-        return ($status[$code]) ? $status[$code] : $status[500];
+        return (array_key_exists($code, $status)) ? $status[$code] : $status[500];
     }
 
     public function errorToJson(string $msg) : string

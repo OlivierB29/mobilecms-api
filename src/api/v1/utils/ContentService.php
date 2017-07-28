@@ -67,7 +67,7 @@ class ContentService
                 $response->setCode(404);
             }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
         } finally {
             return $response;
@@ -95,7 +95,7 @@ class ContentService
                 $response->setCode(404);
             }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
         } finally {
             return $response;
@@ -140,7 +140,7 @@ class ContentService
                 $response->setCode(404);
             }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
         } finally {
             return $response;
@@ -187,7 +187,7 @@ class ContentService
                 $response->setCode(200);
             }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
         } finally {
             return $response;
@@ -222,7 +222,7 @@ class ContentService
             $response->setResult(json_encode($thelist));
             $response->setCode(200);
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
             $response->setResult('{ "result":"'.$e->getMessage().'"}');
         } finally {
@@ -253,7 +253,7 @@ class ContentService
                 $response->setResult(json_encode($data));
             }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
             $response->setResult('{ "result":"'.$e->getMessage().'"}');
         } finally {
@@ -417,7 +417,7 @@ class ContentService
             $tempResponse->{'timestamp'} = ''.time();
             $response->setResult(json_encode($tempResponse));
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
         } finally {
             return $response;
@@ -478,7 +478,7 @@ class ContentService
             $response->setMessage('done');
             $response->setCode(200);
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
         } finally {
             return $response;

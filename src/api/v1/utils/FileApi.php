@@ -15,12 +15,17 @@ class FileApi extends SecureRestApi
    */
   private $media;
 
-    private $homedir;
+  private $homedir;
 
   /**
    * media directory (eg: /var/www/html/media ).
    */
   private $mediadir;
+
+  /**
+  * Default umask for directories and files
+  */
+  private $umask = 0775;
 
     public function __construct($conf)
     {
@@ -77,7 +82,7 @@ class FileApi extends SecureRestApi
               }
           }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {
@@ -116,15 +121,13 @@ class FileApi extends SecureRestApi
                   // TODO get file
               } elseif ($this->method === 'POST') {
                   if (array_key_exists(0, $this->args)) {
-                      $uploadResult = $this->downloadFiles($datatype, $this->args[0], urldecode($this->request[self::REQUESTBODY]));
-                      $response->setCode(200);
-                      $response->setMessage('');
-                      $response->setResult(json_encode($uploadResult));
+                      // $datatype : calendar, $this->args[0] : 1
+                      $response = $this->downloadFiles($datatype, $this->args[0], urldecode($this->request[self::REQUESTBODY]));
                   }
               }
           }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {
@@ -153,15 +156,17 @@ class FileApi extends SecureRestApi
 
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
-                mkdir($destdir, 0777, true);
+              mkdir($destdir, $this->umask, true);
+              chmod($destdir, $this->umask);
             }
 
             // upload
             if (isset($file['tmp_name']) && isset($file['name'])) {
                 $destfile = $destdir.'/'.$file['name'];
                 if (move_uploaded_file($file['tmp_name'], $destfile)) {
+                    chmod($destfile, $this->umask);
                     $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
-                $mimetype = finfo_file($finfo, $destfile);
+                    $mimetype = finfo_file($finfo, $destfile);
                     finfo_close($finfo);
 
                     $fileResult = json_decode('{}');
@@ -203,15 +208,19 @@ class FileApi extends SecureRestApi
 
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
-                mkdir($destdir, 0777, true);
+              mkdir($destdir, $this->umask, true);
+              chmod($destdir, $this->umask);
+
             }
 
             // upload
             if (isset($file->{'url'})) {
                 $current = file_get_contents($file->{'url'});
-                $destfile = $destdir.'/'.$file->{'title'};
+                // get foobar.html from http://something.com/[...]/foobar.html
+                $destfile = $destdir.'/'.basename($file->{'url'});
 
                 if (file_put_contents($destfile, $current)) {
+                    chmod($destfile, $this->umask);
                     $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
                     $mimetype = finfo_file($finfo, $destfile);
                     finfo_close($finfo);
@@ -220,7 +229,7 @@ class FileApi extends SecureRestApi
 
                     $fileResult = json_decode('{}');
                     $fileResult->{'title'} = $file->{'title'};
-                    $fileResult->{'url'} = '/'.$uridir.'/'.$file->{'title'};
+                    $fileResult->{'url'} = '/'.$uridir.'/'.basename($file->{'url'});
                     $fileResult->{'size'} = $filesize;
                     $fileResult->{'mimetype'} = $mimetype;
                     array_push($result, $fileResult);
@@ -236,9 +245,12 @@ class FileApi extends SecureRestApi
 
         $response->setResult(json_encode($result));
         $response->setCode(200);
+        $response->setMessage('');
 
         return $response;
     }
+
+
 
     private function getDataType(): string
     {

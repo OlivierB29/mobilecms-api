@@ -59,7 +59,7 @@ class CmsApi extends SecureRestApi
               }
           }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {
@@ -171,7 +171,7 @@ class CmsApi extends SecureRestApi
                 }
             }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {

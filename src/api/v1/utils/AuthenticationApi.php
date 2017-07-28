@@ -52,7 +52,7 @@ class AuthenticationApi extends RestApi
                 // free variables before response
             }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {
@@ -99,7 +99,7 @@ class AuthenticationApi extends RestApi
                 unset($logindata);
             }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {
@@ -147,7 +147,7 @@ class AuthenticationApi extends RestApi
                 }
             }
         } catch (Exception $e) {
-            $response->setCode(520);
+            $response->setCode(500);
             $response->setMessage($e->getMessage());
             $response->setResult($this->errorToJson($e->getMessage()));
         } finally {
