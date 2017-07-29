@@ -15,7 +15,7 @@ class FileApi extends SecureRestApi
    */
   private $media;
 
-  private $homedir;
+    private $homedir;
 
   /**
    * media directory (eg: /var/www/html/media ).
@@ -23,8 +23,8 @@ class FileApi extends SecureRestApi
   private $mediadir;
 
   /**
-  * Default umask for directories and files
-  */
+   * Default umask for directories and files.
+   */
   private $umask = 0775;
 
     public function __construct($conf)
@@ -156,8 +156,8 @@ class FileApi extends SecureRestApi
 
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
-              mkdir($destdir, $this->umask, true);
-              chmod($destdir, $this->umask);
+                mkdir($destdir, $this->umask, true);
+                chmod($destdir, $this->umask);
             }
 
             // upload
@@ -208,9 +208,8 @@ class FileApi extends SecureRestApi
 
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
-              mkdir($destdir, $this->umask, true);
-              chmod($destdir, $this->umask);
-
+                mkdir($destdir, $this->umask, true);
+                chmod($destdir, $this->umask);
             }
 
             // upload
@@ -249,8 +248,6 @@ class FileApi extends SecureRestApi
 
         return $response;
     }
-
-
 
     private function getDataType(): string
     {
