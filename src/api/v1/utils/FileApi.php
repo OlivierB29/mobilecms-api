@@ -159,15 +159,9 @@ class FileApi extends SecureRestApi
                 $destfile = $destdir.'/'.$file['name'];
                 if (move_uploaded_file($file['tmp_name'], $destfile)) {
                     chmod($destfile, $this->umask);
-                    $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
-                    $mimetype = finfo_file($finfo, $destfile);
-                    finfo_close($finfo);
-
-                    $fileResult = json_decode('{}');
-                    $fileResult->{'title'} = $file['name'];
-                    $fileResult->{'url'} = '/'.$uridir.'/'.$file['name'];
-                    $fileResult->{'size'} = $file['size'];
-                    $fileResult->{'mimetype'} = $mimetype;
+                    $title = $file['name'];
+                    $url = '/'.$uridir.'/'.$file['name'];
+                    $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
                     throw new Exception($file['name'].' KO');
@@ -211,17 +205,9 @@ class FileApi extends SecureRestApi
 
                 if (file_put_contents($destfile, $current)) {
                     chmod($destfile, $this->umask);
-                    $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
-                    $mimetype = finfo_file($finfo, $destfile);
-                    finfo_close($finfo);
-
-                    $filesize = filesize($destfile);
-
-                    $fileResult = json_decode('{}');
-                    $fileResult->{'title'} = $file->{'title'};
-                    $fileResult->{'url'} = '/'.$uridir.'/'.basename($file->{'url'});
-                    $fileResult->{'size'} = $filesize;
-                    $fileResult->{'mimetype'} = $mimetype;
+                    $title = $file->{'title'};
+                    $url = '/' . $uridir . '/' . basename($file->{'url'});
+                    $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
                     throw new Exception($file['name'].' KO');
@@ -238,6 +224,26 @@ class FileApi extends SecureRestApi
         $response->setMessage('');
 
         return $response;
+    }
+
+    /**
+    * get file info and build JSON response
+    */
+    private function getFileResponse($destfile, $title, $url) {
+
+      $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
+      $mimetype = finfo_file($finfo, $destfile);
+      finfo_close($finfo);
+
+      $filesize = filesize($destfile);
+
+      $fileResult = json_decode('{}');
+      $fileResult->{'title'} = $title;
+      $fileResult->{'url'} = $url;
+      $fileResult->{'size'} = $filesize;
+      $fileResult->{'mimetype'} = $mimetype;
+
+      return $fileResult;
     }
 
     private function getDataType(): string
