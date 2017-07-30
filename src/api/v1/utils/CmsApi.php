@@ -26,10 +26,7 @@ class CmsApi extends SecureRestApi
 
     protected function index() : Response
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
             $this->checkConfiguration();
@@ -77,10 +74,7 @@ class CmsApi extends SecureRestApi
      */
     protected function content() : Response
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
             $this->checkConfiguration();
@@ -187,10 +181,7 @@ class CmsApi extends SecureRestApi
 
     protected function file() : Response
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         $this->checkConfiguration();
 

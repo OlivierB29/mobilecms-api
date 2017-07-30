@@ -357,10 +357,7 @@ class UserService
 
     public function verifyToken($token): Response
     {
-        $response = new Response();
-        $response->setCode(401);
-        $response->setMessage('bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
             if (!isset($token)) {
@@ -399,5 +396,15 @@ class UserService
         }
     }
 
-    //
+
+    /**
+    * initialize a default Response object
+    */
+    protected function getDefaultResponse() : Response {
+      $response = new Response();
+      $response->setCode(400);
+      $response->setMessage('Bad parameters');
+      $response->setResult('{}');
+      return $response;
+    }
 }

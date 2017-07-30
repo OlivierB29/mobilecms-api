@@ -48,10 +48,7 @@ class ContentService
      */
     public function getRecord(string $type, string $keyvalue)
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
 
@@ -76,10 +73,7 @@ class ContentService
 
     public function deleteRecord(string $type, string $keyvalue)
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
 
@@ -115,10 +109,7 @@ class ContentService
      */
     public function getFilePath(string $filename): Response
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
 
@@ -157,10 +148,7 @@ class ContentService
      */
     public function get(string $filename, string $keyname, string $keyvalue)
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
 
@@ -200,10 +188,8 @@ class ContentService
      */
     public function getAllObjects($type)
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
+
         $thelist = [];
         try {
             if ($handle = opendir($this->databasedir.'/'.$type)) {
@@ -238,10 +224,7 @@ class ContentService
      */
     public function getAll(string $filename)
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
 
@@ -326,10 +309,7 @@ class ContentService
 
     public function post(string $type, string $keyname, string $recordStr)
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         if (isset($recordStr)) {
 
@@ -361,10 +341,7 @@ class ContentService
      */
     public function publishById(string $type, string $keyname, string $keyvalue)
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
             // file name eg: index.json
@@ -426,10 +403,7 @@ class ContentService
 
     public function rebuildIndex(string $type, string $keyname)
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         $data = [];
           // file name eg: index.json
@@ -519,5 +493,16 @@ class ContentService
         $file = $this->databasedir.'/'.$filename;
 
         return json_encode(JsonUtils::readJsonFile($file));
+    }
+
+    /**
+    * initialize a default Response object
+    */
+    protected function getDefaultResponse() : Response {
+      $response = new Response();
+      $response->setCode(400);
+      $response->setMessage('Bad parameters');
+      $response->setResult('{}');
+      return $response;
     }
 }

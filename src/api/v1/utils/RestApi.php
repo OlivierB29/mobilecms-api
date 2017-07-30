@@ -262,4 +262,15 @@ abstract class RestApi
 
         return json_encode($json);
     }
+
+    /**
+    * initialize a default Response object
+    */
+    protected function getDefaultResponse() : Response {
+      $response = new Response();
+      $response->setCode(400);
+      $response->setMessage('Bad parameters');
+      $response->setResult('{}');
+      return $response;
+    }
 }

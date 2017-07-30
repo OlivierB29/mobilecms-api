@@ -47,10 +47,7 @@ class FileApi extends SecureRestApi
      */
     protected function basicupload()
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
             $this->checkConfiguration();
@@ -96,10 +93,7 @@ class FileApi extends SecureRestApi
      */
     protected function download()
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
             $this->checkConfiguration();
@@ -190,10 +184,7 @@ class FileApi extends SecureRestApi
 
     private function downloadFiles($type, $id, $filesStr)
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         $files = json_decode($filesStr);
 

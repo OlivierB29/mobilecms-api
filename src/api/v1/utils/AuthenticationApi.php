@@ -19,10 +19,7 @@ class AuthenticationApi extends RestApi
      */
     protected function authenticate() : Response
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
             //throw error if wrong configuration, such as empty directory
@@ -65,10 +62,7 @@ class AuthenticationApi extends RestApi
      */
     protected function changepassword() : Response
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
             //throw error if wrong configuration, such as empty directory
@@ -112,10 +106,7 @@ class AuthenticationApi extends RestApi
      */
     protected function register() : Response
     {
-        $response = new Response();
-        $response->setCode(400);
-        $response->setMessage('Bad parameters');
-        $response->setResult('{}');
+        $response = $this->getDefaultResponse();
 
         try {
             //throw error if wrong configuration, such as empty directory
