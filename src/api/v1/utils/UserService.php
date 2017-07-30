@@ -396,15 +396,16 @@ class UserService
         }
     }
 
-
     /**
-    * initialize a default Response object
-    */
-    protected function getDefaultResponse() : Response {
-      $response = new Response();
-      $response->setCode(400);
-      $response->setMessage('Bad parameters');
-      $response->setResult('{}');
-      return $response;
+     * initialize a default Response object.
+     */
+    protected function getDefaultResponse() : Response
+    {
+        $response = new Response();
+        $response->setCode(400);
+        $response->setMessage('Bad parameters');
+        $response->setResult('{}');
+
+        return $response;
     }
 }

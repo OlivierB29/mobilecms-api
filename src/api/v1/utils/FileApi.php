@@ -206,7 +206,7 @@ class FileApi extends SecureRestApi
                 if (file_put_contents($destfile, $current)) {
                     chmod($destfile, $this->umask);
                     $title = $file->{'title'};
-                    $url = '/' . $uridir . '/' . basename($file->{'url'});
+                    $url = '/'.$uridir.'/'.basename($file->{'url'});
                     $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
@@ -227,23 +227,23 @@ class FileApi extends SecureRestApi
     }
 
     /**
-    * get file info and build JSON response
-    */
-    private function getFileResponse($destfile, $title, $url) {
-
-      $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
+     * get file info and build JSON response.
+     */
+    private function getFileResponse($destfile, $title, $url)
+    {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
       $mimetype = finfo_file($finfo, $destfile);
-      finfo_close($finfo);
+        finfo_close($finfo);
 
-      $filesize = filesize($destfile);
+        $filesize = filesize($destfile);
 
-      $fileResult = json_decode('{}');
-      $fileResult->{'title'} = $title;
-      $fileResult->{'url'} = $url;
-      $fileResult->{'size'} = $filesize;
-      $fileResult->{'mimetype'} = $mimetype;
+        $fileResult = json_decode('{}');
+        $fileResult->{'title'} = $title;
+        $fileResult->{'url'} = $url;
+        $fileResult->{'size'} = $filesize;
+        $fileResult->{'mimetype'} = $mimetype;
 
-      return $fileResult;
+        return $fileResult;
     }
 
     private function getDataType(): string
