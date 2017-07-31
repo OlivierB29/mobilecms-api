@@ -1,7 +1,7 @@
 <?php
 
 require_once 'SecureRestApi.php';
-
+require_once 'FileService.php';
 /*
  * File API with authentication.
  * Basic file upload using _FILES
@@ -67,9 +67,11 @@ class FileApi extends SecureRestApi
               // eg : /api/v1/content/calendar
               if ($this->method === 'GET') {
                   if (array_key_exists(0, $this->args)) {
-                      $id = $this->args[0];
-                    //
+                    // object id
+                    $id = $this->args[0];
+                    // create service
                     $service = new FileService();
+
                     // update files description
                     // media/calendar/1
                     $uridir = $this->media.'/'.$datatype.'/'.$id;
