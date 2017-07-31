@@ -64,4 +64,34 @@ final class FileApiTest extends TestCase
           $download = file_get_contents($this->conf->{'homedir'}.'/'.$this->conf->{'media'}.'/calendar/1/index.html');
         $this->assertTrue(strpos($download, 'MIT License') !== false);
     }
+
+    public function testGet()
+    {
+
+
+          // echo 'testPostSuccess: ' . $this->memory();
+          $path = '/fileapi/v1/basicupload/calendar/1';
+
+        $REQUEST = []; // $REQUEST = ['path' => $path];
+          $headers = ['Authorization' => $this->token];
+        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $GET = ['requestbody' => '{}'];
+        $recordStr = '[{ "url": "https://mit-license.org/index.html", "title":"MIT licence"}]';
+
+        $POST = null;
+        unset($recordStr);
+
+        $API = new FileApi($this->conf);
+
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+
+        $API->authorize($headers, $SERVER);
+
+        $result = $API->processAPI();
+
+        $this->assertTrue($result != null && $result != '');
+        $expected = '[{"title":"index.html","url":"media\/calendar\/1\/index.html","size":2834,"mimetype":"text\/html"},{"title":"lorem ipsum.pdf","url":"media\/calendar\/1\/lorem ipsum.pdf","size":24612,"mimetype":"application\/pdf"}]';
+
+        $this->assertJsonStringEqualsJsonString($expected, $result);
+    }
 }
