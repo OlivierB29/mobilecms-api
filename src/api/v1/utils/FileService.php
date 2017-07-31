@@ -3,54 +3,52 @@
 require_once 'Response.php';
 require_once 'JsonUtils.php';
 /**
-* file utility service
-*/
+ * file utility service.
+ */
 class FileService
 {
-
-
-      /**
-      * Direct file children from dir.
-      */
+    /**
+     * Direct file children from dir.
+     */
     public function getDescriptions($dir, $baseUri)
     {
-          $result = json_decode('[]');
-          $scanned_directory = array_diff(scandir($dir), array('..', '.'));
-          foreach ($scanned_directory as $key => $value) {
-              $filePath = $dir . DIRECTORY_SEPARATOR . $value;
-              if (is_file($filePath)) {
-                  array_push($result, $this->getFileResponse($filePath, $value, $baseUri . '/' . $value));
-              }
-          }
+        $result = json_decode('[]');
+        $scanned_directory = array_diff(scandir($dir), ['..', '.']);
+        foreach ($scanned_directory as $key => $value) {
+            $filePath = $dir.DIRECTORY_SEPARATOR.$value;
+            if (is_file($filePath)) {
+                array_push($result, $this->getFileResponse($filePath, $value, $baseUri.'/'.$value));
+            }
+        }
 
-          return $result;
+        return $result;
     }
 
     public function cleanDeletedFiles($homedir, $existing)
     {
-      $result = json_decode('[]');
-      foreach ($existing as $key => $value) {
+        $result = json_decode('[]');
+        foreach ($existing as $key => $value) {
+            $filePath = $homedir.DIRECTORY_SEPARATOR.$value->{'url'};
 
-        $filePath = $homedir . DIRECTORY_SEPARATOR . $value->{'url'};
-
-        if (is_file($filePath)) {
-            array_push($result, $value);
+            if (is_file($filePath)) {
+                array_push($result, $value);
+            }
         }
-      }
-      return $result;
+
+        return $result;
     }
 
     public function updateDescriptions($dir, $baseUri, $existing)
     {
         $result = $this->getDescriptions($dir, $baseUri);
         foreach ($result as $key => $value) {
-          $url = $value->{'url'};
-          $existingFile = JsonUtils::getByKey($existing, 'url', $url);
-          if (isset($existingFile)) {
-              $value->{'title'} = $existingFile->{'title'};
-          }
-
+            $url = $value->{'url'};
+            $existingFile = JsonUtils::getByKey($existing, 'url', $url);
+            if (isset($existingFile)) {
+                $value->{'title'} = $existingFile->{'title'};
+            }
         }
+
         return $result;
     }
 

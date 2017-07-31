@@ -68,7 +68,6 @@ final class FileApiTest extends TestCase
     public function testGet()
     {
 
-
           // echo 'testPostSuccess: ' . $this->memory();
           $path = '/fileapi/v1/basicupload/calendar/1';
 
