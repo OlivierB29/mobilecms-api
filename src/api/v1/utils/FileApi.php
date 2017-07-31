@@ -15,7 +15,7 @@ class FileApi extends SecureRestApi
    */
   private $media;
 
-  private $homedir;
+    private $homedir;
 
   /**
    * media directory (eg: /var/www/html/media ).
@@ -67,7 +67,7 @@ class FileApi extends SecureRestApi
               // eg : /api/v1/content/calendar
               if ($this->method === 'GET') {
                   if (array_key_exists(0, $this->args)) {
-                    $id = $this->args[0];
+                      $id = $this->args[0];
                     //
                     $service = new FileService();
                     // update files description
@@ -77,16 +77,11 @@ class FileApi extends SecureRestApi
                     // /var/www/html/media/calendar/1
                     $destdir = $this->homedir.'/'.$uridir;
 
-                    $uploadResult = $service->getDescriptions($destdir, $uridir);
+                      $uploadResult = $service->getDescriptions($destdir, $uridir);
                       $response->setCode(200);
                       $response->setMessage('');
                       $response->setResult(json_encode($uploadResult));
                   }
-
-
-
-
-
               } elseif ($this->method === 'POST') {
                   if (array_key_exists(0, $this->args)) {
                       //get the full data of a single record $this->args contains the remaining path parameters
