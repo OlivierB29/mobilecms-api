@@ -58,7 +58,7 @@ final class FileApiTest extends TestCase
           // test JSON response
           $this->assertTrue(strpos($result, 'title') !== false);
         $this->assertTrue(strpos($result, 'url') !== false);
-        $this->assertTrue(strpos($result, '"url":"\/media\/calendar\/1\/index.html"') !== false);
+        $this->assertTrue(strpos($result, '"url":"index.html"') !== false);
 
           // test download
           $download = file_get_contents($this->conf->{'homedir'}.'/'.$this->conf->{'media'}.'/calendar/1/index.html');
@@ -89,7 +89,7 @@ final class FileApiTest extends TestCase
         $result = $API->processAPI();
 
         $this->assertTrue($result != null && $result != '');
-        $expected = '[{"title":"index.html","url":"media\/calendar\/1\/index.html","size":2834,"mimetype":"text\/html"},{"title":"lorem ipsum.pdf","url":"media\/calendar\/1\/lorem ipsum.pdf","size":24612,"mimetype":"application\/pdf"}]';
+        $expected = '[{"title":"index.html","url":"index.html","size":2834,"mimetype":"text\/html"},{"title":"lorem ipsum.pdf","url":"lorem ipsum.pdf","size":24612,"mimetype":"application\/pdf"}]';
 
         $this->assertJsonStringEqualsJsonString($expected, $result);
     }

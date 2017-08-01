@@ -10,14 +10,14 @@ class FileService
     /**
      * Direct file children from dir.
      */
-    public function getDescriptions($dir, $baseUri)
+    public function getDescriptions($dir)
     {
         $result = json_decode('[]');
         $scanned_directory = array_diff(scandir($dir), ['..', '.']);
         foreach ($scanned_directory as $key => $value) {
             $filePath = $dir.DIRECTORY_SEPARATOR.$value;
             if (is_file($filePath)) {
-                array_push($result, $this->getFileResponse($filePath, $value, $baseUri.'/'.$value));
+                array_push($result, $this->getFileResponse($filePath, $value));
             }
         }
 
@@ -38,9 +38,9 @@ class FileService
         return $result;
     }
 
-    public function updateDescriptions($dir, $baseUri, $existing)
+    public function updateDescriptions($dir, $existing)
     {
-        $result = $this->getDescriptions($dir, $baseUri);
+        $result = $this->getDescriptions($dir);
         foreach ($result as $key => $value) {
             $url = $value->{'url'};
             $existingFile = JsonUtils::getByKey($existing, 'url', $url);
@@ -55,7 +55,7 @@ class FileService
       /**
        * get file info and build JSON response.
        */
-      public function getFileResponse($destfile, $title, $url)
+      public function getFileResponse($destfile, $title)
       {
           $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
           $mimetype = finfo_file($finfo, $destfile);
@@ -65,7 +65,7 @@ class FileService
 
           $fileResult = json_decode('{}');
           $fileResult->{'title'} = $title;
-          $fileResult->{'url'} = $url;
+          $fileResult->{'url'} = basename($destfile);
           $fileResult->{'size'} = $filesize;
           $fileResult->{'mimetype'} = $mimetype;
 

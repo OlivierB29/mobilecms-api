@@ -79,7 +79,7 @@ class FileApi extends SecureRestApi
                     // /var/www/html/media/calendar/1
                     $destdir = $this->homedir.'/'.$uridir;
 
-                      $uploadResult = $service->getDescriptions($destdir, $uridir);
+                      $uploadResult = $service->getDescriptions($destdir);
                       $response->setCode(200);
                       $response->setMessage('');
                       $response->setResult(json_encode($uploadResult));
@@ -177,7 +177,7 @@ class FileApi extends SecureRestApi
                 if (move_uploaded_file($file['tmp_name'], $destfile)) {
                     chmod($destfile, $this->umask);
                     $title = $file['name'];
-                    $url = '/'.$uridir.'/'.$file['name'];
+                    $url = $file['name'];
                     $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
@@ -187,7 +187,7 @@ class FileApi extends SecureRestApi
         }
 
         if (count($result) === 0) {
-            throw new Exception('no files');
+            throw new Exception('no file uploaded. Please check file size.');
         }
 
         return $result;
@@ -223,7 +223,7 @@ class FileApi extends SecureRestApi
                 if (file_put_contents($destfile, $current)) {
                     chmod($destfile, $this->umask);
                     $title = $file->{'title'};
-                    $url = '/'.$uridir.'/'.basename($file->{'url'});
+                    $url = basename($file->{'url'});
                     $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
