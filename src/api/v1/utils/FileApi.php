@@ -67,7 +67,7 @@ class FileApi extends SecureRestApi
               // eg : /api/v1/content/calendar
               if ($this->method === 'GET') {
                   if (array_key_exists(0, $this->args)) {
-                    // object id
+                      // object id
                     $id = $this->args[0];
                     // create service
                     $service = new FileService();
