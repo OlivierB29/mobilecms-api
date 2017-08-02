@@ -8,7 +8,6 @@ final class FileServiceTest extends TestCase
 {
     private $dir = 'tests-data/fileservice';
 
-
     public function testGetDescriptions()
     {
         $service = new FileService();
