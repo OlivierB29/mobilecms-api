@@ -25,8 +25,8 @@ class FileService
     }
 
     /**
-    * delete file JSON descriptions, if they don't exist
-    */
+     * delete file JSON descriptions, if they don't exist.
+     */
     public function cleanDeletedFiles($homedir, $existing)
     {
         $result = json_decode('[]');
@@ -42,8 +42,8 @@ class FileService
     }
 
     /**
-    * get updated file descriptions from a directory.
-    */
+     * get updated file descriptions from a directory.
+     */
     public function updateDescriptions($dir, $existing)
     {
         $result = $this->getDescriptions($dir);
@@ -78,15 +78,15 @@ class FileService
           return $fileResult;
       }
 
-
       /**
-      * /var/www/html/media/calendar/1
-      */
-      public function getRecordDirectory($mediadir, $datatype, $id): string {
-        if (isset($mediadir) && isset($datatype) && isset($id)) {
-            return $mediadir . '/' . $datatype . '/' . $id;
-        } else {
-          throw new Exception('getMediaDirectory args $mediadir:' . $mediadir . ' $datatype:' . $datatype . ' $id:' . $id);
-        }
+       * /var/www/html/media/calendar/1.
+       */
+      public function getRecordDirectory($mediadir, $datatype, $id): string
+      {
+          if (isset($mediadir) && isset($datatype) && isset($id)) {
+              return $mediadir.'/'.$datatype.'/'.$id;
+          } else {
+              throw new Exception('getMediaDirectory args $mediadir:'.$mediadir.' $datatype:'.$datatype.' $id:'.$id);
+          }
       }
 }
