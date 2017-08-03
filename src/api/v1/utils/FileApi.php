@@ -67,7 +67,7 @@ class FileApi extends SecureRestApi
               // eg : /api/v1/content/calendar
               if ($this->method === 'GET') {
                   if (array_key_exists(0, $this->args)) {
-                    // object id
+                      // object id
                     $id = $this->args[0];
                     // create service
                     $service = new FileService();
@@ -104,13 +104,14 @@ class FileApi extends SecureRestApi
         }
     }
 
-    protected function delete() {
-      $response = $this->getDefaultResponse();
+    protected function delete()
+    {
+        $response = $this->getDefaultResponse();
 
-      try {
-          $this->checkConfiguration();
+        try {
+            $this->checkConfiguration();
 
-          $datatype = $this->getDataType();
+            $datatype = $this->getDataType();
 
         //
         // Preflight requests are send by Angular
@@ -123,23 +124,19 @@ class FileApi extends SecureRestApi
         //
         if ($this->method === 'POST') {
             if (array_key_exists(0, $this->args)) {
-
-              $deleteResult = $this->deleteFiles($datatype, $this->args[0], urldecode($this->request[self::REQUESTBODY]));
-              $response->setCode(200);
-              $response->setMessage('');
-              $response->setResult(json_encode($deleteResult));
+                $deleteResult = $this->deleteFiles($datatype, $this->args[0], urldecode($this->request[self::REQUESTBODY]));
+                $response->setCode(200);
+                $response->setMessage('');
+                $response->setResult(json_encode($deleteResult));
             }
-          }
-
-      } catch (Exception $e) {
-          $response->setCode(500);
-          $response->setMessage($e->getMessage());
-          $response->setResult($this->errorToJson($e->getMessage()));
-      } finally {
-          return $response;
-      }
-
-
+        }
+        } catch (Exception $e) {
+            $response->setCode(500);
+            $response->setMessage($e->getMessage());
+            $response->setResult($this->errorToJson($e->getMessage()));
+        } finally {
+            return $response;
+        }
     }
 
     /**
@@ -322,8 +319,8 @@ class FileApi extends SecureRestApi
     }
 
     /**
-    * delete files
-    */
+     * delete files.
+     */
     private function deleteFiles($type, $id, $filesStr)
     {
         $response = $this->getDefaultResponse();
@@ -340,17 +337,16 @@ class FileApi extends SecureRestApi
             // /var/www/html/media/calendar/1
             $destdir = $this->homedir.'/'.$uridir;
 
-
             // upload
             if (isset($file->{'url'})) {
                 // get foobar.html from http://something.com/[...]/foobar.html
                 $destfile = $destdir.'/'.basename($file->{'url'});
 
                 if (!unlink($destfile)) {
-                  throw new Exception('delete ' . $file['name'].' KO');
+                    throw new Exception('delete '.$file['name'].' KO');
                 }
             } else {
-                throw new Exception('wrong file ' . $file['name'].' KO');
+                throw new Exception('wrong file '.$file['name'].' KO');
             }
         }
 
