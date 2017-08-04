@@ -65,6 +65,42 @@ final class FileApiTest extends TestCase
         $this->assertTrue(strpos($download, 'MIT License') !== false);
     }
 
+
+    public function testDelete()
+    {
+        $filename = 'testdelete.pdf';
+        $record = '/calendar/2';
+        // tests-data/fileapi/save -> tests-data/fileapi/media/calendar/2/
+        $destfile = $this->conf->{'homedir'} . '/' . $this->conf->{'media'} . $record . '/' . $filename;
+        copy($this->conf->{'homedir'} . '/save' .'/' . $filename, $destfile);
+
+        // assert file exists before API call
+        $this->assertTrue(file_exists($destfile));
+        $path = '/fileapi/v1/delete/calendar/2';
+
+        $REQUEST = [];
+        $headers = ['Authorization' => $this->token];
+        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $GET = null;
+        $recordStr = '[{ "url": "testdelete.pdf", "title":"test"}]';
+
+        $POST = ['requestbody' => $recordStr];
+        unset($recordStr);
+
+        $API = new FileApi($this->conf);
+
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+
+        $API->authorize($headers, $SERVER);
+
+        $result = $API->processAPI();
+
+        $this->assertTrue($result != null && $result != '');
+
+        // test deleted file
+        $this->assertTrue(!file_exists($destfile));
+    }
+
     public function testGet()
     {
 
