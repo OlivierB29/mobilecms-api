@@ -325,6 +325,7 @@ class UserService
         // return the existing user
         $user = $this->getJsonUser($email);
 
+
         // user found
         if (!empty($user)) {
             if ($this->login($emailParam, $password) === '') {
@@ -332,6 +333,7 @@ class UserService
 
                 if (empty($updateMsg)) {
                     $response->setCode(200);
+                    $response->setResult('{}');
                     $response->setMessage('');
                 } else {
                     $response->setCode(500);

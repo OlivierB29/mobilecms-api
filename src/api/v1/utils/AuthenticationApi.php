@@ -27,9 +27,7 @@ class AuthenticationApi extends RestApi
 
             $service = new UserService($this->conf->{'privatedir'}.'/users');
 
-            //
             // Preflight requests are send by Angular
-            //
             if ($this->method === 'OPTIONS') {
                 // eg : /authapi/v1/auth
                 $response = $service->preflight();
@@ -38,10 +36,8 @@ class AuthenticationApi extends RestApi
             if ($this->method === 'POST') {
 
                 // login and get token
-                //
-                // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
-                //
-                $logindata = json_decode($this->request['requestbody']);
+                    // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
+                    $logindata = json_decode($this->request['requestbody']);
 
                 //TODO : user contains either email of name
                 $response = $service->getToken($logindata->{'user'}, $logindata->{'password'});
@@ -70,9 +66,7 @@ class AuthenticationApi extends RestApi
 
             $service = new UserService($this->conf->{'privatedir'}.'/users');
 
-            //
             // Preflight requests are send by Angular
-            //
             if ($this->method === 'OPTIONS') {
                 // eg : /authapi/v1/auth
                 $response->setResult($service->preflight());
@@ -80,16 +74,17 @@ class AuthenticationApi extends RestApi
 
             if ($this->method === 'POST') {
 
+
                 // login and get token
-                //
-                // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
-                //
-                $logindata = json_decode($this->request['requestbody']);
+                    // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
+                    $logindata = json_decode($this->request['requestbody']);
 
                 //TODO : user contains either email of name
 
+
                 // free variables before response
                 $response = $service->changePassword($logindata->{'email'}, $logindata->{'password'}, $logindata->{'newpassword'});
+
                 unset($logindata);
             }
         } catch (Exception $e) {
@@ -113,16 +108,12 @@ class AuthenticationApi extends RestApi
             $this->checkConfiguration();
             $service = new UserService($this->conf->{'privatedir'}.'/users');
 
-            //
             // Preflight requests are send by Angular
-            //
             if ($this->method === 'OPTIONS') {
                 $response->setResult($service->preflight());
             }
 
-            //
             // register and create a user
-            //
             if ($this->method === 'POST') {
                 $user = json_decode($this->request['requestbody']);
                 //returns a empty string if success, a string with the message otherwise

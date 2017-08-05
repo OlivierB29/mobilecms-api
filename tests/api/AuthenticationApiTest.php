@@ -21,7 +21,6 @@ final class AuthenticationApiTest extends TestCase
     public function testLogin()
     {
         $path = '/api/v1/authenticate';
-
         $recordStr = '{ "user": "test@example.com", "password":"Sample#123456"}';
 
         $REQUEST = ['path' => $path];
@@ -41,6 +40,8 @@ final class AuthenticationApiTest extends TestCase
         $this->assertTrue($userObject->{'email'} === 'test@example.com');
         $this->assertTrue(strlen($userObject->{'token'}) > 150);
     }
+
+
 
     public function testRegister()
     {
@@ -65,5 +66,61 @@ final class AuthenticationApiTest extends TestCase
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
         $result = $API->processAPI();
         $this->assertTrue($result != null && $result != '');
+    }
+
+    public function testChangePassword()
+    {
+        $path = '/api/v1/changepassword';
+        $user = 'changepassword@example.com';
+        $userFile = $user . '.json';
+        copy($this->conf->{'privatedir'} . '/save/' . $userFile, $this->conf->{'privatedir'} . '/users/' . $userFile);
+
+        $recordStr = '{ "email": "'. $user .'", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
+
+        $REQUEST = ['path' => $path];
+        $headers = [];
+        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $GET = null;
+        $POST = ['requestbody' => $recordStr];
+
+        $API = new AuthenticationApi($this->conf);
+
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+        $result = $API->processAPI();
+        $this->assertTrue($result != null && $result != '');
+
+        // test new password with login
+        $loginRecordStr = '{ "email": "'.$user.'", "password":"Foobar!654321"}';
+
+        $recordStr = '{ "user": "changepassword@example.com", "password":"Foobar!654321"}';
+
+        $this->verifyChangePassword($user, $recordStr);
+
+      // delete file
+      unlink($this->conf->{'privatedir'} . '/users/' . $userFile);
+    }
+
+
+
+    private function verifyChangePassword($user, $recordStr)
+    {
+        $path = '/api/v1/authenticate';
+
+        $REQUEST = ['path' => $path];
+        $headers = [];
+        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $GET = null;
+        $POST = ['requestbody' => $recordStr];
+
+        $API = new AuthenticationApi($this->conf);
+
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+        $result = $API->processAPI();
+        $this->assertTrue($result != null && $result != '');
+
+        $userObject = json_decode($result);
+
+        $this->assertTrue($userObject->{'email'} === $user);
+        $this->assertTrue(strlen($userObject->{'token'}) > 150);
     }
 }
