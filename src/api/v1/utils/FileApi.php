@@ -342,17 +342,16 @@ class FileApi extends SecureRestApi
                 // get foobar.html from http://something.com/[...]/foobar.html
                 $destfile = $destdir.'/'.basename($file->{'url'});
                 if (file_exists($destfile)) {
-                  if (!unlink($destfile)) {
-                      throw new Exception('delete '.$file['url'].' KO');
-                  }
+                    if (!unlink($destfile)) {
+                        throw new Exception('delete '.$file['url'].' KO');
+                    }
                 } else {
-                  // TODO add message
+                    // TODO add message
                 }
             } else {
                 throw new Exception('wrong file '.$file['url'].' KO');
             }
         }
-
 
         $response->setResult(json_encode($result));
         $response->setCode(200);

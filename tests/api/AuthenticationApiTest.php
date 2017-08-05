@@ -41,8 +41,6 @@ final class AuthenticationApiTest extends TestCase
         $this->assertTrue(strlen($userObject->{'token'}) > 150);
     }
 
-
-
     public function testRegister()
     {
         $email = 'testregister@example.com';
@@ -72,10 +70,10 @@ final class AuthenticationApiTest extends TestCase
     {
         $path = '/api/v1/changepassword';
         $user = 'changepassword@example.com';
-        $userFile = $user . '.json';
-        copy($this->conf->{'privatedir'} . '/save/' . $userFile, $this->conf->{'privatedir'} . '/users/' . $userFile);
+        $userFile = $user.'.json';
+        copy($this->conf->{'privatedir'}.'/save/'.$userFile, $this->conf->{'privatedir'}.'/users/'.$userFile);
 
-        $recordStr = '{ "email": "'. $user .'", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
+        $recordStr = '{ "email": "'.$user.'", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
 
         $REQUEST = ['path' => $path];
         $headers = [];
@@ -97,10 +95,8 @@ final class AuthenticationApiTest extends TestCase
         $this->verifyChangePassword($user, $recordStr);
 
       // delete file
-      unlink($this->conf->{'privatedir'} . '/users/' . $userFile);
+      unlink($this->conf->{'privatedir'}.'/users/'.$userFile);
     }
-
-
 
     private function verifyChangePassword($user, $recordStr)
     {
