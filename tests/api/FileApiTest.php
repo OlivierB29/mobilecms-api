@@ -65,14 +65,13 @@ final class FileApiTest extends TestCase
         $this->assertTrue(strpos($download, 'MIT License') !== false);
     }
 
-
     public function testDelete()
     {
         $filename = 'testdelete.pdf';
         $record = '/calendar/2';
         // tests-data/fileapi/save -> tests-data/fileapi/media/calendar/2/
-        $destfile = $this->conf->{'homedir'} . '/' . $this->conf->{'media'} . $record . '/' . $filename;
-        copy($this->conf->{'homedir'} . '/save' .'/' . $filename, $destfile);
+        $destfile = $this->conf->{'homedir'}.'/'.$this->conf->{'media'}.$record.'/'.$filename;
+        copy($this->conf->{'homedir'}.'/save'.'/'.$filename, $destfile);
 
         // assert file exists before API call
         $this->assertTrue(file_exists($destfile));

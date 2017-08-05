@@ -325,7 +325,6 @@ class UserService
         // return the existing user
         $user = $this->getJsonUser($email);
 
-
         // user found
         if (!empty($user)) {
             if ($this->login($emailParam, $password) === '') {

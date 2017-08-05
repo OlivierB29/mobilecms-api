@@ -74,13 +74,11 @@ class AuthenticationApi extends RestApi
 
             if ($this->method === 'POST') {
 
-
                 // login and get token
                     // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
                     $logindata = json_decode($this->request['requestbody']);
 
                 //TODO : user contains either email of name
-
 
                 // free variables before response
                 $response = $service->changePassword($logindata->{'email'}, $logindata->{'password'}, $logindata->{'newpassword'});
