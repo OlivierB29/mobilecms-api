@@ -151,11 +151,9 @@ final class CmsApiTest extends TestCase
         $API = new CmsApi($this->conf);
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
-
         $result = $API->processAPI();
         $this->assertTrue($result != null && $result != '');
         $this->assertTrue(strpos($result, '{"error":"wrong role"}') !== false);
-
     }
 
     public function testGetCalendarRecord()

@@ -34,17 +34,16 @@ class AuthenticationApi extends RestApi
             }
 
             if ($this->method === 'POST') {
-
-              if (!array_key_exists('requestbody', $this->request)) {
-                throw new Exception('no login request');
-              }
+                if (!array_key_exists('requestbody', $this->request)) {
+                    throw new Exception('no login request');
+                }
                 // login and get token
                     // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
                 $logindata = json_decode($this->request['requestbody']);
 
                 //TODO : user contains either email of name
                 if (!isset($logindata)) {
-                  throw new Exception('no login data');
+                    throw new Exception('no login data');
                 }
                 $response = $service->getToken($logindata->{'user'}, $logindata->{'password'});
                 unset($logindata);

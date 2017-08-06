@@ -360,30 +360,28 @@ class UserService
     {
         $response = $this->getDefaultResponse();
 
+        if (!isset($token)) {
+            throw new Exception('empty token');
+        }
 
-            if (!isset($token)) {
-                throw new Exception('empty token');
-            }
-
-            $response->setMessage('init');
-            $jwt = new JwtToken();
+        $response->setMessage('init');
+        $jwt = new JwtToken();
 
             // get payload and convert to JSON
             $response->setMessage('json_decode token');
-            $payload = $jwt->getPayload($token);
+        $payload = $jwt->getPayload($token);
 
-            if (!isset($payload)) {
-                throw new Exception('empty payload');
-            }
+        if (!isset($payload)) {
+            throw new Exception('empty payload');
+        }
 
-
-              $payloadJson = json_decode($payload);
-              if (!isset($payloadJson)) {
-                  throw new Exception('empty payload');
-              }
+        $payloadJson = json_decode($payload);
+        if (!isset($payloadJson)) {
+            throw new Exception('empty payload');
+        }
               // get the existing user
               $response->setMessage('getJsonUser');
-              $user = $this->getJsonUser($payloadJson->{'sub'});
+        $user = $this->getJsonUser($payloadJson->{'sub'});
 
               // verify token with secret
               if ($jwt->verifyToken($token, $user->{'salt'})) {
@@ -399,9 +397,7 @@ class UserService
                   $response->setMessage('JwtToken.verifyToken is false');
               }
 
-
         return $response;
-
     }
 
     /**
