@@ -26,29 +26,28 @@ abstract class SecureRestApi extends RestApi
         parent::__construct($conf);
     }
 
-    /**
-     * $headers : array containing result of apache_request_headers() and getallheaders(), if available.
-     * Or send by test units.
-     *
-     * $SERVER : send by test units.
-     */
-    public function authorize(array $headers = null, array $SERVER = null)
+    public function processAPI(): string
     {
-        switch ($this->method) {
-        case 'DELETE':
-        case 'POST':
-        case 'PUT':
-            $this->doAuthorize($headers, $SERVER);
-            break;
-        case 'OPTIONS':
-            break;
-        case 'GET':
-            $this->doAuthorize($headers, $SERVER);
-            break;
-        default:
-            $this->_response('Invalid Method', 405);
-            break;
+
+      $response = $this->getDefaultResponse();
+
+      // authorize() return a response with 200. Otherwise :
+      // - throw an exception
+      // - return a response
+    try {
+      $response = $this->authorize();
+    } catch (Exception $e) {
+          $response->setCode(401);
+          $response->setMessage($e->getMessage());
+          $response->setResult($this->errorToJson($e->getMessage()));
     }
+
+      if ($response->getCode() === 200) {
+        return parent::processAPI();
+      } else {
+        return $this->_responseObj($response);
+      }
+
     }
 
     /**
@@ -57,8 +56,41 @@ abstract class SecureRestApi extends RestApi
      *
      * $SERVER : send by test units.
      */
-    public function doAuthorize(array $headers = null, array $SERVER = null)
+    public function authorize(array $headers = null, array $SERVER = null)
     {
+      $response = $this->getDefaultResponse();
+      $response->setCode(401);
+
+        switch ($this->method) {
+        case 'OPTIONS':
+              $response->setCode(200);
+              $response->setResult('{}');
+              break;
+        case 'GET':
+        case 'POST':
+        case 'PUT':
+        case 'DELETE':
+            $response = $this->doAuthorize($headers, $SERVER);
+            break;
+        default:
+            $response->getCode(405);
+            break;
+    }
+
+    return $response;
+    }
+
+    /**
+     * $headers : array containing result of apache_request_headers() and getallheaders(), if available.
+     * Or send by test units.
+     *
+     * $SERVER : send by test units.
+     */
+    public function doAuthorize(array $SERVER = null)
+    {
+        $response = $this->getDefaultResponse();
+        $response->setCode(401);
+
         if (!isset($SERVER)) {
             $SERVER = &$_SERVER;
         }
@@ -111,8 +143,8 @@ abstract class SecureRestApi extends RestApi
         $bearerTokenValue = $this->getAuthorizationHeader();
 
         //for unit tests
-        if (!empty($headers)) {
-            $bearerTokenValue = $headers[self::AUTHORIZATION];
+        if (!empty($this->headers)) {
+            $bearerTokenValue = $this->headers[self::AUTHORIZATION];
         }
 
         if (!empty($bearerTokenValue)) {
@@ -127,13 +159,15 @@ abstract class SecureRestApi extends RestApi
 
             $service = new UserService($this->conf->{'privatedir'}.'/users');
             $response = $service->verifyToken($tokenValue);
+
             unset($service);
-            if ($response->getCode() !== 200) {
-                throw new Exception('Invalid User Token'.$response->getCode().$response->getMessage());
-            }
+
         } else {
             throw new Exception('No User Token provided');
         }
+
+        return $response;
+
     }
 
     /**

@@ -360,7 +360,7 @@ class UserService
     {
         $response = $this->getDefaultResponse();
 
-        try {
+
             if (!isset($token)) {
                 throw new Exception('empty token');
             }
@@ -370,31 +370,38 @@ class UserService
 
             // get payload and convert to JSON
             $response->setMessage('json_decode token');
-            $payloadJson = json_decode($jwt->getPayload($token));
+            $payload = $jwt->getPayload($token);
 
-            // get the existing user
-            $response->setMessage('getJsonUser');
-            $user = $this->getJsonUser($payloadJson->{'sub'});
-
-            // verify token with secret
-            if ($jwt->verifyToken($token, $user->{'salt'})) {
-
-              // verify user role
-              if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
-                  $response->setCode(200);
-                  $response->setMessage('');
-              } else {
-                  $response->setMessage('wrong role');
-              }
-            } else {
-                $response->setMessage('JwtToken.verifyToken is false');
+            if (!isset($payload)) {
+                throw new Exception('empty payload');
             }
-        } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
-        } finally {
-            return $response;
-        }
+
+
+              $payloadJson = json_decode($payload);
+              if (!isset($payloadJson)) {
+                  throw new Exception('empty payload');
+              }
+              // get the existing user
+              $response->setMessage('getJsonUser');
+              $user = $this->getJsonUser($payloadJson->{'sub'});
+
+              // verify token with secret
+              if ($jwt->verifyToken($token, $user->{'salt'})) {
+
+                // verify user role
+                if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
+                    $response->setCode(200);
+                    $response->setMessage('');
+                } else {
+                    throw new Exception('wrong role');
+                }
+              } else {
+                  $response->setMessage('JwtToken.verifyToken is false');
+              }
+
+
+        return $response;
+
     }
 
     /**

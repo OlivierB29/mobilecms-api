@@ -19,8 +19,6 @@ try {
     $API = new FileApi($conf);
 
     $API->setRequest();
-    $API->authorize();
-
     echo $API->processAPI();
 } catch (Exception $e) {
     echo json_encode([

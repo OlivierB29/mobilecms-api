@@ -62,8 +62,8 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $API->authorize($headers, $SERVER);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+
         $result = $API->processAPI();
         $this->assertTrue($result != null);
         $this->assertJsonStringEqualsJsonString('[
@@ -90,9 +90,9 @@ final class CmsApiTest extends TestCase
         $API = new CmsApi($this->conf);
         // echo 'new CmsApi: ' . $this->memory();
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
         // echo 'setRequest: ' . $this->memory();
-        $API->authorize($headers, $SERVER);
+
         // echo 'authorize: ' . $this->memory();
         $result = $API->processAPI();
         // echo 'processAPI: ' . $this->memory();
@@ -115,8 +115,8 @@ final class CmsApiTest extends TestCase
 
         $API = new CmsApi($this->conf);
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $API->authorize($headers, $SERVER);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+
         $result = $API->processAPI();
         $this->assertTrue($result != null && $result != '');
     }
@@ -131,8 +131,8 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $API->authorize($headers, $SERVER);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+
         $result = $API->processAPI();
 
         $this->assertTrue($result != null && $result != '');
@@ -141,7 +141,6 @@ final class CmsApiTest extends TestCase
 
     public function testGetByGuest()
     {
-        $this->expectException(Exception::class);
         $path = '/restapi/v1/content/calendar/1';
         $headers = ['Authorization' => $this->guesttoken];
         $REQUEST = [];
@@ -150,10 +149,13 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $API->authorize($headers, $SERVER);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+
 
         $result = $API->processAPI();
+        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue(strpos($result, '{"error":"wrong role"}') !== false);
+
     }
 
     public function testGetCalendarRecord()
@@ -166,8 +168,8 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $API->authorize($headers, $SERVER);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+
         $result = $API->processAPI();
 
         $this->assertTrue($result != null && $result != '');
@@ -187,8 +189,8 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $API->authorize($headers, $SERVER);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+
         $result = $API->processAPI();
 
         $this->assertTrue($result != null && $result === '{}');
@@ -204,8 +206,8 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $API->authorize($headers, $SERVER);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+
         $result = $API->processAPI();
 
         $this->assertTrue($result != null && $result != '');
@@ -238,8 +240,8 @@ final class CmsApiTest extends TestCase
 
         $API = new CmsApi($this->conf);
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $API->authorize($headers, $SERVER);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+
         $result = $API->processAPI();
         $this->assertTrue($result != null && $result != '');
 

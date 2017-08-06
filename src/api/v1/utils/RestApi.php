@@ -59,6 +59,8 @@ abstract class RestApi
 
     protected $request = null;
 
+    protected $headers = null;
+
     /**
      * /api/v1/content/save
      * eg : /restapi/v1/recipe/cake/foo/bar.
@@ -112,7 +114,7 @@ abstract class RestApi
     /**
      * initialize parameters with request.
      */
-    public function setRequest(array $REQUEST = null, array $SERVER = null, array $GET = null, array $POST = null)
+    public function setRequest(array $REQUEST = null, array $SERVER = null, array $GET = null, array $POST = null, array $headers = null)
     {
 
         // Useful for tests http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
@@ -130,6 +132,10 @@ abstract class RestApi
         if ($REQUEST === null) {
             $REQUEST = &$_REQUEST;
         }
+
+
+        $this->headers = $headers;
+
 
         //
         // Parse URI
@@ -206,7 +212,7 @@ abstract class RestApi
     /**
      * send JSON response.
      */
-    private function _response($data = '', $status = 0): string
+    protected function _response($data = '', $status = 0): string
     {
         if ($this->enableHeaders && $status > 0) {
             header('HTTP/1.1 '.$status.' '.$this->_requestStatus($status));
@@ -216,7 +222,7 @@ abstract class RestApi
         return $data;
     }
 
-    private function _responseObj($response): string
+    protected function _responseObj($response): string
     {
         if ($this->enableHeaders && $response->getCode() > 0) {
             header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
@@ -245,6 +251,7 @@ abstract class RestApi
         $status = [
                 200 => 'OK',
                 400 => 'Bad Request',
+                401 => 'Unauthorized',
                 404 => 'Not Found',
                 405 => 'Method Not Allowed',
                 500 => 'Internal Server Error',

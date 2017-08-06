@@ -53,7 +53,6 @@ try {//PRIVATEDIR . '/users'
 
     // $API->setRequest($_REQUEST, $_SERVER, $_GET, $_POST);
     $API->setRequest();
-    $API->authorize();
 
     echo $API->processAPI();
 } catch (Exception $e) {

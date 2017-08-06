@@ -47,7 +47,7 @@ final class FileApiTest extends TestCase
 
         $API = new FileApi($this->conf);
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
         $API->authorize($headers, $SERVER);
 
@@ -88,7 +88,7 @@ final class FileApiTest extends TestCase
 
         $API = new FileApi($this->conf);
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
         $API->authorize($headers, $SERVER);
 
@@ -117,7 +117,7 @@ final class FileApiTest extends TestCase
 
         $API = new FileApi($this->conf);
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
         $API->authorize($headers, $SERVER);
 
