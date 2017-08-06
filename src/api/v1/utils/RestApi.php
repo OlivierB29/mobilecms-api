@@ -133,9 +133,7 @@ abstract class RestApi
             $REQUEST = &$_REQUEST;
         }
 
-
         $this->headers = $headers;
-
 
         //
         // Parse URI

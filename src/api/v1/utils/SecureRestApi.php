@@ -28,26 +28,24 @@ abstract class SecureRestApi extends RestApi
 
     public function processAPI(): string
     {
-
-      $response = $this->getDefaultResponse();
+        $response = $this->getDefaultResponse();
 
       // authorize() return a response with 200. Otherwise :
       // - throw an exception
       // - return a response
     try {
-      $response = $this->authorize();
+        $response = $this->authorize();
     } catch (Exception $e) {
-          $response->setCode(401);
-          $response->setMessage($e->getMessage());
-          $response->setResult($this->errorToJson($e->getMessage()));
+        $response->setCode(401);
+        $response->setMessage($e->getMessage());
+        $response->setResult($this->errorToJson($e->getMessage()));
     }
 
-      if ($response->getCode() === 200) {
-        return parent::processAPI();
-      } else {
-        return $this->_responseObj($response);
-      }
-
+        if ($response->getCode() === 200) {
+            return parent::processAPI();
+        } else {
+            return $this->_responseObj($response);
+        }
     }
 
     /**
@@ -58,8 +56,8 @@ abstract class SecureRestApi extends RestApi
      */
     public function authorize(array $headers = null, array $SERVER = null)
     {
-      $response = $this->getDefaultResponse();
-      $response->setCode(401);
+        $response = $this->getDefaultResponse();
+        $response->setCode(401);
 
         switch ($this->method) {
         case 'OPTIONS':
@@ -77,7 +75,7 @@ abstract class SecureRestApi extends RestApi
             break;
     }
 
-    return $response;
+        return $response;
     }
 
     /**
@@ -161,13 +159,11 @@ abstract class SecureRestApi extends RestApi
             $response = $service->verifyToken($tokenValue);
 
             unset($service);
-
         } else {
             throw new Exception('No User Token provided');
         }
 
         return $response;
-
     }
 
     /**
