@@ -81,7 +81,8 @@ class AuthenticationApi extends RestApi
 
                 // login and get token
                     // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
-                    $logindata = json_decode($this->request['requestbody']);
+
+                $logindata = json_decode($this->request['requestbody']);
 
                 //TODO : user contains either email of name
 
@@ -89,6 +90,8 @@ class AuthenticationApi extends RestApi
                 $response = $service->changePassword($logindata->{'email'}, $logindata->{'password'}, $logindata->{'newpassword'});
 
                 unset($logindata);
+
+
             }
         } catch (Exception $e) {
             $response->setCode(500);

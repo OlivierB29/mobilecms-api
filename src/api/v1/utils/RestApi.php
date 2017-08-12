@@ -20,6 +20,11 @@ abstract class RestApi
     protected $enableHeaders = true;
 
     /**
+    * see _cleanInputs() below.
+    */
+    protected $enableCleanInputs = true;
+
+    /**
      * Property: method
      * The HTTP method this request was made in, either GET, POST, PUT or DELETE.
      */
@@ -109,6 +114,11 @@ abstract class RestApi
         if ('false' === $this->conf->{'enableheaders'}) {
             $this->enableHeaders = false;
         }
+
+        // Default value is true
+        if ('false' === $this->conf->{'enablecleaninputs'}) {
+            $this->enableCleanInputs = false;
+        }
     }
 
     /**
@@ -158,15 +168,16 @@ abstract class RestApi
         switch ($this->method) {
             case 'DELETE':
             case 'POST':
-                $this->request = $this->_cleanInputs($POST);
+                $this->request = $this->enableCleanInputs ? $this->_cleanInputs($POST) : $POST;
                 break;
             case 'OPTIONS':
                     $this->preflight();
             case 'GET':
-                $this->request = $this->_cleanInputs($GET);
+                $this->request = $this->enableCleanInputs ? $this->_cleanInputs($GET) : $GET;
                 break;
             case 'PUT':
-                $this->request = $this->_cleanInputs($GET);
+                $this->request = $this->enableCleanInputs ? $this->_cleanInputs($GET) : $GET;
+                //$this->request = $this->_cleanInputs($GET);
                 // http://php.net/manual/en/wrappers.php.php
                 $this->file = file_get_contents('php://input');
                 break;

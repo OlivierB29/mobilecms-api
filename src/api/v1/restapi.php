@@ -43,15 +43,15 @@ try {//PRIVATEDIR . '/users'
     $conf = json_decode('{"enableheaders" : "","enableapikey" : "true", "publicdir":"", "privatedir":"" , "apikeyfile" : "" }');
     $conf->{'enableheaders'} = 'true';
     $conf->{'enableapikey'} = 'false';
+    
+    $conf->{'enablecleaninputs'} = 'true';
     $conf->{'publicdir'} = HOME.'/public';
     $conf->{'privatedir'} = PRIVATEDIR;
-    //$conf->{'apikeyfile'} = HOME . '/private/apikeys/key1.json';
 
-    // echo print_r($_REQUEST);
 
     $API = new CmsApi($conf);
 
-    // $API->setRequest($_REQUEST, $_SERVER, $_GET, $_POST);
+
     $API->setRequest();
 
     echo $API->processAPI();

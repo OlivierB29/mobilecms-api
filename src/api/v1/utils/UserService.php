@@ -328,6 +328,7 @@ class UserService
         // user found
         if (!empty($user)) {
             if ($this->login($emailParam, $password) === '') {
+
                 $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
 
                 if (empty($updateMsg)) {
@@ -336,7 +337,7 @@ class UserService
                     $response->setMessage('');
                 } else {
                     $response->setCode(500);
-                    $response->setMessage('createUserWithSecret error');
+                    $response->setMessage('createUserWithSecret error ' + $updateMsg);
                 }
             } else {
                 // incorrect password

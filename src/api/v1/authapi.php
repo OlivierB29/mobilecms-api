@@ -43,6 +43,8 @@ try {
     $conf = json_decode('{"enableheaders" : "","enableapikey" : "true", "privatedir":"" , "apikeyfile" : "" }');
     $conf->{'enableheaders'} = 'true';
     $conf->{'enableapikey'} = 'false';
+    // see _cleanInput() method : since hashed password are send, the strip tags function can corrupt data
+    $conf->{'enablecleaninputs'} = 'false';
     $conf->{'privatedir'} = PRIVATEDIR;
 
     $API = new AuthenticationApi($conf);
