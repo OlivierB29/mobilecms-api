@@ -20,8 +20,8 @@ abstract class RestApi
     protected $enableHeaders = true;
 
     /**
-    * see _cleanInputs() below.
-    */
+     * see _cleanInputs() below.
+     */
     protected $enableCleanInputs = true;
 
     /**

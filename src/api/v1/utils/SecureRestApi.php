@@ -30,16 +30,16 @@ abstract class SecureRestApi extends RestApi
     {
         $response = $this->getDefaultResponse();
 
-      // authorize() return a response with 200. Otherwise :
-      // - throw an exception
-      // - return a response
-    try {
-        $response = $this->authorize();
-    } catch (Exception $e) {
-        $response->setCode(401);
-        $response->setMessage($e->getMessage());
-        $response->setResult($this->errorToJson($e->getMessage()));
-    }
+        // authorize() return a response with 200. Otherwise :
+        // - throw an exception
+        // - return a response
+        try {
+            $response = $this->authorize();
+        } catch (Exception $e) {
+            $response->setCode(401);
+            $response->setMessage($e->getMessage());
+            $response->setResult($this->errorToJson($e->getMessage()));
+        }
 
         if ($response->getCode() === 200) {
             return parent::processAPI();

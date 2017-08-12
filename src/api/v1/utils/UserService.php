@@ -162,7 +162,7 @@ class UserService
 
             if (file_exists($file)) {
                 // user already exists
-              $error_msg .= 'AlreadyExists.';
+                $error_msg .= 'AlreadyExists.';
             }
 
             if (empty($secretQuestion)) {
@@ -192,10 +192,10 @@ class UserService
 
             if ($mode === 'create') {
                 // create user
-              $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
+                $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
             } else {
                 //role is not modified
-              $this->updateUser($email, '', $saltpassword, $random_salt, '');
+                $this->updateUser($email, '', $saltpassword, $random_salt, '');
             }
         }
 
@@ -328,7 +328,6 @@ class UserService
         // user found
         if (!empty($user)) {
             if ($this->login($emailParam, $password) === '') {
-
                 $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
 
                 if (empty($updateMsg)) {
@@ -368,8 +367,8 @@ class UserService
         $response->setMessage('init');
         $jwt = new JwtToken();
 
-            // get payload and convert to JSON
-            $response->setMessage('json_decode token');
+        // get payload and convert to JSON
+        $response->setMessage('json_decode token');
         $payload = $jwt->getPayload($token);
 
         if (!isset($payload)) {
@@ -380,23 +379,23 @@ class UserService
         if (!isset($payloadJson)) {
             throw new Exception('empty payload');
         }
-              // get the existing user
-              $response->setMessage('getJsonUser');
+        // get the existing user
+        $response->setMessage('getJsonUser');
         $user = $this->getJsonUser($payloadJson->{'sub'});
 
-              // verify token with secret
-              if ($jwt->verifyToken($token, $user->{'salt'})) {
+        // verify token with secret
+        if ($jwt->verifyToken($token, $user->{'salt'})) {
 
                 // verify user role
-                if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
-                    $response->setCode(200);
-                    $response->setMessage('');
-                } else {
-                    throw new Exception('wrong role');
-                }
-              } else {
-                  $response->setMessage('JwtToken.verifyToken is false');
-              }
+            if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
+                $response->setCode(200);
+                $response->setMessage('');
+            } else {
+                throw new Exception('wrong role');
+            }
+        } else {
+            $response->setMessage('JwtToken.verifyToken is false');
+        }
 
         return $response;
     }

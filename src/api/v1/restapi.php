@@ -23,7 +23,7 @@ if (null !== ACTIVATE_HTTPS && ACTIVATE_HTTPS === 'true') {
     } else {
         header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], true, 301);
         // we are in cleartext at the moment, prevent further execution and output
-            die();
+        die();
     }
 }
 
@@ -43,14 +43,12 @@ try {//PRIVATEDIR . '/users'
     $conf = json_decode('{"enableheaders" : "","enableapikey" : "true", "publicdir":"", "privatedir":"" , "apikeyfile" : "" }');
     $conf->{'enableheaders'} = 'true';
     $conf->{'enableapikey'} = 'false';
-    
+
     $conf->{'enablecleaninputs'} = 'true';
     $conf->{'publicdir'} = HOME.'/public';
     $conf->{'privatedir'} = PRIVATEDIR;
 
-
     $API = new CmsApi($conf);
-
 
     $API->setRequest();
 

@@ -191,6 +191,7 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         $thelist = [];
+
         try {
             if ($handle = opendir($this->databasedir.'/'.$type)) {
                 while (false !== ($file = readdir($handle))) {
@@ -406,16 +407,16 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         $data = [];
-          // file name eg: index.json
-          $response->setMessage('getIndexFileName');
+        // file name eg: index.json
+        $response->setMessage('getIndexFileName');
         $indexFile = $this->getIndexFileName($type);
 
-          /*
-          Load a template for index.
-          eg :
-              { "id": "", "date": "",  "activity": "", "title": "" }
-          */
-          $response->setMessage('getIndexTemplateFileName'.$this->getIndexTemplateFileName($type));
+        /*
+        Load a template for index.
+        eg :
+            { "id": "", "date": "",  "activity": "", "title": "" }
+        */
+        $response->setMessage('getIndexTemplateFileName'.$this->getIndexTemplateFileName($type));
         $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
         try {
@@ -423,12 +424,12 @@ class ContentService
                 while (false !== ($file = readdir($handle))) {
                     if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
                         // Read the full JSON record
-                      $record = JsonUtils::readJsonFile($this->databasedir.'/'.$type.'/'.$file);
+                        $record = JsonUtils::readJsonFile($this->databasedir.'/'.$type.'/'.$file);
 
-                      //
-                      //copy some fields to index
-                      //
-                      $indexValue = clone $indexTemplate;
+                        //
+                        //copy some fields to index
+                        //
+                        $indexValue = clone $indexTemplate;
                         $response->setMessage('copy values to index');
                         JsonUtils::copy($record, $indexValue);
                         unset($record);
