@@ -34,27 +34,27 @@ class CmsApi extends SecureRestApi
             $datatype = $this->getDataType();
             $service = new ContentService($this->conf->{'publicdir'});
 
-          //
-          // Preflight requests are send by Angular
-          //
-          if ($this->method === 'OPTIONS') {
-              // eg : /api/v1/content
-              $response = $this->preflight();
-          }
+            //
+            // Preflight requests are send by Angular
+            //
+            if ($this->method === 'OPTIONS') {
+                // eg : /api/v1/content
+                $response = $this->preflight();
+            }
 
-          //
-          if (isset($datatype) && strlen($datatype) > 0) {
-              // eg : /api/v1/content/calendar
-              if ($this->method === 'GET') {
-                  if (array_key_exists(0, $this->args)) {
-                      //TODO get single index value
-                  } else {
-                      $response = $service->getAll($datatype.'/index/index.json');
-                  }
-              } elseif ($this->method === 'POST') {
-                  $response = $service->rebuildIndex($datatype, self::ID);
-              }
-          }
+            //
+            if (isset($datatype) && strlen($datatype) > 0) {
+                // eg : /api/v1/content/calendar
+                if ($this->method === 'GET') {
+                    if (array_key_exists(0, $this->args)) {
+                        //TODO get single index value
+                    } else {
+                        $response = $service->getAll($datatype.'/index/index.json');
+                    }
+                } elseif ($this->method === 'POST') {
+                    $response = $service->rebuildIndex($datatype, self::ID);
+                }
+            }
         } catch (Exception $e) {
             $response->setCode(500);
             $response->setMessage($e->getMessage());
@@ -65,7 +65,7 @@ class CmsApi extends SecureRestApi
            * header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
            * }
            */
-          return $response;
+            return $response;
         }
     }
 
@@ -122,38 +122,38 @@ class CmsApi extends SecureRestApi
                     $response = $service->publishById($datatype, self::ID, $id);
                 } elseif ($this->method === 'PUT') {
                     // save a record and update the index
-                  // path eg : /api/v1/content/calendar
+                    // path eg : /api/v1/content/calendar
 
-                  // step 1 : update Record
-                  $putResponse = $service->post($datatype, self::ID, $this->request);
+                    // step 1 : update Record
+                    $putResponse = $service->post($datatype, self::ID, $this->request);
                     $myobjectJson = json_decode($putResponse->getResult());
-                  //TODO manage errors
-                  unset($putResponse);
+                    //TODO manage errors
+                    unset($putResponse);
 
-                  // step 2 : publish to index
-                  $id = $myobjectJson->{self::ID};
+                    // step 2 : publish to index
+                    $id = $myobjectJson->{self::ID};
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::ID, $id);
                 } elseif ($this->method === 'DELETE') {
                     if (array_key_exists(0, $this->args)) {
                         //get the full data of a single record
 
-                      // $this->args contains the remaining path parameters
-                      // eg : /api/v1/content/calendar/1/foo/bar
-                      // ['1', 'foo', 'bar']
+                        // $this->args contains the remaining path parameters
+                        // eg : /api/v1/content/calendar/1/foo/bar
+                        // ['1', 'foo', 'bar']
 
-                          $id = $this->args[0];
+                        $id = $this->args[0];
                         $response = $service->deleteRecord($datatype, $id);
-                          // step 1 : update Record
+                        // step 1 : update Record
 
-                            if ($response->getCode() === 200) {
+                        if ($response->getCode() === 200) {
 
                                 // step 2 : publish to index
-                              $response = $service->rebuildIndex($datatype, self::ID);
-                            }
+                            $response = $service->rebuildIndex($datatype, self::ID);
+                        }
                     }
 
-                  // delete a record and update the index. eg : /api/v1/content/calendar/1.json
+                    // delete a record and update the index. eg : /api/v1/content/calendar/1.json
                 }
             } else {
                 if ($this->method === 'GET') {

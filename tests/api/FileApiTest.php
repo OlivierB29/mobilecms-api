@@ -33,11 +33,11 @@ final class FileApiTest extends TestCase
         protected function download()
         */
 
-          // echo 'testPostSuccess: ' . $this->memory();
-          $path = '/fileapi/v1/download/calendar/1';
+        // echo 'testPostSuccess: ' . $this->memory();
+        $path = '/fileapi/v1/download/calendar/1';
 
         $REQUEST = []; // $REQUEST = ['path' => $path];
-          $headers = ['Authorization' => $this->token];
+        $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
         $recordStr = '[{ "url": "https://mit-license.org/index.html", "title":"MIT licence"}]';
@@ -55,13 +55,13 @@ final class FileApiTest extends TestCase
 
         $this->assertTrue($result != null && $result != '');
 
-          // test JSON response
-          $this->assertTrue(strpos($result, 'title') !== false);
+        // test JSON response
+        $this->assertTrue(strpos($result, 'title') !== false);
         $this->assertTrue(strpos($result, 'url') !== false);
         $this->assertTrue(strpos($result, '"url":"index.html"') !== false);
 
-          // test download
-          $download = file_get_contents($this->conf->{'homedir'}.'/'.$this->conf->{'media'}.'/calendar/1/index.html');
+        // test download
+        $download = file_get_contents($this->conf->{'homedir'}.'/'.$this->conf->{'media'}.'/calendar/1/index.html');
         $this->assertTrue(strpos($download, 'MIT License') !== false);
     }
 
@@ -104,10 +104,10 @@ final class FileApiTest extends TestCase
     {
 
           // echo 'testPostSuccess: ' . $this->memory();
-          $path = '/fileapi/v1/basicupload/calendar/1';
+        $path = '/fileapi/v1/basicupload/calendar/1';
 
         $REQUEST = []; // $REQUEST = ['path' => $path];
-          $headers = ['Authorization' => $this->token];
+        $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
         $GET = ['requestbody' => '{}'];
         $recordStr = '[{ "url": "https://mit-license.org/index.html", "title":"MIT licence"}]';

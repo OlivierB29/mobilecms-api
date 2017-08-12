@@ -58,35 +58,35 @@ class FileService
         return $result;
     }
 
-      /**
-       * get file info and build JSON response.
-       */
-      public function getFileResponse($destfile, $title)
-      {
-          $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
-          $mimetype = finfo_file($finfo, $destfile);
-          finfo_close($finfo);
+    /**
+     * get file info and build JSON response.
+     */
+    public function getFileResponse($destfile, $title)
+    {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
+        $mimetype = finfo_file($finfo, $destfile);
+        finfo_close($finfo);
 
-          $filesize = filesize($destfile);
+        $filesize = filesize($destfile);
 
-          $fileResult = json_decode('{}');
-          $fileResult->{'title'} = $title;
-          $fileResult->{'url'} = basename($destfile);
-          $fileResult->{'size'} = $filesize;
-          $fileResult->{'mimetype'} = $mimetype;
+        $fileResult = json_decode('{}');
+        $fileResult->{'title'} = $title;
+        $fileResult->{'url'} = basename($destfile);
+        $fileResult->{'size'} = $filesize;
+        $fileResult->{'mimetype'} = $mimetype;
 
-          return $fileResult;
-      }
+        return $fileResult;
+    }
 
-      /**
-       * /var/www/html/media/calendar/1.
-       */
-      public function getRecordDirectory($mediadir, $datatype, $id): string
-      {
-          if (isset($mediadir) && isset($datatype) && isset($id)) {
-              return $mediadir.'/'.$datatype.'/'.$id;
-          } else {
-              throw new Exception('getMediaDirectory args $mediadir:'.$mediadir.' $datatype:'.$datatype.' $id:'.$id);
-          }
-      }
+    /**
+     * /var/www/html/media/calendar/1.
+     */
+    public function getRecordDirectory($mediadir, $datatype, $id): string
+    {
+        if (isset($mediadir) && isset($datatype) && isset($id)) {
+            return $mediadir.'/'.$datatype.'/'.$id;
+        } else {
+            throw new Exception('getMediaDirectory args $mediadir:'.$mediadir.' $datatype:'.$datatype.' $id:'.$id);
+        }
+    }
 }

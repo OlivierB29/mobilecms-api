@@ -94,8 +94,8 @@ final class AuthenticationApiTest extends TestCase
 
         $this->verifyChangePassword($user, $recordStr);
 
-      // delete file
-      unlink($this->conf->{'privatedir'}.'/users/'.$userFile);
+        // delete file
+        unlink($this->conf->{'privatedir'}.'/users/'.$userFile);
     }
 
     private function verifyChangePassword($user, $recordStr)
