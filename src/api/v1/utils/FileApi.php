@@ -54,49 +54,47 @@ class FileApi extends SecureRestApi
 
             $datatype = $this->getDataType();
 
+            //
+            // Preflight requests are send by Angular
+            //
+            if ($this->method === 'OPTIONS') {
+                // eg : /api/v1/content
+                $response = $this->preflight();
+            }
 
-          //
-          // Preflight requests are send by Angular
-          //
-          if ($this->method === 'OPTIONS') {
-              // eg : /api/v1/content
-              $response = $this->preflight();
-          }
+            //
+            if (isset($datatype) && strlen($datatype) > 0) {
+                // eg : /api/v1/content/calendar
+                if ($this->method === 'GET') {
+                    if (array_key_exists(0, $this->args)) {
+                        // object id
+                        $id = $this->args[0];
+                        // create service
+                        $service = new FileService();
 
-          //
-          if (isset($datatype) && strlen($datatype) > 0) {
-              // eg : /api/v1/content/calendar
-              if ($this->method === 'GET') {
-                  if (array_key_exists(0, $this->args)) {
-                      // object id
-                    $id = $this->args[0];
-                    // create service
-                    $service = new FileService();
+                        // update files description
+                        // media/calendar/1
+                        $uridir = $this->media.'/'.$datatype.'/'.$id;
 
-                    // update files description
-                    // media/calendar/1
-                    $uridir = $this->media.'/'.$datatype.'/'.$id;
+                        // /var/www/html/media/calendar/1
+                        $destdir = $this->homedir.'/'.$uridir;
 
-                    // /var/www/html/media/calendar/1
-                    $destdir = $this->homedir.'/'.$uridir;
+                        $uploadResult = $service->getDescriptions($destdir);
+                        $response->setCode(200);
 
-                      $uploadResult = $service->getDescriptions($destdir);
-                      $response->setCode(200);
+                        $response->setResult(json_encode($uploadResult));
+                    }
+                } elseif ($this->method === 'POST') {
+                    if (array_key_exists(0, $this->args)) {
+                        //get the full data of a single record $this->args contains the remaining path parameters
+                        // eg : /api/v1/file/calendar/1
+                        $uploadResult = $this->uploadFiles($datatype, $this->args[0]);
+                        $response->setCode(200);
 
-                      $response->setResult(json_encode($uploadResult));
-                  }
-              } elseif ($this->method === 'POST') {
-                  if (array_key_exists(0, $this->args)) {
-                      //get the full data of a single record $this->args contains the remaining path parameters
-                    // eg : /api/v1/file/calendar/1
-                      $uploadResult = $this->uploadFiles($datatype, $this->args[0]);
-                      $response->setCode(200);
-
-                      $response->setResult(json_encode($uploadResult));
-                  }
-              }
-          }
-
+                        $response->setResult(json_encode($uploadResult));
+                    }
+                }
+            }
         } catch (Exception $e) {
             $response->setError(500, $e->getMessage());
         } finally {
@@ -121,18 +119,16 @@ class FileApi extends SecureRestApi
                 $response = $this->preflight();
             }
 
+            //
+            if ($this->method === 'POST') {
+                if (array_key_exists(0, $this->args)) {
+                    $deleteResult = $this->deleteFiles($datatype, $this->args[0], urldecode($this->request[self::REQUESTBODY]));
+                    $response->setCode(200);
 
-        //
-        if ($this->method === 'POST') {
-            if (array_key_exists(0, $this->args)) {
-                $deleteResult = $this->deleteFiles($datatype, $this->args[0], urldecode($this->request[self::REQUESTBODY]));
-                $response->setCode(200);
-
-                $response->setResult(json_encode($deleteResult));
-
+                    $response->setResult(json_encode($deleteResult));
+                }
             }
-        }
-      } catch (Exception $e) {
+        } catch (Exception $e) {
             $response->setError(500, $e->getMessage());
         } finally {
             return $response;
@@ -272,7 +268,6 @@ class FileApi extends SecureRestApi
         $response->setResult(json_encode($result));
         $response->setCode(200);
 
-
         return $response;
     }
 
@@ -353,7 +348,6 @@ class FileApi extends SecureRestApi
 
         $response->setResult(json_encode($result));
         $response->setCode(200);
-
 
         return $response;
     }

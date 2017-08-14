@@ -23,8 +23,8 @@ class AdminApi extends SecureRestApi
 
     protected function index() : Response
     {
-      $userKey = 'email';
-      $response = $this->getDefaultResponse();
+        $userKey = 'email';
+        $response = $this->getDefaultResponse();
 
         try {
             $this->checkConfiguration();
@@ -32,29 +32,28 @@ class AdminApi extends SecureRestApi
             $datatype = $this->getDataType();
             $service = new ContentService($this->conf->{'privatedir'});
 
-          // Preflight requests are send by Angular
-          if ($this->method === 'OPTIONS') {
-              // eg : /api/v1/content
-              $response = $this->preflight();
-          }
+            // Preflight requests are send by Angular
+            if ($this->method === 'OPTIONS') {
+                // eg : /api/v1/content
+                $response = $this->preflight();
+            }
 
-          if (!empty($datatype)) {
-              // eg : /api/v1/content/calendar
-              if ($this->method === 'GET') {
-                  if (!empty($pathId)) {
-                      //TODO get single index value
-                  } else {
-                      $response = $service->getAll($datatype.'/index/index.json');
-                  }
-              } elseif ($this->method === 'POST') {
-                  $response = $service->rebuildIndex($datatype, $userKey);
-              }
-          }
+            if (!empty($datatype)) {
+                // eg : /api/v1/content/calendar
+                if ($this->method === 'GET') {
+                    if (!empty($pathId)) {
+                        //TODO get single index value
+                    } else {
+                        $response = $service->getAll($datatype.'/index/index.json');
+                    }
+                } elseif ($this->method === 'POST') {
+                    $response = $service->rebuildIndex($datatype, $userKey);
+                }
+            }
         } catch (Exception $e) {
             $response->setError(500, $e->getMessage());
         } finally {
-
-          return $response;
+            return $response;
         }
     }
 
@@ -80,35 +79,30 @@ class AdminApi extends SecureRestApi
                 $response = $this->preflight();
             }
 
-                // eg : /api/v1/content/calendar
-                if ($this->method === 'GET') {
+            // eg : /api/v1/content/calendar
+            if ($this->method === 'GET') {
+                if (!empty($id)) {
+                    //get the full data of a single record. $this->args contains the remaining path parameters  eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
+                    $response = $service->getRecord($datatype, $id);
 
-                    if (!empty($id)) {
-                        //get the full data of a single record. $this->args contains the remaining path parameters  eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
-                        $response = $service->getRecord($datatype, $id);
-
-                        // basic user fields, without password
-                        $response->setResult($this->getUserResponse($response->getResult()));
-
-                    } else {
-                        //get all records in index
-                        $response = $service->getAllObjects($datatype);
+                    // basic user fields, without password
+                    $response->setResult($this->getUserResponse($response->getResult()));
+                } else {
+                    //get all records in index
+                    $response = $service->getAllObjects($datatype);
+                }
+            } elseif ($this->method === 'POST') {
+            } elseif ($this->method === 'PUT') {
+            } elseif ($this->method === 'DELETE') {
+                if (array_key_exists(0, $this->args)) {
+                    $response = $service->deleteRecord($datatype, $id);
+                    if ($response->getCode() === 200) {
+                        $response = $service->rebuildIndex($datatype, $userKey);
                     }
-                } elseif ($this->method === 'POST') {
-
-                } elseif ($this->method === 'PUT') {
-
-                } elseif ($this->method === 'DELETE') {
-                    if (array_key_exists(0, $this->args)) {
-                        $response = $service->deleteRecord($datatype, $id);
-                            if ($response->getCode() === 200) {
-                              $response = $service->rebuildIndex($datatype, $userKey);
-                            }
-                    }
-
-                  // delete a record and update the index. eg : /api/v1/content/calendar/1.json
                 }
 
+                // delete a record and update the index. eg : /api/v1/content/calendar/1.json
+            }
         } catch (Exception $e) {
             $response->setError(500, $e->getMessage());
         } finally {
@@ -117,16 +111,19 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-    * basic user fields, without password
-    * @return JSON user string
-    */
-    public function getUserResponse($userStr) {
-      $completeUserObj = json_decode($userStr);
-      $responseUser = json_decode('{}');
-      $responseUser->{'name'} = $completeUserObj->{'email'};
-      $responseUser->{'email'} = $completeUserObj->{'email'};
-      $responseUser->{'role'} = $completeUserObj->{'role'};
-      return json_encode($responseUser);
+     * basic user fields, without password.
+     *
+     * @return JSON user string
+     */
+    public function getUserResponse($userStr)
+    {
+        $completeUserObj = json_decode($userStr);
+        $responseUser = json_decode('{}');
+        $responseUser->{'name'} = $completeUserObj->{'email'};
+        $responseUser->{'email'} = $completeUserObj->{'email'};
+        $responseUser->{'role'} = $completeUserObj->{'role'};
+
+        return json_encode($responseUser);
     }
 
     private function getDataType(): string

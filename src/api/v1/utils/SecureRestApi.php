@@ -22,8 +22,8 @@ abstract class SecureRestApi extends RestApi
     const HTTP_AUTHORIZATION = 'HTTP_AUTHORIZATION';
 
     /**
-    * required role for read / write throug API
-    */
+     * required role for read / write throug API.
+     */
     private $role = 'editor';
 
     public function __construct($conf)
@@ -36,16 +36,14 @@ abstract class SecureRestApi extends RestApi
     {
         $response = $this->getDefaultResponse();
 
-
-      // authorize() return a response with 200. Otherwise :
-      // - throw an exception
-      // - return a response
-    try {
-        $response = $this->authorize();
-    } catch (Exception $e) {
-        $response->setError(401, $e->getMessage());
-    }
-
+        // authorize() return a response with 200. Otherwise :
+        // - throw an exception
+        // - return a response
+        try {
+            $response = $this->authorize();
+        } catch (Exception $e) {
+            $response->setError(401, $e->getMessage());
+        }
 
         if ($response->getCode() === 200) {
             return parent::processAPI();
@@ -86,7 +84,7 @@ abstract class SecureRestApi extends RestApi
 
     public function setRole($role)
     {
-      $this->role = $role;
+        $this->role = $role;
     }
 
     /**

@@ -211,7 +211,7 @@ abstract class RestApi
             if (isset($apiResponse) && $apiResponse instanceof Response) {
                 return $this->_responseObj($apiResponse);
             } else {
-                return $this->_response('{"Empty response" : ' . '"' . $this->endpoint . '"}', 503);
+                return $this->_response('{"Empty response" : '.'"'.$this->endpoint.'"}', 503);
             }
         }
 
@@ -237,13 +237,10 @@ abstract class RestApi
             header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
         }
         if ($response->getCode() !== 200) {
-
-          if ($response->getResult() === '{}' && !empty($response->getMessage())) {
-            $response->setResult($this->errorToJson($response->getMessage()));
-          }
-
+            if ($response->getResult() === '{}' && !empty($response->getMessage())) {
+                $response->setResult($this->errorToJson($response->getMessage()));
+            }
         }
-
 
         //each endpoint should prepare an encoded response
         return $response;
