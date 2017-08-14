@@ -2,36 +2,23 @@
 /*
  * Response object for services
  */
-class Response implements JsonSerializable
+class Response
 {
     /**
-     * String data of the result.
+     * result.data
      */
     private $result;
 
-    /**
-     * optional message.
-     */
-    private $message;
 
     /**
      * http return code to return.
      */
     private $code;
 
-    public function jsonSerialize()
-    {
-        return [
-                'result'  => $this->result,
-                'message' => $this->message,
-                'code'    => $this->code,
-        ];
-    }
 
     public function __construct()
     {
-        $this->result = '';
-        $this->message = '';
+        $this->result = '{}';
     }
 
     public function setResult(string $newval)
@@ -44,15 +31,6 @@ class Response implements JsonSerializable
         return $this->result;
     }
 
-    public function setMessage(string $newval)
-    {
-        $this->message = $newval;
-    }
-
-    public function getMessage(): string
-    {
-        return $this->message;
-    }
 
     public function setCode(int $newval)
     {
@@ -68,4 +46,15 @@ class Response implements JsonSerializable
     {
         $this->message .= $newval;
     }
+
+    public function setError(int $code, string $msg)
+    {
+        $this->code = $code;
+
+        $json = json_decode('{}');
+        $json->{'error'} = $msg;
+        $this->result = json_encode($json);
+    }
+
+
 }

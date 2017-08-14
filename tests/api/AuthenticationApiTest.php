@@ -14,6 +14,7 @@ final class AuthenticationApiTest extends TestCase
         $this->conf = json_decode('{}');
         $this->conf->{'enableheaders'} = 'false';
         $this->conf->{'enableapikey'} = 'false';
+        $this->conf->{'enablecleaninputs'} = 'false';
         $this->conf->{'privatedir'} = HOME.'/tests-data/private';
         $this->conf->{'apikeyfile'} = HOME.'/tests-data/private/apikeys/key1.json';
     }
@@ -32,7 +33,9 @@ final class AuthenticationApiTest extends TestCase
         $API = new AuthenticationApi($this->conf);
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $result = $API->processAPI();
+        $response = $API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
 
         $userObject = json_decode($result);
@@ -44,7 +47,7 @@ final class AuthenticationApiTest extends TestCase
     public function testRegister()
     {
         $email = 'testregister@example.com';
-        $file = $this->conf->{'privatedir'}.'/users/'.$email;
+        $file = $this->conf->{'privatedir'} . '/users/' . $email . '.json';
         if (file_exists($file)) {
             unlink($file);
         }
@@ -62,8 +65,14 @@ final class AuthenticationApiTest extends TestCase
         $API = new AuthenticationApi($this->conf);
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $result = $API->processAPI();
+        $response = $API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
     }
 
     public function testChangePassword()
@@ -84,7 +93,9 @@ final class AuthenticationApiTest extends TestCase
         $API = new AuthenticationApi($this->conf);
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $result = $API->processAPI();
+        $response = $API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
 
         // test new password with login
@@ -111,7 +122,9 @@ final class AuthenticationApiTest extends TestCase
         $API = new AuthenticationApi($this->conf);
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $result = $API->processAPI();
+        $response = $API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
 
         $userObject = json_decode($result);

@@ -50,9 +50,8 @@ class AuthenticationApi extends RestApi
                 // free variables before response
             }
         } catch (Exception $e) {
-            $response->setCode(401);
-            $response->setMessage($e->getMessage());
-            $response->setResult($this->errorToJson($e->getMessage()));
+            $response->setError(401, $e->getMessage());
+
         } finally {
             return $response;
         }
@@ -92,9 +91,7 @@ class AuthenticationApi extends RestApi
                 unset($logindata);
             }
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
-            $response->setResult($this->errorToJson($e->getMessage()));
+            $response->setError(500, $e->getMessage());
         } finally {
             return $response;
         }
@@ -123,19 +120,14 @@ class AuthenticationApi extends RestApi
                 //returns a empty string if success, a string with the message otherwise
                 $createresult = $service->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
                 if ($createresult === null) {
-                    $response->setMessage('');
                     $response->setCode(200);
                     $response->setResult('{}');
                 } else {
-                    $response->setMessage('Bad user parameters');
-                    $response->setCode(400);
-                    $response->setResult($this->errorToJson('Bad user parameters'));
+                    $response->setError(400, $this->errorToJson('Bad user parameters'));
                 }
             }
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
-            $response->setResult($this->errorToJson($e->getMessage()));
+            $response->setError(500, $e->getMessage());
         } finally {
             return $response;
         }

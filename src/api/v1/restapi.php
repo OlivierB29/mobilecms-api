@@ -47,12 +47,13 @@ try {//PRIVATEDIR . '/users'
     $conf->{'enablecleaninputs'} = 'true';
     $conf->{'publicdir'} = HOME.'/public';
     $conf->{'privatedir'} = PRIVATEDIR;
+    $conf->{'role'} = 'editor';
 
     $API = new CmsApi($conf);
 
     $API->setRequest();
 
-    echo $API->processAPI();
+    echo $API->processAPI()->getResult();
 } catch (Exception $e) {
     echo json_encode([
             'error' => $e->getMessage(),

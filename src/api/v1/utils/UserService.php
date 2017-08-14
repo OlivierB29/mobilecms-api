@@ -250,7 +250,6 @@ class UserService
         // initialize Response
         $response = new Response();
         $response->setCode(401);
-        $response->setMessage('Wrong login');
         $response->setResult('{}');
 
         $loginmsg = '';
@@ -283,7 +282,6 @@ class UserService
                     $response->setResult(json_encode($userResponse));
                     // success
                     $loginmsg = '';
-                    $response->setMessage('success');
                 }
             } else {
                 // incorrect password
@@ -311,7 +309,6 @@ class UserService
         // initialize Response
         $response = new Response();
         $response->setCode(401);
-        $response->setMessage('Wrong login');
         $response->setResult('{}');
 
         $loginmsg = '';
@@ -333,30 +330,24 @@ class UserService
                 if (empty($updateMsg)) {
                     $response->setCode(200);
                     $response->setResult('{}');
-                    $response->setMessage('');
+
                 } else {
-                    $response->setCode(500);
-                    $response->setMessage('createUserWithSecret error ' + $updateMsg);
+                    $response->setError(500, 'modify password error ' + $updateMsg);
                 }
             } else {
                 // incorrect password
-                $loginmsg = 'wrong passsword';
+                $response->setError(401, 'wrong password' );
             }
         } else {
             // wrong user
-            $loginmsg = 'wrong user '.$email;
-            $debugmsg .= $email;
+            $response->setError(401, 'wrong user' );
         }
 
-        // return an empty string on success, so if debug is enabled, it's impossible to connect
-        if ($debug) {
-            $loginmsg .= $debugmsg;
-        }
 
         return $response;
     }
 
-    public function verifyToken($token): Response
+    public function verifyToken($token, $role): Response
     {
         $response = $this->getDefaultResponse();
 
@@ -364,11 +355,12 @@ class UserService
             throw new Exception('empty token');
         }
 
-        $response->setMessage('init');
         $jwt = new JwtToken();
 
-        // get payload and convert to JSON
-        $response->setMessage('json_decode token');
+
+            // get payload and convert to JSON
+
+
         $payload = $jwt->getPayload($token);
 
         if (!isset($payload)) {
@@ -379,25 +371,43 @@ class UserService
         if (!isset($payloadJson)) {
             throw new Exception('empty payload');
         }
-        // get the existing user
-        $response->setMessage('getJsonUser');
+
+              // get the existing user
+
         $user = $this->getJsonUser($payloadJson->{'sub'});
 
         // verify token with secret
         if ($jwt->verifyToken($token, $user->{'salt'})) {
 
-                // verify user role
-            if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
-                $response->setCode(200);
-                $response->setMessage('');
-            } else {
-                throw new Exception('wrong role');
-            }
-        } else {
-            $response->setMessage('JwtToken.verifyToken is false');
-        }
+                $response = $this->checkRole($user, $role);
+
+              } else {
+                  $response->setError(403, 'JwtToken.verifyToken is false');
+              }
 
         return $response;
+    }
+
+    private function checkRole($user, $role): Response {
+      $response = $this->getDefaultResponse();
+
+      if ($role === 'editor') {
+        // verify user role
+        if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
+            $response->setCode(200);
+
+        } else {
+            $response->setError(403, 'wrong role');
+        }
+      } else if ($role === 'admin') {
+        // verify user role
+        if ($user->{'role'} === 'admin') {
+            $response->setCode(200);
+        } else {
+          $response->setError(403, 'require admin role');
+        }
+      }
+      return $response;
     }
 
     /**
@@ -407,7 +417,6 @@ class UserService
     {
         $response = new Response();
         $response->setCode(400);
-        $response->setMessage('Bad parameters');
         $response->setResult('{}');
 
         return $response;

@@ -60,12 +60,10 @@ class ContentService
                 $response->setResult(file_get_contents($file));
                 $response->setCode(200);
             } else {
-                $response->appendMessage('not found '.$keyname.' : '.$keyvalue);
-                $response->setCode(404);
+                $response->setError(404, 'not found '.$keyname.' = '.$keyvalue);
             }
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
+            $response->setError(500, $e->getMessage());
         } finally {
             return $response;
         }
@@ -89,8 +87,7 @@ class ContentService
                 $response->setCode(404);
             }
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
+            $response->setError(500, $e->getMessage());
         } finally {
             return $response;
         }
@@ -131,8 +128,7 @@ class ContentService
                 $response->setCode(404);
             }
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
+            $response->setError(500, $e->getMessage());
         } finally {
             return $response;
         }
@@ -175,8 +171,7 @@ class ContentService
                 $response->setCode(200);
             }
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
+            $response->setError(500, $e->getMessage());
         } finally {
             return $response;
         }
@@ -209,9 +204,7 @@ class ContentService
             $response->setResult(json_encode($thelist));
             $response->setCode(200);
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
-            $response->setResult('{ "result":"'.$e->getMessage().'"}');
+            $response->setError(500, $e->getMessage());
         } finally {
             return $response;
         }
@@ -237,9 +230,7 @@ class ContentService
                 $response->setResult(json_encode($data));
             }
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
-            $response->setResult('{ "result":"'.$e->getMessage().'"}');
+            $response->setError(500, $e->getMessage());
         } finally {
             return $response;
         }
@@ -329,9 +320,8 @@ class ContentService
             JsonUtils::writeJsonFile($file, $myobjectJson);
             unset($myobjectJson);
             $response->setCode(200);
-            $response->setMessage('OK');
         } else {
-            $response->setMessage('Bad parameters object');
+            $response->setError(400, 'Bad object parameters');
         }
 
         return $response;
@@ -346,49 +336,37 @@ class ContentService
 
         try {
             // file name eg: index.json
-            $response->setMessage('getIndexFileName');
             $file = $this->getIndexFileName($type);
-
             // create a backup of previous index file eg: history/index-TIMESTAMP.json
             if ($this->enableIndexHistory) {
                 $backupDone = $this->mycopy($file, $this->getBackupIndexFileName($type));
-                $response->setMessage('backup '.$backupDone);
             }
-
             /*
             Load a template for index.
             eg :
                 { "id": "", "date": "",  "activity": "", "title": "" }
             */
-            $response->setMessage('getIndexTemplateFileName'.$this->getIndexTemplateFileName($type));
+
             $indexValue = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
             // Read the full JSON record
-
             $recordFile = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
-            $response->setMessage('readJsonFile'.$recordFile);
+
             $record = JsonUtils::readJsonFile($recordFile);
 
-            //
             //copy some fields to index
-            //
-            $response->setMessage('copy values to index');
             JsonUtils::copy($record, $indexValue);
             unset($record);
 
             // get index data
-            $response->setMessage('get index data');
             $data = JsonUtils::readJsonFile($file);
-
-            $response->setMessage('put');
             $data = JsonUtils::put($data, $keyname, $indexValue);
 
             // write to file
-            $response->setMessage('write to file');
             JsonUtils::writeJsonFile($file, $data);
             unset($data);
 
-            $response->setMessage('done');
+
             $response->setCode(200);
             // set a timestamp response
             $tempResponse = json_decode($response->getResult());
@@ -396,7 +374,7 @@ class ContentService
             $response->setResult(json_encode($tempResponse));
         } catch (Exception $e) {
             $response->setCode(500);
-            $response->setMessage($e->getMessage());
+            $response->setError(500, $e->getMessage());
         } finally {
             return $response;
         }
@@ -407,16 +385,17 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         $data = [];
-        // file name eg: index.json
-        $response->setMessage('getIndexFileName');
+
+          // file name eg: index.json
+
         $indexFile = $this->getIndexFileName($type);
 
-        /*
-        Load a template for index.
-        eg :
-            { "id": "", "date": "",  "activity": "", "title": "" }
-        */
-        $response->setMessage('getIndexTemplateFileName'.$this->getIndexTemplateFileName($type));
+          /*
+          Load a template for index.
+          eg :
+              { "id": "", "date": "",  "activity": "", "title": "" }
+          */
+
         $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
         try {
@@ -426,14 +405,14 @@ class ContentService
                         // Read the full JSON record
                         $record = JsonUtils::readJsonFile($this->databasedir.'/'.$type.'/'.$file);
 
-                        //
-                        //copy some fields to index
-                        //
-                        $indexValue = clone $indexTemplate;
-                        $response->setMessage('copy values to index');
+
+                      //
+                      //copy some fields to index
+                      //
+                      $indexValue = clone $indexTemplate;
+
                         JsonUtils::copy($record, $indexValue);
                         unset($record);
-                        $response->setMessage('put');
                         array_push($data, $indexValue);
                         unset($indexValue);
                     }
@@ -442,19 +421,16 @@ class ContentService
             }
 
             //sort
-            $response->setMessage('sort');
             usort($data, compareIndex($keyname));
 
             // write to file
 
-            $response->setMessage('write to file');
+
             JsonUtils::writeJsonFile($indexFile, $data);
             unset($data);
-            $response->setMessage('done');
             $response->setCode(200);
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
+            $response->setError(500, $e->getMessage());
         } finally {
             return $response;
         }
@@ -503,7 +479,6 @@ class ContentService
     {
         $response = new Response();
         $response->setCode(400);
-        $response->setMessage('Bad parameters');
         $response->setResult('{}');
 
         return $response;

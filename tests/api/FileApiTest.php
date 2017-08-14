@@ -12,9 +12,10 @@ final class FileApiTest extends TestCase
         $this->conf = json_decode('{}');
         $this->conf->{'enableheaders'} = 'false';
         $this->conf->{'enableapikey'} = 'false';
+        $this->conf->{'enablecleaninputs'} = 'true';
         $this->conf->{'homedir'} = HOME.'/tests-data/fileapi';
         $this->conf->{'media'} = 'media';
-
+        $this->conf->{'role'} = 'editor';
         $this->conf->{'privatedir'} = HOME.'/tests-data/private';
 
         $service = new UserService($this->conf->{'privatedir'}.'/users');
@@ -51,11 +52,15 @@ final class FileApiTest extends TestCase
 
         $API->authorize($headers, $SERVER);
 
-        $result = $API->processAPI();
+        $response = $API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(200, $response->getCode());
 
         $this->assertTrue($result != null && $result != '');
 
-        // test JSON response
+
+          // test JSON response
+
         $this->assertTrue(strpos($result, 'title') !== false);
         $this->assertTrue(strpos($result, 'url') !== false);
         $this->assertTrue(strpos($result, '"url":"index.html"') !== false);
@@ -92,7 +97,9 @@ final class FileApiTest extends TestCase
 
         $API->authorize($headers, $SERVER);
 
-        $result = $API->processAPI();
+        $response = $API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(200, $response->getCode());
 
         $this->assertTrue($result != null && $result != '');
 
@@ -121,7 +128,9 @@ final class FileApiTest extends TestCase
 
         $API->authorize($headers, $SERVER);
 
-        $result = $API->processAPI();
+        $response = $API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(200, $response->getCode());
 
         $this->assertTrue($result != null && $result != '');
         $expected = '[{"title":"index.html","url":"index.html","size":2834,"mimetype":"text\/html"},{"title":"lorem ipsum.pdf","url":"lorem ipsum.pdf","size":24612,"mimetype":"application\/pdf"}]';

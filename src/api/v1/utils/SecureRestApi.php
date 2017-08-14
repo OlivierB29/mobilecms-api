@@ -21,25 +21,31 @@ abstract class SecureRestApi extends RestApi
      */
     const HTTP_AUTHORIZATION = 'HTTP_AUTHORIZATION';
 
+    /**
+    * required role for read / write throug API
+    */
+    private $role = 'editor';
+
     public function __construct($conf)
     {
         parent::__construct($conf);
+        $this->role = $conf->{'role'};
     }
 
-    public function processAPI(): string
+    public function processAPI()
     {
         $response = $this->getDefaultResponse();
 
-        // authorize() return a response with 200. Otherwise :
-        // - throw an exception
-        // - return a response
-        try {
-            $response = $this->authorize();
-        } catch (Exception $e) {
-            $response->setCode(401);
-            $response->setMessage($e->getMessage());
-            $response->setResult($this->errorToJson($e->getMessage()));
-        }
+
+      // authorize() return a response with 200. Otherwise :
+      // - throw an exception
+      // - return a response
+    try {
+        $response = $this->authorize();
+    } catch (Exception $e) {
+        $response->setError(401, $e->getMessage());
+    }
+
 
         if ($response->getCode() === 200) {
             return parent::processAPI();
@@ -76,6 +82,11 @@ abstract class SecureRestApi extends RestApi
     }
 
         return $response;
+    }
+
+    public function setRole($role)
+    {
+      $this->role = $role;
     }
 
     /**
@@ -156,7 +167,7 @@ abstract class SecureRestApi extends RestApi
             // verify token
 
             $service = new UserService($this->conf->{'privatedir'}.'/users');
-            $response = $service->verifyToken($tokenValue);
+            $response = $service->verifyToken($tokenValue, $this->role);
 
             unset($service);
         } else {

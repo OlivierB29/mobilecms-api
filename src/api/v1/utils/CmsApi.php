@@ -34,38 +34,33 @@ class CmsApi extends SecureRestApi
             $datatype = $this->getDataType();
             $service = new ContentService($this->conf->{'publicdir'});
 
-            //
-            // Preflight requests are send by Angular
-            //
-            if ($this->method === 'OPTIONS') {
-                // eg : /api/v1/content
-                $response = $this->preflight();
-            }
 
-            //
-            if (isset($datatype) && strlen($datatype) > 0) {
-                // eg : /api/v1/content/calendar
-                if ($this->method === 'GET') {
-                    if (array_key_exists(0, $this->args)) {
-                        //TODO get single index value
-                    } else {
-                        $response = $service->getAll($datatype.'/index/index.json');
-                    }
-                } elseif ($this->method === 'POST') {
-                    $response = $service->rebuildIndex($datatype, self::ID);
-                }
-            }
+          // Preflight requests are send by Angular
+          if ($this->method === 'OPTIONS') {
+              // eg : /api/v1/content
+              $response = $this->preflight();
+          }
+
+          //
+          if (!empty($datatype)) {
+              // eg : /api/v1/content/calendar
+              if ($this->method === 'GET') {
+                  if (!empty($pathId)) {
+                      //TODO get single index value
+                  } else {
+                      $response = $service->getAll($datatype.'/index/index.json');
+                  }
+              } elseif ($this->method === 'POST') {
+                  $response = $service->rebuildIndex($datatype, self::ID);
+              }
+          }
+
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
-            $response->setResult($this->errorToJson($e->getMessage()));
+            $response->setError(500, $e->getMessage());
         } finally {
-            /*
-           * if ($this->enableHeaders) {
-           * header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
-           * }
-           */
-            return $response;
+
+          return $response;
+
         }
     }
 
@@ -80,40 +75,37 @@ class CmsApi extends SecureRestApi
             $this->checkConfiguration();
 
             $datatype = $this->getDataType();
+
+            $pathId = $this->getId();
+
             $service = new ContentService($this->conf->{'publicdir'});
 
-            //
             // Preflight requests are send by Angular
-            //
             if ($this->method === 'OPTIONS') {
                 // eg : /api/v1/content
                 $response = $this->preflight();
             }
 
-            //
-            if (isset($datatype) && strlen($datatype) > 0) {
+            if (!empty($datatype)) {
+
                 // eg : /api/v1/content/calendar
                 if ($this->method === 'GET') {
-                    if (array_key_exists(0, $this->args)) {
+                    if (!empty($pathId)) {
                         //get the full data of a single record
 
                         // $this->args contains the remaining path parameters
-                        // eg : /api/v1/content/calendar/1/foo/bar
-                        // ['1', 'foo', 'bar']
-
+                        // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
                         $response = $service->getRecord($datatype, $this->args[0]);
                     } else {
                         //get all records in index
                         $response = $service->getAllObjects($datatype);
                     }
                 } elseif ($this->method === 'POST') {
-                    // save a record and update the index
-                    // path eg : /api/v1/content/calendar
+                    // save a record and update the index. eg : /api/v1/content/calendar
 
                     // step 1 : update Record
                     $putResponse = $service->post($datatype, self::ID, urldecode($this->request[self::REQUESTBODY]));
                     $myobjectJson = json_decode($putResponse->getResult());
-                    //TODO manage errors
                     unset($putResponse);
 
                     // step 2 : publish to index
@@ -135,16 +127,16 @@ class CmsApi extends SecureRestApi
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::ID, $id);
                 } elseif ($this->method === 'DELETE') {
-                    if (array_key_exists(0, $this->args)) {
-                        //get the full data of a single record
+                    if (!empty($pathId)) {
+                      //delete a single record
 
-                        // $this->args contains the remaining path parameters
-                        // eg : /api/v1/content/calendar/1/foo/bar
-                        // ['1', 'foo', 'bar']
 
-                        $id = $this->args[0];
-                        $response = $service->deleteRecord($datatype, $id);
-                        // step 1 : update Record
+                      // $this->args contains the remaining path parameters
+                      // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
+
+                        $response = $service->deleteRecord($datatype, $pathId);
+                          // step 1 : update Record
+
 
                         if ($response->getCode() === 200) {
 
@@ -156,28 +148,21 @@ class CmsApi extends SecureRestApi
                     // delete a record and update the index. eg : /api/v1/content/calendar/1.json
                 }
             } else {
+
                 if ($this->method === 'GET') {
-                    //return the list of editable types
-                    // path eg : /api/v1/content/
+                    //return the list of editable types. eg : /api/v1/content/
 
                     $response->setResult($service->options('types.json'));
                     $response->setCode(200);
                 }
             }
         } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setMessage($e->getMessage());
-            $response->setResult($this->errorToJson($e->getMessage()));
+            $response->setError(500, $e->getMessage());
         } finally {
-            /*
-             * if ($this->enableHeaders) {
-             * header ( "HTTP/1.1 " . $status . " " . $this->_requestStatus ( $status ) );
-             * }
-             */
-
             return $response;
         }
     }
+
 
     protected function file() : Response
     {
@@ -187,18 +172,15 @@ class CmsApi extends SecureRestApi
 
         $service = new ContentService($this->conf->{'publicdir'});
 
-        //
         // Preflight requests are send by Angular
-        //
         if ($this->method === 'OPTIONS') {
             // eg : /api/v1/content
             $response->setCode(200);
-            $response->setMessage('');
+
             $response = $this->preflight();
         } elseif ($this->method === 'GET') {
             // eg : /api/v1/file?filename
-            // $this->args contains the remaining path parameters
-            // eg : /api/v1/file?file=/calendar/1/foo/bar/sample.json
+            // $this->args contains the remaining path parameters --> eg : /api/v1/file?file=/calendar/1/foo/bar/sample.json
 
             if (array_key_exists(self::FILE, $this->getRequest())) {
                 // this
@@ -220,7 +202,7 @@ class CmsApi extends SecureRestApi
 
     private function getDataType(): string
     {
-        $datatype = null;
+        $datatype = '';
         if (isset($this->verb)) {
             $datatype = $this->verb;
         }
@@ -229,6 +211,15 @@ class CmsApi extends SecureRestApi
         }
 
         return $datatype;
+    }
+
+    private function getId(): string {
+
+      $result = '';
+      if (isset($this->args) && array_key_exists(0, $this->args)) {
+        $result = $this->args[0];
+      }
+      return $result;
     }
 
     private function checkConfiguration()

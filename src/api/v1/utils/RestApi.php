@@ -203,7 +203,7 @@ abstract class RestApi
     /**
      * Parse class, and call the method with the endpoint name.
      */
-    public function processAPI(): string
+    public function processAPI()
     {
         $apiResponse = null;
         if (method_exists($this, $this->endpoint)) {
@@ -211,7 +211,7 @@ abstract class RestApi
             if (isset($apiResponse) && $apiResponse instanceof Response) {
                 return $this->_responseObj($apiResponse);
             } else {
-                return $this->_response("Empty response : $this->endpoint", 503);
+                return $this->_response('{"Empty response" : ' . '"' . $this->endpoint . '"}', 503);
             }
         }
 
@@ -221,7 +221,7 @@ abstract class RestApi
     /**
      * send JSON response.
      */
-    protected function _response($data = '', $status = 0): string
+    protected function _response($data = null, $status = 0)
     {
         if ($this->enableHeaders && $status > 0) {
             header('HTTP/1.1 '.$status.' '.$this->_requestStatus($status));
@@ -231,14 +231,22 @@ abstract class RestApi
         return $data;
     }
 
-    protected function _responseObj($response): string
+    protected function _responseObj($response)
     {
         if ($this->enableHeaders && $response->getCode() > 0) {
             header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
         }
+        if ($response->getCode() !== 200) {
+
+          if ($response->getResult() === '{}' && !empty($response->getMessage())) {
+            $response->setResult($this->errorToJson($response->getMessage()));
+          }
+
+        }
+
 
         //each endpoint should prepare an encoded response
-        return $response->getResult();
+        return $response;
     }
 
     private function _cleanInputs($data)
@@ -261,6 +269,7 @@ abstract class RestApi
                 200 => 'OK',
                 400 => 'Bad Request',
                 401 => 'Unauthorized',
+                403 => 'Forbidden',
                 404 => 'Not Found',
                 405 => 'Method Not Allowed',
                 500 => 'Internal Server Error',
@@ -286,7 +295,6 @@ abstract class RestApi
     {
         $response = new Response();
         $response->setCode(400);
-        $response->setMessage('Bad parameters');
         $response->setResult('{}');
 
         return $response;

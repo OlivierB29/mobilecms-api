@@ -43,7 +43,7 @@ final class UserServiceTest extends TestCase
 
         $user = json_decode($getTokenResponse->getResult());
 
-        $result = $service->verifyToken($user->{'token'});
+        $result = $service->verifyToken($user->{'token'}, 'editor');
 
         $this->assertTrue($result->getCode() === 200);
     }

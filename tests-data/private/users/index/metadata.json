@@ -1,0 +1,6 @@
+[
+	{"name" : "name" , "primary" : "false", "type" : "string",  "editor":"line"},
+    {"name" : "email" , "primary" : "true", "type" : "string",  "editor":"line"},
+    {"name" : "activity" , "primary" : "false", "type" : "text",  "editor":"choice", "choices" : ["guest", "editor", "admin"]}
+
+]

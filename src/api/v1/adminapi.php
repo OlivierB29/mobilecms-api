@@ -3,8 +3,8 @@
  * REST Api
  * based on http://coreymaynard.com/blog/creating-a-restful-api-with-php/
  */
-require_once 'conf.php';
-require_once 'utils/AuthenticationApi.php';
+include 'conf.php';
+include 'utils/AdminApi.php';
 
 if (null !== ERROR_LOG && ERROR_LOG === 'true') {
     error_reporting(E_ALL);
@@ -16,14 +16,14 @@ if (null !== ERROR_LOG && ERROR_LOG === 'true') {
 // HTTPS
 //
 if (null !== ACTIVATE_HTTPS && ACTIVATE_HTTPS === 'true') {
-    // http://stackoverflow.com/questions/85816/how-can-i-force-users-to-access-my-page-over-https-instead-of-http/12145293#12145293
+    //http://stackoverflow.com/questions/85816/how-can-i-force-users-to-access-my-page-over-https-instead-of-http/12145293#12145293
     // iis sets HTTPS to 'off' for non-SSL requests
     if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
         header('Strict-Transport-Security: max-age=31536000');
     } else {
         header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], true, 301);
         // we are in cleartext at the moment, prevent further execution and output
-        die();
+            die();
     }
 }
 
@@ -39,15 +39,18 @@ if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
     $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
 }
 
-try {
-    $conf = json_decode('{"enableheaders" : "","enableapikey" : "true", "privatedir":"" , "apikeyfile" : "" }');
+try {//PRIVATEDIR . '/users'
+    $conf = json_decode('{"enableheaders" : "","enableapikey" : "true", "publicdir":"", "privatedir":"" , "apikeyfile" : "" }');
     $conf->{'enableheaders'} = 'true';
     $conf->{'enableapikey'} = 'false';
-    // see _cleanInput() method : since hashed password are send, the strip tags function can corrupt data
-    $conf->{'enablecleaninputs'} = 'false';
+    $conf->{'enablecleaninputs'} = 'true';
+    $conf->{'publicdir'} = HOME.'/public';
     $conf->{'privatedir'} = PRIVATEDIR;
+    $conf->{'role'} = 'admin';
 
-    $API = new AuthenticationApi($conf);
+
+    $API = new AdminApi($conf);
+
 
     $API->setRequest();
 
