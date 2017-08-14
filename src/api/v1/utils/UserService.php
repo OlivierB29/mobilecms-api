@@ -330,19 +330,17 @@ class UserService
                 if (empty($updateMsg)) {
                     $response->setCode(200);
                     $response->setResult('{}');
-
                 } else {
                     $response->setError(500, 'modify password error ' + $updateMsg);
                 }
             } else {
                 // incorrect password
-                $response->setError(401, 'wrong password' );
+                $response->setError(401, 'wrong password');
             }
         } else {
             // wrong user
-            $response->setError(401, 'wrong user' );
+            $response->setError(401, 'wrong user');
         }
-
 
         return $response;
     }
@@ -357,9 +355,7 @@ class UserService
 
         $jwt = new JwtToken();
 
-
-            // get payload and convert to JSON
-
+        // get payload and convert to JSON
 
         $payload = $jwt->getPayload($token);
 
@@ -372,42 +368,41 @@ class UserService
             throw new Exception('empty payload');
         }
 
-              // get the existing user
+        // get the existing user
 
         $user = $this->getJsonUser($payloadJson->{'sub'});
 
         // verify token with secret
         if ($jwt->verifyToken($token, $user->{'salt'})) {
-
-                $response = $this->checkRole($user, $role);
-
-              } else {
-                  $response->setError(403, 'JwtToken.verifyToken is false');
-              }
+            $response = $this->checkRole($user, $role);
+        } else {
+            $response->setError(403, 'JwtToken.verifyToken is false');
+        }
 
         return $response;
     }
 
-    private function checkRole($user, $role): Response {
-      $response = $this->getDefaultResponse();
+    private function checkRole($user, $role): Response
+    {
+        $response = $this->getDefaultResponse();
 
-      if ($role === 'editor') {
-        // verify user role
-        if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
-            $response->setCode(200);
+        if ($role === 'editor') {
+            // verify user role
+            if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
+                $response->setCode(200);
+            } else {
+                $response->setError(403, 'wrong role');
+            }
+        } elseif ($role === 'admin') {
+            // verify user role
+            if ($user->{'role'} === 'admin') {
+                $response->setCode(200);
+            } else {
+                $response->setError(403, 'require admin role');
+            }
+        }
 
-        } else {
-            $response->setError(403, 'wrong role');
-        }
-      } else if ($role === 'admin') {
-        // verify user role
-        if ($user->{'role'} === 'admin') {
-            $response->setCode(200);
-        } else {
-          $response->setError(403, 'require admin role');
-        }
-      }
-      return $response;
+        return $response;
     }
 
     /**

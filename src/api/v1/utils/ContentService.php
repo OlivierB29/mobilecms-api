@@ -366,7 +366,6 @@ class ContentService
             JsonUtils::writeJsonFile($file, $data);
             unset($data);
 
-
             $response->setCode(200);
             // set a timestamp response
             $tempResponse = json_decode($response->getResult());
@@ -386,15 +385,15 @@ class ContentService
 
         $data = [];
 
-          // file name eg: index.json
+        // file name eg: index.json
 
         $indexFile = $this->getIndexFileName($type);
 
-          /*
-          Load a template for index.
-          eg :
-              { "id": "", "date": "",  "activity": "", "title": "" }
-          */
+        /*
+        Load a template for index.
+        eg :
+            { "id": "", "date": "",  "activity": "", "title": "" }
+        */
 
         $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
@@ -405,11 +404,10 @@ class ContentService
                         // Read the full JSON record
                         $record = JsonUtils::readJsonFile($this->databasedir.'/'.$type.'/'.$file);
 
-
-                      //
-                      //copy some fields to index
-                      //
-                      $indexValue = clone $indexTemplate;
+                        //
+                        //copy some fields to index
+                        //
+                        $indexValue = clone $indexTemplate;
 
                         JsonUtils::copy($record, $indexValue);
                         unset($record);
@@ -424,7 +422,6 @@ class ContentService
             usort($data, compareIndex($keyname));
 
             // write to file
-
 
             JsonUtils::writeJsonFile($indexFile, $data);
             unset($data);

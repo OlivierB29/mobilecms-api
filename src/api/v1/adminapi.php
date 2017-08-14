@@ -23,7 +23,7 @@ if (null !== ACTIVATE_HTTPS && ACTIVATE_HTTPS === 'true') {
     } else {
         header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], true, 301);
         // we are in cleartext at the moment, prevent further execution and output
-            die();
+        die();
     }
 }
 
@@ -48,9 +48,7 @@ try {//PRIVATEDIR . '/users'
     $conf->{'privatedir'} = PRIVATEDIR;
     $conf->{'role'} = 'admin';
 
-
     $API = new AdminApi($conf);
-
 
     $API->setRequest();
 

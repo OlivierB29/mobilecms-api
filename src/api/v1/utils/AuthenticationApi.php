@@ -51,7 +51,6 @@ class AuthenticationApi extends RestApi
             }
         } catch (Exception $e) {
             $response->setError(401, $e->getMessage());
-
         } finally {
             return $response;
         }

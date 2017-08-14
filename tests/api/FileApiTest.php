@@ -58,8 +58,7 @@ final class FileApiTest extends TestCase
 
         $this->assertTrue($result != null && $result != '');
 
-
-          // test JSON response
+        // test JSON response
 
         $this->assertTrue(strpos($result, 'title') !== false);
         $this->assertTrue(strpos($result, 'url') !== false);

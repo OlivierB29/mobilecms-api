@@ -75,7 +75,6 @@ final class CmsApiTest extends TestCase
           {"type":"news", "labels": [ {"i18n":"en", "label":"News"}, {"i18n":"fr", "label":"Actualités"}]}
         ]', $result);
         $this->assertEquals(200, $response->getCode());
-
     }
 
     public function testPostSuccess()
@@ -108,38 +107,39 @@ final class CmsApiTest extends TestCase
         $jsonResult = json_decode($result);
         $this->assertTrue($jsonResult->{'timestamp'} != '');
     }
-/*
-    public function testPut1()
-    {
-        $path = '/restapi/v1/content/calendar';
-        $id = 'test_'.rand(0, 999999);
-        $recordStr = '{"id":"'.$id.'","type" : "calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
 
-        $file = $this->conf->{'publicdir'} . $path . '/' . $id . '.json';
-
-        if (file_exists($file)) {
-            unlink($file);
+    /*
+        public function testPut1()
+        {
+            $path = '/restapi/v1/content/calendar';
+            $id = 'test_'.rand(0, 999999);
+            $recordStr = '{"id":"'.$id.'","type" : "calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+    
+            $file = $this->conf->{'publicdir'} . $path . '/' . $id . '.json';
+    
+            if (file_exists($file)) {
+                unlink($file);
+            }
+            $REQUEST = []; // $REQUEST = ['path' => $path];
+            $headers = ['Authorization' => $this->token];
+            $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'PUT', 'HTTP_ORIGIN' => 'foobar'];
+            $GET = null;
+            $POST = ['requestbody' => $recordStr];
+    
+            $API = new CmsApi($this->conf);
+    
+            $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+    
+            $response = $API->processAPI(); $result = $response->getResult();
+            echo '!!!!!!!!!!!!!!!' . $result;
+    
+    
+            $this->assertEquals(200, $response->getCode());
+            $this->assertTrue($result != null && $result != '');
+    
+    
         }
-        $REQUEST = []; // $REQUEST = ['path' => $path];
-        $headers = ['Authorization' => $this->token];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'PUT', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
-        $POST = ['requestbody' => $recordStr];
-
-        $API = new CmsApi($this->conf);
-
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
-
-        $response = $API->processAPI(); $result = $response->getResult();
-        echo '!!!!!!!!!!!!!!!' . $result;
-
-
-        $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
-
-
-    }
-*/
+    */
     public function testGetCalendarList()
     {
         $path = '/restapi/v1/content/calendar';
@@ -180,7 +180,6 @@ final class CmsApiTest extends TestCase
         $this->assertJsonStringEqualsJsonString(
           '{"error":"wrong role"}',
            $result);
-
     }
 
     public function testGetCalendarRecord()
@@ -221,7 +220,6 @@ final class CmsApiTest extends TestCase
         $response = $API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(500, $response->getCode());
-
     }
 
     public function testGetFile()

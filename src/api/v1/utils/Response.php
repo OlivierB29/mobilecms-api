@@ -5,16 +5,14 @@
 class Response
 {
     /**
-     * result.data
+     * result.data.
      */
     private $result;
-
 
     /**
      * http return code to return.
      */
     private $code;
-
 
     public function __construct()
     {
@@ -30,7 +28,6 @@ class Response
     {
         return $this->result;
     }
-
 
     public function setCode(int $newval)
     {
@@ -55,6 +52,4 @@ class Response
         $json->{'error'} = $msg;
         $this->result = json_encode($json);
     }
-
-
 }

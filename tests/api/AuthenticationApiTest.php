@@ -47,7 +47,7 @@ final class AuthenticationApiTest extends TestCase
     public function testRegister()
     {
         $email = 'testregister@example.com';
-        $file = $this->conf->{'privatedir'} . '/users/' . $email . '.json';
+        $file = $this->conf->{'privatedir'}.'/users/'.$email.'.json';
         if (file_exists($file)) {
             unlink($file);
         }

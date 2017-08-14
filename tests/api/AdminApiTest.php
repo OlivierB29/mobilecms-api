@@ -77,7 +77,7 @@ final class AdminApiTest extends TestCase
         $this->assertJsonStringEqualsJsonString(
           '{"name":"editor@example.com","email":"editor@example.com","role":"editor"}',
            $result);
-           $this->assertEquals(200, $response->getCode());
+        $this->assertEquals(200, $response->getCode());
     }
 
     public function testGetByGuest()
@@ -148,7 +148,6 @@ final class AdminApiTest extends TestCase
         $this->assertJsonStringEqualsJsonString(
           '[{"name":"admin@example.com","email":"admin@example.com"},{"name":"editor@example.com","email":"editor@example.com"},{"name":"guest@example.com","email":"guest@example.com"},{"name":"test@example.com","email":"test@example.com"}]',
            $result);
-           $this->assertEquals(200, $response->getCode());
-
+        $this->assertEquals(200, $response->getCode());
     }
 }

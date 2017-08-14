@@ -34,33 +34,29 @@ class CmsApi extends SecureRestApi
             $datatype = $this->getDataType();
             $service = new ContentService($this->conf->{'publicdir'});
 
+            // Preflight requests are send by Angular
+            if ($this->method === 'OPTIONS') {
+                // eg : /api/v1/content
+                $response = $this->preflight();
+            }
 
-          // Preflight requests are send by Angular
-          if ($this->method === 'OPTIONS') {
-              // eg : /api/v1/content
-              $response = $this->preflight();
-          }
-
-          //
-          if (!empty($datatype)) {
-              // eg : /api/v1/content/calendar
-              if ($this->method === 'GET') {
-                  if (!empty($pathId)) {
-                      //TODO get single index value
-                  } else {
-                      $response = $service->getAll($datatype.'/index/index.json');
-                  }
-              } elseif ($this->method === 'POST') {
-                  $response = $service->rebuildIndex($datatype, self::ID);
-              }
-          }
-
+            //
+            if (!empty($datatype)) {
+                // eg : /api/v1/content/calendar
+                if ($this->method === 'GET') {
+                    if (!empty($pathId)) {
+                        //TODO get single index value
+                    } else {
+                        $response = $service->getAll($datatype.'/index/index.json');
+                    }
+                } elseif ($this->method === 'POST') {
+                    $response = $service->rebuildIndex($datatype, self::ID);
+                }
+            }
         } catch (Exception $e) {
             $response->setError(500, $e->getMessage());
         } finally {
-
-          return $response;
-
+            return $response;
         }
     }
 
@@ -128,15 +124,13 @@ class CmsApi extends SecureRestApi
                     $response = $service->publishById($datatype, self::ID, $id);
                 } elseif ($this->method === 'DELETE') {
                     if (!empty($pathId)) {
-                      //delete a single record
+                        //delete a single record
 
-
-                      // $this->args contains the remaining path parameters
-                      // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
+                        // $this->args contains the remaining path parameters
+                        // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
 
                         $response = $service->deleteRecord($datatype, $pathId);
-                          // step 1 : update Record
-
+                        // step 1 : update Record
 
                         if ($response->getCode() === 200) {
 
@@ -148,7 +142,6 @@ class CmsApi extends SecureRestApi
                     // delete a record and update the index. eg : /api/v1/content/calendar/1.json
                 }
             } else {
-
                 if ($this->method === 'GET') {
                     //return the list of editable types. eg : /api/v1/content/
 
@@ -162,7 +155,6 @@ class CmsApi extends SecureRestApi
             return $response;
         }
     }
-
 
     protected function file() : Response
     {
@@ -213,13 +205,14 @@ class CmsApi extends SecureRestApi
         return $datatype;
     }
 
-    private function getId(): string {
+    private function getId(): string
+    {
+        $result = '';
+        if (isset($this->args) && array_key_exists(0, $this->args)) {
+            $result = $this->args[0];
+        }
 
-      $result = '';
-      if (isset($this->args) && array_key_exists(0, $this->args)) {
-        $result = $this->args[0];
-      }
-      return $result;
+        return $result;
     }
 
     private function checkConfiguration()
