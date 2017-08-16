@@ -50,42 +50,37 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
+        // Read the JSON file
+        $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
 
+        // get one element
+        if (file_exists($file)) {
+            $response->setResult(file_get_contents($file));
+            $response->setCode(200);
+        } else {
+            $response->setError(404, 'not found '.$keyname.' = '.$keyvalue);
+        }
 
-            // Read the JSON file
-            $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
-
-            // get one element
-            if (file_exists($file)) {
-                $response->setResult(file_get_contents($file));
-                $response->setCode(200);
-            } else {
-                $response->setError(404, 'not found '.$keyname.' = '.$keyvalue);
-            }
-
-            return $response;
-
+        return $response;
     }
 
     public function deleteRecord(string $type, string $keyvalue)
     {
         $response = $this->getDefaultResponse();
 
+        // Read the JSON file
+        $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
 
-            // Read the JSON file
-            $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
+        if (file_exists($file)) {
+            unlink($file);
 
-            if (file_exists($file)) {
-                unlink($file);
+            $response->setCode(200);
+        } else {
+            $response->appendMessage('not found '.$type.' : '.$keyvalue);
+            $response->setCode(404);
+        }
 
-                $response->setCode(200);
-            } else {
-                $response->appendMessage('not found '.$type.' : '.$keyvalue);
-                $response->setCode(404);
-            }
-
-            return $response;
-
+        return $response;
     }
 
     /**
@@ -103,27 +98,25 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
+        //
+        //forbid upper directory
+        //
+        if (strpos($filename, '..') !== false) {
+            throw new Exception('Invalid path '.$filename, 1);
+        }
 
-            //
-            //forbid upper directory
-            //
-            if (strpos($filename, '..') !== false) {
-                throw new Exception('Invalid path '.$filename, 1);
-            }
+        $file = $this->databasedir.'/'.$filename;
 
-            $file = $this->databasedir.'/'.$filename;
+        // get one element
+        if (file_exists($file)) {
+            $response->setResult($file);
+            $response->setCode(200);
+        } else {
+            $response->appendMessage('not found '.$file);
+            $response->setCode(404);
+        }
 
-            // get one element
-            if (file_exists($file)) {
-                $response->setResult($file);
-                $response->setCode(200);
-            } else {
-                $response->appendMessage('not found '.$file);
-                $response->setCode(404);
-            }
-
-            return $response;
-
+        return $response;
     }
 
     /**
@@ -138,32 +131,30 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
+        // Read the JSON file
+        $file = $this->databasedir.'/'.$filename;
+        $data = JsonUtils::readJsonFile($file);
 
-            // Read the JSON file
-            $file = $this->databasedir.'/'.$filename;
-            $data = JsonUtils::readJsonFile($file);
-
-            // get one element
-            if (isset($keyvalue)) {
+        // get one element
+        if (isset($keyvalue)) {
 
                 // extract element data
-                $existingObject = JsonUtils::getByKey($data, $keyname, $keyvalue);
-                if (isset($existingObject)) {
-                    $response->setResult(json_encode($existingObject));
-                    $response->setCode(200);
-                } else {
-                    // element not found
-                    $response->appendMessage('not found '.$keyname.' : '.$keyvalue);
-                    $response->setCode(404);
-                }
-            } else {
-                // return all
-                $response->setResult(json_encode($data));
+            $existingObject = JsonUtils::getByKey($data, $keyname, $keyvalue);
+            if (isset($existingObject)) {
+                $response->setResult(json_encode($existingObject));
                 $response->setCode(200);
+            } else {
+                // element not found
+                $response->appendMessage('not found '.$keyname.' : '.$keyvalue);
+                $response->setCode(404);
             }
+        } else {
+            // return all
+            $response->setResult(json_encode($data));
+            $response->setCode(200);
+        }
 
-            return $response;
-
+        return $response;
     }
 
     /**
@@ -176,25 +167,23 @@ class ContentService
 
         $thelist = [];
 
-
-            if ($handle = opendir($this->databasedir.'/'.$type)) {
-                while (false !== ($file = readdir($handle))) {
-                    $fileObject = json_decode('{}');
-                    if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
-                        // echo $file;
-                        $fileObject->{'filename'} = $file;
-                        $fileObject->{'id'} = str_replace('.json', '', $file);
-                        array_push($thelist, $fileObject);
-                    }
+        if ($handle = opendir($this->databasedir.'/'.$type)) {
+            while (false !== ($file = readdir($handle))) {
+                $fileObject = json_decode('{}');
+                if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
+                    // echo $file;
+                    $fileObject->{'filename'} = $file;
+                    $fileObject->{'id'} = str_replace('.json', '', $file);
+                    array_push($thelist, $fileObject);
                 }
-                closedir($handle);
             }
+            closedir($handle);
+        }
 
-            $response->setResult(json_encode($thelist));
-            $response->setCode(200);
+        $response->setResult(json_encode($thelist));
+        $response->setCode(200);
 
-            return $response;
-
+        return $response;
     }
 
     /**
@@ -207,18 +196,15 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
+        // Read the JSON file
+        $file = $this->databasedir.'/'.$filename;
+        $data = JsonUtils::readJsonFile($file);
+        if (isset($data)) {
+            $response->setCode(200);
+            $response->setResult(json_encode($data));
+        }
 
-
-            // Read the JSON file
-            $file = $this->databasedir.'/'.$filename;
-            $data = JsonUtils::readJsonFile($file);
-            if (isset($data)) {
-                $response->setCode(200);
-                $response->setResult(json_encode($data));
-            }
-
-            return $response;
-
+        return $response;
     }
 
     /**
@@ -349,45 +335,44 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
-            // file name eg: index.json
-            $file = $this->getIndexFileName($type);
-            // create a backup of previous index file eg: history/index-TIMESTAMP.json
-            if ($this->enableIndexHistory) {
-                $backupDone = $this->mycopy($file, $this->getBackupIndexFileName($type));
-            }
-            /*
-            Load a template for index.
-            eg :
-                { "id": "", "date": "",  "activity": "", "title": "" }
-            */
+        // file name eg: index.json
+        $file = $this->getIndexFileName($type);
+        // create a backup of previous index file eg: history/index-TIMESTAMP.json
+        if ($this->enableIndexHistory) {
+            $backupDone = $this->mycopy($file, $this->getBackupIndexFileName($type));
+        }
+        /*
+        Load a template for index.
+        eg :
+            { "id": "", "date": "",  "activity": "", "title": "" }
+        */
 
-            $indexValue = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
+        $indexValue = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
-            // Read the full JSON record
-            $recordFile = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
+        // Read the full JSON record
+        $recordFile = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
 
-            $record = JsonUtils::readJsonFile($recordFile);
+        $record = JsonUtils::readJsonFile($recordFile);
 
-            //copy some fields to index
-            JsonUtils::copy($record, $indexValue);
-            unset($record);
+        //copy some fields to index
+        JsonUtils::copy($record, $indexValue);
+        unset($record);
 
-            // get index data
-            $data = JsonUtils::readJsonFile($file);
-            $data = JsonUtils::put($data, $keyname, $indexValue);
+        // get index data
+        $data = JsonUtils::readJsonFile($file);
+        $data = JsonUtils::put($data, $keyname, $indexValue);
 
-            // write to file
-            JsonUtils::writeJsonFile($file, $data);
-            unset($data);
+        // write to file
+        JsonUtils::writeJsonFile($file, $data);
+        unset($data);
 
-            $response->setCode(200);
-            // set a timestamp response
-            $tempResponse = json_decode($response->getResult());
-            $tempResponse->{'timestamp'} = ''.time();
-            $response->setResult(json_encode($tempResponse));
+        $response->setCode(200);
+        // set a timestamp response
+        $tempResponse = json_decode($response->getResult());
+        $tempResponse->{'timestamp'} = ''.time();
+        $response->setResult(json_encode($tempResponse));
 
-            return $response;
-
+        return $response;
     }
 
     public function rebuildIndex(string $type, string $keyname)
@@ -408,38 +393,36 @@ class ContentService
 
         $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
+        if ($handle = opendir($this->databasedir.'/'.$type)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
+                    // Read the full JSON record
+                    $record = JsonUtils::readJsonFile($this->databasedir.'/'.$type.'/'.$file);
 
-            if ($handle = opendir($this->databasedir.'/'.$type)) {
-                while (false !== ($file = readdir($handle))) {
-                    if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
-                        // Read the full JSON record
-                        $record = JsonUtils::readJsonFile($this->databasedir.'/'.$type.'/'.$file);
+                    //
+                    //copy some fields to index
+                    //
+                    $indexValue = clone $indexTemplate;
 
-                        //
-                        //copy some fields to index
-                        //
-                        $indexValue = clone $indexTemplate;
-
-                        JsonUtils::copy($record, $indexValue);
-                        unset($record);
-                        array_push($data, $indexValue);
-                        unset($indexValue);
-                    }
+                    JsonUtils::copy($record, $indexValue);
+                    unset($record);
+                    array_push($data, $indexValue);
+                    unset($indexValue);
                 }
-                closedir($handle);
             }
+            closedir($handle);
+        }
 
-            //sort
-            usort($data, compareIndex($keyname));
+        //sort
+        usort($data, compareIndex($keyname));
 
-            // write to file
+        // write to file
 
-            JsonUtils::writeJsonFile($indexFile, $data);
-            unset($data);
-            $response->setCode(200);
+        JsonUtils::writeJsonFile($indexFile, $data);
+        unset($data);
+        $response->setCode(200);
 
-            return $response;
-
+        return $response;
     }
 
     /**
