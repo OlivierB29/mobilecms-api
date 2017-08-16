@@ -64,6 +64,8 @@ abstract class RestApi
 
     protected $request = null;
 
+    protected $uri = null;
+
     protected $headers = null;
 
     /**
@@ -73,6 +75,7 @@ abstract class RestApi
      */
     public function setRequestUri($request)
     {
+        $this->uri = $request;
         $this->args = explode('/', rtrim(ltrim($request, '/'), '/'));
         // eg : api
         array_shift($this->args);
@@ -176,10 +179,11 @@ abstract class RestApi
                 $this->request = $this->enableCleanInputs ? $this->_cleanInputs($GET) : $GET;
                 break;
             case 'PUT':
-                $this->request = $this->enableCleanInputs ? $this->_cleanInputs($GET) : $GET;
+              $this->request = $this->enableCleanInputs ? $this->_cleanInputs($POST) : $POST;
+                //$this->request = $this->enableCleanInputs ? $this->_cleanInputs($GET) : $GET;
                 //$this->request = $this->_cleanInputs($GET);
                 // http://php.net/manual/en/wrappers.php.php
-                $this->file = file_get_contents('php://input');
+              //  $this->file = file_get_contents('php://input');
                 break;
             default:
                 $this->_response('Invalid Method', 405);
@@ -205,17 +209,29 @@ abstract class RestApi
      */
     public function processAPI()
     {
+        $response = null;
+        try {
         $apiResponse = null;
         if (method_exists($this, $this->endpoint)) {
             $apiResponse = $this->{$this->endpoint} ($this->args);
             if (isset($apiResponse) && $apiResponse instanceof Response) {
-                return $this->_responseObj($apiResponse);
+                $response = $this->_responseObj($apiResponse);
             } else {
-                return $this->_response('{"Empty response" : '.'"'.$this->endpoint.'"}', 503);
+                $response = $this->_response('{"Empty response" : '.'"'.$this->endpoint.'"}', 503);
             }
         }
 
-        return $this->_response("No Endpoint: $this->endpoint", 404);
+        if (!isset($response)) {
+          $response = $this->_response("No Endpoint: $this->endpoint", 404);
+        }
+
+      } catch (Exception $e) {
+          $response = new Response();
+          $response->setError(500, $e->getMessage());
+      } finally {
+          return $response;
+      }
+
     }
 
     /**
@@ -228,18 +244,16 @@ abstract class RestApi
         }
 
         //each endpoint should prepare an encoded response
-        return $data;
+        $response = new Response();
+        $response->setCode($status);
+        $response->setResult($data);
+        return $response;
     }
 
     protected function _responseObj($response)
     {
         if ($this->enableHeaders && $response->getCode() > 0) {
             header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
-        }
-        if ($response->getCode() !== 200) {
-            if ($response->getResult() === '{}' && !empty($response->getMessage())) {
-                $response->setResult($this->errorToJson($response->getMessage()));
-            }
         }
 
         //each endpoint should prepare an encoded response

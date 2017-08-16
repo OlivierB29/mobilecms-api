@@ -63,7 +63,7 @@ class AuthenticationApi extends RestApi
     {
         $response = $this->getDefaultResponse();
 
-        try {
+
             //throw error if wrong configuration, such as empty directory
             $this->checkConfiguration();
 
@@ -89,11 +89,9 @@ class AuthenticationApi extends RestApi
 
                 unset($logindata);
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     /**
@@ -103,7 +101,7 @@ class AuthenticationApi extends RestApi
     {
         $response = $this->getDefaultResponse();
 
-        try {
+
             //throw error if wrong configuration, such as empty directory
             $this->checkConfiguration();
             $service = new UserService($this->conf->{'privatedir'}.'/users');
@@ -125,11 +123,9 @@ class AuthenticationApi extends RestApi
                     $response->setError(400, $this->errorToJson('Bad user parameters'));
                 }
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     /**

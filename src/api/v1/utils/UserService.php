@@ -147,6 +147,10 @@ class UserService
             $error_msg .= 'EmptyPassword ';
         }
 
+        if (strlen($password) < 8) {
+            $error_msg .= 'ShortPassword ';
+        }
+
         // Cf forms.js
         // Ensure password length
         if (strlen($password) > 128) {
@@ -344,6 +348,47 @@ class UserService
 
         return $response;
     }
+
+
+        /**
+         * authenticate and return a User object with a token.
+         */
+        public function changePasswordByAdmin($emailParam, $newPassword): Response
+        {
+            // initialize Response
+            $response = new Response();
+            $response->setCode(400);
+            $response->setResult('{}');
+
+            $loginmsg = '';
+
+            $debug = false;
+            $debugmsg = 'debugmsg ';
+
+            // if someone forgot to do this before
+            $email = strtolower($emailParam);
+
+            // return the existing user
+            $user = $this->getJsonUser($email);
+
+            // user found
+            if (!empty($user)) {
+                    $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
+
+                    if (empty($updateMsg)) {
+                        $response->setCode(200);
+                        $response->setResult('{}');
+                    } else {
+                        $response->setError(500, 'modify password error ' + $updateMsg);
+                    }
+
+            } else {
+                // wrong user
+                $response->setError(400, 'wrong user');
+            }
+
+            return $response;
+        }
 
     public function verifyToken($token, $role): Response
     {

@@ -12,8 +12,7 @@
         "email": "guest@example.com"
     },
     {
-      "name": "test@example.com",
-      "email": "test@example.com"
+        "name": "test@example.com",
+        "email": "test@example.com"
     }
-
 ]

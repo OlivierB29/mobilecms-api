@@ -49,7 +49,7 @@ class FileApi extends SecureRestApi
     {
         $response = $this->getDefaultResponse();
 
-        try {
+
             $this->checkConfiguration();
 
             $datatype = $this->getDataType();
@@ -95,18 +95,16 @@ class FileApi extends SecureRestApi
                     }
                 }
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     protected function delete()
     {
         $response = $this->getDefaultResponse();
 
-        try {
+
             $this->checkConfiguration();
 
             $datatype = $this->getDataType();
@@ -128,11 +126,9 @@ class FileApi extends SecureRestApi
                     $response->setResult(json_encode($deleteResult));
                 }
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     /**
@@ -143,7 +139,7 @@ class FileApi extends SecureRestApi
     {
         $response = $this->getDefaultResponse();
 
-        try {
+
             $this->checkConfiguration();
 
             $datatype = $this->getDataType();
@@ -168,11 +164,9 @@ class FileApi extends SecureRestApi
                     }
                 }
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     private function uploadFiles($type, $id)
@@ -293,7 +287,7 @@ class FileApi extends SecureRestApi
 
     private function getDataType(): string
     {
-        $datatype = null;
+        $datatype = '';
         if (isset($this->verb)) {
             $datatype = $this->verb;
         }

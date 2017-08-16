@@ -3,6 +3,8 @@
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule "restapi/v1/(.*)$" api/v1/restapi.php [QSA,L]
+  RewriteRule "cmsapi/v1/(.*)$" api/v1/cmsapi.php [QSA,L]
   RewriteRule "authapi/v1/(.*)$" api/v1/authapi.php [QSA,L]
   RewriteRule "fileapi/v1/(.*)$" api/v1/fileapi.php [QSA,L]
+  RewriteRule "adminapi/v1/(.*)$" api/v1/adminapi.php [QSA,L]
 </IfModule>

@@ -57,97 +57,41 @@ final class AdminApiTest extends TestCase
         return $this->memory2 - $this->memory1;
     }
 
-    public function testGetUser()
-    {
-        $path = '/restapi/v1/users/editor@example.com';
-        $headers = ['Authorization' => $this->token];
-        $REQUEST = []; // $REQUEST = ['path' => $path];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = [];
-        $POST = null;
 
-        $API = new AdminApi($this->conf);
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+        public function testUpdate()
+        {
+          $email = 'role@example.com';
+          $path = '/adminapi/v1/content/users/'.$email;
+          $file = $this->conf->{'privatedir'}.'/users/'.$email.'.json';
 
-        $response = $API->processAPI();
-        $result = $response->getResult();
+          $this->assertTrue(copy($this->conf->{'privatedir'} . '/save/'.$email.'.json', $file));
 
-        $this->assertTrue($result != null && $result != '');
 
-        $this->assertJsonStringEqualsJsonString(
-          '{"name":"editor@example.com","email":"editor@example.com","role":"editor"}',
-           $result);
-        $this->assertEquals(200, $response->getCode());
-    }
+          $headers = ['Authorization' => $this->token];
+          $REQUEST = [];
+          $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+          $GET = null;
 
-    public function testGetByGuest()
-    {
-        $path = '/restapi/v1/users/editor@example.com';
-        $headers = ['Authorization' => $this->guesttoken];
-        $REQUEST = []; // $REQUEST = ['path' => $path];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = [];
-        $POST = null;
 
-        $API = new AdminApi($this->conf);
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
-        $response = $API->processAPI();
-        $result = $response->getResult();
 
-        $this->assertTrue($result != null && $result != '');
 
-        $this->assertJsonStringEqualsJsonString(
-          '{"error":"require admin role"}',
-           $result);
+            $recordStr = '{ "name": "test role", "email": "'.$email.'", "role":"editor"}';
+            $POST = ['requestbody' => $recordStr];
 
-        $this->assertEquals(403, $response->getCode());
-    }
+            $API = new AdminApi($this->conf);
 
-    public function testGetByEditor()
-    {
-        $path = '/restapi/v1/users/editor@example.com';
-        $headers = ['Authorization' => $this->editortoken];
-        $REQUEST = []; // $REQUEST = ['path' => $path];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = [];
-        $POST = null;
+            $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+            $response = $API->processAPI();
 
-        $API = new AdminApi($this->conf);
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+            $result = $response->getResult();
 
-        $response = $API->processAPI();
-        $result = $response->getResult();
+            $this->assertEquals(200, $response->getCode());
+            $this->assertTrue($result != null && $result != '');
+            $this->assertTrue(file_exists($file));
 
-        $this->assertTrue($result != null && $result != '');
-
-        $this->assertJsonStringEqualsJsonString(
-          '{"error":"require admin role"}',
-           $result);
-        $this->assertEquals(403, $response->getCode());
-    }
-
-    public function testIndexUserList()
-    {
-        $path = '/restapi/v1/index/users';
-        $headers = ['Authorization' => $this->token];
-        $REQUEST = []; // $REQUEST = ['path' => $path];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = ['requestbody' => '{}'];
-        $POST = null;
-
-        $API = new AdminApi($this->conf);
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
-
-        $response = $API->processAPI();
-
-        $result = $response->getResult();
-        $this->assertEquals(200, $response->getCode());
-
-        $this->assertTrue($result != null && $result != '');
-        $this->assertJsonStringEqualsJsonString(
-          '[{"name":"admin@example.com","email":"admin@example.com"},{"name":"editor@example.com","email":"editor@example.com"},{"name":"guest@example.com","email":"guest@example.com"},{"name":"test@example.com","email":"test@example.com"}]',
-           $result);
-        $this->assertEquals(200, $response->getCode());
-    }
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
 }

@@ -28,7 +28,7 @@ class CmsApi extends SecureRestApi
     {
         $response = $this->getDefaultResponse();
 
-        try {
+
             $this->checkConfiguration();
 
             $datatype = $this->getDataType();
@@ -53,11 +53,9 @@ class CmsApi extends SecureRestApi
                     $response = $service->rebuildIndex($datatype, self::ID);
                 }
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
-            return $response;
-        }
+
+          return $response;
+
     }
 
     /**
@@ -67,7 +65,7 @@ class CmsApi extends SecureRestApi
     {
         $response = $this->getDefaultResponse();
 
-        try {
+
             $this->checkConfiguration();
 
             $datatype = $this->getDataType();
@@ -91,7 +89,7 @@ class CmsApi extends SecureRestApi
 
                         // $this->args contains the remaining path parameters
                         // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
-                        $response = $service->getRecord($datatype, $this->args[0]);
+                        $response = $service->getRecord($datatype, $pathId);
                     } else {
                         //get all records in index
                         $response = $service->getAllObjects($datatype);
@@ -149,11 +147,9 @@ class CmsApi extends SecureRestApi
                     $response->setCode(200);
                 }
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     protected function file() : Response

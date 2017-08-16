@@ -11,6 +11,8 @@ class AdminApi extends SecureRestApi
     const INDEX_JSON = '/index/index.json';
     const REQUESTBODY = 'requestbody';
 
+    const EMAIL = 'email';
+
     public function __construct($conf)
     {
         parent::__construct($conf);
@@ -25,20 +27,18 @@ class AdminApi extends SecureRestApi
     {
         $userKey = 'email';
         $response = $this->getDefaultResponse();
+$datatype = $this->getDataType();
 
-        try {
             $this->checkConfiguration();
-
-            $datatype = $this->getDataType();
-            $service = new ContentService($this->conf->{'privatedir'});
 
             // Preflight requests are send by Angular
             if ($this->method === 'OPTIONS') {
                 // eg : /api/v1/content
                 $response = $this->preflight();
-            }
+            } elseif (!empty($datatype)) {
 
-            if (!empty($datatype)) {
+              $service = new ContentService($this->conf->{'privatedir'});
+
                 // eg : /api/v1/content/calendar
                 if ($this->method === 'GET') {
                     if (!empty($pathId)) {
@@ -50,27 +50,24 @@ class AdminApi extends SecureRestApi
                     $response = $service->rebuildIndex($datatype, $userKey);
                 }
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
-            return $response;
-        }
+
+
+        return $response;
     }
 
+
     /**
-     * base API path /api/v1/user.
+     * base API path /api/v1/content.
      */
-    protected function users() : Response
+    protected function content() : Response
     {
-        $userKey = 'email';
 
         $response = $this->getDefaultResponse();
 
-        try {
-            $this->checkConfiguration();
 
-            $id = $this->getDataType();
-            $datatype = 'users';
+            $this->checkConfiguration();
+            $datatype = $this->getDataType();
+
             $service = new ContentService($this->conf->{'privatedir'});
 
             // Preflight requests are send by Angular
@@ -79,36 +76,102 @@ class AdminApi extends SecureRestApi
                 $response = $this->preflight();
             }
 
-            // eg : /api/v1/content/calendar
-            if ($this->method === 'GET') {
-                if (!empty($id)) {
-                    //get the full data of a single record. $this->args contains the remaining path parameters  eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
-                    $response = $service->getRecord($datatype, $id);
+            if (!empty($datatype)) {
+              $pathId = $this->getId();
 
-                    // basic user fields, without password
-                    $response->setResult($this->getUserResponse($response->getResult()));
-                } else {
-                    //get all records in index
-                    $response = $service->getAllObjects($datatype);
-                }
-            } elseif ($this->method === 'POST') {
-            } elseif ($this->method === 'PUT') {
-            } elseif ($this->method === 'DELETE') {
-                if (array_key_exists(0, $this->args)) {
-                    $response = $service->deleteRecord($datatype, $id);
-                    if ($response->getCode() === 200) {
-                        $response = $service->rebuildIndex($datatype, $userKey);
+                // eg : /api/v1/content/calendar
+                if ($this->method === 'GET') {
+
+                    if (!empty($pathId)) {
+
+                      //get the full data of a single record. $this->args contains the remaining path parameters  eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
+                      $tmpResponse = $service->getRecord($datatype, $pathId);
+                      // basic user fields, without password
+                      if ($tmpResponse->getCode() === 200) {
+                        $response->setCode(200);
+                        $response->setResult($this->getUserResponse($tmpResponse->getResult()));
+                      }
+
+                    } else {
+                        //get all records in index
+                        $response = $service->getAllObjects($datatype);
                     }
-                }
+                } elseif ($this->method === 'POST') {
+                    $userService = new UserService($this->conf->{'privatedir'}.'/users');
 
-                // delete a record and update the index. eg : /api/v1/content/calendar/1.json
+                  if (!empty($pathId)) {
+                    // save a record and update the index. eg : /api/v1/content/calendar
+                    // step 1 : update Record
+
+                    // update password if needed
+                    $userParam = urldecode($this->request[self::REQUESTBODY]);
+                    $user = json_decode($userParam);
+                    if (isset($user->{'newpassword'})) {
+                      $response = $userService->changePasswordByAdmin($user->{'email'}, $user->{'newpassword'});
+                    }
+
+                    $putResponse = $service->update($datatype, self::EMAIL, $this->getUserResponse($userParam));
+
+                    $myobjectJson = json_decode($putResponse->getResult());
+                    unset($putResponse);
+
+                    // step 2 : publish to index
+                    $id = $myobjectJson->{self::EMAIL};
+                    unset($myobjectJson);
+                    $response = $service->publishById($datatype, self::EMAIL, $id);
+                  } else {
+
+                    $user = json_decode($this->request['requestbody']);
+
+                    //returns a empty string if success, a string with the message otherwise
+                    $createresult = $userService->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
+                    if ($createresult === null) {
+                        $response->setCode(200);
+                        $response->setResult('{}');
+                    } else {
+                        $response->setError(400, $this->errorToJson('Bad user parameters'));
+                    }
+                  }
+
+
+
+                } elseif ($this->method === 'PUT') {
+                  $user = json_decode($this->request['requestbody']);
+                  $userService = new UserService($this->conf->{'privatedir'}.'/users');
+                  //returns a empty string if success, a string with the message otherwise
+                  $createresult = $userService->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
+                  if ($createresult === null) {
+                      $response->setCode(200);
+                      $response->setResult('{}');
+                  } else {
+                      $response->setError(400, $this->errorToJson('Bad user parameters'));
+                  }
+                } elseif ($this->method === 'DELETE') {
+                    if (!empty($pathId)) {
+                        //delete a single record. $this->args contains the remaining path parameters
+                        // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
+                        $response = $service->deleteRecord($datatype, $pathId);
+                        // step 1 : update Record
+                        if ($response->getCode() === 200) {
+                            // step 2 : publish to index
+                            $response = $service->rebuildIndex($datatype, self::EMAIL);
+                        }
+                    }
+                    // delete a record and update the index. eg : /api/v1/content/calendar/1.json
+                }
+            } else {
+                if ($this->method === 'GET') {
+                    //return the list of editable types. eg : /api/v1/content/
+                    $response->setResult($service->options('types.json'));
+                    $response->setCode(200);
+                }
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
+
+
 
     /**
      * basic user fields, without password.
@@ -119,16 +182,15 @@ class AdminApi extends SecureRestApi
     {
         $completeUserObj = json_decode($userStr);
         $responseUser = json_decode('{}');
-        $responseUser->{'name'} = $completeUserObj->{'email'};
+        $responseUser->{'name'} = $completeUserObj->{'name'};
         $responseUser->{'email'} = $completeUserObj->{'email'};
         $responseUser->{'role'} = $completeUserObj->{'role'};
-
         return json_encode($responseUser);
     }
 
     private function getDataType(): string
     {
-        $datatype = null;
+        $datatype = '';
         if (isset($this->verb)) {
             $datatype = $this->verb;
         }
@@ -137,6 +199,16 @@ class AdminApi extends SecureRestApi
         }
 
         return $datatype;
+    }
+
+    private function getId(): string
+    {
+        $result = '';
+        if (isset($this->args) && array_key_exists(0, $this->args)) {
+            $result = $this->args[0];
+        }
+
+        return $result;
     }
 
     private function checkConfiguration()

@@ -50,7 +50,7 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
-        try {
+
 
             // Read the JSON file
             $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
@@ -62,18 +62,15 @@ class ContentService
             } else {
                 $response->setError(404, 'not found '.$keyname.' = '.$keyvalue);
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     public function deleteRecord(string $type, string $keyvalue)
     {
         $response = $this->getDefaultResponse();
 
-        try {
 
             // Read the JSON file
             $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
@@ -86,11 +83,9 @@ class ContentService
                 $response->appendMessage('not found '.$type.' : '.$keyvalue);
                 $response->setCode(404);
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     /**
@@ -108,7 +103,6 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
-        try {
 
             //
             //forbid upper directory
@@ -127,11 +121,9 @@ class ContentService
                 $response->appendMessage('not found '.$file);
                 $response->setCode(404);
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     /**
@@ -146,7 +138,6 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
-        try {
 
             // Read the JSON file
             $file = $this->databasedir.'/'.$filename;
@@ -170,11 +161,9 @@ class ContentService
                 $response->setResult(json_encode($data));
                 $response->setCode(200);
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     /**
@@ -187,7 +176,7 @@ class ContentService
 
         $thelist = [];
 
-        try {
+
             if ($handle = opendir($this->databasedir.'/'.$type)) {
                 while (false !== ($file = readdir($handle))) {
                     $fileObject = json_decode('{}');
@@ -203,11 +192,9 @@ class ContentService
 
             $response->setResult(json_encode($thelist));
             $response->setCode(200);
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     /**
@@ -220,7 +207,7 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
-        try {
+
 
             // Read the JSON file
             $file = $this->databasedir.'/'.$filename;
@@ -229,11 +216,9 @@ class ContentService
                 $response->setCode(200);
                 $response->setResult(json_encode($data));
             }
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     /**
@@ -327,6 +312,36 @@ class ContentService
         return $response;
     }
 
+    public function update(string $type, string $keyname, string $recordStr)
+    {
+        $response = $this->getDefaultResponse();
+
+        if (isset($recordStr)) {
+
+            // Decode JSON
+            $myobjectJson = json_decode($recordStr);
+            $response->setResult($recordStr);
+            unset($recordStr);
+
+            // detect id
+            $id = $myobjectJson->{$keyname};
+            // file name
+            $file = $this->getItemFileName($type, $id);
+
+            $existing = JsonUtils::readJsonFile($file);
+            JsonUtils::copy($myobjectJson, $existing);
+
+            // write to file
+            JsonUtils::writeJsonFile($file, $existing);
+            unset($myobjectJson);
+            $response->setCode(200);
+        } else {
+            $response->setError(400, 'Bad object parameters');
+        }
+
+        return $response;
+    }
+
     /**
      * Add object id to index.
      */
@@ -334,7 +349,6 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
-        try {
             // file name eg: index.json
             $file = $this->getIndexFileName($type);
             // create a backup of previous index file eg: history/index-TIMESTAMP.json
@@ -371,12 +385,9 @@ class ContentService
             $tempResponse = json_decode($response->getResult());
             $tempResponse->{'timestamp'} = ''.time();
             $response->setResult(json_encode($tempResponse));
-        } catch (Exception $e) {
-            $response->setCode(500);
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     public function rebuildIndex(string $type, string $keyname)
@@ -397,7 +408,7 @@ class ContentService
 
         $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
-        try {
+
             if ($handle = opendir($this->databasedir.'/'.$type)) {
                 while (false !== ($file = readdir($handle))) {
                     if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
@@ -426,11 +437,9 @@ class ContentService
             JsonUtils::writeJsonFile($indexFile, $data);
             unset($data);
             $response->setCode(200);
-        } catch (Exception $e) {
-            $response->setError(500, $e->getMessage());
-        } finally {
+
             return $response;
-        }
+
     }
 
     /**
