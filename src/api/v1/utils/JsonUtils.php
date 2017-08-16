@@ -76,10 +76,9 @@ class JsonUtils
     public static function copy(stdClass $source, stdClass $dest)
     {
         foreach ($dest as $key => $value) {
-          if (isset($source->{$key})) {
-            $dest->{$key} = $source->{$key};
-          }
-
+            if (isset($source->{$key})) {
+                $dest->{$key} = $source->{$key};
+            }
         }
     }
 

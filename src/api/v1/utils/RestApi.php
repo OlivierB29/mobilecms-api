@@ -210,28 +210,27 @@ abstract class RestApi
     public function processAPI()
     {
         $response = null;
+
         try {
-        $apiResponse = null;
-        if (method_exists($this, $this->endpoint)) {
-            $apiResponse = $this->{$this->endpoint} ($this->args);
-            if (isset($apiResponse) && $apiResponse instanceof Response) {
-                $response = $this->_responseObj($apiResponse);
-            } else {
-                $response = $this->_response('{"Empty response" : '.'"'.$this->endpoint.'"}', 503);
+            $apiResponse = null;
+            if (method_exists($this, $this->endpoint)) {
+                $apiResponse = $this->{$this->endpoint} ($this->args);
+                if (isset($apiResponse) && $apiResponse instanceof Response) {
+                    $response = $this->_responseObj($apiResponse);
+                } else {
+                    $response = $this->_response('{"Empty response" : '.'"'.$this->endpoint.'"}', 503);
+                }
             }
+
+            if (!isset($response)) {
+                $response = $this->_response("No Endpoint: $this->endpoint", 404);
+            }
+        } catch (Exception $e) {
+            $response = new Response();
+            $response->setError(500, $e->getMessage());
+        } finally {
+            return $response;
         }
-
-        if (!isset($response)) {
-          $response = $this->_response("No Endpoint: $this->endpoint", 404);
-        }
-
-      } catch (Exception $e) {
-          $response = new Response();
-          $response->setError(500, $e->getMessage());
-      } finally {
-          return $response;
-      }
-
     }
 
     /**
@@ -247,6 +246,7 @@ abstract class RestApi
         $response = new Response();
         $response->setCode($status);
         $response->setResult($data);
+
         return $response;
     }
 

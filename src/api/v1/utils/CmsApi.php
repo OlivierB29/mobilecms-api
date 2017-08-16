@@ -28,34 +28,32 @@ class CmsApi extends SecureRestApi
     {
         $response = $this->getDefaultResponse();
 
+        $this->checkConfiguration();
 
-            $this->checkConfiguration();
+        $datatype = $this->getDataType();
+        $service = new ContentService($this->conf->{'publicdir'});
 
-            $datatype = $this->getDataType();
-            $service = new ContentService($this->conf->{'publicdir'});
+        // Preflight requests are send by Angular
+        if ($this->method === 'OPTIONS') {
+            // eg : /api/v1/content
+            $response = $this->preflight();
+        }
 
-            // Preflight requests are send by Angular
-            if ($this->method === 'OPTIONS') {
-                // eg : /api/v1/content
-                $response = $this->preflight();
-            }
-
-            //
-            if (!empty($datatype)) {
-                // eg : /api/v1/content/calendar
-                if ($this->method === 'GET') {
-                    if (!empty($pathId)) {
-                        //TODO get single index value
-                    } else {
-                        $response = $service->getAll($datatype.'/index/index.json');
-                    }
-                } elseif ($this->method === 'POST') {
-                    $response = $service->rebuildIndex($datatype, self::ID);
+        //
+        if (!empty($datatype)) {
+            // eg : /api/v1/content/calendar
+            if ($this->method === 'GET') {
+                if (!empty($pathId)) {
+                    //TODO get single index value
+                } else {
+                    $response = $service->getAll($datatype.'/index/index.json');
                 }
+            } elseif ($this->method === 'POST') {
+                $response = $service->rebuildIndex($datatype, self::ID);
             }
+        }
 
-          return $response;
-
+        return $response;
     }
 
     /**
@@ -65,91 +63,89 @@ class CmsApi extends SecureRestApi
     {
         $response = $this->getDefaultResponse();
 
+        $this->checkConfiguration();
 
-            $this->checkConfiguration();
+        $datatype = $this->getDataType();
 
-            $datatype = $this->getDataType();
+        $pathId = $this->getId();
 
-            $pathId = $this->getId();
+        $service = new ContentService($this->conf->{'publicdir'});
 
-            $service = new ContentService($this->conf->{'publicdir'});
+        // Preflight requests are send by Angular
+        if ($this->method === 'OPTIONS') {
+            // eg : /api/v1/content
+            $response = $this->preflight();
+        }
 
-            // Preflight requests are send by Angular
-            if ($this->method === 'OPTIONS') {
-                // eg : /api/v1/content
-                $response = $this->preflight();
-            }
-
-            if (!empty($datatype)) {
+        if (!empty($datatype)) {
 
                 // eg : /api/v1/content/calendar
-                if ($this->method === 'GET') {
-                    if (!empty($pathId)) {
-                        //get the full data of a single record
+            if ($this->method === 'GET') {
+                if (!empty($pathId)) {
+                    //get the full data of a single record
 
-                        // $this->args contains the remaining path parameters
-                        // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
-                        $response = $service->getRecord($datatype, $pathId);
-                    } else {
-                        //get all records in index
-                        $response = $service->getAllObjects($datatype);
-                    }
-                } elseif ($this->method === 'POST') {
-                    // save a record and update the index. eg : /api/v1/content/calendar
+                    // $this->args contains the remaining path parameters
+                    // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
+                    $response = $service->getRecord($datatype, $pathId);
+                } else {
+                    //get all records in index
+                    $response = $service->getAllObjects($datatype);
+                }
+            } elseif ($this->method === 'POST') {
+                // save a record and update the index. eg : /api/v1/content/calendar
 
+                // step 1 : update Record
+                $putResponse = $service->post($datatype, self::ID, urldecode($this->request[self::REQUESTBODY]));
+                $myobjectJson = json_decode($putResponse->getResult());
+                unset($putResponse);
+
+                // step 2 : publish to index
+                $id = $myobjectJson->{self::ID};
+                unset($myobjectJson);
+                $response = $service->publishById($datatype, self::ID, $id);
+            } elseif ($this->method === 'PUT') {
+                // save a record and update the index
+                // path eg : /api/v1/content/calendar
+
+                // step 1 : update Record
+                $putResponse = $service->post($datatype, self::ID, $this->request);
+                $myobjectJson = json_decode($putResponse->getResult());
+                //TODO manage errors
+                unset($putResponse);
+
+                // step 2 : publish to index
+                $id = $myobjectJson->{self::ID};
+                unset($myobjectJson);
+                $response = $service->publishById($datatype, self::ID, $id);
+            } elseif ($this->method === 'DELETE') {
+                if (!empty($pathId)) {
+                    //delete a single record
+
+                    // $this->args contains the remaining path parameters
+                    // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
+
+                    $response = $service->deleteRecord($datatype, $pathId);
                     // step 1 : update Record
-                    $putResponse = $service->post($datatype, self::ID, urldecode($this->request[self::REQUESTBODY]));
-                    $myobjectJson = json_decode($putResponse->getResult());
-                    unset($putResponse);
 
-                    // step 2 : publish to index
-                    $id = $myobjectJson->{self::ID};
-                    unset($myobjectJson);
-                    $response = $service->publishById($datatype, self::ID, $id);
-                } elseif ($this->method === 'PUT') {
-                    // save a record and update the index
-                    // path eg : /api/v1/content/calendar
-
-                    // step 1 : update Record
-                    $putResponse = $service->post($datatype, self::ID, $this->request);
-                    $myobjectJson = json_decode($putResponse->getResult());
-                    //TODO manage errors
-                    unset($putResponse);
-
-                    // step 2 : publish to index
-                    $id = $myobjectJson->{self::ID};
-                    unset($myobjectJson);
-                    $response = $service->publishById($datatype, self::ID, $id);
-                } elseif ($this->method === 'DELETE') {
-                    if (!empty($pathId)) {
-                        //delete a single record
-
-                        // $this->args contains the remaining path parameters
-                        // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
-
-                        $response = $service->deleteRecord($datatype, $pathId);
-                        // step 1 : update Record
-
-                        if ($response->getCode() === 200) {
+                    if ($response->getCode() === 200) {
 
                                 // step 2 : publish to index
-                            $response = $service->rebuildIndex($datatype, self::ID);
-                        }
+                        $response = $service->rebuildIndex($datatype, self::ID);
                     }
-
-                    // delete a record and update the index. eg : /api/v1/content/calendar/1.json
                 }
-            } else {
-                if ($this->method === 'GET') {
-                    //return the list of editable types. eg : /api/v1/content/
 
-                    $response->setResult($service->options('types.json'));
-                    $response->setCode(200);
-                }
+                // delete a record and update the index. eg : /api/v1/content/calendar/1.json
             }
+        } else {
+            if ($this->method === 'GET') {
+                //return the list of editable types. eg : /api/v1/content/
 
-            return $response;
+                $response->setResult($service->options('types.json'));
+                $response->setCode(200);
+            }
+        }
 
+        return $response;
     }
 
     protected function file() : Response

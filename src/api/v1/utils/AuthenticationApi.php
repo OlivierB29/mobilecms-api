@@ -63,35 +63,33 @@ class AuthenticationApi extends RestApi
     {
         $response = $this->getDefaultResponse();
 
+        //throw error if wrong configuration, such as empty directory
+        $this->checkConfiguration();
 
-            //throw error if wrong configuration, such as empty directory
-            $this->checkConfiguration();
+        $service = new UserService($this->conf->{'privatedir'}.'/users');
 
-            $service = new UserService($this->conf->{'privatedir'}.'/users');
+        // Preflight requests are send by Angular
+        if ($this->method === 'OPTIONS') {
+            // eg : /authapi/v1/auth
+            $response->setResult($service->preflight());
+        }
 
-            // Preflight requests are send by Angular
-            if ($this->method === 'OPTIONS') {
-                // eg : /authapi/v1/auth
-                $response->setResult($service->preflight());
-            }
-
-            if ($this->method === 'POST') {
+        if ($this->method === 'POST') {
 
                 // login and get token
-                // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
+            // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
 
-                $logindata = json_decode($this->request['requestbody']);
+            $logindata = json_decode($this->request['requestbody']);
 
-                //TODO : user contains either email of name
+            //TODO : user contains either email of name
 
-                // free variables before response
-                $response = $service->changePassword($logindata->{'email'}, $logindata->{'password'}, $logindata->{'newpassword'});
+            // free variables before response
+            $response = $service->changePassword($logindata->{'email'}, $logindata->{'password'}, $logindata->{'newpassword'});
 
-                unset($logindata);
-            }
+            unset($logindata);
+        }
 
-            return $response;
-
+        return $response;
     }
 
     /**
@@ -101,31 +99,29 @@ class AuthenticationApi extends RestApi
     {
         $response = $this->getDefaultResponse();
 
+        //throw error if wrong configuration, such as empty directory
+        $this->checkConfiguration();
+        $service = new UserService($this->conf->{'privatedir'}.'/users');
 
-            //throw error if wrong configuration, such as empty directory
-            $this->checkConfiguration();
-            $service = new UserService($this->conf->{'privatedir'}.'/users');
+        // Preflight requests are send by Angular
+        if ($this->method === 'OPTIONS') {
+            $response->setResult($service->preflight());
+        }
 
-            // Preflight requests are send by Angular
-            if ($this->method === 'OPTIONS') {
-                $response->setResult($service->preflight());
+        // register and create a user
+        if ($this->method === 'POST') {
+            $user = json_decode($this->request['requestbody']);
+            //returns a empty string if success, a string with the message otherwise
+            $createresult = $service->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
+            if ($createresult === null) {
+                $response->setCode(200);
+                $response->setResult('{}');
+            } else {
+                $response->setError(400, $this->errorToJson('Bad user parameters'));
             }
+        }
 
-            // register and create a user
-            if ($this->method === 'POST') {
-                $user = json_decode($this->request['requestbody']);
-                //returns a empty string if success, a string with the message otherwise
-                $createresult = $service->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
-                if ($createresult === null) {
-                    $response->setCode(200);
-                    $response->setResult('{}');
-                } else {
-                    $response->setError(400, $this->errorToJson('Bad user parameters'));
-                }
-            }
-
-            return $response;
-
+        return $response;
     }
 
     /**

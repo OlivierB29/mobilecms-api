@@ -349,46 +349,44 @@ class UserService
         return $response;
     }
 
+    /**
+     * authenticate and return a User object with a token.
+     */
+    public function changePasswordByAdmin($emailParam, $newPassword): Response
+    {
+        // initialize Response
+        $response = new Response();
+        $response->setCode(400);
+        $response->setResult('{}');
 
-        /**
-         * authenticate and return a User object with a token.
-         */
-        public function changePasswordByAdmin($emailParam, $newPassword): Response
-        {
-            // initialize Response
-            $response = new Response();
-            $response->setCode(400);
-            $response->setResult('{}');
+        $loginmsg = '';
 
-            $loginmsg = '';
+        $debug = false;
+        $debugmsg = 'debugmsg ';
 
-            $debug = false;
-            $debugmsg = 'debugmsg ';
+        // if someone forgot to do this before
+        $email = strtolower($emailParam);
 
-            // if someone forgot to do this before
-            $email = strtolower($emailParam);
+        // return the existing user
+        $user = $this->getJsonUser($email);
 
-            // return the existing user
-            $user = $this->getJsonUser($email);
+        // user found
+        if (!empty($user)) {
+            $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
 
-            // user found
-            if (!empty($user)) {
-                    $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
-
-                    if (empty($updateMsg)) {
-                        $response->setCode(200);
-                        $response->setResult('{}');
-                    } else {
-                        $response->setError(500, 'modify password error ' + $updateMsg);
-                    }
-
+            if (empty($updateMsg)) {
+                $response->setCode(200);
+                $response->setResult('{}');
             } else {
-                // wrong user
-                $response->setError(400, 'wrong user');
+                $response->setError(500, 'modify password error ' + $updateMsg);
             }
-
-            return $response;
+        } else {
+            // wrong user
+            $response->setError(400, 'wrong user');
         }
+
+        return $response;
+    }
 
     public function verifyToken($token, $role): Response
     {

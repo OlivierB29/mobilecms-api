@@ -57,41 +57,35 @@ final class AdminApiTest extends TestCase
         return $this->memory2 - $this->memory1;
     }
 
+    public function testUpdate()
+    {
+        $email = 'role@example.com';
+        $path = '/adminapi/v1/content/users/'.$email;
+        $file = $this->conf->{'privatedir'}.'/users/'.$email.'.json';
 
-        public function testUpdate()
-        {
-          $email = 'role@example.com';
-          $path = '/adminapi/v1/content/users/'.$email;
-          $file = $this->conf->{'privatedir'}.'/users/'.$email.'.json';
+        $this->assertTrue(copy($this->conf->{'privatedir'}.'/save/'.$email.'.json', $file));
 
-          $this->assertTrue(copy($this->conf->{'privatedir'} . '/save/'.$email.'.json', $file));
+        $headers = ['Authorization' => $this->token];
+        $REQUEST = [];
+        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $GET = null;
 
+        $recordStr = '{ "name": "test role", "email": "'.$email.'", "role":"editor"}';
+        $POST = ['requestbody' => $recordStr];
 
-          $headers = ['Authorization' => $this->token];
-          $REQUEST = [];
-          $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-          $GET = null;
+        $API = new AdminApi($this->conf);
 
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+        $response = $API->processAPI();
 
+        $result = $response->getResult();
 
+        $this->assertEquals(200, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue(file_exists($file));
 
-
-            $recordStr = '{ "name": "test role", "email": "'.$email.'", "role":"editor"}';
-            $POST = ['requestbody' => $recordStr];
-
-            $API = new AdminApi($this->conf);
-
-            $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
-            $response = $API->processAPI();
-
-            $result = $response->getResult();
-
-            $this->assertEquals(200, $response->getCode());
-            $this->assertTrue($result != null && $result != '');
-            $this->assertTrue(file_exists($file));
-
-            if (file_exists($file)) {
-                unlink($file);
-            }
+        if (file_exists($file)) {
+            unlink($file);
         }
+    }
 }
