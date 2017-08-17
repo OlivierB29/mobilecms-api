@@ -170,7 +170,6 @@ class UserService
             }
 
             // secretQuestion and secretResponse are optional
-
         }
 
         if (empty($error_msg)) {
@@ -297,8 +296,8 @@ class UserService
             $loginmsg .= $debugmsg;
         }
         if (!empty($loginmsg)) {
-          throw new Exception($loginmsg);
-        } 
+            throw new Exception($loginmsg);
+        }
 
         return $response;
     }
