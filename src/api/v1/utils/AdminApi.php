@@ -3,6 +3,7 @@
 require_once 'SecureRestApi.php';
 require_once 'ContentService.php';
 require_once 'UserService.php';
+require_once 'JsonUtils.php';
 /*
  * /api/v1/content/cake?filter=foobar
  */
@@ -112,29 +113,42 @@ class AdminApi extends SecureRestApi
                     $id = $myobjectJson->{self::EMAIL};
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::EMAIL, $id);
+
                 } else {
-                    $user = json_decode($this->request['requestbody']);
+
+                    // get all properties of a user, unless $user->{'property'} will fail if the request is empty
+                    $user = $this->getDefaultUser();
+                    // get parameters from request
+
+                    $requestuser = json_decode($this->request['requestbody']);
+
+                    JsonUtils::copy($requestuser, $user);
+
 
                     //returns a empty string if success, a string with the message otherwise
                     $createresult = $userService->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
-                    if ($createresult === null) {
+
+                    if (empty($createresult)) {
                         $response->setCode(200);
                         $response->setResult('{}');
                     } else {
                         $response->setError(400, $this->errorToJson('Bad user parameters'));
                     }
+
+
+                      // step 2 : publish to index
+                    if ($response->getCode() === 200) {
+
+                      $id = $user->{self::EMAIL};
+                      unset($user);
+                      $response = $service->publishById($datatype, self::EMAIL, $id);
+                      $response->setResult('{}');
+
+                    }
+
                 }
             } elseif ($this->method === 'PUT') {
-                $user = json_decode($this->request['requestbody']);
-                $userService = new UserService($this->conf->{'privatedir'}.'/users');
-                //returns a empty string if success, a string with the message otherwise
-                $createresult = $userService->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
-                if ($createresult === null) {
-                    $response->setCode(200);
-                    $response->setResult('{}');
-                } else {
-                    $response->setError(400, $this->errorToJson('Bad user parameters'));
-                }
+
             } elseif ($this->method === 'DELETE') {
                 if (!empty($pathId)) {
                     //delete a single record. $this->args contains the remaining path parameters
@@ -155,8 +169,15 @@ class AdminApi extends SecureRestApi
                 $response->setCode(200);
             }
         }
-
+        // set a timestamp response
+        $tempResponse = json_decode($response->getResult());
+        $tempResponse->{'timestamp'} = ''.time();
+        $response->setResult(json_encode($tempResponse));
         return $response;
+    }
+
+    private function getDefaultUser() {
+      return json_decode('{"name":"", "email":"", "password":"", "secretQuestion":"", "secretResponse":"" }');
     }
 
     /**

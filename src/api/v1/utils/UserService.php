@@ -169,13 +169,8 @@ class UserService
                 $error_msg .= 'AlreadyExists.';
             }
 
-            if (empty($secretQuestion)) {
-                $error_msg .= 'EmptySecretQuestion ';
-            }
+            // secretQuestion and secretResponse are optional
 
-            if (empty($secretResponse)) {
-                $error_msg .= 'EmptySecretResponse ';
-            }
         }
 
         if (empty($error_msg)) {
@@ -289,7 +284,7 @@ class UserService
                 }
             } else {
                 // incorrect password
-                $loginmsg = 'wrong passsword';
+                $loginmsg = 'wrong password';
             }
         } else {
             // wrong user
@@ -301,6 +296,9 @@ class UserService
         if ($debug) {
             $loginmsg .= $debugmsg;
         }
+        if (!empty($loginmsg)) {
+          throw new Exception($loginmsg);
+        } 
 
         return $response;
     }
