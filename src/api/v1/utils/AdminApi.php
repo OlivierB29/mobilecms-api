@@ -113,7 +113,6 @@ class AdminApi extends SecureRestApi
                     $id = $myobjectJson->{self::EMAIL};
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::EMAIL, $id);
-
                 } else {
 
                     // get all properties of a user, unless $user->{'property'} will fail if the request is empty
@@ -123,7 +122,6 @@ class AdminApi extends SecureRestApi
                     $requestuser = json_decode($this->request['requestbody']);
 
                     JsonUtils::copy($requestuser, $user);
-
 
                     //returns a empty string if success, a string with the message otherwise
                     $createresult = $userService->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
@@ -135,20 +133,15 @@ class AdminApi extends SecureRestApi
                         $response->setError(400, $this->errorToJson('Bad user parameters'));
                     }
 
-
-                      // step 2 : publish to index
+                    // step 2 : publish to index
                     if ($response->getCode() === 200) {
-
-                      $id = $user->{self::EMAIL};
-                      unset($user);
-                      $response = $service->publishById($datatype, self::EMAIL, $id);
-                      $response->setResult('{}');
-
+                        $id = $user->{self::EMAIL};
+                        unset($user);
+                        $response = $service->publishById($datatype, self::EMAIL, $id);
+                        $response->setResult('{}');
                     }
-
                 }
             } elseif ($this->method === 'PUT') {
-
             } elseif ($this->method === 'DELETE') {
                 if (!empty($pathId)) {
                     //delete a single record. $this->args contains the remaining path parameters
@@ -173,11 +166,13 @@ class AdminApi extends SecureRestApi
         $tempResponse = json_decode($response->getResult());
         $tempResponse->{'timestamp'} = ''.time();
         $response->setResult(json_encode($tempResponse));
+
         return $response;
     }
 
-    private function getDefaultUser() {
-      return json_decode('{"name":"", "email":"", "password":"", "secretQuestion":"", "secretResponse":"" }');
+    private function getDefaultUser()
+    {
+        return json_decode('{"name":"", "email":"", "password":"", "secretQuestion":"", "secretResponse":"" }');
     }
 
     /**
