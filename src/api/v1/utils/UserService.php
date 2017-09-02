@@ -147,10 +147,6 @@ class UserService
             $error_msg .= 'EmptyPassword ';
         }
 
-        if (strlen($password) < 8) {
-            $error_msg .= 'ShortPassword ';
-        }
-
         // Cf forms.js
         // Ensure password length
         if (strlen($password) > 128) {
@@ -166,10 +162,16 @@ class UserService
 
             if (file_exists($file)) {
                 // user already exists
-                $error_msg .= 'AlreadyExists.';
+              $error_msg .= 'AlreadyExists.';
             }
 
-            // secretQuestion and secretResponse are optional
+            if (empty($secretQuestion)) {
+                $error_msg .= 'EmptySecretQuestion ';
+            }
+
+            if (empty($secretResponse)) {
+                $error_msg .= 'EmptySecretResponse ';
+            }
         }
 
         if (empty($error_msg)) {
@@ -190,10 +192,10 @@ class UserService
 
             if ($mode === 'create') {
                 // create user
-                $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
+              $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
             } else {
                 //role is not modified
-                $this->updateUser($email, '', $saltpassword, $random_salt, '');
+              $this->updateUser($email, '', $saltpassword, $random_salt, '');
             }
         }
 
@@ -250,7 +252,7 @@ class UserService
         $response->setCode(401);
         $response->setResult('{}');
 
-        $loginmsg = '';
+        $loginmsg = 'Wrong login';
 
         $debug = false;
         $debugmsg = 'debugmsg ';
@@ -283,7 +285,7 @@ class UserService
                 }
             } else {
                 // incorrect password
-                $loginmsg = 'wrong password';
+                $loginmsg = 'wrong passsword';
             }
         } else {
             // wrong user
@@ -294,9 +296,6 @@ class UserService
         // return an empty string on success, so if debug is enabled, it's impossible to connect
         if ($debug) {
             $loginmsg .= $debugmsg;
-        }
-        if (!empty($loginmsg)) {
-            throw new Exception($loginmsg);
         }
 
         return $response;
@@ -310,9 +309,10 @@ class UserService
         // initialize Response
         $response = new Response();
         $response->setCode(401);
+
         $response->setResult('{}');
 
-        $loginmsg = '';
+        $loginmsg = 'Wrong login';
 
         $debug = false;
         $debugmsg = 'debugmsg ';
@@ -326,60 +326,29 @@ class UserService
         // user found
         if (!empty($user)) {
             if ($this->login($emailParam, $password) === '') {
+
                 $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
 
                 if (empty($updateMsg)) {
                     $response->setCode(200);
                     $response->setResult('{}');
+
                 } else {
-                    $response->setError(500, 'modify password error ' + $updateMsg);
+                    $response->setError(500, 'createUserWithSecret error ' . $updateMsg);
                 }
             } else {
                 // incorrect password
-                $response->setError(401, 'wrong password');
+                $loginmsg = 'wrong passsword';
             }
         } else {
             // wrong user
-            $response->setError(401, 'wrong user');
+            $loginmsg = 'wrong user '.$email;
+            $debugmsg .= $email;
         }
 
-        return $response;
-    }
-
-    /**
-     * authenticate and return a User object with a token.
-     */
-    public function changePasswordByAdmin($emailParam, $newPassword): Response
-    {
-        // initialize Response
-        $response = new Response();
-        $response->setCode(400);
-        $response->setResult('{}');
-
-        $loginmsg = '';
-
-        $debug = false;
-        $debugmsg = 'debugmsg ';
-
-        // if someone forgot to do this before
-        $email = strtolower($emailParam);
-
-        // return the existing user
-        $user = $this->getJsonUser($email);
-
-        // user found
-        if (!empty($user)) {
-            $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
-
-            if (empty($updateMsg)) {
-                $response->setCode(200);
-                $response->setResult('{}');
-            } else {
-                $response->setError(500, 'modify password error ' + $updateMsg);
-            }
-        } else {
-            // wrong user
-            $response->setError(400, 'wrong user');
+        // return an empty string on success, so if debug is enabled, it's impossible to connect
+        if ($debug) {
+            $loginmsg .= $debugmsg;
         }
 
         return $response;
@@ -393,9 +362,10 @@ class UserService
             throw new Exception('empty token');
         }
 
+
         $jwt = new JwtToken();
 
-        // get payload and convert to JSON
+            // get payload and convert to JSON
 
         $payload = $jwt->getPayload($token);
 
@@ -407,43 +377,38 @@ class UserService
         if (!isset($payloadJson)) {
             throw new Exception('empty payload');
         }
-
-        // get the existing user
+              // get the existing user
 
         $user = $this->getJsonUser($payloadJson->{'sub'});
 
-        // verify token with secret
-        if ($jwt->verifyToken($token, $user->{'salt'})) {
-            $response = $this->checkRole($user, $role);
-        } else {
-            $response->setError(403, 'JwtToken.verifyToken is false');
-        }
+              // verify token with secret
+              if ($jwt->verifyToken($token, $user->{'salt'})) {
+
+                if ($role === 'editor') {
+                  // verify user role
+                  if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
+                      $response->setCode(200);
+                    } else {
+                      $response->setError(403, 'wrong role');
+                  }
+                } else if ($role === 'admin') {
+                  // verify user role
+                  if ($user->{'role'} === 'admin') {
+                      $response->setCode(200);
+                  } else {
+                    $response->setError(403, 'wrong role');
+                  }
+                }
+
+
+              } else {
+                  $response->setError(401, 'verifyToken false');
+              }
 
         return $response;
     }
 
-    private function checkRole($user, $role): Response
-    {
-        $response = $this->getDefaultResponse();
 
-        if ($role === 'editor') {
-            // verify user role
-            if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
-                $response->setCode(200);
-            } else {
-                $response->setError(403, 'wrong role');
-            }
-        } elseif ($role === 'admin') {
-            // verify user role
-            if ($user->{'role'} === 'admin') {
-                $response->setCode(200);
-            } else {
-                $response->setError(403, 'require admin role');
-            }
-        }
-
-        return $response;
-    }
 
     /**
      * initialize a default Response object.

@@ -58,7 +58,7 @@ class ContentService
             $response->setResult(file_get_contents($file));
             $response->setCode(200);
         } else {
-            $response->setError(404, 'not found '.$keyname.' = '.$keyvalue);
+            $response->setError(404, 'not found '. $type . ' / ' . $keyvalue);
         }
 
         return $response;
