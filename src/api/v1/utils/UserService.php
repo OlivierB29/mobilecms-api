@@ -162,7 +162,7 @@ class UserService
 
             if (file_exists($file)) {
                 // user already exists
-              $error_msg .= 'AlreadyExists.';
+                $error_msg .= 'AlreadyExists.';
             }
 
             if (empty($secretQuestion)) {
@@ -192,10 +192,10 @@ class UserService
 
             if ($mode === 'create') {
                 // create user
-              $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
+                $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
             } else {
                 //role is not modified
-              $this->updateUser($email, '', $saltpassword, $random_salt, '');
+                $this->updateUser($email, '', $saltpassword, $random_salt, '');
             }
         }
 
@@ -326,7 +326,6 @@ class UserService
         // user found
         if (!empty($user)) {
             if ($this->login($email, $password) === '') {
-
                 $updateMsg = $this->createUserWithSecret('', $email, $newPassword, '', '', 'update');
 
                 // return the existing user
@@ -338,9 +337,8 @@ class UserService
                 if (empty($updateMsg)) {
                     $response->setCode(200);
                     $response->setResult('{}');
-
                 } else {
-                    $response->setError(500, 'createUserWithSecret error ' . $updateMsg);
+                    $response->setError(500, 'createUserWithSecret error '.$updateMsg);
                 }
             } else {
                 // incorrect password
@@ -360,7 +358,6 @@ class UserService
         return $response;
     }
 
-
     public function verifyToken($token, $role): Response
     {
         $response = $this->getDefaultResponse();
@@ -369,10 +366,9 @@ class UserService
             throw new Exception('empty token');
         }
 
-
         $jwt = new JwtToken();
 
-            // get payload and convert to JSON
+        // get payload and convert to JSON
 
         $payload = $jwt->getPayload($token);
 
@@ -384,118 +380,112 @@ class UserService
         if (!isset($payloadJson)) {
             throw new Exception('empty payload');
         }
-              // get the existing user
+        // get the existing user
 
         $user = $this->getJsonUser($payloadJson->{'sub'});
 
-              // verify token with secret
-              if ($jwt->verifyToken($token, $user->{'salt'})) {
-
-                if ($role === 'editor') {
-                  // verify user role
-                  if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
-                      $response->setCode(200);
-                    } else {
-                      $response->setError(403, 'wrong role');
-                  }
-                } else if ($role === 'admin') {
-                  // verify user role
-                  if ($user->{'role'} === 'admin') {
-                      $response->setCode(200);
-                  } else {
+        // verify token with secret
+        if ($jwt->verifyToken($token, $user->{'salt'})) {
+            if ($role === 'editor') {
+                // verify user role
+                if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
+                    $response->setCode(200);
+                } else {
                     $response->setError(403, 'wrong role');
-                  }
                 }
-
-
-              } else {
-                  $response->setError(401, 'verifyToken false');
-              }
+            } elseif ($role === 'admin') {
+                // verify user role
+                if ($user->{'role'} === 'admin') {
+                    $response->setCode(200);
+                } else {
+                    $response->setError(403, 'wrong role');
+                }
+            }
+        } else {
+            $response->setError(401, 'verifyToken false');
+        }
 
         return $response;
     }
 
+    /**
+     * authenticate and return a User object with a token.
+     */
+    public function resetPassword($emailParam, $newPassword): Response
+    {
+        // initialize Response
+        $response = new Response();
+        $response->setCode(401);
 
-        /**
-         * authenticate and return a User object with a token.
-         */
-        public function resetPassword($emailParam, $newPassword): Response
-        {
-            // initialize Response
-            $response = new Response();
-            $response->setCode(401);
+        $response->setResult('{}');
 
-            $response->setResult('{}');
+        $loginmsg = 'Wrong login';
 
-            $loginmsg = 'Wrong login';
+        $debug = false;
+        $debugmsg = 'debugmsg ';
 
-            $debug = false;
-            $debugmsg = 'debugmsg ';
+        // if someone forgot to do this before
+        $email = strtolower($emailParam);
 
-            // if someone forgot to do this before
-            $email = strtolower($emailParam);
+        // return the existing user
+        $user = $this->getJsonUser($email);
+
+        // user found
+        if (!empty($user)) {
+            $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
 
             // return the existing user
             $user = $this->getJsonUser($email);
+            $user->{'clientalgorithm'} = 'none';
+            $user->{'newpasswordrequired'} = 'true';
+            JsonUtils::writeJsonFile($this->getJsonUserFile($email), $user);
 
-            // user found
-            if (!empty($user)) {
-
-
-                    $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
-
-                    // return the existing user
-                    $user = $this->getJsonUser($email);
-                    $user->{'clientalgorithm'} = 'none';
-                    $user->{'newpasswordrequired'} = 'true';
-                    JsonUtils::writeJsonFile($this->getJsonUserFile($email), $user);
-
-                    if (empty($updateMsg)) {
-                        $response->setCode(200);
-                        $response->setResult('{}');
-
-                    } else {
-                        $response->setError(500, 'createUserWithSecret error ' . $updateMsg);
-                    }
-
+            if (empty($updateMsg)) {
+                $response->setCode(200);
+                $response->setResult('{}');
             } else {
-                // wrong user
-                $loginmsg = 'wrong user '.$email;
-                $debugmsg .= $email;
+                $response->setError(500, 'createUserWithSecret error '.$updateMsg);
             }
-
-            // return an empty string on success, so if debug is enabled, it's impossible to connect
-            if ($debug) {
-                $loginmsg .= $debugmsg;
-            }
-
-            return $response;
+        } else {
+            // wrong user
+            $loginmsg = 'wrong user '.$email;
+            $debugmsg .= $email;
         }
 
-      public function getPublicInfo($email) {
+        // return an empty string on success, so if debug is enabled, it's impossible to connect
+        if ($debug) {
+            $loginmsg .= $debugmsg;
+        }
+
+        return $response;
+    }
+
+    public function getPublicInfo($email)
+    {
         $response = $this->getDefaultResponse();
 
         $user = $this->getJsonUser($email);
         if (isset($user)) {
-          $info = json_decode('{"name":"", "clientalgorithm":"", "newpasswordrequired":""}');
-          JsonUtils::copy($user, $info);
-          $response->setResult(json_encode($info));
-          $response->setCode(200);
+            $info = json_decode('{"name":"", "clientalgorithm":"", "newpasswordrequired":""}');
+            JsonUtils::copy($user, $info);
+            $response->setResult(json_encode($info));
+            $response->setCode(200);
         }
-
-
 
         return $response;
-      }
+    }
 
-      public function generateRandomString($length = 10) {
-            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $randomString = '';
-            for ($i = 0; $i < $length; $i++) {
-                $randomString .= $characters[rand(0, strlen($characters) - 1)];
-            }
-            return $randomString;
+    public function generateRandomString($length = 10)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
         }
+
+        return $randomString;
+    }
+
     /**
      * initialize a default Response object.
      */

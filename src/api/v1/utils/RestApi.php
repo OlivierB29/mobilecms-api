@@ -20,8 +20,8 @@ abstract class RestApi
     protected $enableHeaders = true;
 
     /**
-    * see _cleanInputs() below.
-    */
+     * see _cleanInputs() below.
+     */
     protected $enableCleanInputs = true;
 
     /**
@@ -211,7 +211,7 @@ abstract class RestApi
             if (isset($apiResponse) && $apiResponse instanceof Response) {
                 return $this->_responseObj($apiResponse);
             } else {
-                return $this->_response('{"Empty response" : ' . '"' . $this->endpoint . '"}', 503);
+                return $this->_response('{"Empty response" : '.'"'.$this->endpoint.'"}', 503);
             }
         }
 
@@ -236,7 +236,6 @@ abstract class RestApi
         if ($this->enableHeaders && $response->getCode() > 0) {
             header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
         }
-
 
         //each endpoint should prepare an encoded response
         return $response;
@@ -292,6 +291,4 @@ abstract class RestApi
 
         return $response;
     }
-
-    
 }

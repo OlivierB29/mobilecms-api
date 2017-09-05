@@ -10,7 +10,6 @@ define('ENABLE_MAIL', 'false');
 define('MAIL_FROM', 'sendmail@example.org');
 define('DEBUG_RESETPASSWORD', 'true');
 
-
 // block HTTP if activated
 define('ACTIVATE_HTTPS', 'false');
 

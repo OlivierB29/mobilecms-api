@@ -127,23 +127,20 @@ class AuthenticationApi extends RestApi
             $response = $service->resetPassword($logindata->{'user'}, $clearPassword);
 
             if ($response->getCode() === 200) {
-              $u = new MailUtils();
+                $u = new MailUtils();
 
+                if (null !== ENABLE_MAIL && ENABLE_MAIL === 'true') {
+                    $CR_Mail = @mail($logindata->{'user'}, 'new password', $u->getNewPassword('new password', $clearPassword, $this->getClientInfo()), $u->getHeaders(MAIL_FROM));
 
-              if (null !== ENABLE_MAIL && ENABLE_MAIL === 'true') {
-                $CR_Mail = @mail ($logindata->{'user'}, 'new password', $u->getNewPassword('new password', $clearPassword, $this->getClientInfo()), $u->getHeaders(MAIL_FROM));
-
-                if ($CR_Mail === FALSE) {
-                   $response->setError(500, $CR_Mail);
-                   } else {
-                   $response->setCode(200);
-                   }
-              } else if (null !== DEBUG_RESETPASSWORD && DEBUG_RESETPASSWORD === 'true') {
-                $response->setResult($u->getNewPassword('new password', $clearPassword, $this->getClientInfo()));
-              }
+                    if ($CR_Mail === false) {
+                        $response->setError(500, $CR_Mail);
+                    } else {
+                        $response->setCode(200);
+                    }
+                } elseif (null !== DEBUG_RESETPASSWORD && DEBUG_RESETPASSWORD === 'true') {
+                    $response->setResult($u->getNewPassword('new password', $clearPassword, $this->getClientInfo()));
+                }
             }
-
-
 
             unset($logindata);
         }
@@ -170,10 +167,10 @@ class AuthenticationApi extends RestApi
         }
 
         if ($this->method === 'GET') {
-          $id = '';
-          if (isset($this->verb)) {
-              $id = $this->verb;
-          }
+            $id = '';
+            if (isset($this->verb)) {
+                $id = $this->verb;
+            }
             $response = $service->getPublicInfo($id);
             unset($user);
         }
@@ -248,26 +245,30 @@ class AuthenticationApi extends RestApi
         return $response;
     }
 
-    function getClientInfo() {
-      return $this->getClientIp() . ' ' . $_SERVER['HTTP_USER_AGENT'];
+    public function getClientInfo()
+    {
+        return $this->getClientIp().' '.$_SERVER['HTTP_USER_AGENT'];
     }
 
-    function getClientIp() {
+    public function getClientIp()
+    {
         $ipaddress = '';
-        if (isset($_SERVER['HTTP_CLIENT_IP']))
+        if (isset($_SERVER['HTTP_CLIENT_IP'])) {
             $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        else if(isset($_SERVER['HTTP_X_FORWARDED']))
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED'])) {
             $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-        else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+        } elseif (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
             $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-        else if(isset($_SERVER['HTTP_FORWARDED']))
+        } elseif (isset($_SERVER['HTTP_FORWARDED'])) {
             $ipaddress = $_SERVER['HTTP_FORWARDED'];
-        else if(isset($_SERVER['REMOTE_ADDR']))
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
             $ipaddress = $_SERVER['REMOTE_ADDR'];
-        else
+        } else {
             $ipaddress = 'UNKNOWN';
+        }
+
         return $ipaddress;
     }
 }
