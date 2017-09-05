@@ -236,13 +236,6 @@ abstract class RestApi
         if ($this->enableHeaders && $response->getCode() > 0) {
             header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
         }
-        if ($response->getCode() !== 200) {
-
-          if ($response->getResult() === '{}' && !empty($response->getMessage())) {
-            $response->setResult($this->errorToJson($response->getMessage()));
-          }
-
-        }
 
 
         //each endpoint should prepare an encoded response
@@ -299,4 +292,6 @@ abstract class RestApi
 
         return $response;
     }
+
+    
 }

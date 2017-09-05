@@ -325,9 +325,15 @@ class UserService
 
         // user found
         if (!empty($user)) {
-            if ($this->login($emailParam, $password) === '') {
+            if ($this->login($email, $password) === '') {
 
-                $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
+                $updateMsg = $this->createUserWithSecret('', $email, $newPassword, '', '', 'update');
+
+                // return the existing user
+                $user = $this->getJsonUser($email);
+                $user->{'clientalgorithm'} = 'hashmacbase64';
+                $user->{'newpasswordrequired'} = 'false';
+                JsonUtils::writeJsonFile($this->getJsonUserFile($email), $user);
 
                 if (empty($updateMsg)) {
                     $response->setCode(200);
@@ -353,6 +359,7 @@ class UserService
 
         return $response;
     }
+
 
     public function verifyToken($token, $role): Response
     {
@@ -409,7 +416,86 @@ class UserService
     }
 
 
+        /**
+         * authenticate and return a User object with a token.
+         */
+        public function resetPassword($emailParam, $newPassword): Response
+        {
+            // initialize Response
+            $response = new Response();
+            $response->setCode(401);
 
+            $response->setResult('{}');
+
+            $loginmsg = 'Wrong login';
+
+            $debug = false;
+            $debugmsg = 'debugmsg ';
+
+            // if someone forgot to do this before
+            $email = strtolower($emailParam);
+
+            // return the existing user
+            $user = $this->getJsonUser($email);
+
+            // user found
+            if (!empty($user)) {
+
+
+                    $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
+
+                    // return the existing user
+                    $user = $this->getJsonUser($email);
+                    $user->{'clientalgorithm'} = 'none';
+                    $user->{'newpasswordrequired'} = 'true';
+                    JsonUtils::writeJsonFile($this->getJsonUserFile($email), $user);
+
+                    if (empty($updateMsg)) {
+                        $response->setCode(200);
+                        $response->setResult('{}');
+
+                    } else {
+                        $response->setError(500, 'createUserWithSecret error ' . $updateMsg);
+                    }
+
+            } else {
+                // wrong user
+                $loginmsg = 'wrong user '.$email;
+                $debugmsg .= $email;
+            }
+
+            // return an empty string on success, so if debug is enabled, it's impossible to connect
+            if ($debug) {
+                $loginmsg .= $debugmsg;
+            }
+
+            return $response;
+        }
+
+      public function getPublicInfo($email) {
+        $response = $this->getDefaultResponse();
+
+        $user = $this->getJsonUser($email);
+        if (isset($user)) {
+          $info = json_decode('{"name":"", "clientalgorithm":"", "newpasswordrequired":""}');
+          JsonUtils::copy($user, $info);
+          $response->setResult(json_encode($info));
+          $response->setCode(200);
+        }
+
+
+
+        return $response;
+      }
+
+      public function generateRandomString($length = 10) {
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $randomString = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[rand(0, strlen($characters) - 1)];
+            }
+            return $randomString;
+        }
     /**
      * initialize a default Response object.
      */

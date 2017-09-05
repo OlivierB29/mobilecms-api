@@ -2,6 +2,8 @@
 
 require_once 'RestApi.php';
 require_once 'UserService.php';
+require_once 'MailUtils.php';
+
 /*
  * Login and creates users
  * /authapi/v1/auth
@@ -84,9 +86,96 @@ class AuthenticationApi extends RestApi
             //TODO : user contains either email of name
 
             // free variables before response
-            $response = $service->changePassword($logindata->{'email'}, $logindata->{'password'}, $logindata->{'newpassword'});
+            $response = $service->changePassword($logindata->{'user'}, $logindata->{'password'}, $logindata->{'newpassword'});
 
             unset($logindata);
+        }
+
+        return $response;
+    }
+
+    /**
+     * base API path /authapi/v1/authenticate.
+     */
+    protected function resetpassword() : Response
+    {
+        $response = $this->getDefaultResponse();
+
+        //throw error if wrong configuration, such as empty directory
+        $this->checkConfiguration();
+
+        $service = new UserService($this->conf->{'privatedir'}.'/users');
+
+        // Preflight requests are send by Angular
+        if ($this->method === 'OPTIONS') {
+            // eg : /authapi/v1/auth
+            $response->setResult($service->preflight());
+        }
+
+        if ($this->method === 'POST') {
+
+                // login and get token
+            // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
+
+            $logindata = json_decode($this->request['requestbody']);
+
+            //TODO : user contains either email of name
+
+            // free variables before response
+            $clearPassword = $service->generateRandomString(20);
+
+            $response = $service->resetPassword($logindata->{'user'}, $clearPassword);
+
+            if ($response->getCode() === 200) {
+              $u = new MailUtils();
+
+
+              if (null !== ENABLE_MAIL && ENABLE_MAIL === 'true') {
+                $CR_Mail = @mail ($logindata->{'user'}, 'new password', $u->getNewPassword('new password', $clearPassword, $this->getClientInfo()), $u->getHeaders(MAIL_FROM));
+
+                if ($CR_Mail === FALSE) {
+                   $response->setError(500, $CR_Mail);
+                   } else {
+                   $response->setCode(200);
+                   }
+              } else if (null !== DEBUG_RESETPASSWORD && DEBUG_RESETPASSWORD === 'true') {
+                $response->setResult($u->getNewPassword('new password', $clearPassword, $this->getClientInfo()));
+              }
+            }
+
+
+
+            unset($logindata);
+        }
+
+        return $response;
+    }
+
+    /**
+     * base API path /authapi/v1/authenticate.
+     */
+    protected function publicinfo() : Response
+    {
+        $response = $this->getDefaultResponse();
+
+        //throw error if wrong configuration, such as empty directory
+        $this->checkConfiguration();
+
+        $service = new UserService($this->conf->{'privatedir'}.'/users');
+
+        // Preflight requests are send by Angular
+        if ($this->method === 'OPTIONS') {
+            // eg : /authapi/v1/auth
+            $response->setResult($service->preflight());
+        }
+
+        if ($this->method === 'GET') {
+          $id = '';
+          if (isset($this->verb)) {
+              $id = $this->verb;
+          }
+            $response = $service->getPublicInfo($id);
+            unset($user);
         }
 
         return $response;
@@ -134,6 +223,16 @@ class AuthenticationApi extends RestApi
         }
     }
 
+    private function getId(): string
+    {
+        $result = '';
+        if (isset($this->args) && array_key_exists(0, $this->args)) {
+            $result = $this->args[0];
+        }
+
+        return $result;
+    }
+
     /**
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      */
@@ -147,5 +246,28 @@ class AuthenticationApi extends RestApi
         header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
 
         return $response;
+    }
+
+    function getClientInfo() {
+      return $this->getClientIp() . ' ' . $_SERVER['HTTP_USER_AGENT'];
+    }
+
+    function getClientIp() {
+        $ipaddress = '';
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if(isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else
+            $ipaddress = 'UNKNOWN';
+        return $ipaddress;
     }
 }

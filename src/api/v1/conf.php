@@ -5,6 +5,12 @@ define('ERROR_LOG', 'true');
 // enable CORS
 define('ALLOW_CROSS_DOMAIN', 'true');
 
+// mail password reset
+define('ENABLE_MAIL', 'false');
+define('MAIL_FROM', 'sendmail@example.org');
+define('DEBUG_RESETPASSWORD', 'true');
+
+
 // block HTTP if activated
 define('ACTIVATE_HTTPS', 'false');
 
