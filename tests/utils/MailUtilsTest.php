@@ -23,7 +23,5 @@ final class MailUtilsTest extends TestCase
         $u = new MailUtils();
         $result = $u->getMailData('subject', 'some text \n new line');
         $this->assertTrue(strpos($result, '<html><head><title>subject</title></head><body>some text <br> new line</body></html>') !== false);
-
     }
-
 }
