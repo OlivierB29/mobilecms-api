@@ -4,10 +4,11 @@ class MailUtils
 {
     public function getHeaders($from) : string
     {
-        $headers = 'MIME-Version: 1.0 \n';
-        $headers .= 'Content-type: text/html; charset=utf-8 \n';
-        $headers .= 'From:'.$from.'\n';
-        $headers .= 'Disposition-Notification-To:'.$from.'\n';
+
+        $headers = "From: " . strip_tags($from) . "\r\n";
+        $headers .= "Reply-To: ". strip_tags($from) . "\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
         return $headers;
     }

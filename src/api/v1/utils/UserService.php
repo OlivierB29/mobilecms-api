@@ -277,6 +277,9 @@ class UserService
                     $userResponse->{'username'} = $user->{'name'};
                     $userResponse->{'email'} = $user->{'email'};
                     $userResponse->{'role'} = $user->{'role'};
+                    $userResponse->{'clientalgorithm'} = $user->{'clientalgorithm'};
+                    $userResponse->{'newpasswordrequired'} = $user->{'newpasswordrequired'};
+
                     $userResponse->{'token'} = $token;
 
                     $response->setResult(json_encode($userResponse));
@@ -335,8 +338,7 @@ class UserService
                 JsonUtils::writeJsonFile($this->getJsonUserFile($email), $user);
 
                 if (empty($updateMsg)) {
-                    $response->setCode(200);
-                    $response->setResult('{}');
+                    $response = $this->getPublicInfo($email);
                 } else {
                     $response->setError(500, 'createUserWithSecret error '.$updateMsg);
                 }
@@ -441,8 +443,7 @@ class UserService
             JsonUtils::writeJsonFile($this->getJsonUserFile($email), $user);
 
             if (empty($updateMsg)) {
-                $response->setCode(200);
-                $response->setResult('{}');
+                $response = $this->getPublicInfo($email);
             } else {
                 $response->setError(500, 'createUserWithSecret error '.$updateMsg);
             }
@@ -474,6 +475,8 @@ class UserService
 
         return $response;
     }
+
+
 
     public function generateRandomString($length = 10)
     {

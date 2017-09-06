@@ -138,7 +138,9 @@ class AuthenticationApi extends RestApi
                         $response->setCode(200);
                     }
                 } elseif (null !== DEBUG_RESETPASSWORD && DEBUG_RESETPASSWORD === 'true') {
-                    $response->setResult($u->getNewPassword('new password', $clearPassword, $this->getClientInfo()));
+                    $tmpResponse = json_decode($response->getResult());
+                    $tmpResponse->{'notification'} = $u->getNewPassword('new password', $clearPassword, $this->getClientInfo());
+                    $response->setResult(json_encode($tmpResponse));
                 }
             }
 
