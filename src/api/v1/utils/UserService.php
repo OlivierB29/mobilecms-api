@@ -476,8 +476,6 @@ class UserService
         return $response;
     }
 
-
-
     public function generateRandomString($length = 10)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
