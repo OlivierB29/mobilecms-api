@@ -14,5 +14,10 @@
     {
         "name": "test@example.com",
         "email": "test@example.com"
+    },
+    {
+        "name": "test role",
+        "email": "role@example.com",
+        "role": "editor"
     }
 ]
