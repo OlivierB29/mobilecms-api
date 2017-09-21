@@ -10,7 +10,6 @@ final class MailUtilsTest extends TestCase
     {
         $u = new MailUtils();
         $result = $u->getHeaders('foo@bar.org');
-        echo $result;
         $this->assertTrue(strpos($result, 'MIME-Version: 1.0') !== false);
         $this->assertTrue(strpos($result, 'Content-Type: text/html; charset=UTF-8') !== false);
         $this->assertTrue(strpos($result, 'From: foo@bar.org') !== false);
