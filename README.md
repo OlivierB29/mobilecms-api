@@ -1,5 +1,8 @@
 # mobilecms-api
-This project is a REST API for reading and writing content stored in JSON files.
+### REST API written in PHP, for managing content stored into JSON files.
+
+[![Build Status](https://travis-ci.org/OlivierB29/mobilecms-api.svg?branch=master)](https://travis-ci.org/OlivierB29/mobilecms-api)
+
 It is initially intended to manage a sport organization, with such content : News, calendar events, public pages, documents, ...
 
 - Hosted on a cheap server, with no database available (see explanation in FAQ)
