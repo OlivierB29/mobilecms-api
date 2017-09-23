@@ -13,7 +13,6 @@ final class MailUtilsTest extends TestCase
         $this->assertTrue(strpos($result, 'MIME-Version: 1.0') !== false);
         $this->assertTrue(strpos($result, 'Content-Type: text/html; charset=UTF-8') !== false);
         $this->assertTrue(strpos($result, 'From: foo@bar.org') !== false);
-
     }
 
     public function testMailData()
