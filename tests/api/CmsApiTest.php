@@ -114,9 +114,9 @@ final class CmsApiTest extends TestCase
             $path = '/restapi/v1/content/calendar';
             $id = 'test_'.rand(0, 999999);
             $recordStr = '{"id":"'.$id.'","type" : "calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
-    
+
             $file = $this->conf->{'publicdir'} . $path . '/' . $id . '.json';
-    
+
             if (file_exists($file)) {
                 unlink($file);
             }
@@ -125,19 +125,19 @@ final class CmsApiTest extends TestCase
             $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'PUT', 'HTTP_ORIGIN' => 'foobar'];
             $GET = null;
             $POST = ['requestbody' => $recordStr];
-    
+
             $API = new CmsApi($this->conf);
-    
+
             $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
-    
+
             $response = $API->processAPI(); $result = $response->getResult();
             echo '!!!!!!!!!!!!!!!' . $result;
-    
-    
+
+
             $this->assertEquals(200, $response->getCode());
             $this->assertTrue($result != null && $result != '');
-    
-    
+
+
         }
     */
     public function testGetCalendarList()
