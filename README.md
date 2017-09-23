@@ -24,8 +24,10 @@ Media files
 ## Runtime Requirements
 - PHP 7
 
-## Dev dependencies
-
+## Dev dependencies (optional)
+- [Composer](https://getcomposer.org/)
+- [phpunit](https://phpunit.de)
+- [Gulp](https://gulpjs.com/)
 
 ## Manual install
 - copy src/api to web server to the web directory eg: /var/www/html/api
@@ -46,7 +48,7 @@ var serverDeployDir = '/var/www/html';
 var privateDeployDir = '/var/www/private';
 
 Copy code and sample data
-`gulp` samplepublic sampleprivate deploy
+`gulp samplepublic sampleprivate deploy`
 
 
 ## Build
