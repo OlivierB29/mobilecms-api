@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/OlivierB29/mobilecms-api.svg?branch=master)](https://travis-ci.org/OlivierB29/mobilecms-api)
 ![compatible](https://img.shields.io/badge/PHP%207-Compatible-brightgreen.svg)
-https://styleci.io/repos/86973415/shield
+[![StyleCI](https://styleci.io/repos/86973415/shield?style=flat)](https://styleci.io/repos/86973415)
 
 It is initially intended to manage a sport organization, with such content : News, calendar events, public pages, documents, ...
 
