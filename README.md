@@ -2,6 +2,8 @@
 ### REST API written in PHP, for managing content stored into JSON files.
 
 [![Build Status](https://travis-ci.org/OlivierB29/mobilecms-api.svg?branch=master)](https://travis-ci.org/OlivierB29/mobilecms-api)
+![compatible](https://img.shields.io/badge/PHP%207-Compatible-brightgreen.svg)
+https://styleci.io/repos/86973415/shield
 
 It is initially intended to manage a sport organization, with such content : News, calendar events, public pages, documents, ...
 
