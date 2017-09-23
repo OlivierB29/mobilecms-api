@@ -272,7 +272,7 @@ class UserService
                 unset($jwt);
                 if (isset($token)) {
                     $response->setCode(200);
-                    $userResponse = json_decode('{"username":"", "email":"",  "role":"", "token":""}');
+                    $userResponse = json_decode('{"username":"", "email":"",  "role":"", "clientalgorithm":"", "newpasswordrequired":"", "token":""}');
                     $userResponse->{'name'} = $user->{'name'};
                     $userResponse->{'username'} = $user->{'name'};
                     $userResponse->{'email'} = $user->{'email'};

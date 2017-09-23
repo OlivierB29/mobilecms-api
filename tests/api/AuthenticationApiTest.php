@@ -82,7 +82,7 @@ final class AuthenticationApiTest extends TestCase
         $userFile = $user.'.json';
         copy($this->conf->{'privatedir'}.'/save/'.$userFile, $this->conf->{'privatedir'}.'/users/'.$userFile);
 
-        $recordStr = '{ "email": "'.$user.'", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
+        $recordStr = '{ "user": "'.$user.'", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
 
         $REQUEST = ['path' => $path];
         $headers = [];
