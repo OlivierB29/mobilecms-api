@@ -72,8 +72,14 @@ abstract class RestApi
      */
     protected $file = null;
 
+    /**
+    * request content from post data or JSON body
+    */
     protected $request = null;
 
+    /**
+    * headers array
+    */
     protected $headers = null;
 
     /**
@@ -112,6 +118,9 @@ abstract class RestApi
         // [1] => bar
     }
 
+    /**
+    * @param $conf JSON configuration
+    */
     public function __construct($conf)
     {
         if (isset($conf)) {
@@ -137,7 +146,14 @@ abstract class RestApi
     }
 
     /**
-     * initialize parameters with request.
+     * Initialize parameters with request.
+     * Important : the variables are initialized in unit tests.
+     * In real case, use null and the PHP variables will be used
+     * @param $REQUEST : must be the same content like the PHP variable
+     * @param $SERVER : must be the same content like the PHP variable
+     * @param $GET : must be the same content like the PHP variable
+     * @param $POST : must be the same content like the PHP variable
+     * @param $headers : http headers
      */
     public function setRequest(array $REQUEST = null, array $SERVER = null, array $GET = null, array $POST = null, array $headers = null)
     {
@@ -160,15 +176,10 @@ abstract class RestApi
 
         $this->headers = $headers;
 
-        //
         // Parse URI
-        //
-        // deprecated $this->setRequestUri($REQUEST['path']);
-
         $this->setRequestUri($SERVER['REQUEST_URI']);
-        //
+
         // detect method
-        //
         $this->method = $SERVER['REQUEST_METHOD'];
         if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $SERVER)) {
             if ($SERVER['HTTP_X_HTTP_METHOD'] == 'DELETE') {
@@ -187,12 +198,11 @@ abstract class RestApi
                     $this->request = $this->enableCleanInputs ? $this->_cleanInputs($POST) : $POST;
                 } else {
                     $this->request = file_get_contents('php://input');
-//                  echo '!!!!!!!!!!!!!!!!!!!!' . $this->request . '!!!!!!!!';
                 }
-
                 break;
             case 'OPTIONS':
                     $this->preflight();
+                break;
             case 'GET':
                 $this->request = $this->enableCleanInputs ? $this->_cleanInputs($GET) : $GET;
                 break;
@@ -208,6 +218,9 @@ abstract class RestApi
         }
     }
 
+    /**
+    * @return request
+    */
     public function getRequest()
     {
         return $this->request;
@@ -244,6 +257,8 @@ abstract class RestApi
 
     /**
      * send JSON response.
+     * @param $data : string data
+     * @param $status : http code
      */
     protected function _response($data = null, $status = 0)
     {
@@ -255,6 +270,10 @@ abstract class RestApi
         return $data;
     }
 
+    /**
+     * send JSON response.
+     * @param $response : response from service or API
+     */
     protected function _responseObj($response)
     {
         if ($this->enableHeaders && $response->getCode() > 0) {
@@ -265,6 +284,9 @@ abstract class RestApi
         return $response;
     }
 
+    /**
+     * @param $data resquest body
+     */
     private function _cleanInputs($data)
     {
         $clean_input = [];
@@ -279,6 +301,10 @@ abstract class RestApi
         return $clean_input;
     }
 
+    /**
+    * @param $code http status code
+    * @return code and text
+    */
     private function _requestStatus($code)
     {
         $status = [
@@ -295,6 +321,10 @@ abstract class RestApi
         return (array_key_exists($code, $status)) ? $status[$code] : $status[500];
     }
 
+    /**
+    * @param $msg : some message
+    * @return JSON object
+    */
     public function errorToJson(string $msg) : string
     {
         $json = json_decode('{}');
