@@ -36,12 +36,12 @@ class AuthenticationApi extends RestApi
             }
 
             if ($this->method === 'POST') {
-                if (!array_key_exists('requestbody', $this->request)) {
+                if (empty($this->getRequestBody())) {
                     throw new Exception('no login request');
                 }
                 // login and get token
-                // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
-                $logindata = json_decode($this->request['requestbody']);
+                // eg : { "user": "test@example.com", "password":"Sample#123456"}
+                $logindata = json_decode($this->getRequestBody());
 
                 //TODO : user contains either email of name
                 if (!isset($logindata)) {
@@ -79,9 +79,9 @@ class AuthenticationApi extends RestApi
         if ($this->method === 'POST') {
 
                 // login and get token
-            // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
+            // eg : { "user": "test@example.com", "password":"Sample#123456"}
 
-            $logindata = json_decode($this->request['requestbody']);
+            $logindata = json_decode($this->getRequestBody());
 
             //TODO : user contains either email of name
 
@@ -115,9 +115,9 @@ class AuthenticationApi extends RestApi
         if ($this->method === 'POST') {
 
                 // login and get token
-            // eg : requestbody={ "user": "test@example.com", "password":"Sample#123456"}
+            // eg : { "user": "test@example.com", "password":"Sample#123456"}
 
-            $logindata = json_decode($this->request['requestbody']);
+            $logindata = json_decode($this->getRequestBody());
 
             //TODO : user contains either email of name
 
@@ -198,7 +198,7 @@ class AuthenticationApi extends RestApi
 
         // register and create a user
         if ($this->method === 'POST') {
-            $user = json_decode($this->request['requestbody']);
+            $user = json_decode($this->getRequestBody());
             //returns a empty string if success, a string with the message otherwise
             $createresult = $service->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
             if ($createresult === null) {

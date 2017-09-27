@@ -8,7 +8,7 @@ require_once 'ContentService.php';
 class CmsApi extends SecureRestApi
 {
     const INDEX_JSON = '/index/index.json';
-    const REQUESTBODY = 'requestbody';
+
     const ID = 'id';
     const TYPE = 'type';
     const FILE = 'file';
@@ -95,7 +95,7 @@ class CmsApi extends SecureRestApi
                 // save a record and update the index. eg : /api/v1/content/calendar
 
                 // step 1 : update Record
-                $putResponse = $service->post($datatype, self::ID, urldecode($this->request[self::REQUESTBODY]));
+                $putResponse = $service->post($datatype, self::ID, urldecode($this->getRequestBody()));
                 $myobjectJson = json_decode($putResponse->getResult());
                 unset($putResponse);
 

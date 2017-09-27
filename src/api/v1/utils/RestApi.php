@@ -9,6 +9,17 @@ require_once 'Response.php';
  */
 abstract class RestApi
 {
+
+    /**
+    * if needed : post form data instead of php://input
+    */
+    const REQUESTBODY = 'requestbody';
+
+    /**
+    * if needed : post form data instead of php://input
+    */
+    protected $postformdata = false;
+
     /**
      * JSON object with configuration.
      */
@@ -111,13 +122,19 @@ abstract class RestApi
         }
 
         // Default value is true
-        if ('false' === $this->conf->{'enableheaders'}) {
+        if (!empty($this->conf->{'enableheaders'}) && 'false' === $this->conf->{'enableheaders'}) {
             $this->enableHeaders = false;
         }
 
         // Default value is true
-        if ('false' === $this->conf->{'enablecleaninputs'}) {
+        if (!empty($this->conf->{'enablecleaninputs'}) && 'false' === $this->conf->{'enablecleaninputs'}) {
             $this->enableCleanInputs = false;
+        }
+
+
+        // Default value is true
+        if (!empty($this->conf->{'postformdata'}) && 'true' === $this->conf->{'postformdata'}) {
+            $this->postformdata = true;
         }
     }
 
@@ -168,7 +185,14 @@ abstract class RestApi
         switch ($this->method) {
             case 'DELETE':
             case 'POST':
-                $this->request = $this->enableCleanInputs ? $this->_cleanInputs($POST) : $POST;
+                if ($this->postformdata === true) {
+                  $this->request = $this->enableCleanInputs ? $this->_cleanInputs($POST) : $POST;
+                } else {
+                  $this->request = file_get_contents('php://input');
+//                  echo '!!!!!!!!!!!!!!!!!!!!' . $this->request . '!!!!!!!!';
+                }
+
+
                 break;
             case 'OPTIONS':
                     $this->preflight();
@@ -290,5 +314,14 @@ abstract class RestApi
         $response->setResult('{}');
 
         return $response;
+    }
+
+    public function getRequestBody(): string {
+      if ($this->postformdata === true) {
+        return $this->request[RestApi::REQUESTBODY];
+      } else {
+        return $this->request;
+      }
+
     }
 }

@@ -10,7 +10,7 @@ require_once 'JsonUtils.php';
 class AdminApi extends SecureRestApi
 {
     const INDEX_JSON = '/index/index.json';
-    const REQUESTBODY = 'requestbody';
+
 
     const EMAIL = 'email';
 
@@ -98,7 +98,7 @@ class AdminApi extends SecureRestApi
                     // step 1 : update Record
 
                     // update password if needed
-                    $userParam = urldecode($this->request[self::REQUESTBODY]);
+                    $userParam = urldecode($this->getRequestBody());
                     $user = json_decode($userParam);
                     if (isset($user->{'newpassword'})) {
                         $response = $userService->changePasswordByAdmin($user->{'email'}, $user->{'newpassword'});
@@ -119,7 +119,7 @@ class AdminApi extends SecureRestApi
                     $user = $this->getDefaultUser();
                     // get parameters from request
 
-                    $requestuser = json_decode($this->request['requestbody']);
+                    $requestuser = json_decode($this->getRequestBody());
 
                     JsonUtils::copy($requestuser, $user);
 

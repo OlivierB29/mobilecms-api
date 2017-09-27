@@ -8,7 +8,6 @@ require_once 'FileService.php';
  */
 class FileApi extends SecureRestApi
 {
-    const REQUESTBODY = 'requestbody';
 
     /**
      * media directory (eg: media ).
@@ -117,7 +116,7 @@ class FileApi extends SecureRestApi
         //
         if ($this->method === 'POST') {
             if (array_key_exists(0, $this->args)) {
-                $deleteResult = $this->deleteFiles($datatype, $this->args[0], urldecode($this->request[self::REQUESTBODY]));
+                $deleteResult = $this->deleteFiles($datatype, $this->args[0], urldecode($this->getRequestBody()));
                 $response->setCode(200);
 
                 $response->setResult(json_encode($deleteResult));
@@ -155,7 +154,7 @@ class FileApi extends SecureRestApi
             } elseif ($this->method === 'POST') {
                 if (array_key_exists(0, $this->args)) {
                     // $datatype : calendar, $this->args[0] : 1
-                    $response = $this->downloadFiles($datatype, $this->args[0], urldecode($this->request[self::REQUESTBODY]));
+                    $response = $this->downloadFiles($datatype, $this->args[0], urldecode($this->getRequestBody()));
                 }
             }
         }
