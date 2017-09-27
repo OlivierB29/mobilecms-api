@@ -8,7 +8,7 @@ class StringUtils
 {
     /**
     * string is not empty
-    * @param $question
+    * @param $question string content
     */
     public static function isNotEmpty(string $question)
     {

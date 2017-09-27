@@ -13,6 +13,9 @@ class FileApi extends SecureRestApi
      */
     private $media;
 
+    /**
+    * home dir
+    */
     private $homedir;
 
     /**
@@ -25,6 +28,9 @@ class FileApi extends SecureRestApi
      */
     private $umask = 0775;
 
+    /**
+    * @param $conf JSON configuration
+    */
     public function __construct($conf)
     {
         parent::__construct($conf);
@@ -161,6 +167,12 @@ class FileApi extends SecureRestApi
         return $response;
     }
 
+    /**
+    * upload files from $_FILES
+    * @param $type eg: calendar
+    * @param $id 123
+    * @return array of files descriptions
+    */
     private function uploadFiles($type, $id)
     {
         /*
@@ -173,7 +185,6 @@ class FileApi extends SecureRestApi
         */
         $result = json_decode('[]');
         foreach ($_FILES as $formKey => $file) {
-
             // media/calendar/1
             $uridir = $this->media.'/'.$type.'/'.$id;
 
@@ -208,6 +219,12 @@ class FileApi extends SecureRestApi
         return $result;
     }
 
+    /**
+    * download files from specified URLs
+    * @param $type : news
+    * @param $id : 123
+    * @param $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
+    */
     private function downloadFiles($type, $id, $filesStr)
     {
         $response = $this->getDefaultResponse();
@@ -216,7 +233,6 @@ class FileApi extends SecureRestApi
 
         $result = json_decode('[]');
         foreach ($files as $formKey => $file) {
-
             // media/calendar/1
             $uridir = $this->media.'/'.$type.'/'.$id;
 
@@ -259,6 +275,9 @@ class FileApi extends SecureRestApi
 
     /**
      * get file info and build JSON response.
+     * @param $destfile : file
+     * @param $title : title of file
+     * @param $url : url
      */
     private function getFileResponse($destfile, $title, $url)
     {
@@ -277,6 +296,9 @@ class FileApi extends SecureRestApi
         return $fileResult;
     }
 
+    /**
+    * @return datatype
+    */
     private function getDataType(): string
     {
         $datatype = '';
@@ -299,6 +321,9 @@ class FileApi extends SecureRestApi
 
     /**
      * delete files.
+     * @param $type news
+     * @param $id 123
+     * @param * @param $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
     private function deleteFiles($type, $id, $filesStr)
     {
@@ -309,7 +334,6 @@ class FileApi extends SecureRestApi
         $result = json_decode('[]');
 
         foreach ($files as $formKey => $file) {
-
             // media/calendar/1
             $uridir = $this->media.'/'.$type.'/'.$id;
 

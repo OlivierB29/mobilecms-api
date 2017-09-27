@@ -13,6 +13,9 @@ class CmsApi extends SecureRestApi
     const TYPE = 'type';
     const FILE = 'file';
 
+    /**
+    * @param $conf JSON configuration
+    */
     public function __construct($conf)
     {
         parent::__construct($conf);

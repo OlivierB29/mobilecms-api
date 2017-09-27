@@ -13,6 +13,9 @@ class AdminApi extends SecureRestApi
 
     const EMAIL = 'email';
 
+    /**
+    * @param $conf JSON configuration
+    */
     public function __construct($conf)
     {
         parent::__construct($conf);
