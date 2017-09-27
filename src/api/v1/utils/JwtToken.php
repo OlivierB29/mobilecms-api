@@ -11,6 +11,7 @@ class JwtToken
 
     /**
      * set algorithm see http://php.net/manual/en/function.hash-algos.php.
+     *
      * @param $newval algorithm
      */
     public function setAlgorithm($newval): string
@@ -20,6 +21,7 @@ class JwtToken
 
     /**
      * current algorithm.
+     *
      * @return algorithm
      */
     public function getAlgorithm(): string
@@ -29,6 +31,7 @@ class JwtToken
 
     /**
      * create a new token.
+     *
      * @param $username user
      * @param $email email
      * @param $role role
@@ -41,6 +44,7 @@ class JwtToken
 
     /**
      * verify a token.
+     *
      * @param $token token data
      * @param $secretKey secret key
      * @param success or error
@@ -66,8 +70,9 @@ class JwtToken
 
     /**
      * @param $token token data
+     *
      * @return payload part
-    */
+     */
     public function getPayload($token): string
     {
         $result = '';
@@ -82,50 +87,56 @@ class JwtToken
 
     /**
      * @return default header
-    */
+     */
     private function initHeader(): string
     {
-        return base64_encode('{ "alg": "' . $this->algorithm . '","typ": "JWT"}');
+        return base64_encode('{ "alg": "'.$this->algorithm.'","typ": "JWT"}');
     }
 
     /**
-     * init payload with user
+     * init payload with user.
+     *
      * @param $username username
      * @param $email email
      * @param $role role
+     *
      * @return default payload
-    */
+     */
     private function initPayload(string $username, string $email, string $role): string
     {
-        return base64_encode('{ "sub": "' . $email . '", "name": "' . $username . '", "role": "' . $role . '"}');
+        return base64_encode('{ "sub": "'.$email.'", "name": "'.$username.'", "role": "'.$role.'"}');
     }
 
     /**
      * Concat token fields.
+     *
      * @param $header header
      * @param $payload payload
      * @param $secretKey secretkey
      */
     private function createToken(string $header, string $payload, string $secretKey): string
     {
-        return $header . '.' . $payload . '.' . $this->createSignature($header, $payload, $secretKey);
+        return $header.'.'.$payload.'.'.$this->createSignature($header, $payload, $secretKey);
     }
 
     /**
      * create a signature.
+     *
      * @param $header header
      * @param $payload payload
      * @param $secretKey secretkey
+     *
      * @return signature
      */
     private function createSignature(string $header, string $payload, string $secretKey): string
     {
-        return hash_hmac($this->algorithm, $header . '.' . $payload, $this->createSecret($secretKey));
+        return hash_hmac($this->algorithm, $header.'.'.$payload, $this->createSecret($secretKey));
     }
 
     /**
      * create secret.
      * This implementation create a valid secret for the current day.
+     *
      * @param $secret secret
      */
     private function createSecret(string $secret): string
@@ -134,20 +145,24 @@ class JwtToken
     }
 
     /**
-    * parse header
-    * @param $payload encoded JSON
-    * @return JSON payload object
-    */
+     * parse header.
+     *
+     * @param $payload encoded JSON
+     *
+     * @return JSON payload object
+     */
     private function parseHeader(string $payload): string
     {
         return json_decode(base64_decode($payload));
     }
 
     /**
-    * parse payload
-    * @param $payload encoded JSON
-    * @return JSON payload object
-    */
+     * parse payload.
+     *
+     * @param $payload encoded JSON
+     *
+     * @return JSON payload object
+     */
     private function parsePayload(string $payload): string
     {
         return json_decode(base64_decode($payload));

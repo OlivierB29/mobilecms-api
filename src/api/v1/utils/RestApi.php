@@ -9,15 +9,14 @@ require_once 'Response.php';
  */
 abstract class RestApi
 {
-
     /**
-    * if needed : post form data instead of php://input
-    */
+     * if needed : post form data instead of php://input.
+     */
     const REQUESTBODY = 'requestbody';
 
     /**
-    * if needed : post form data instead of php://input
-    */
+     * if needed : post form data instead of php://input.
+     */
     protected $postformdata = false;
 
     /**
@@ -131,7 +130,6 @@ abstract class RestApi
             $this->enableCleanInputs = false;
         }
 
-
         // Default value is true
         if (!empty($this->conf->{'postformdata'}) && 'true' === $this->conf->{'postformdata'}) {
             $this->postformdata = true;
@@ -186,12 +184,11 @@ abstract class RestApi
             case 'DELETE':
             case 'POST':
                 if ($this->postformdata === true) {
-                  $this->request = $this->enableCleanInputs ? $this->_cleanInputs($POST) : $POST;
+                    $this->request = $this->enableCleanInputs ? $this->_cleanInputs($POST) : $POST;
                 } else {
-                  $this->request = file_get_contents('php://input');
+                    $this->request = file_get_contents('php://input');
 //                  echo '!!!!!!!!!!!!!!!!!!!!' . $this->request . '!!!!!!!!';
                 }
-
 
                 break;
             case 'OPTIONS':
@@ -222,6 +219,7 @@ abstract class RestApi
      * header("Access-Control-Allow-Methods: *");
      * header("Access-Control-Allow-Headers: Content-Type,
      *   Access-Control-Allow-Headers, Authorization, X-Requested-With");.
+     *
      * @return response object
      */
     abstract public function preflight(): Response;
@@ -237,7 +235,7 @@ abstract class RestApi
             if (isset($apiResponse) && $apiResponse instanceof Response) {
                 return $this->_responseObj($apiResponse);
             } else {
-                return $this->_response('{"Empty response" : ' . '"' . $this->endpoint . '"}', 503);
+                return $this->_response('{"Empty response" : '.'"'.$this->endpoint.'"}', 503);
             }
         }
 
@@ -250,7 +248,7 @@ abstract class RestApi
     protected function _response($data = null, $status = 0)
     {
         if ($this->enableHeaders && $status > 0) {
-            header('HTTP/1.1 ' . $status . ' ' . $this->_requestStatus($status));
+            header('HTTP/1.1 '.$status.' '.$this->_requestStatus($status));
         }
 
         //each endpoint should prepare an encoded response
@@ -260,7 +258,7 @@ abstract class RestApi
     protected function _responseObj($response)
     {
         if ($this->enableHeaders && $response->getCode() > 0) {
-            header('HTTP/1.1 ' . $response->getCode() . ' ' . $this->_requestStatus($response->getCode()));
+            header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
         }
 
         //each endpoint should prepare an encoded response
@@ -308,6 +306,7 @@ abstract class RestApi
 
     /**
      * initialize a default Response object.
+     *
      * @return response object
      */
     protected function getDefaultResponse() : Response
@@ -320,15 +319,16 @@ abstract class RestApi
     }
 
     /**
-    * get request body
-    * @return post form data or JSON data
-    */
-    public function getRequestBody(): string {
-      if ($this->postformdata === true) {
-        return $this->request[RestApi::REQUESTBODY];
-      } else {
-        return $this->request;
-      }
-
+     * get request body.
+     *
+     * @return post form data or JSON data
+     */
+    public function getRequestBody(): string
+    {
+        if ($this->postformdata === true) {
+            return $this->request[self::REQUESTBODY];
+        } else {
+            return $this->request;
+        }
     }
 }

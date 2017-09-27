@@ -21,7 +21,7 @@ if (null !== ACTIVATE_HTTPS && ACTIVATE_HTTPS === 'true') {
     if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
         header('Strict-Transport-Security: max-age=31536000');
     } else {
-        header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 301);
+        header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], true, 301);
         // we are in cleartext at the moment, prevent further execution and output
         die();
     }
@@ -45,7 +45,7 @@ try {//PRIVATEDIR . '/users'
     $conf->{'enableapikey'} = 'false';
 
     $conf->{'enablecleaninputs'} = 'true';
-    $conf->{'publicdir'} = HOME . '/public';
+    $conf->{'publicdir'} = HOME.'/public';
     $conf->{'privatedir'} = PRIVATEDIR;
     $conf->{'role'} = 'editor';
 
