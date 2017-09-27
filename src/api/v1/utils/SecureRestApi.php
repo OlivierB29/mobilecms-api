@@ -83,9 +83,10 @@ abstract class SecureRestApi extends RestApi
     }
 
     /**
-    * set role
-    * @param $role editor, admin, ...
-    */
+     * set role.
+     *
+     * @param $role editor, admin, ...
+     */
     public function setRole($role)
     {
         $this->role = $role;
@@ -186,6 +187,7 @@ abstract class SecureRestApi extends RestApi
      *
      * Use a .htaccess file for generating HTTP_AUTHORIZATION :
      * http://php.net/manual/en/function.apache-request-headers.php
+     *
      * @param $SERVER : send same content as PHP variable when testing
      */
     private function getAuthorizationHeader($SERVER = null)
@@ -214,9 +216,10 @@ abstract class SecureRestApi extends RestApi
     }
 
     /**
-    *  token from headers
-    * @param $headerValue header value
-    */
+     *  token from headers.
+     *
+     * @param $headerValue header value
+     */
     private function getBearerTokenValue($headerValue)
     {
 
@@ -230,6 +233,7 @@ abstract class SecureRestApi extends RestApi
 
     /**
      * get access token from header.
+     *
      * @param $SERVER : send by test units.
      */
     private function getBearerToken($SERVER = null)
