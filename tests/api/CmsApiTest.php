@@ -27,6 +27,7 @@ final class CmsApiTest extends TestCase
         $this->conf->{'enableapikey'} = 'false';
         $this->conf->{'publicdir'} = HOME.'/tests-data/public';
         $this->conf->{'privatedir'} = HOME.'/tests-data/private';
+        $this->conf->{'postformdata'} = 'true'; // use classic post for tests
         $this->conf->{'enablecleaninputs'} = 'true';
         $this->conf->{'role'} = 'editor';
         $this->conf->{'apikeyfile'} = HOME.'/tests-data/private/apikeys/key1.json';

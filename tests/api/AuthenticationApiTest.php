@@ -15,6 +15,7 @@ final class AuthenticationApiTest extends TestCase
         $this->conf->{'enableheaders'} = 'false';
         $this->conf->{'enableapikey'} = 'false';
         $this->conf->{'enablecleaninputs'} = 'false';
+        $this->conf->{'postformdata'} = 'true'; // use classic post for tests
         $this->conf->{'privatedir'} = HOME.'/tests-data/private';
         $this->conf->{'apikeyfile'} = HOME.'/tests-data/private/apikeys/key1.json';
     }

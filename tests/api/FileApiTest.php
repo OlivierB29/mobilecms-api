@@ -12,6 +12,7 @@ final class FileApiTest extends TestCase
         $this->conf = json_decode('{}');
         $this->conf->{'enableheaders'} = 'false';
         $this->conf->{'enableapikey'} = 'false';
+        $this->conf->{'postformdata'} = 'true'; // use classic post for tests
         $this->conf->{'enablecleaninputs'} = 'true';
         $this->conf->{'homedir'} = HOME.'/tests-data/fileapi';
         $this->conf->{'media'} = 'media';

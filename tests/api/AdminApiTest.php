@@ -26,6 +26,7 @@ final class AdminApiTest extends TestCase
         $this->conf->{'enableheaders'} = 'false';
         $this->conf->{'enableapikey'} = 'false';
         $this->conf->{'enablecleaninputs'} = 'true';
+        $this->conf->{'postformdata'} = 'true'; // use classic post for tests
         $this->conf->{'role'} = 'admin';
         $this->conf->{'publicdir'} = HOME.'/tests-data/public';
         $this->conf->{'privatedir'} = HOME.'/tests-data/private';
