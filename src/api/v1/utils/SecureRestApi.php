@@ -56,7 +56,7 @@ abstract class SecureRestApi extends RestApi
      * $headers : array containing result of apache_request_headers() and getallheaders(), if available.
      * Or send by test units.
      *
-     * $SERVER : send by test units.
+     * @param $SERVER : send by test units.
      */
     public function authorize(array $headers = null, array $SERVER = null)
     {
@@ -82,6 +82,10 @@ abstract class SecureRestApi extends RestApi
         return $response;
     }
 
+    /**
+    * set role
+    * @param $role editor, admin, ...
+    */
     public function setRole($role)
     {
         $this->role = $role;
@@ -91,7 +95,7 @@ abstract class SecureRestApi extends RestApi
      * $headers : array containing result of apache_request_headers() and getallheaders(), if available.
      * Or send by test units.
      *
-     * $SERVER : send by test units.
+     * @param $SERVER : send by test units.
      */
     public function doAuthorize(array $SERVER = null)
     {
@@ -163,7 +167,6 @@ abstract class SecureRestApi extends RestApi
             unset($bearerTokenValue);
 
             // verify token
-
             $service = new UserService($this->conf->{'privatedir'}.'/users');
             $response = $service->verifyToken($tokenValue, $this->role);
 
@@ -183,6 +186,7 @@ abstract class SecureRestApi extends RestApi
      *
      * Use a .htaccess file for generating HTTP_AUTHORIZATION :
      * http://php.net/manual/en/function.apache-request-headers.php
+     * @param $SERVER : send same content as PHP variable when testing
      */
     private function getAuthorizationHeader($SERVER = null)
     {
@@ -197,9 +201,10 @@ abstract class SecureRestApi extends RestApi
             $headers = trim($SERVER[self::HTTP_AUTHORIZATION]);
         } elseif (function_exists('apache_request_headers')) {
             $requestHeaders = apache_request_headers();
-            // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
+            // Server-side fix for bug in old Android versions
+            // (a nice side-effect of this fix means we don't care about capitalization for Authorization)
             $requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
-            // print_r($requestHeaders);
+
             if (isset($requestHeaders[self::AUTHORIZATION])) {
                 $headers = trim($requestHeaders[self::AUTHORIZATION]);
             }
@@ -208,6 +213,10 @@ abstract class SecureRestApi extends RestApi
         return $headers;
     }
 
+    /**
+    *  token from headers
+    * @param $headerValue header value
+    */
     private function getBearerTokenValue($headerValue)
     {
 
@@ -221,6 +230,7 @@ abstract class SecureRestApi extends RestApi
 
     /**
      * get access token from header.
+     * @param $SERVER : send by test units.
      */
     private function getBearerToken($SERVER = null)
     {
