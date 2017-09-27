@@ -25,8 +25,8 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-    * @return response object
-    */
+     * @return response object
+     */
     protected function index() : Response
     {
         $response = $this->getDefaultResponse();
@@ -49,7 +49,7 @@ class CmsApi extends SecureRestApi
                 if (!empty($pathId)) {
                     //TODO get single index value
                 } else {
-                    $response = $service->getAll($datatype . '/index/index.json');
+                    $response = $service->getAll($datatype.'/index/index.json');
                 }
             } elseif ($this->method === 'POST') {
                 $response = $service->rebuildIndex($datatype, self::ID);
@@ -61,6 +61,7 @@ class CmsApi extends SecureRestApi
 
     /**
      * base API path /api/v1/content.
+     *
      * @return response object
      */
     protected function content() : Response
@@ -153,8 +154,8 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-    * @return response object
-    */
+     * @return response object
+     */
     protected function file() : Response
     {
         $response = $this->getDefaultResponse();
@@ -223,6 +224,7 @@ class CmsApi extends SecureRestApi
 
     /**
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
+     *
      * @return response object
      */
     public function preflight(): Response

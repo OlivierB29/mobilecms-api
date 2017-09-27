@@ -8,7 +8,6 @@ require_once 'FileService.php';
  */
 class FileApi extends SecureRestApi
 {
-
     /**
      * media directory (eg: media ).
      */
@@ -38,7 +37,7 @@ class FileApi extends SecureRestApi
 
         $this->media = $this->conf->{'media'};
 
-        $this->mediadir = $this->conf->{'homedir'} . '/' . $this->media;
+        $this->mediadir = $this->conf->{'homedir'}.'/'.$this->media;
     }
 
     /**
@@ -72,10 +71,10 @@ class FileApi extends SecureRestApi
 
                     // update files description
                     // media/calendar/1
-                    $uridir = $this->media . '/' . $datatype . '/' . $id;
+                    $uridir = $this->media.'/'.$datatype.'/'.$id;
 
                     // /var/www/html/media/calendar/1
-                    $destdir = $this->homedir . '/' . $uridir;
+                    $destdir = $this->homedir.'/'.$uridir;
 
                     $uploadResult = $service->getDescriptions($destdir);
                     $response->setCode(200);
@@ -176,10 +175,10 @@ class FileApi extends SecureRestApi
         foreach ($_FILES as $formKey => $file) {
 
             // media/calendar/1
-            $uridir = $this->media . '/' . $type . '/' . $id;
+            $uridir = $this->media.'/'.$type.'/'.$id;
 
             // /var/www/html/media/calendar/1
-            $destdir = $this->homedir . '/' . $uridir;
+            $destdir = $this->homedir.'/'.$uridir;
 
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
@@ -189,7 +188,7 @@ class FileApi extends SecureRestApi
 
             // upload
             if (isset($file['tmp_name']) && isset($file['name'])) {
-                $destfile = $destdir . '/' . $file['name'];
+                $destfile = $destdir.'/'.$file['name'];
                 if (move_uploaded_file($file['tmp_name'], $destfile)) {
                     chmod($destfile, $this->umask);
                     $title = $file['name'];
@@ -197,7 +196,7 @@ class FileApi extends SecureRestApi
                     $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
-                    throw new Exception($file['name'] . ' KO');
+                    throw new Exception($file['name'].' KO');
                 }
             }
         }
@@ -219,10 +218,10 @@ class FileApi extends SecureRestApi
         foreach ($files as $formKey => $file) {
 
             // media/calendar/1
-            $uridir = $this->media . '/' . $type . '/' . $id;
+            $uridir = $this->media.'/'.$type.'/'.$id;
 
             // /var/www/html/media/calendar/1
-            $destdir = $this->homedir . '/' . $uridir;
+            $destdir = $this->homedir.'/'.$uridir;
 
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
@@ -243,7 +242,7 @@ class FileApi extends SecureRestApi
                     $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
-                    throw new Exception($file['name'] . ' KO');
+                    throw new Exception($file['name'].' KO');
                 }
             }
         }
@@ -312,24 +311,24 @@ class FileApi extends SecureRestApi
         foreach ($files as $formKey => $file) {
 
             // media/calendar/1
-            $uridir = $this->media . '/' . $type . '/' . $id;
+            $uridir = $this->media.'/'.$type.'/'.$id;
 
             // /var/www/html/media/calendar/1
-            $destdir = $this->homedir . '/' . $uridir;
+            $destdir = $this->homedir.'/'.$uridir;
 
             // upload
             if (isset($file->{'url'})) {
                 // get foobar.html from http://something.com/[...]/foobar.html
-                $destfile = $destdir . '/' . basename($file->{'url'});
+                $destfile = $destdir.'/'.basename($file->{'url'});
                 if (file_exists($destfile)) {
                     if (!unlink($destfile)) {
-                        throw new Exception('delete ' . $file['url'] . ' KO');
+                        throw new Exception('delete '.$file['url'].' KO');
                     }
                 } else {
                     // TODO add message
                 }
             } else {
-                throw new Exception('wrong file ' . $file['url'] . ' KO');
+                throw new Exception('wrong file '.$file['url'].' KO');
             }
         }
 
@@ -341,6 +340,7 @@ class FileApi extends SecureRestApi
 
     /**
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
+     *
      * @return response object
      */
     public function preflight(): Response

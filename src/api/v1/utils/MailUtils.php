@@ -14,7 +14,7 @@ class MailUtils
 
     public function getNewPassword($subject, $password, $clientinfo) : string
     {
-        $message = file_get_contents(HOME . '/api/v1/mail/newpassword.html');
+        $message = file_get_contents(HOME.'/api/v1/mail/newpassword.html');
         $message = str_replace('%subject%', $subject, $message);
         $message = str_replace('%password%', $password, $message);
         $message = str_replace('%clientinfo%', $clientinfo, $message);
@@ -27,7 +27,7 @@ class MailUtils
         $mail_Data = '';
         $mail_Data .= '<html>';
         $mail_Data .= '<head>';
-        $mail_Data .= '<title>' . $subject . '</title>';
+        $mail_Data .= '<title>'.$subject.'</title>';
         $mail_Data .= '</head>';
         $mail_Data .= '<body>';
         $mail_Data .= str_replace('\n', '<br>', $text);
