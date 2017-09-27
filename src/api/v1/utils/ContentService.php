@@ -33,6 +33,7 @@ class ContentService
 
     /**
      * constructor.
+     * @param $databasedir eg : public
      */
     public function __construct($databasedir)
     {
@@ -42,41 +43,45 @@ class ContentService
     /**
      * Get a single record.
      *
-     * $type eg : calendar
-     * $keyname : unique id
-     * $keyvalue : id value, eg :1
+     * @param $type eg : calendar
+     * @param $keyvalue : id value, eg :1
      */
     public function getRecord(string $type, string $keyvalue)
     {
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
+        $file = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
 
         // get one element
         if (file_exists($file)) {
             $response->setResult(file_get_contents($file));
             $response->setCode(200);
         } else {
-            $response->setError(404, 'not found '.$type.' / '.$keyvalue);
+            $response->setError(404, 'not found ' . $type . ' / ' . $keyvalue);
         }
 
         return $response;
     }
 
+    /**
+    * delete a record
+    * @param $type eg: calendar
+    * @param $keyvalue eg: id
+    */
     public function deleteRecord(string $type, string $keyvalue)
     {
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
+        $file = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
 
         if (file_exists($file)) {
             unlink($file);
 
             $response->setCode(200);
         } else {
-            $response->appendMessage('not found '.$type.' : '.$keyvalue);
+            $response->appendMessage('not found ' . $type . ' : ' . $keyvalue);
             $response->setCode(404);
         }
 
@@ -86,13 +91,13 @@ class ContentService
     /**
      * Return a filepath from a single filename, only contained in the public databasedir.
      * Valid path :
-     *	calendar/1.json , new/foobar.json, index/index.json , ...
+     * calendar/1.json , new/foobar.json, index/index.json , ...
      * Invalid path :
      * /var/www/private/somefile.sh.
      *
      * $filename : calendar/1.json , new/foobar.json, index/index.json , ...
-     *
-     * @return calendar/index/index.json
+     * @param $filename file
+     * @return response object
      */
     public function getFilePath(string $filename): Response
     {
@@ -102,17 +107,17 @@ class ContentService
         //forbid upper directory
         //
         if (strpos($filename, '..') !== false) {
-            throw new Exception('Invalid path '.$filename, 1);
+            throw new Exception('Invalid path ' . $filename, 1);
         }
 
-        $file = $this->databasedir.'/'.$filename;
+        $file = $this->databasedir . '/' . $filename;
 
         // get one element
         if (file_exists($file)) {
             $response->setResult($file);
             $response->setCode(200);
         } else {
-            $response->appendMessage('not found '.$file);
+            $response->appendMessage('not found ' . $file);
             $response->setCode(404);
         }
 
@@ -124,7 +129,9 @@ class ContentService
      * $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}]
      * $keyname : primary key inside the file eg : id
      * $keyvalue : eg : 1.
-     *
+     * @param $filename : index.json
+     * @param $keyname : id
+     * @param $keyvalue : 1
      * @return : Response object with a JSON object eg : {"id":"1", "foo":"bar"}
      */
     public function get(string $filename, string $keyname, string $keyvalue)
@@ -132,12 +139,11 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->databasedir.'/'.$filename;
+        $file = $this->databasedir . '/' . $filename;
         $data = JsonUtils::readJsonFile($file);
 
         // get one element
         if (isset($keyvalue)) {
-
                 // extract element data
             $existingObject = JsonUtils::getByKey($data, $keyname, $keyvalue);
             if (isset($existingObject)) {
@@ -145,7 +151,7 @@ class ContentService
                 $response->setCode(200);
             } else {
                 // element not found
-                $response->appendMessage('not found '.$keyname.' : '.$keyvalue);
+                $response->appendMessage('not found ' . $keyname . ' : ' . $keyvalue);
                 $response->setCode(404);
             }
         } else {
@@ -160,6 +166,7 @@ class ContentService
     /**
      * get all JSON files list of a directory
      * eg: [{"id":"1", "filename": "1.json"}, {"id":"2", "filename": "2.json"}].
+     * @param $type eg: calendar
      */
     public function getAllObjects($type)
     {
@@ -167,7 +174,7 @@ class ContentService
 
         $thelist = [];
 
-        if ($handle = opendir($this->databasedir.'/'.$type)) {
+        if ($handle = opendir($this->databasedir . '/' . $type)) {
             while (false !== ($file = readdir($handle))) {
                 $fileObject = json_decode('{}');
                 if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
@@ -188,8 +195,7 @@ class ContentService
 
     /**
      * get all elements from an array, contained in a single file
-     * $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}].
-     *
+     * @param $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}].
      * @return : Response object with a JSON array
      */
     public function getAll(string $filename)
@@ -197,7 +203,7 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->databasedir.'/'.$filename;
+        $file = $this->databasedir . '/' . $filename;
         $data = JsonUtils::readJsonFile($file);
         if (isset($data)) {
             $response->setCode(200);
@@ -209,9 +215,9 @@ class ContentService
 
     /**
      * create a single element
-     * $type : object type (eg : calendar)
-     * $filename : JSON data filename
-     * $keyname : primary key inside the file.
+     * @param $type : object type (eg : calendar)
+     * @param $filename : JSON data filename
+     * @param $keyname : primary key inside the file.
      *
      * @return : Response object with a JSON object
      */
@@ -223,8 +229,8 @@ class ContentService
 
     /**
      * return a record file path
-     * $type : name of type eg : calendar
-     * $id : unique id of record eg : 1.
+     * @param $type : name of type eg : calendar
+     * @param $id : unique id of record eg : 1.
      *
      * @return /foobar/calendar/index.json
      */
@@ -237,7 +243,7 @@ class ContentService
             throw new Exception('empty id', 1);
         }
 
-        return $this->databasedir.'/'.$type.'/'.$id.'.json';
+        return $this->databasedir . '/' . $type . '/' . $id . '.json';
     }
 
     /**
@@ -252,7 +258,7 @@ class ContentService
             throw new Exception('empty type', 1);
         }
 
-        return $this->databasedir.'/'.$type.'/index/index.json';
+        return $this->databasedir . '/' . $type . '/index/index.json';
     }
 
     /**
@@ -267,9 +273,13 @@ class ContentService
             throw new Exception('empty type', 1);
         }
 
-        return $this->databasedir.'/'.$type.'/index/index_template.json';
+        return $this->databasedir . '/' . $type . '/index/index_template.json';
     }
-
+/**
+     * @param $type : object type (eg : calendar)
+     * @param $keyname : primary key inside the file.
+     * @param $recordStr : JSON data
+*/
     public function post(string $type, string $keyname, string $recordStr)
     {
         $response = $this->getDefaultResponse();
@@ -297,7 +307,11 @@ class ContentService
 
         return $response;
     }
-
+    /**
+         * @param $type : object type (eg : calendar)
+         * @param $keyname : primary key inside the file.
+         * @param $recordStr : JSON data
+    */
     public function update(string $type, string $keyname, string $recordStr)
     {
         $response = $this->getDefaultResponse();
@@ -330,6 +344,9 @@ class ContentService
 
     /**
      * Add object id to index.
+          * @param $type : object type (eg : calendar)
+          * @param $keyname : primary key inside the file.
+          * @param $recordStr : JSON data
      */
     public function publishById(string $type, string $keyname, string $keyvalue)
     {
@@ -350,7 +367,7 @@ class ContentService
         $indexValue = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
         // Read the full JSON record
-        $recordFile = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
+        $recordFile = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
 
         $record = JsonUtils::readJsonFile($recordFile);
 
@@ -369,12 +386,15 @@ class ContentService
         $response->setCode(200);
         // set a timestamp response
         $tempResponse = json_decode($response->getResult());
-        $tempResponse->{'timestamp'} = ''.time();
+        $tempResponse->{'timestamp'} = '' . time();
         $response->setResult(json_encode($tempResponse));
 
         return $response;
     }
-
+/**
+     * @param $type eg : calendar
+     * @param $keyname : eg :id
+*/
     public function rebuildIndex(string $type, string $keyname)
     {
         $response = $this->getDefaultResponse();
@@ -397,7 +417,7 @@ class ContentService
             while (false !== ($file = readdir($handle))) {
                 if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
                     // Read the full JSON record
-                    $record = JsonUtils::readJsonFile($this->databasedir.'/'.$type.'/'.$file);
+                    $record = JsonUtils::readJsonFile($this->databasedir . '/' . $type . '/' . $file);
 
                     //
                     //copy some fields to index
@@ -427,6 +447,8 @@ class ContentService
 
     /**
      * generate a backup index file name.
+     * @param $type : eg calendar
+     * @return file name
      */
     private function getBackupIndexFileName(string $type) : string
     {
@@ -434,11 +456,13 @@ class ContentService
             throw new Exception('empty type', 1);
         }
 
-        return $this->databasedir.'/'.$type.'/history/index-'.time().'.json';
+        return $this->databasedir . '/' . $type . '/history/index-' . time() . '.json';
     }
 
     /**
      * copy a file and create directory if necessary.
+     * @param $s1 : source
+     * @param $s2 : dest
      */
     private function mycopy(string $s1, string $s2)
     {
@@ -453,16 +477,18 @@ class ContentService
 
     /**
      * returns options files content.
+     * @param $filename file
      */
     public function options(string $filename)
     {
-        $file = $this->databasedir.'/'.$filename;
+        $file = $this->databasedir . '/' . $filename;
 
         return json_encode(JsonUtils::readJsonFile($file));
     }
 
     /**
      * initialize a default Response object.
+     * @return response object
      */
     protected function getDefaultResponse() : Response
     {

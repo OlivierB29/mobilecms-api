@@ -12,6 +12,7 @@ class JsonUtils
     }
 
     /**
+    * @param $file : file
      * @return JSON object (array or stdClass)
      */
     public static function readJsonFile(string $file)
@@ -20,17 +21,22 @@ class JsonUtils
     }
 
     /*
-     * write JSON object (array or stdClass)
-     */
+    *  write JSON object (array or stdClass)
+    * @param $file : file
+    * @param $data : JSON object
+   */
     public static function writeJsonFile(string $file, $data)
     {
-        $fh = fopen($file, 'w') or die('Error opening output file'.$file);
+        $fh = fopen($file, 'w') or die('Error opening output file' . $file);
         fwrite($fh, json_encode($data, JSON_PRETTY_PRINT));
         fclose($fh);
     }
 
     /**
      * find a JSON object into a JSON array, by key=value.
+     * @param $data : Array
+     * @param $name : eg: id
+     * @param $value : eg: 123
      */
     public static function getByKey(array $data, string $name, string $value)
     {
@@ -50,7 +56,9 @@ class JsonUtils
     /**
      * If the JSON array previously contained a mapping for the key,
      * the old value is replaced by the specified value.
-     *
+     * @param $data : Array
+     * @param $name : eg: id
+     * @param $item : JSON object
      * @return updated array
      */
     public static function put(array $data, string $name, stdClass $item): array
@@ -68,10 +76,9 @@ class JsonUtils
 
     /**
      * copy properties of $source to $dest, without including the new properties
-     * eg:
-     * $source = {"id":"1", "foo":"pub" , "hello":"world"}
-     * $dest = {"id":"1", "foo":"bar"}
-     * --> $dest = {"id":"1", "foo":"pub"}.
+     * convert to --> $dest = {"id":"1", "foo":"pub"}.
+     * @param $source = {"id":"1", "foo":"pub" , "hello":"world"}
+     * @param $dest = {"id":"1", "foo":"bar"}
      */
     public static function copy(stdClass $source, stdClass $dest)
     {
@@ -84,10 +91,9 @@ class JsonUtils
 
     /**
      * copy properties of $source to $dest, including the new properties
-     * eg:
-     * $source = {"id":"1", "foo":"pub" , "hello":"world"}
-     * $dest = {"id":"1", "foo":"bar"}
-     * --> $dest = {"id":"1", "foo":"pub" , "hello":"world"}.
+     * eg:--> $dest = {"id":"1", "foo":"pub" , "hello":"world"}.
+     * @param $source = {"id":"1", "foo":"pub" , "hello":"world"}
+     * @param $dest = {"id":"1", "foo":"bar"}
      */
     public static function replace(stdClass $source, stdClass $dest)
     {

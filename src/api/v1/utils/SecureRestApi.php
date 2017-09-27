@@ -158,13 +158,13 @@ abstract class SecureRestApi extends RestApi
             $tokenValue = $this->getBearerTokenValue($bearerTokenValue);
 
             if (empty($tokenValue)) {
-                throw new Exception('Empty token !'.$bearerTokenValue);
+                throw new Exception('Empty token !' . $bearerTokenValue);
             }
             unset($bearerTokenValue);
 
             // verify token
 
-            $service = new UserService($this->conf->{'privatedir'}.'/users');
+            $service = new UserService($this->conf->{'privatedir'} . '/users');
             $response = $service->verifyToken($tokenValue, $this->role);
 
             unset($service);

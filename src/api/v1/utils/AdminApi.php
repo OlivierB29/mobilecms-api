@@ -23,7 +23,9 @@ class AdminApi extends SecureRestApi
             header('Content-Type: application/json');
         }
     }
-
+    /**
+    * @return response object
+    */
     protected function index() : Response
     {
         $userKey = 'email';
@@ -44,7 +46,7 @@ class AdminApi extends SecureRestApi
                 if (!empty($pathId)) {
                     //TODO get single index value
                 } else {
-                    $response = $service->getAll($datatype.'/index/index.json');
+                    $response = $service->getAll($datatype . '/index/index.json');
                 }
             } elseif ($this->method === 'POST') {
                 $response = $service->rebuildIndex($datatype, $userKey);
@@ -56,6 +58,7 @@ class AdminApi extends SecureRestApi
 
     /**
      * base API path /api/v1/content.
+     * @return response object
      */
     protected function content() : Response
     {
@@ -91,7 +94,7 @@ class AdminApi extends SecureRestApi
                     $response = $service->getAllObjects($datatype);
                 }
             } elseif ($this->method === 'POST') {
-                $userService = new UserService($this->conf->{'privatedir'}.'/users');
+                $userService = new UserService($this->conf->{'privatedir'} . '/users');
 
                 if (!empty($pathId)) {
                     // save a record and update the index. eg : /api/v1/content/calendar
@@ -164,7 +167,7 @@ class AdminApi extends SecureRestApi
         }
         // set a timestamp response
         $tempResponse = json_decode($response->getResult());
-        $tempResponse->{'timestamp'} = ''.time();
+        $tempResponse->{'timestamp'} = '' . time();
         $response->setResult(json_encode($tempResponse));
 
         return $response;
@@ -223,6 +226,7 @@ class AdminApi extends SecureRestApi
 
     /**
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
+     * @return response object
      */
     public function preflight(): Response
     {
