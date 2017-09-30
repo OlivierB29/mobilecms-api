@@ -218,7 +218,7 @@ class AuthenticationApi extends RestApi
                 $response->setCode(200);
                 $response->setResult('{}');
             } else {
-                $response->setError(400, $this->errorToJson('Bad user parameters'));
+                $response->setError(400, 'Bad user parameters');
             }
         }
 

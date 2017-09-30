@@ -137,7 +137,7 @@ class AdminApi extends SecureRestApi
                         $response->setResult('{}');
                         $response->setCode(200);
                     } else {
-                        $response->setError(400, $this->errorToJson($createresult));
+                        $response->setError(400, $createresult);
                     }
                 }
             } elseif ($this->method === 'PUT') {
