@@ -14,8 +14,8 @@ class AdminApi extends SecureRestApi
     const EMAIL = 'email';
 
     /**
-    * @param $conf JSON configuration
-    */
+     * @param $conf JSON configuration
+     */
     public function __construct($conf)
     {
         parent::__construct($conf);
@@ -85,7 +85,7 @@ class AdminApi extends SecureRestApi
             // eg : /api/v1/content/calendar
             if ($this->method === 'GET') {
                 if (!empty($pathId)) {
-                      //get the full data of a single record. $this->args contains the remaining path parameters  eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
+                    //get the full data of a single record. $this->args contains the remaining path parameters  eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
                     $tmpResponse = $service->getRecord($datatype, $pathId);
                     // basic user fields, without password
                     if ($tmpResponse->getCode() === 200) {
@@ -174,8 +174,8 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-    * init a default user object
-    */
+     * init a default user object.
+     */
     private function getDefaultUser()
     {
         return json_decode('{"name":"", "email":"", "password":"", "secretQuestion":"", "secretResponse":"" }');
@@ -183,7 +183,9 @@ class AdminApi extends SecureRestApi
 
     /**
      * basic user fields, without password.
+     *
      * @param JSON user string
+     *
      * @return JSON user string
      */
     public function getUserResponse($userStr)
@@ -198,9 +200,10 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-    * get data type
-    * @return data type
-    */
+     * get data type.
+     *
+     * @return data type
+     */
     private function getDataType(): string
     {
         $datatype = '';
@@ -215,9 +218,10 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-    * get path id
-    * @return id
-    */
+     * get path id.
+     *
+     * @return id
+     */
     private function getId(): string
     {
         $result = '';
@@ -229,8 +233,8 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-    * check config and throw an exception if needed
-    */
+     * check config and throw an exception if needed.
+     */
     private function checkConfiguration()
     {
         if (!isset($this->conf->{'publicdir'})) {

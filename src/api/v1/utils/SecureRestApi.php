@@ -27,8 +27,8 @@ abstract class SecureRestApi extends RestApi
     private $role = 'editor';
 
     /**
-    * @param $conf JSON configuration
-    */
+     * @param $conf JSON configuration
+     */
     public function __construct($conf)
     {
         parent::__construct($conf);
@@ -58,6 +58,7 @@ abstract class SecureRestApi extends RestApi
     /**
      * $headers : array containing result of apache_request_headers() and getallheaders(), if available.
      * Or send by test units.
+     *
      * @param $headers : send by test units.
      * @param $SERVER : send by test units.
      */
