@@ -2,36 +2,41 @@
 
 define('EMPTYSTR', '');
 /**
-* Java-like StringUtils
-*/
+ * Java-like StringUtils.
+ */
 class StringUtils
 {
     /**
-    * string is not empty
-    * @param $question string content
-    */
+     * string is not empty.
+     *
+     * @param $question
+     */
     public static function isNotEmpty(string $question)
     {
         return isset($question) && trim($question) != EMPTYSTR;
     }
 
     /**
-    * compare strings
-    * @param $a str a
-    * @param $b str b
-    * @return boolean result
-    */
+     * compare strings.
+     *
+     * @param $a str a
+     * @param $b str b
+     *
+     * @return bool result
+     */
     public static function eq(string $a, string $b)
     {
         return strcmp($a, $b) == 0;
     }
 
     /**
-    * starts with string ?
-    * @param $haystack eg "foobar"
-    * @param $needle eg "foo"
-    * @return boolean result
-    */
+     * starts with string ?
+     *
+     * @param $haystack eg "foobar"
+     * @param $needle eg "foo"
+     *
+     * @return bool result
+     */
     public static function startsWith(string $haystack, string $needle)
     {
         $length = strlen($needle);
@@ -40,11 +45,13 @@ class StringUtils
     }
 
     /**
-    * ends with string ?
-    * @param $haystack eg "foobar"
-    * @param $needle eg "bar"
-    * @return boolean result
-    */
+     * ends with string ?
+     *
+     * @param $haystack eg "foobar"
+     * @param $needle eg "bar"
+     *
+     * @return bool result
+     */
     public static function endsWith(string $haystack, string $needle)
     {
         $length = strlen($needle);

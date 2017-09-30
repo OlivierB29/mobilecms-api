@@ -3,8 +3,17 @@
 require_once 'Response.php';
 require_once 'JsonUtils.php';
 
+/**
+* function used for sorting
+* @param $key key name
+*/
 function compareIndex($key)
 {
+    /**
+    * compare two object using the $key property
+    * @param $a first object to compare
+    * @param $b second object to compare
+    */
     return function ($a, $b) use ($key) {
         return strnatcmp($a->{$key}, $b->{$key});
     };
@@ -83,8 +92,7 @@ class ContentService
 
             $response->setCode(200);
         } else {
-            $response->appendMessage('not found '.$type.' : '.$keyvalue);
-            $response->setCode(404);
+            $response->setError(404, 'not found '.$type.' : '.$keyvalue);
         }
 
         return $response;
@@ -121,8 +129,7 @@ class ContentService
             $response->setResult($file);
             $response->setCode(200);
         } else {
-            $response->appendMessage('not found '.$file);
-            $response->setCode(404);
+            $response->setError(404, 'not found '.$file);
         }
 
         return $response;
@@ -157,8 +164,7 @@ class ContentService
                 $response->setCode(200);
             } else {
                 // element not found
-                $response->appendMessage('not found '.$keyname.' : '.$keyvalue);
-                $response->setCode(404);
+                $response->setError(404, 'not found '.$keyname.' : '.$keyvalue);
             }
         } else {
             // return all

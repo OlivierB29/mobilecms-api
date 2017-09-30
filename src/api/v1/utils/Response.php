@@ -39,11 +39,6 @@ class Response
         return $this->code;
     }
 
-    public function appendMessage(string $newval)
-    {
-        $this->message .= $newval;
-    }
-
     public function setError(int $code, string $msg)
     {
         $this->code = $code;

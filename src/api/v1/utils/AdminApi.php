@@ -85,7 +85,6 @@ class AdminApi extends SecureRestApi
             // eg : /api/v1/content/calendar
             if ($this->method === 'GET') {
                 if (!empty($pathId)) {
-
                       //get the full data of a single record. $this->args contains the remaining path parameters  eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
                     $tmpResponse = $service->getRecord($datatype, $pathId);
                     // basic user fields, without password
@@ -121,11 +120,9 @@ class AdminApi extends SecureRestApi
                     unset($myobjectJson);
                     $response = $service->publishById($datatype, self::EMAIL, $id);
                 } else {
-
                     // get all properties of a user, unless $user->{'property'} will fail if the request is empty
                     $user = $this->getDefaultUser();
                     // get parameters from request
-
                     $requestuser = json_decode($this->getRequestBody());
 
                     JsonUtils::copy($requestuser, $user);
@@ -151,12 +148,11 @@ class AdminApi extends SecureRestApi
             } elseif ($this->method === 'PUT') {
             } elseif ($this->method === 'DELETE') {
                 if (!empty($pathId)) {
-                    //delete a single record. $this->args contains the remaining path parameters
+                    // delete a single record. $this->args contains the remaining path parameters
                     // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
                     $response = $service->deleteRecord($datatype, $pathId);
-                    // step 1 : update Record
                     if ($response->getCode() === 200) {
-                        // step 2 : publish to index
+                        // rebuild index
                         $response = $service->rebuildIndex($datatype, self::EMAIL);
                     }
                 }
@@ -177,6 +173,9 @@ class AdminApi extends SecureRestApi
         return $response;
     }
 
+    /**
+    * init a default user object
+    */
     private function getDefaultUser()
     {
         return json_decode('{"name":"", "email":"", "password":"", "secretQuestion":"", "secretResponse":"" }');
@@ -184,7 +183,7 @@ class AdminApi extends SecureRestApi
 
     /**
      * basic user fields, without password.
-     *
+     * @param JSON user string
      * @return JSON user string
      */
     public function getUserResponse($userStr)
@@ -198,6 +197,10 @@ class AdminApi extends SecureRestApi
         return json_encode($responseUser);
     }
 
+    /**
+    * get data type
+    * @return data type
+    */
     private function getDataType(): string
     {
         $datatype = '';
@@ -211,6 +214,10 @@ class AdminApi extends SecureRestApi
         return $datatype;
     }
 
+    /**
+    * get path id
+    * @return id
+    */
     private function getId(): string
     {
         $result = '';
@@ -221,6 +228,9 @@ class AdminApi extends SecureRestApi
         return $result;
     }
 
+    /**
+    * check config and throw an exception if needed
+    */
     private function checkConfiguration()
     {
         if (!isset($this->conf->{'publicdir'})) {
