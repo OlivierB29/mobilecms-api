@@ -14,8 +14,8 @@ class FileApi extends SecureRestApi
     private $media;
 
     /**
-    * home dir
-    */
+     * home dir.
+     */
     private $homedir;
 
     /**
@@ -29,8 +29,8 @@ class FileApi extends SecureRestApi
     private $umask = 0775;
 
     /**
-    * @param $conf JSON configuration
-    */
+     * @param $conf JSON configuration
+     */
     public function __construct($conf)
     {
         parent::__construct($conf);
@@ -168,11 +168,13 @@ class FileApi extends SecureRestApi
     }
 
     /**
-    * upload files from $_FILES
-    * @param $type eg: calendar
-    * @param $id 123
-    * @return array of files descriptions
-    */
+     * upload files from $_FILES.
+     *
+     * @param $type eg: calendar
+     * @param $id 123
+     *
+     * @return array of files descriptions
+     */
     private function uploadFiles($type, $id)
     {
         /*
@@ -220,11 +222,12 @@ class FileApi extends SecureRestApi
     }
 
     /**
-    * download files from specified URLs
-    * @param $type : news
-    * @param $id : 123
-    * @param $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
-    */
+     * download files from specified URLs.
+     *
+     * @param $type : news
+     * @param $id : 123
+     * @param $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
+     */
     private function downloadFiles($type, $id, $filesStr)
     {
         $response = $this->getDefaultResponse();
@@ -275,6 +278,7 @@ class FileApi extends SecureRestApi
 
     /**
      * get file info and build JSON response.
+     *
      * @param $destfile : file
      * @param $title : title of file
      * @param $url : url
@@ -297,8 +301,8 @@ class FileApi extends SecureRestApi
     }
 
     /**
-    * @return datatype
-    */
+     * @return datatype
+     */
     private function getDataType(): string
     {
         $datatype = '';
@@ -321,6 +325,7 @@ class FileApi extends SecureRestApi
 
     /**
      * delete files.
+     *
      * @param $type news
      * @param $id 123
      * @param * @param $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]

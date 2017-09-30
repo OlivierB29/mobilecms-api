@@ -11,9 +11,9 @@ require_once 'MailUtils.php';
  */
 class AuthenticationApi extends RestApi
 {
-  /**
-  * @param $conf JSON configuration
-  */
+    /**
+     * @param $conf JSON configuration
+     */
     public function __construct($conf)
     {
         parent::__construct($conf);

@@ -4,12 +4,13 @@ require_once 'Response.php';
 require_once 'JsonUtils.php';
 
 /**
-* function used for sorting
-* @param $key key name
-*/
+ * function used for sorting.
+ *
+ * @param $key key name
+ */
 function compareIndex($key)
 {
-    /**
+    /*
     * compare two object using the $key property
     * @param $a first object to compare
     * @param $b second object to compare
