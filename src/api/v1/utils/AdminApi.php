@@ -131,18 +131,13 @@ class AdminApi extends SecureRestApi
                     $createresult = $userService->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
 
                     if (empty($createresult)) {
-                        $response->setCode(200);
-                        $response->setResult('{}');
-                    } else {
-                        $response->setError(400, $this->errorToJson('Bad user parameters'));
-                    }
-
-                    // step 2 : publish to index
-                    if ($response->getCode() === 200) {
                         $id = $user->{self::EMAIL};
-                        unset($user);
                         $response = $service->publishById($datatype, self::EMAIL, $id);
+                        unset($user);
                         $response->setResult('{}');
+                        $response->setCode(200);
+                    } else {
+                        $response->setError(400, $this->errorToJson($createresult));
                     }
                 }
             } elseif ($this->method === 'PUT') {

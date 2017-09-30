@@ -192,14 +192,6 @@ class UserService
                 // user already exists
                 $error_msg .= 'AlreadyExists.';
             }
-
-            if (empty($secretQuestion)) {
-                $error_msg .= 'EmptySecretQuestion ';
-            }
-
-            if (empty($secretResponse)) {
-                $error_msg .= 'EmptySecretResponse ';
-            }
         }
 
         if (empty($error_msg)) {
@@ -216,7 +208,11 @@ class UserService
             $saltpassword = password_hash($password, PASSWORD_BCRYPT, $options);
 
             // store a salted response
-            $saltresponse = password_hash($secretResponse, PASSWORD_BCRYPT, $options);
+            $saltresponse = '';
+            if (!empty($secretResponse)) {
+                $saltresponse = password_hash($secretResponse, PASSWORD_BCRYPT, $options);
+            }
+
 
             if ($mode === 'create') {
                 // create user
