@@ -82,16 +82,11 @@ abstract class RestApi
      */
     protected $headers = null;
 
-    /**
-     *
-     */
     protected $debugHttpApi = true;
-
 
     protected $rootDir = '';
 
     protected $publicDir = '';
-
 
     /**
      * /api/v1/content/save
@@ -155,25 +150,23 @@ abstract class RestApi
             $this->postformdata = true;
         }
 
-
         if ($this->enableHeaders) {
+            if (!empty($this->conf->{'crossdomain'}) && 'true' === $this->conf->{'crossdomain'}) {
+                header('Access-Control-Allow-Origin: *');
+            }
 
-          if (!empty($this->conf->{'crossdomain'}) && 'true' === $this->conf->{'crossdomain'}) {
-            header('Access-Control-Allow-Origin: *');
-          }
+            header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type');
 
-          header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
-          header('Access-Control-Allow-Headers: Content-Type');
+            // Requests from the same server don't have a HTTP_ORIGIN header
+            if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
+                $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
+            }
 
-          // Requests from the same server don't have a HTTP_ORIGIN header
-          if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
-              $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
-          }
-
-          if (!empty($this->conf->{'https'}) && 'true' === $this->conf->{'https'}) {
-            //
-            // HTTPS
-            //
+            if (!empty($this->conf->{'https'}) && 'true' === $this->conf->{'https'}) {
+                //
+                // HTTPS
+                //
 
                 //http://stackoverflow.com/questions/85816/how-can-i-force-users-to-access-my-page-over-https-instead-of-http/12145293#12145293
                 // iis sets HTTPS to 'off' for non-SSL requests
@@ -184,18 +177,14 @@ abstract class RestApi
                     // we are in cleartext at the moment, prevent further execution and output
                     die();
                 }
-
-          }
+            }
         }
-
-
 
         if (!empty($this->conf->{'errorlog'}) && 'true' === $this->conf->{'errorlog'}) {
             error_reporting(E_ALL);
             ini_set('display_errors', 'On');
             ini_set('log_errors', 'On');
         }
-
 
         $this->rootDir = $_SERVER['DOCUMENT_ROOT'];
     }
@@ -308,32 +297,30 @@ abstract class RestApi
 
     public function execute()
     {
+        $status = 400;
+        $responseBody = null;
 
-      $status = 400;
-      $responseBody = null;
-      try {
-          $this->setRequest();
+        try {
+            $this->setRequest();
 
-          $response = $this->processAPI();
-          $responseBody = $response->getResult();
-          $status = $response->getCode();
+            $response = $this->processAPI();
+            $responseBody = $response->getResult();
+            $status = $response->getCode();
+        } catch (Exception $e) {
+            // security : clear variables on exception
 
-      } catch (Exception $e) {
-        // security : clear variables on exception
-
-          $status = 500;
-          error_log($e->getMessage());
-          if ($this->debugHttpApi) {
-            $responseBody = json_encode(['error' => $e->getMessage(),]);
-          } else {
-            // security : should not display to much error reporting to an attacker
-            $responseBody =  json_encode(['error' => 'internal error',]);
-          }
-      } finally {
-        http_response_code($status);
-        echo $responseBody;
-      }
-
+            $status = 500;
+            error_log($e->getMessage());
+            if ($this->debugHttpApi) {
+                $responseBody = json_encode(['error' => $e->getMessage()]);
+            } else {
+                // security : should not display to much error reporting to an attacker
+                $responseBody = json_encode(['error' => 'internal error']);
+            }
+        } finally {
+            http_response_code($status);
+            echo $responseBody;
+        }
     }
 
     /**
@@ -453,20 +440,23 @@ abstract class RestApi
         }
     }
 
-    public function setRootDir($rootDir) {
-      $this->rootDir = $rootDir;
+    public function setRootDir($rootDir)
+    {
+        $this->rootDir = $rootDir;
     }
 
-
-    public function getRootDir() {
-      return $this->rootDir;
+    public function getRootDir()
+    {
+        return $this->rootDir;
     }
 
-    public function getPublicDirPath() {
-      return $this->rootDir . $this->conf->{'publicdir'};
+    public function getPublicDirPath()
+    {
+        return $this->rootDir.$this->conf->{'publicdir'};
     }
 
-    public function getPrivateDirPath() {
-      return $this->rootDir . $this->conf->{'privatedir'};
+    public function getPrivateDirPath()
+    {
+        return $this->rootDir.$this->conf->{'privatedir'};
     }
 }

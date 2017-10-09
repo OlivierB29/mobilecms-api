@@ -25,7 +25,6 @@ class AdminApi extends SecureRestApi
             header('Content-Type: application/json');
         }
         $this->role = 'admin';
-
     }
 
     /**
@@ -99,7 +98,7 @@ class AdminApi extends SecureRestApi
                     $response = $service->getAllObjects($datatype);
                 }
             } elseif ($this->method === 'POST') {
-                $userService = new UserService($this->getPrivateDirPath() . '/users');
+                $userService = new UserService($this->getPrivateDirPath().'/users');
 
                 if (!empty($pathId)) {
                     // save a record and update the index. eg : /api/v1/content/calendar

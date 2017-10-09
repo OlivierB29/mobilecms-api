@@ -13,9 +13,6 @@ class FileApi extends SecureRestApi
      */
     private $media;
 
-
-
-
     /**
      * Default umask for directories and files.
      */
@@ -176,7 +173,6 @@ class FileApi extends SecureRestApi
         foreach ($_FILES as $formKey => $file) {
             $destdir = $this->getRecordDirPath($datatype, $id);
 
-
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
                 mkdir($destdir, $this->umask, true);
@@ -185,7 +181,7 @@ class FileApi extends SecureRestApi
 
             // upload
             if (isset($file['tmp_name']) && isset($file['name'])) {
-                $destfile = $destdir . '/' . $file['name'];
+                $destfile = $destdir.'/'.$file['name'];
                 if (move_uploaded_file($file['tmp_name'], $destfile)) {
                     chmod($destfile, $this->umask);
                     $title = $file['name'];
@@ -232,7 +228,7 @@ class FileApi extends SecureRestApi
             if (isset($file->{'url'})) {
                 $current = file_get_contents($file->{'url'});
                 // get foobar.html from http://something.com/[...]/foobar.html
-                $destfile = $destdir . '/' . basename($file->{'url'});
+                $destfile = $destdir.'/'.basename($file->{'url'});
 
                 if (file_put_contents($destfile, $current)) {
                     chmod($destfile, $this->umask);
@@ -326,7 +322,7 @@ class FileApi extends SecureRestApi
             // upload
             if (isset($file->{'url'})) {
                 // get foobar.html from http://something.com/[...]/foobar.html
-                $destfile = $destdir . '/' . basename($file->{'url'});
+                $destfile = $destdir.'/'.basename($file->{'url'});
                 if (file_exists($destfile)) {
                     if (!unlink($destfile)) {
                         throw new Exception('delete '.$file['url'].' KO');
@@ -363,20 +359,22 @@ class FileApi extends SecureRestApi
     }
 
     /**
-    * main storage directory.
-    * @return eg : // /var/www/html/media
-    */
+     * main storage directory.
+     *
+     * @return eg : // /var/www/html/media
+     */
     public function getMediaDirPath()
     {
-        return $this->getRootDir() . $this->conf->{'media'};
+        return $this->getRootDir().$this->conf->{'media'};
     }
 
     /**
-    * record storage directory.
-    * @return eg : // /var/www/html/media/calendar/1
-    */
+     * record storage directory.
+     *
+     * @return eg : // /var/www/html/media/calendar/1
+     */
     public function getRecordDirPath($type, $id)
     {
-        return $this->getMediaDirPath() . '/' . $type . '/' . $id;
+        return $this->getMediaDirPath().'/'.$type.'/'.$id;
     }
 }

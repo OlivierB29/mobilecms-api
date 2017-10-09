@@ -13,7 +13,6 @@ class CmsApi extends SecureRestApi
     const TYPE = 'type';
     const FILE = 'file';
 
-
     /**
      * @param $conf JSON configuration
      */
@@ -27,9 +26,6 @@ class CmsApi extends SecureRestApi
             header('Content-Type: application/json');
         }
     }
-
-
-
 
     /**
      * @return response object
