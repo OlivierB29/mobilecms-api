@@ -26,8 +26,6 @@ abstract class SecureRestApi extends RestApi
      */
     private $role = 'editor';
 
-
-
     /**
      * @param $conf JSON configuration
      */
@@ -35,7 +33,6 @@ abstract class SecureRestApi extends RestApi
     {
         parent::__construct($conf);
         $this->role = 'editor';
-
     }
 
     public function processAPI(): Response
@@ -175,7 +172,7 @@ abstract class SecureRestApi extends RestApi
             unset($bearerTokenValue);
 
             // verify token
-            $service = new UserService($this->getPrivateDirPath() . '/users');
+            $service = new UserService($this->getPrivateDirPath().'/users');
             $response = $service->verifyToken($tokenValue, $this->role);
 
             unset($service);
@@ -253,6 +250,4 @@ abstract class SecureRestApi extends RestApi
             }
         }
     }
-
-
 }

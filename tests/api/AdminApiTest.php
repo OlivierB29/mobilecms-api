@@ -24,8 +24,7 @@ final class AdminApiTest extends TestCase
 
         $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-
-        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'}.'/users');
+        $service = new UserService(realpath('tests-data').$this->conf->{'privatedir'}.'/users');
 
         $response = $service->getToken('admin@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
@@ -59,7 +58,7 @@ final class AdminApiTest extends TestCase
         $API = new AdminApi($this->conf);
         $API->setRootDir(realpath('tests-data'));
         $file = $API->getPrivateDirPath().'/users/'.$email.'.json';
-        $this->assertTrue(copy($API->getPrivateDirPath() . '/save/'.$email.'.json', $file));
+        $this->assertTrue(copy($API->getPrivateDirPath().'/save/'.$email.'.json', $file));
 
         $headers = ['Authorization' => $this->token];
         $REQUEST = [];
@@ -68,8 +67,6 @@ final class AdminApiTest extends TestCase
 
         $recordStr = '{ "name": "test role", "email": "'.$email.'", "role":"editor"}';
         $POST = ['requestbody' => $recordStr];
-
-
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
         $response = $API->processAPI();

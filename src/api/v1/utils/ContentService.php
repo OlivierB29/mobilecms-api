@@ -324,7 +324,6 @@ class ContentService
             $response->setError(400, 'Bad object parameters');
         }
 
-
         return $response;
     }
 

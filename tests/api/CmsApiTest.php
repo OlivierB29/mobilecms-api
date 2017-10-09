@@ -24,9 +24,7 @@ final class CmsApiTest extends TestCase
 
         $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-
-
-        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'}.'/users');
+        $service = new UserService(realpath('tests-data').$this->conf->{'privatedir'}.'/users');
 
         $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
@@ -83,10 +81,9 @@ final class CmsApiTest extends TestCase
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
 
-
-                $API = new CmsApi($this->conf);
-                $API->setRootDir(realpath('tests-data')); // unit test only
-        $recordStr = file_get_contents($API->getPublicDirPath() . '/big.json');
+        $API = new CmsApi($this->conf);
+        $API->setRootDir(realpath('tests-data')); // unit test only
+        $recordStr = file_get_contents($API->getPublicDirPath().'/big.json');
         //$recordStr = '{"id":"10","type" : "calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         // echo 'recordStr: ' . $this->memory();
         $POST = ['requestbody' => $recordStr];
@@ -270,7 +267,6 @@ final class CmsApiTest extends TestCase
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'DELETE', 'HTTP_ORIGIN' => 'foobar'];
         $GET = [];
         $POST = null;
-
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 

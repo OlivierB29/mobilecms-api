@@ -7,14 +7,13 @@ use PHPUnit\Framework\TestCase;
 
 final class FileApiTest extends TestCase
 {
-  private $conf;
+    private $conf;
 
     protected function setUp()
     {
         $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-
-        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'}.'/users');
+        $service = new UserService(realpath('tests-data').$this->conf->{'privatedir'}.'/users');
         $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
         $this->token = 'Bearer '.$this->user->{'token'};
@@ -90,8 +89,6 @@ final class FileApiTest extends TestCase
         $POST = ['requestbody' => $recordStr];
         unset($recordStr);
 
-
-
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
         $API->authorize($headers, $SERVER);
@@ -121,7 +118,8 @@ final class FileApiTest extends TestCase
         $POST = null;
         unset($recordStr);
 
-        $API = new FileApi($this->conf); $API->setRootDir(realpath('tests-data'));
+        $API = new FileApi($this->conf);
+        $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 

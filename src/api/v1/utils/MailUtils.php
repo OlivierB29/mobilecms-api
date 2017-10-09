@@ -2,15 +2,15 @@
 
 class MailUtils
 {
-  /**
-  * eg : /var/www/html
-  */
-  private $rootdir;
-  
-  public function __construct($rootdir)
-  {
-    $this->rootdir = $rootdir;
-  }
+    /**
+     * eg : /var/www/html.
+     */
+    private $rootdir;
+
+    public function __construct($rootdir)
+    {
+        $this->rootdir = $rootdir;
+    }
 
     public function getHeaders($from) : string
     {
@@ -24,7 +24,7 @@ class MailUtils
 
     public function getNewPassword($subject, $password, $clientinfo) : string
     {
-        $message = file_get_contents($this->rootdir . '/api/v1/mail/newpassword.html');
+        $message = file_get_contents($this->rootdir.'/api/v1/mail/newpassword.html');
         $message = str_replace('%subject%', $subject, $message);
         $message = str_replace('%password%', $password, $message);
         $message = str_replace('%clientinfo%', $clientinfo, $message);

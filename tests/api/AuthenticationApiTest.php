@@ -11,8 +11,7 @@ final class AuthenticationApiTest extends TestCase
 
     protected function setUp()
     {
-      $this->conf = json_decode(file_get_contents('tests/conf.json'));
-
+        $this->conf = json_decode(file_get_contents('tests/conf.json'));
     }
 
     public function testLogin()
@@ -26,7 +25,8 @@ final class AuthenticationApiTest extends TestCase
         $GET = null;
         $POST = ['requestbody' => $recordStr];
 
-        $API = new AuthenticationApi($this->conf); $API->setRootDir(realpath('tests-data'));
+        $API = new AuthenticationApi($this->conf);
+        $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
         $response = $API->processAPI();
@@ -46,7 +46,7 @@ final class AuthenticationApiTest extends TestCase
         $API = new AuthenticationApi($this->conf);
         $API->setRootDir(realpath('tests-data'));
 
-        $file = $API->getPrivateDirPath() . '/users/'.$email.'.json';
+        $file = $API->getPrivateDirPath().'/users/'.$email.'.json';
         if (file_exists($file)) {
             unlink($file);
         }
@@ -60,7 +60,6 @@ final class AuthenticationApiTest extends TestCase
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
         $POST = ['requestbody' => $recordStr];
-
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
         $response = $API->processAPI();
@@ -80,7 +79,7 @@ final class AuthenticationApiTest extends TestCase
         $userFile = $user.'.json';
         $API = new AuthenticationApi($this->conf);
         $API->setRootDir(realpath('tests-data'));
-        copy($API->getPrivateDirPath() . '/save/'.$userFile, $API->getPrivateDirPath() . '/users/'.$userFile);
+        copy($API->getPrivateDirPath().'/save/'.$userFile, $API->getPrivateDirPath().'/users/'.$userFile);
 
         $recordStr = '{ "user": "'.$user.'", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
 
@@ -89,8 +88,6 @@ final class AuthenticationApiTest extends TestCase
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
         $POST = ['requestbody' => $recordStr];
-
-
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
         $response = $API->processAPI();
@@ -106,7 +103,7 @@ final class AuthenticationApiTest extends TestCase
         $this->verifyChangePassword($user, $recordStr);
 
         // delete file
-        unlink($API->getPrivateDirPath() . '/users/'.$userFile);
+        unlink($API->getPrivateDirPath().'/users/'.$userFile);
     }
 
     private function verifyChangePassword($user, $recordStr)
@@ -119,7 +116,8 @@ final class AuthenticationApiTest extends TestCase
         $GET = null;
         $POST = ['requestbody' => $recordStr];
 
-        $API = new AuthenticationApi($this->conf); $API->setRootDir(realpath('tests-data'));
+        $API = new AuthenticationApi($this->conf);
+        $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
         $response = $API->processAPI();
