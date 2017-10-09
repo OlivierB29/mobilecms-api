@@ -391,8 +391,6 @@ class ContentService
         // Read the full JSON record
         $recordFile = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
 
-
-
         $record = JsonUtils::readJsonFile($recordFile);
 
         //copy some fields to index

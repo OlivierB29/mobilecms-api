@@ -213,7 +213,6 @@ class UserService
                 $saltresponse = password_hash($secretResponse, PASSWORD_BCRYPT, $options);
             }
 
-
             if ($mode === 'create') {
                 // create user
                 $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
