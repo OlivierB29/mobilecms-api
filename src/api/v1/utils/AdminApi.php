@@ -24,6 +24,8 @@ class AdminApi extends SecureRestApi
             header('Access-Control-Allow-Methods: *');
             header('Content-Type: application/json');
         }
+        $this->role = 'admin';
+
     }
 
     /**
@@ -42,7 +44,7 @@ class AdminApi extends SecureRestApi
             // eg : /api/v1/content
             $response = $this->preflight();
         } elseif (!empty($datatype)) {
-            $service = new ContentService($this->conf->{'privatedir'});
+            $service = new ContentService($this->getPrivateDirPath());
 
             // eg : /api/v1/content/calendar
             if ($this->method === 'GET') {
@@ -71,7 +73,7 @@ class AdminApi extends SecureRestApi
         $this->checkConfiguration();
         $datatype = $this->getDataType();
 
-        $service = new ContentService($this->conf->{'privatedir'});
+        $service = new ContentService($this->getPrivateDirPath());
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -97,7 +99,7 @@ class AdminApi extends SecureRestApi
                     $response = $service->getAllObjects($datatype);
                 }
             } elseif ($this->method === 'POST') {
-                $userService = new UserService($this->conf->{'privatedir'}.'/users');
+                $userService = new UserService($this->getPrivateDirPath() . '/users');
 
                 if (!empty($pathId)) {
                     // save a record and update the index. eg : /api/v1/content/calendar
@@ -232,7 +234,7 @@ class AdminApi extends SecureRestApi
      */
     private function checkConfiguration()
     {
-        if (!isset($this->conf->{'publicdir'})) {
+        if (!isset($this->conf->{'privatedir'})) {
             throw new Exception('Empty publicdir');
         }
     }

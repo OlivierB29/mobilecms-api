@@ -27,8 +27,18 @@ var basedir = '.';
  * deploy php server code to local web server
  */
 gulp.task('deploy', function() {
+  // Issue :
+  // events.js:160
+  //       throw er; // Unhandled 'error' event
+  //       ^
+  //
+  // Error: EPERM: operation not permitted, chmod '/var/www/html'
+  //     at Error (native)
+  //
+  // -->  create /var/www/html with the current user
 
   // copy PHP and .htaccess
+  //
   var srcPath = [basedir + '/src/**/.*', basedir + '/src/**'];
   var destPath = serverDeployDir + '/' + projectName;
 
@@ -102,6 +112,6 @@ gulp.task('default', function() {
 
   console.log('Server : check directories, and then \n gulp deploy');
   console.log('Tests :\n gulp test-utils test-api');
-  console.log('Sampledata :\n gulp sampledata sampleprivate');
+  console.log('Sampledata :\n gulp samplepublic sampleprivate');
 
 });

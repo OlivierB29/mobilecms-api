@@ -1,8 +1,8 @@
 {
     "name": "updated",
     "email": "modifypasssword@example.com",
-    "password": "$2y$12$5KJDryR5\/AlSH.zcyRW55u2bLOTCXy76ykEmoCWYAVkLAi8OC84Jm",
-    "salt": "q64advA7gNwv9QAMc5BU4EAh\/3yvL6M6B4Tb5nXRp7kt4bz3UE+SmP9lOl77kclHaUPDwfpAPsDbhs2dp8BNMr+WWhqJ0VI\/gcRSqRVjt7143MWGjkT8IB+DXXWN8ZxgdTLQ8rJkLMZMejmO+at4n1kR7S\/jWu+2p3w8xJDXnaE=",
+    "password": "$2y$12$xhyatV24LYIsFzR9dMY4p.61jScJsMDTAsaCnHGJEekJrexLx7yZ6",
+    "salt": "4qZ\/14GdAskFe628\/4CH4NgfuVpkif6PmqqjdXCgWP6N0zuqL3ewhzfxfXWaAecLvP7JZT0z1pKkemx3BI7ohjEv3Ul5RxzN4eUxCZHz9c5yKg1iWevRj\/jKayNZY1WFsWTwZVz2LAxVQgm6m9MMFo9AhTmq42so\/Z8XChrjHxc=",
     "secretQuestion": "some secret",
     "secretResponse": "$2y$12$JFA5Vs\/Zg9Vxt2hLSctWR.xrojdfVMSqmRNbs67tBCTYnx\/L6z4l.",
     "role": "guest",

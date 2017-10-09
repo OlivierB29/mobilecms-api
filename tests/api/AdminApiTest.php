@@ -22,17 +22,10 @@ final class AdminApiTest extends TestCase
         $this->memory1 = 0;
         $this->memory2 = 0;
 
-        $this->conf = json_decode('{}');
-        $this->conf->{'enableheaders'} = 'false';
-        $this->conf->{'enableapikey'} = 'false';
-        $this->conf->{'enablecleaninputs'} = 'true';
-        $this->conf->{'postformdata'} = 'true'; // use classic post for tests
-        $this->conf->{'role'} = 'admin';
-        $this->conf->{'publicdir'} = HOME.'/tests-data/public';
-        $this->conf->{'privatedir'} = HOME.'/tests-data/private';
-        $this->conf->{'apikeyfile'} = HOME.'/tests-data/private/apikeys/key1.json';
+        $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-        $service = new UserService($this->conf->{'privatedir'}.'/users');
+
+        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'}.'/users');
 
         $response = $service->getToken('admin@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
@@ -62,9 +55,11 @@ final class AdminApiTest extends TestCase
     {
         $email = 'role@example.com';
         $path = '/adminapi/v1/content/users/'.$email;
-        $file = $this->conf->{'privatedir'}.'/users/'.$email.'.json';
 
-        $this->assertTrue(copy($this->conf->{'privatedir'}.'/save/'.$email.'.json', $file));
+        $API = new AdminApi($this->conf);
+        $API->setRootDir(realpath('tests-data'));
+        $file = $API->getPrivateDirPath().'/users/'.$email.'.json';
+        $this->assertTrue(copy($API->getPrivateDirPath() . '/save/'.$email.'.json', $file));
 
         $headers = ['Authorization' => $this->token];
         $REQUEST = [];
@@ -74,7 +69,7 @@ final class AdminApiTest extends TestCase
         $recordStr = '{ "name": "test role", "email": "'.$email.'", "role":"editor"}';
         $POST = ['requestbody' => $recordStr];
 
-        $API = new AdminApi($this->conf);
+
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
         $response = $API->processAPI();

@@ -22,17 +22,11 @@ final class CmsApiTest extends TestCase
         $this->memory1 = 0;
         $this->memory2 = 0;
 
-        $this->conf = json_decode('{}');
-        $this->conf->{'enableheaders'} = 'false';
-        $this->conf->{'enableapikey'} = 'false';
-        $this->conf->{'publicdir'} = HOME.'/tests-data/public';
-        $this->conf->{'privatedir'} = HOME.'/tests-data/private';
-        $this->conf->{'postformdata'} = 'true'; // use classic post for tests
-        $this->conf->{'enablecleaninputs'} = 'true';
-        $this->conf->{'role'} = 'editor';
-        $this->conf->{'apikeyfile'} = HOME.'/tests-data/private/apikeys/key1.json';
+        $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-        $service = new UserService($this->conf->{'privatedir'}.'/users');
+
+
+        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'}.'/users');
 
         $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
@@ -65,6 +59,7 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
+        $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
         $response = $API->processAPI();
@@ -87,13 +82,16 @@ final class CmsApiTest extends TestCase
         $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
-        $recordStr = file_get_contents($this->conf->{'publicdir'}.'/big.json');
+
+
+                $API = new CmsApi($this->conf);
+                $API->setRootDir(realpath('tests-data')); // unit test only
+        $recordStr = file_get_contents($API->getPublicDirPath() . '/big.json');
         //$recordStr = '{"id":"10","type" : "calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         // echo 'recordStr: ' . $this->memory();
         $POST = ['requestbody' => $recordStr];
         unset($recordStr);
 
-        $API = new CmsApi($this->conf);
         // echo 'new CmsApi: ' . $this->memory();
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
@@ -151,6 +149,7 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
+        $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
         $response = $API->processAPI();
@@ -171,6 +170,7 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
+        $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
         $response = $API->processAPI();
@@ -193,6 +193,7 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
+        $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
         $response = $API->processAPI();
@@ -216,6 +217,7 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
+        $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
         $response = $API->processAPI();
@@ -233,6 +235,7 @@ final class CmsApiTest extends TestCase
         $POST = null;
 
         $API = new CmsApi($this->conf);
+        $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
         $response = $API->processAPI();
@@ -250,8 +253,9 @@ final class CmsApiTest extends TestCase
     public function testDelete()
     {
         $id = 'exampleid';
-
-        $dir = $this->conf->{'publicdir'};
+        $API = new CmsApi($this->conf);
+        $API->setRootDir(realpath('tests-data')); // unit test only
+        $dir = $API->getPublicDirPath();
 
         //clone backup to directory
         $recordfile = $dir.'/calendar/'.$id.'.json';
@@ -267,7 +271,6 @@ final class CmsApiTest extends TestCase
         $GET = [];
         $POST = null;
 
-        $API = new CmsApi($this->conf);
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 

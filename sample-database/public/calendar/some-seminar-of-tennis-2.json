@@ -1,6 +1,7 @@
 {
     "id": "some-seminar-of-tennis-2",
     "date": "2015-09-01",
+    "enddate": "2015-09-01",
     "activity": "tennis",
     "title": "some seminar of tennis 2",
     "organization": "Some org",

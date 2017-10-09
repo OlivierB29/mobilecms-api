@@ -83,6 +83,17 @@ abstract class RestApi
     protected $headers = null;
 
     /**
+     *
+     */
+    protected $debugHttpApi = true;
+
+
+    protected $rootDir = '';
+
+    protected $publicDir = '';
+
+
+    /**
      * /api/v1/content/save
      * eg : /restapi/v1/recipe/cake/foo/bar.
      * http://localhost/restapi/v1/file/?file=news/index/metadata.json.
@@ -143,6 +154,50 @@ abstract class RestApi
         if (!empty($this->conf->{'postformdata'}) && 'true' === $this->conf->{'postformdata'}) {
             $this->postformdata = true;
         }
+
+
+        if ($this->enableHeaders) {
+
+          if (!empty($this->conf->{'crossdomain'}) && 'true' === $this->conf->{'crossdomain'}) {
+            header('Access-Control-Allow-Origin: *');
+          }
+
+          header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
+          header('Access-Control-Allow-Headers: Content-Type');
+
+          // Requests from the same server don't have a HTTP_ORIGIN header
+          if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
+              $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
+          }
+
+          if (!empty($this->conf->{'https'}) && 'true' === $this->conf->{'https'}) {
+            //
+            // HTTPS
+            //
+
+                //http://stackoverflow.com/questions/85816/how-can-i-force-users-to-access-my-page-over-https-instead-of-http/12145293#12145293
+                // iis sets HTTPS to 'off' for non-SSL requests
+                if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+                    header('Strict-Transport-Security: max-age=31536000');
+                } else {
+                    header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], true, 301);
+                    // we are in cleartext at the moment, prevent further execution and output
+                    die();
+                }
+
+          }
+        }
+
+
+
+        if (!empty($this->conf->{'errorlog'}) && 'true' === $this->conf->{'errorlog'}) {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 'On');
+            ini_set('log_errors', 'On');
+        }
+
+
+        $this->rootDir = $_SERVER['DOCUMENT_ROOT'];
     }
 
     /**
@@ -198,7 +253,7 @@ abstract class RestApi
                 if ($this->postformdata === true) {
                     $this->request = $this->enableCleanInputs ? $this->_cleanInputs($POST) : $POST;
                 } else {
-                    $this->request = file_get_contents('php://input');
+                    $this->request = $this->enableCleanInputs ? $this->_cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
                 }
                 break;
             case 'OPTIONS':
@@ -211,7 +266,7 @@ abstract class RestApi
                 $this->request = $this->enableCleanInputs ? $this->_cleanInputs($GET) : $GET;
                 //$this->request = $this->_cleanInputs($GET);
                 // http://php.net/manual/en/wrappers.php.php
-                $this->file = file_get_contents('php://input');
+
                 break;
             default:
                 $this->_response('Invalid Method', 405);
@@ -241,19 +296,44 @@ abstract class RestApi
     /**
      * Parse class, and call the method with the endpoint name.
      */
-    public function processAPI()
+    public function processAPI(): Response
     {
-        $apiResponse = null;
+        $apiResponse = $this->getDefaultResponse();
         if (method_exists($this, $this->endpoint)) {
             $apiResponse = $this->{$this->endpoint} ($this->args);
-            if (isset($apiResponse) && $apiResponse instanceof Response) {
-                return $this->_responseObj($apiResponse);
-            } else {
-                return $this->_response('{"Empty response" : '.'"'.$this->endpoint.'"}', 503);
-            }
         }
 
-        return $this->_response("No Endpoint: $this->endpoint", 404);
+        return $apiResponse;
+    }
+
+    public function execute()
+    {
+
+      $status = 400;
+      $responseBody = null;
+      try {
+          $this->setRequest();
+
+          $response = $this->processAPI();
+          $responseBody = $response->getResult();
+          $status = $response->getCode();
+
+      } catch (Exception $e) {
+        // security : clear variables on exception
+
+          $status = 500;
+          error_log($e->getMessage());
+          if ($this->debugHttpApi) {
+            $responseBody = json_encode(['error' => $e->getMessage(),]);
+          } else {
+            // security : should not display to much error reporting to an attacker
+            $responseBody =  json_encode(['error' => 'internal error',]);
+          }
+      } finally {
+        http_response_code($status);
+        echo $responseBody;
+      }
+
     }
 
     /**
@@ -262,30 +342,36 @@ abstract class RestApi
      * @param $data : string data
      * @param $status : http code
      */
-    protected function _response($data = null, $status = 0)
-    {
-        if ($this->enableHeaders && $status > 0) {
-            header('HTTP/1.1 '.$status.' '.$this->_requestStatus($status));
-        }
+    // protected function _response_old($data = null, $status = 0)
+    // {
+    //     if ($this->enableHeaders && $status > 0) {
+    //         header('HTTP/1.1 '.$status.' '.$this->_requestStatus($status));
+    //     }
+    //
+    //     //each endpoint should prepare an encoded response
+    //     return $data;
+    // }
 
-        //each endpoint should prepare an encoded response
-        return $data;
-    }
+    // protected function _response($data = null, $status = 0)
+    // {
+    //
+    //     return $data;
+    // }
 
     /**
      * send JSON response.
      *
      * @param $response : response from service or API
      */
-    protected function _responseObj($response)
-    {
-        if ($this->enableHeaders && $response->getCode() > 0) {
-            header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
-        }
-
-        //each endpoint should prepare an encoded response
-        return $response;
-    }
+    // protected function _responseObj($response)
+    // {
+    //     if ($this->enableHeaders && $response->getCode() > 0) {
+    //         header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
+    //     }
+    //
+    //     //each endpoint should prepare an encoded response
+    //     return $response;
+    // }
 
     /**
      * @param $data resquest body
@@ -309,21 +395,21 @@ abstract class RestApi
      *
      * @return code and text
      */
-    private function _requestStatus($code)
-    {
-        $status = [
-                200 => 'OK',
-                400 => 'Bad Request',
-                401 => 'Unauthorized',
-                403 => 'Forbidden',
-                404 => 'Not Found',
-                405 => 'Method Not Allowed',
-                500 => 'Internal Server Error',
-                503 => 'Service unavailable',
-        ];
-
-        return (array_key_exists($code, $status)) ? $status[$code] : $status[500];
-    }
+    // private function _requestStatus($code)
+    // {
+    //     $status = [
+    //             200 => 'OK',
+    //             400 => 'Bad Request',
+    //             401 => 'Unauthorized',
+    //             403 => 'Forbidden',
+    //             404 => 'Not Found',
+    //             405 => 'Method Not Allowed',
+    //             500 => 'Internal Server Error',
+    //             503 => 'Service unavailable',
+    //     ];
+    //
+    //     return (array_key_exists($code, $status)) ? $status[$code] : $status[500];
+    // }
 
     /**
      * @param $msg : some message
@@ -365,5 +451,22 @@ abstract class RestApi
         } else {
             return $this->request;
         }
+    }
+
+    public function setRootDir($rootDir) {
+      $this->rootDir = $rootDir;
+    }
+
+
+    public function getRootDir() {
+      return $this->rootDir;
+    }
+
+    public function getPublicDirPath() {
+      return $this->rootDir . $this->conf->{'publicdir'};
+    }
+
+    public function getPrivateDirPath() {
+      return $this->rootDir . $this->conf->{'privatedir'};
     }
 }

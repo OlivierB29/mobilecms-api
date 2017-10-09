@@ -13,15 +13,8 @@ class FileApi extends SecureRestApi
      */
     private $media;
 
-    /**
-     * home dir.
-     */
-    private $homedir;
 
-    /**
-     * media directory (eg: /var/www/html/media ).
-     */
-    private $mediadir;
+
 
     /**
      * Default umask for directories and files.
@@ -39,11 +32,8 @@ class FileApi extends SecureRestApi
         if ($this->enableHeaders) {
             header('Access-Control-Allow-Methods: *');
         }
-        $this->homedir = $this->conf->{'homedir'};
 
         $this->media = $this->conf->{'media'};
-
-        $this->mediadir = $this->conf->{'homedir'}.'/'.$this->media;
     }
 
     /**
@@ -76,11 +66,8 @@ class FileApi extends SecureRestApi
                     $service = new FileService();
 
                     // update files description
-                    // media/calendar/1
-                    $uridir = $this->media.'/'.$datatype.'/'.$id;
-
                     // /var/www/html/media/calendar/1
-                    $destdir = $this->homedir.'/'.$uridir;
+                    $destdir = $this->getRecordDirPath($datatype, $id);
 
                     $uploadResult = $service->getDescriptions($destdir);
                     $response->setCode(200);
@@ -187,11 +174,8 @@ class FileApi extends SecureRestApi
         */
         $result = json_decode('[]');
         foreach ($_FILES as $formKey => $file) {
-            // media/calendar/1
-            $uridir = $this->media.'/'.$type.'/'.$id;
+            $destdir = $this->getRecordDirPath($datatype, $id);
 
-            // /var/www/html/media/calendar/1
-            $destdir = $this->homedir.'/'.$uridir;
 
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
@@ -201,7 +185,7 @@ class FileApi extends SecureRestApi
 
             // upload
             if (isset($file['tmp_name']) && isset($file['name'])) {
-                $destfile = $destdir.'/'.$file['name'];
+                $destfile = $destdir . '/' . $file['name'];
                 if (move_uploaded_file($file['tmp_name'], $destfile)) {
                     chmod($destfile, $this->umask);
                     $title = $file['name'];
@@ -228,7 +212,7 @@ class FileApi extends SecureRestApi
      * @param $id : 123
      * @param $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
-    private function downloadFiles($type, $id, $filesStr)
+    private function downloadFiles($datatype, $id, $filesStr)
     {
         $response = $this->getDefaultResponse();
 
@@ -236,11 +220,7 @@ class FileApi extends SecureRestApi
 
         $result = json_decode('[]');
         foreach ($files as $formKey => $file) {
-            // media/calendar/1
-            $uridir = $this->media.'/'.$type.'/'.$id;
-
-            // /var/www/html/media/calendar/1
-            $destdir = $this->homedir.'/'.$uridir;
+            $destdir = $this->getRecordDirPath($datatype, $id);
 
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
@@ -252,7 +232,7 @@ class FileApi extends SecureRestApi
             if (isset($file->{'url'})) {
                 $current = file_get_contents($file->{'url'});
                 // get foobar.html from http://something.com/[...]/foobar.html
-                $destfile = $destdir.'/'.basename($file->{'url'});
+                $destfile = $destdir . '/' . basename($file->{'url'});
 
                 if (file_put_contents($destfile, $current)) {
                     chmod($destfile, $this->umask);
@@ -318,8 +298,8 @@ class FileApi extends SecureRestApi
 
     private function checkConfiguration()
     {
-        if (!isset($this->conf->{'homedir'})) {
-            throw new Exception('Empty publicdir');
+        if (!isset($this->conf->{'media'})) {
+            throw new Exception('Empty media dir');
         }
     }
 
@@ -330,7 +310,7 @@ class FileApi extends SecureRestApi
      * @param $id 123
      * @param * @param $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
-    private function deleteFiles($type, $id, $filesStr)
+    private function deleteFiles($datatype, $id, $filesStr)
     {
         $response = $this->getDefaultResponse();
 
@@ -339,16 +319,14 @@ class FileApi extends SecureRestApi
         $result = json_decode('[]');
 
         foreach ($files as $formKey => $file) {
-            // media/calendar/1
-            $uridir = $this->media.'/'.$type.'/'.$id;
 
             // /var/www/html/media/calendar/1
-            $destdir = $this->homedir.'/'.$uridir;
+            $destdir = $this->getRecordDirPath($datatype, $id);
 
             // upload
             if (isset($file->{'url'})) {
                 // get foobar.html from http://something.com/[...]/foobar.html
-                $destfile = $destdir.'/'.basename($file->{'url'});
+                $destfile = $destdir . '/' . basename($file->{'url'});
                 if (file_exists($destfile)) {
                     if (!unlink($destfile)) {
                         throw new Exception('delete '.$file['url'].' KO');
@@ -382,5 +360,23 @@ class FileApi extends SecureRestApi
         header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
         return $response;
+    }
+
+    /**
+    * main storage directory.
+    * @return eg : // /var/www/html/media
+    */
+    public function getMediaDirPath()
+    {
+        return $this->getRootDir() . $this->conf->{'media'};
+    }
+
+    /**
+    * record storage directory.
+    * @return eg : // /var/www/html/media/calendar/1
+    */
+    public function getRecordDirPath($type, $id)
+    {
+        return $this->getMediaDirPath() . '/' . $type . '/' . $id;
     }
 }

@@ -11,13 +11,31 @@ require_once 'MailUtils.php';
  */
 class AuthenticationApi extends RestApi
 {
+
+    private $debugResetPassword = false;
+
+    private $enablemail = false;
+
+
     /**
      * @param $conf JSON configuration
      */
     public function __construct($conf)
     {
         parent::__construct($conf);
-    }
+
+
+        // Default value is true
+        if (!empty($this->conf->{'debugnotifications'}) && 'false' === $this->conf->{'debugnotifications'}) {
+            $this->$debugResetPassword = true;
+        }
+
+        if (!empty($this->conf->{'enablemail'}) && 'true' === $this->conf->{'enablemail'}) {
+            $this->enablemail = true;
+        }
+
+
+      }
 
     /**
      * base API path /authapi/v1/authenticate.
@@ -32,7 +50,7 @@ class AuthenticationApi extends RestApi
             //throw error if wrong configuration, such as empty directory
             $this->checkConfiguration();
 
-            $service = new UserService($this->conf->{'privatedir'}.'/users');
+            $service = new UserService($this->getPrivateDirPath() . '/users');
 
             // Preflight requests are send by Angular
             if ($this->method === 'OPTIONS') {
@@ -75,7 +93,7 @@ class AuthenticationApi extends RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->conf->{'privatedir'}.'/users');
+        $service = new UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -113,7 +131,7 @@ class AuthenticationApi extends RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->conf->{'privatedir'}.'/users');
+        $service = new UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -138,17 +156,17 @@ class AuthenticationApi extends RestApi
             if ($response->getCode() === 200) {
                 $u = new MailUtils();
 
-                if (null !== ENABLE_MAIL && ENABLE_MAIL === 'true') {
-                    $CR_Mail = @mail($logindata->{'user'}, 'new password', $u->getNewPassword('new password', $clearPassword, $this->getClientInfo()), $u->getHeaders(MAIL_FROM));
+                if ($this->enablemail) {
+                    $CR_Mail = @mail($logindata->{'user'}, 'new password', $u->getNewPassword('new password', $clearPassword, $this->getClientInfo()), $u->getHeaders($this->conf->{'mailsender'}));
 
                     if ($CR_Mail === false) {
                         $response->setError(500, $CR_Mail);
                     } else {
                         $response->setCode(200);
                     }
-                } elseif (null !== DEBUG_RESETPASSWORD && DEBUG_RESETPASSWORD === 'true') {
+                } elseif ($this->debugResetPassword) {
                     $tmpResponse = json_decode($response->getResult());
-                    $tmpResponse->{'notification'} = $u->getNewPassword('new password', $clearPassword, $this->getClientInfo());
+                    $tmpResponse->{'notification'} = $clearPassword;
                     $response->setResult(json_encode($tmpResponse));
                 }
             }
@@ -171,7 +189,7 @@ class AuthenticationApi extends RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->conf->{'privatedir'}.'/users');
+        $service = new UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -202,7 +220,7 @@ class AuthenticationApi extends RestApi
 
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
-        $service = new UserService($this->conf->{'privatedir'}.'/users');
+        $service = new UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -231,7 +249,7 @@ class AuthenticationApi extends RestApi
     private function checkConfiguration()
     {
         if (!isset($this->conf->{'privatedir'})) {
-            throw new Exception('Empty publicdir');
+            throw new Exception('Empty privatedir');
         }
     }
 

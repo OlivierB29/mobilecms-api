@@ -11,13 +11,8 @@ final class AuthenticationApiTest extends TestCase
 
     protected function setUp()
     {
-        $this->conf = json_decode('{}');
-        $this->conf->{'enableheaders'} = 'false';
-        $this->conf->{'enableapikey'} = 'false';
-        $this->conf->{'enablecleaninputs'} = 'false';
-        $this->conf->{'postformdata'} = 'true'; // use classic post for tests
-        $this->conf->{'privatedir'} = HOME.'/tests-data/private';
-        $this->conf->{'apikeyfile'} = HOME.'/tests-data/private/apikeys/key1.json';
+      $this->conf = json_decode(file_get_contents('tests/conf.json'));
+
     }
 
     public function testLogin()
@@ -31,7 +26,7 @@ final class AuthenticationApiTest extends TestCase
         $GET = null;
         $POST = ['requestbody' => $recordStr];
 
-        $API = new AuthenticationApi($this->conf);
+        $API = new AuthenticationApi($this->conf); $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
         $response = $API->processAPI();
@@ -48,7 +43,10 @@ final class AuthenticationApiTest extends TestCase
     public function testRegister()
     {
         $email = 'testregister@example.com';
-        $file = $this->conf->{'privatedir'}.'/users/'.$email.'.json';
+        $API = new AuthenticationApi($this->conf);
+        $API->setRootDir(realpath('tests-data'));
+
+        $file = $API->getPrivateDirPath() . '/users/'.$email.'.json';
         if (file_exists($file)) {
             unlink($file);
         }
@@ -63,7 +61,6 @@ final class AuthenticationApiTest extends TestCase
         $GET = null;
         $POST = ['requestbody' => $recordStr];
 
-        $API = new AuthenticationApi($this->conf);
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
         $response = $API->processAPI();
@@ -81,7 +78,9 @@ final class AuthenticationApiTest extends TestCase
         $path = '/api/v1/changepassword';
         $user = 'changepassword@example.com';
         $userFile = $user.'.json';
-        copy($this->conf->{'privatedir'}.'/save/'.$userFile, $this->conf->{'privatedir'}.'/users/'.$userFile);
+        $API = new AuthenticationApi($this->conf);
+        $API->setRootDir(realpath('tests-data'));
+        copy($API->getPrivateDirPath() . '/save/'.$userFile, $API->getPrivateDirPath() . '/users/'.$userFile);
 
         $recordStr = '{ "user": "'.$user.'", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
 
@@ -91,7 +90,7 @@ final class AuthenticationApiTest extends TestCase
         $GET = null;
         $POST = ['requestbody' => $recordStr];
 
-        $API = new AuthenticationApi($this->conf);
+
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
         $response = $API->processAPI();
@@ -107,7 +106,7 @@ final class AuthenticationApiTest extends TestCase
         $this->verifyChangePassword($user, $recordStr);
 
         // delete file
-        unlink($this->conf->{'privatedir'}.'/users/'.$userFile);
+        unlink($API->getPrivateDirPath() . '/users/'.$userFile);
     }
 
     private function verifyChangePassword($user, $recordStr)
@@ -120,7 +119,7 @@ final class AuthenticationApiTest extends TestCase
         $GET = null;
         $POST = ['requestbody' => $recordStr];
 
-        $API = new AuthenticationApi($this->conf);
+        $API = new AuthenticationApi($this->conf); $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
         $response = $API->processAPI();

@@ -7,19 +7,14 @@ use PHPUnit\Framework\TestCase;
 
 final class FileApiTest extends TestCase
 {
+  private $conf;
+
     protected function setUp()
     {
-        $this->conf = json_decode('{}');
-        $this->conf->{'enableheaders'} = 'false';
-        $this->conf->{'enableapikey'} = 'false';
-        $this->conf->{'postformdata'} = 'true'; // use classic post for tests
-        $this->conf->{'enablecleaninputs'} = 'true';
-        $this->conf->{'homedir'} = HOME.'/tests-data/fileapi';
-        $this->conf->{'media'} = 'media';
-        $this->conf->{'role'} = 'editor';
-        $this->conf->{'privatedir'} = HOME.'/tests-data/private';
+        $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-        $service = new UserService($this->conf->{'privatedir'}.'/users');
+
+        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'}.'/users');
         $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
         $this->token = 'Bearer '.$this->user->{'token'};
@@ -48,6 +43,7 @@ final class FileApiTest extends TestCase
         unset($recordStr);
 
         $API = new FileApi($this->conf);
+        $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
@@ -66,7 +62,7 @@ final class FileApiTest extends TestCase
         $this->assertTrue(strpos($result, '"url":"index.html"') !== false);
 
         // test download
-        $download = file_get_contents($this->conf->{'homedir'}.'/'.$this->conf->{'media'}.'/calendar/1/index.html');
+        $download = file_get_contents($API->getMediaDirPath().'/calendar/1/index.html');
         $this->assertTrue(strpos($download, 'MIT License') !== false);
     }
 
@@ -75,8 +71,11 @@ final class FileApiTest extends TestCase
         $filename = 'testdelete.pdf';
         $record = '/calendar/2';
         // tests-data/fileapi/save -> tests-data/fileapi/media/calendar/2/
-        $destfile = $this->conf->{'homedir'}.'/'.$this->conf->{'media'}.$record.'/'.$filename;
-        copy($this->conf->{'homedir'}.'/save'.'/'.$filename, $destfile);
+        $API = new FileApi($this->conf);
+        $API->setRootDir(realpath('tests-data'));
+        $destfile = $API->getMediaDirPath().$record.'/'.$filename;
+
+        copy('tests-data/fileapi/save/'.$filename, $destfile);
 
         // assert file exists before API call
         $this->assertTrue(file_exists($destfile));
@@ -91,7 +90,7 @@ final class FileApiTest extends TestCase
         $POST = ['requestbody' => $recordStr];
         unset($recordStr);
 
-        $API = new FileApi($this->conf);
+
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
@@ -122,7 +121,7 @@ final class FileApiTest extends TestCase
         $POST = null;
         unset($recordStr);
 
-        $API = new FileApi($this->conf);
+        $API = new FileApi($this->conf); $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 

@@ -13,6 +13,7 @@ class CmsApi extends SecureRestApi
     const TYPE = 'type';
     const FILE = 'file';
 
+
     /**
      * @param $conf JSON configuration
      */
@@ -27,6 +28,9 @@ class CmsApi extends SecureRestApi
         }
     }
 
+
+
+
     /**
      * @return response object
      */
@@ -37,7 +41,8 @@ class CmsApi extends SecureRestApi
         $this->checkConfiguration();
 
         $datatype = $this->getDataType();
-        $service = new ContentService($this->conf->{'publicdir'});
+
+        $service = new ContentService($this->getPublicDirPath());
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -77,10 +82,11 @@ class CmsApi extends SecureRestApi
 
         $pathId = $this->getId();
 
-        $service = new ContentService($this->conf->{'publicdir'});
+        $service = new ContentService($this->getPublicDirPath());
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
+
             // eg : /api/v1/content
             $response = $this->preflight();
         }
@@ -165,7 +171,7 @@ class CmsApi extends SecureRestApi
 
         $this->checkConfiguration();
 
-        $service = new ContentService($this->conf->{'publicdir'});
+        $service = new ContentService($this->getPublicDirPath());
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {

@@ -404,7 +404,7 @@ class UserService
      *
      * @return response object
      */
-    public function verifyToken($token, $role): Response
+    public function verifyToken($token, $requiredRole): Response
     {
         $response = $this->getDefaultResponse();
 
@@ -432,26 +432,57 @@ class UserService
 
         // verify token with secret
         if ($jwt->verifyToken($token, $user->{'salt'})) {
-            if ($role === 'editor') {
-                // verify user role
-                if ($user->{'role'} === 'editor' || $user->{'role'} === 'admin') {
-                    $response->setCode(200);
-                } else {
-                    $response->setError(403, 'wrong role');
-                }
-            } elseif ($role === 'admin') {
-                // verify user role
-                if ($user->{'role'} === 'admin') {
-                    $response->setCode(200);
-                } else {
-                    $response->setError(403, 'wrong role');
-                }
+            if ($this->isPermitted($user, $requiredRole)) {
+              $response->setCode(200);
+            } else {
+              // TODO : return 401 instead of 403 ?
+              $response->setError(403, 'wrong role');
             }
         } else {
             $response->setError(401, 'verifyToken false');
         }
 
         return $response;
+    }
+
+
+    private function isPermitted($user, $requiredRole): bool {
+      $result = false;
+      if (!empty($user) && !empty($user->{'role'}) && !empty($requiredRole)) {
+        if ($requiredRole === 'editor') {
+          $result = $this->isPermittedEditor($user);
+        }
+
+        if ($requiredRole === 'admin') {
+          $result = $this->isPermittedAdmin($user);
+        }
+      }
+      return $result;
+    }
+
+    /**
+    *
+    */
+    private function isPermittedEditor($user): bool {
+      $result = false;
+      if (!empty($user) && !empty($user->{'role'})) {
+        if ($user->{'role'} === 'editor') {
+          $result = true;
+        } else if ($user->{'role'} === 'admin') {
+          $result = true;
+        }
+      }
+      return $result;
+    }
+
+    private function isPermittedAdmin($user): bool {
+      $result = false;
+      if (!empty($user) && !empty($user->{'role'})) {
+        if ($user->{'role'} === 'admin') {
+          $result = true;
+        }
+      }
+      return $result;
     }
 
     /**

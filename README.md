@@ -27,11 +27,11 @@ Media files
 * media/calendar/id1/foobar.jpg
 
 ## Runtime Requirements
-- PHP 7
+- PHP 7.0
 
 ## Dev dependencies (optional)
-- [Composer](https://getcomposer.org/)
-- [phpunit](https://phpunit.de)
+- [Composer](https://getcomposer.org/download/)
+- [phpunit](https://phpunit.de) (use composer)
 - [Gulp](https://gulpjs.com/)
 
 ## Manual install
@@ -60,10 +60,9 @@ Copy code and sample data
 - copy src/api to web server to the web directory eg: www/adminapp/api
 
 ## Running unit tests
-- [phpunit](https://phpunit.de) 6.1+
 
-`phpunit --configuration phpunit-utils.xml`
-`phpunit --configuration phpunit-api.xml`
+`./vendor/bin/phpunit --configuration phpunit-utils.xml`
+`./vendor/bin/phpunit --configuration phpunit-api.xml`
 
 ## Running end-to-end tests
 - deploy to a local server
@@ -110,3 +109,14 @@ I prefer a domain name, instead of mysite.company.com
 Some entry level offers don't have any database, and <10MB of file storage, such as a domain name package.
 In future plans, with the growing data, the database may become useful.
 For now, we have 10-20 news per year, and roughly the same for calendar events.
+
+## Additional configuration
+- When running phpunit : `Class 'DOMDocument' not found`
+(https://stackoverflow.com/questions/14395239/class-domdocument-not-found#14395414)
+
+- Each request returns 404 :  [mod_rewrite](https://stackoverflow.com/questions/17745310/how-to-enable-mod-rewrite-in-lamp-on-ubuntu#17745379)
+With some distros, the file is /etc/apache2/sites-available/000-default.conf
+
+
+## TODO
+vendor/bin/phpcs --standard=CakePHP src/

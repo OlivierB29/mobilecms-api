@@ -26,16 +26,19 @@ abstract class SecureRestApi extends RestApi
      */
     private $role = 'editor';
 
+
+
     /**
      * @param $conf JSON configuration
      */
     public function __construct($conf)
     {
         parent::__construct($conf);
-        $this->role = $conf->{'role'};
+        $this->role = 'editor';
+
     }
 
-    public function processAPI()
+    public function processAPI(): Response
     {
         $response = $this->getDefaultResponse();
 
@@ -50,9 +53,9 @@ abstract class SecureRestApi extends RestApi
 
         if ($response->getCode() === 200) {
             return parent::processAPI();
-        } else {
-            return $this->_responseObj($response);
         }
+
+        return $response;
     }
 
     /**
@@ -172,7 +175,7 @@ abstract class SecureRestApi extends RestApi
             unset($bearerTokenValue);
 
             // verify token
-            $service = new UserService($this->conf->{'privatedir'}.'/users');
+            $service = new UserService($this->getPrivateDirPath() . '/users');
             $response = $service->verifyToken($tokenValue, $this->role);
 
             unset($service);
@@ -250,4 +253,6 @@ abstract class SecureRestApi extends RestApi
             }
         }
     }
+
+
 }
