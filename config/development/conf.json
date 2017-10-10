@@ -1,0 +1,15 @@
+{
+  "publicdir": "/public",
+  "privatedir": "/../private",
+  "media": "/media",
+  "crossdomain": "true",
+  "apikeyfile": "",
+  "enablecleaninputs": "true",
+  "https": "false",
+  "errorlog": "true",
+  "enableheaders": "true",
+  "enableapikey": "false",
+  "enablemail": "false",
+  "mailsender": "sendmail@example.org",
+  "debugnotifications": "true"
+}
