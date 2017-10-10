@@ -17,8 +17,8 @@ include_once 'Response.php';
 class UserService
 {
     /**
-    * database directory
-    */
+     * database directory.
+     */
     private $databasedir;
 
     /*
@@ -27,13 +27,13 @@ class UserService
     private $algorithm = 'sha512';
 
     /**
-    * default salt length
-    */
+     * default salt length.
+     */
     private $saltlength = 128;
 
     /**
-    * depends on server hardware
-    */
+     * depends on server hardware.
+     */
     private $passwordHashCost = 12;
 
     /**
@@ -45,7 +45,7 @@ class UserService
     }
 
     /**
-     * return the users directory
+     * return the users directory.
      *
      * @param email : email
      */
@@ -56,15 +56,17 @@ class UserService
         }
 
         if (!empty($email)) {
-            return $this->databasedir . '/' . strtolower($email) . '.json';
+            return $this->databasedir.'/'.strtolower($email).'.json';
         } else {
             throw new Exception('getJsonUserFile : empty email');
         }
     }
 
     /**
-     * return a JSON object of a user, null if not found
+     * return a JSON object of a user, null if not found.
+     *
      * @param email : email
+     *
      * @return user object
      */
     public function getJsonUser($email): stdClass
@@ -79,10 +81,10 @@ class UserService
             if (isset($jsonUser->{'name'}) && isset($jsonUser->{'password'})) {
                 $result = $jsonUser;
             } else {
-                throw new Exception('getJsonUser : empty user ' . $email);
+                throw new Exception('getJsonUser : empty user '.$email);
             }
         } else {
-            throw new Exception('getJsonUser : file not found ' . $file);
+            throw new Exception('getJsonUser : file not found '.$file);
         }
 
         return $result;
@@ -335,7 +337,7 @@ class UserService
             }
         } else {
             // wrong user
-            $loginmsg = 'wrong user ' . $email;
+            $loginmsg = 'wrong user '.$email;
             $debugmsg .= $email;
         }
 
@@ -389,7 +391,7 @@ class UserService
                 if (empty($updateMsg)) {
                     $response = $this->getPublicInfo($email);
                 } else {
-                    $response->setError(500, 'createUserWithSecret error ' . $updateMsg);
+                    $response->setError(500, 'createUserWithSecret error '.$updateMsg);
                 }
             } else {
                 // incorrect password
@@ -397,7 +399,7 @@ class UserService
             }
         } else {
             // wrong user
-            $loginmsg = 'wrong user ' . $email;
+            $loginmsg = 'wrong user '.$email;
             $debugmsg .= $email;
         }
 
@@ -457,11 +459,13 @@ class UserService
     }
 
     /**
-    * Control if the current user has access to API
-    * @param user object
-    * @param requiredRole required role
-    * @return true if access is authorized
-    */
+     * Control if the current user has access to API.
+     *
+     * @param user object
+     * @param requiredRole required role
+     *
+     * @return true if access is authorized
+     */
     private function isPermitted($user, $requiredRole): bool
     {
         $result = false;
@@ -479,10 +483,12 @@ class UserService
     }
 
     /**
-    * Control if the current user has access to an editor API
-    * @param user object
-    * @return true if access is authorized
-    */
+     * Control if the current user has access to an editor API.
+     *
+     * @param user object
+     *
+     * @return true if access is authorized
+     */
     private function isPermittedEditor($user): bool
     {
         $result = false;
@@ -498,10 +504,12 @@ class UserService
     }
 
     /**
-    * Control if the current user has access to an admin API
-    * @param user object
-    * @return true if access is authorized
-    */
+     * Control if the current user has access to an admin API.
+     *
+     * @param user object
+     *
+     * @return true if access is authorized
+     */
     private function isPermittedAdmin($user): bool
     {
         $result = false;
@@ -554,11 +562,11 @@ class UserService
             if (empty($updateMsg)) {
                 $response = $this->getPublicInfo($email);
             } else {
-                $response->setError(500, 'createUserWithSecret error ' . $updateMsg);
+                $response->setError(500, 'createUserWithSecret error '.$updateMsg);
             }
         } else {
             // wrong user
-            $loginmsg = 'wrong user ' . $email;
+            $loginmsg = 'wrong user '.$email;
             $debugmsg .= $email;
         }
 
@@ -571,8 +579,10 @@ class UserService
     }
 
     /**
-     * public info of a user
+     * public info of a user.
+     *
      * @param email user
+     *
      * @return Response public info
      */
     public function getPublicInfo($email): Response
@@ -591,8 +601,10 @@ class UserService
     }
 
     /**
-     * Generate a US-ASCII random string
+     * Generate a US-ASCII random string.
+     *
      * @param length length to generate
+     *
      * @return US-ASCII random string
      */
     public function generateRandomString($length = 10): string

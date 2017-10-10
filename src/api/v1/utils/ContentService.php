@@ -62,14 +62,14 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
+        $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
 
         // get one element
         if (file_exists($file)) {
             $response->setResult(file_get_contents($file));
             $response->setCode(200);
         } else {
-            $response->setError(404, 'not found '.$type . '/' . $keyvalue);
+            $response->setError(404, 'not found '.$type.'/'.$keyvalue);
         }
 
         return $response;
@@ -86,14 +86,14 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
+        $file = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
 
         if (file_exists($file)) {
             unlink($file);
 
             $response->setCode(200);
         } else {
-            $response->setError(404, 'not found '.$type . ' : '.$keyvalue);
+            $response->setError(404, 'not found '.$type.' : '.$keyvalue);
         }
 
         return $response;
@@ -123,7 +123,7 @@ class ContentService
             throw new Exception('Invalid path '.$filename, 1);
         }
 
-        $file = $this->databasedir . '/' . $filename;
+        $file = $this->databasedir.'/'.$filename;
 
         // get one element
         if (file_exists($file)) {
@@ -153,7 +153,7 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->databasedir . '/' . $filename;
+        $file = $this->databasedir.'/'.$filename;
         $data = JsonUtils::readJsonFile($file);
 
         // get one element
@@ -165,7 +165,7 @@ class ContentService
                 $response->setCode(200);
             } else {
                 // element not found
-                $response->setError(404, 'not found '.$keyname . ' : '.$keyvalue);
+                $response->setError(404, 'not found '.$keyname.' : '.$keyvalue);
             }
         } else {
             // return all
@@ -188,7 +188,7 @@ class ContentService
 
         $thelist = [];
 
-        if ($handle = opendir($this->databasedir . '/' . $type)) {
+        if ($handle = opendir($this->databasedir.'/'.$type)) {
             while (false !== ($file = readdir($handle))) {
                 $fileObject = json_decode('{}');
                 if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
@@ -219,7 +219,7 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->databasedir . '/' . $filename;
+        $file = $this->databasedir.'/'.$filename;
         $data = JsonUtils::readJsonFile($file);
         if (isset($data)) {
             $response->setCode(200);
@@ -261,7 +261,7 @@ class ContentService
             throw new Exception('empty id', 1);
         }
 
-        return $this->databasedir . '/' . $type . '/' . $id . '.json';
+        return $this->databasedir.'/'.$type.'/'.$id.'.json';
     }
 
     /**
@@ -276,7 +276,7 @@ class ContentService
             throw new Exception('empty type', 1);
         }
 
-        return $this->databasedir . '/' . $type . '/index/index.json';
+        return $this->databasedir.'/'.$type.'/index/index.json';
     }
 
     /**
@@ -291,7 +291,7 @@ class ContentService
             throw new Exception('empty type', 1);
         }
 
-        return $this->databasedir . '/' . $type . '/index/index_template.json';
+        return $this->databasedir.'/'.$type.'/index/index_template.json';
     }
 
     /**
@@ -386,7 +386,7 @@ class ContentService
         $indexValue = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
         // Read the full JSON record
-        $recordFile = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
+        $recordFile = $this->databasedir.'/'.$type.'/'.$keyvalue.'.json';
 
         $record = JsonUtils::readJsonFile($recordFile);
 
@@ -433,11 +433,11 @@ class ContentService
 
         $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
-        if ($handle = opendir($this->databasedir . '/' . $type)) {
+        if ($handle = opendir($this->databasedir.'/'.$type)) {
             while (false !== ($file = readdir($handle))) {
                 if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
                     // Read the full JSON record
-                    $record = JsonUtils::readJsonFile($this->databasedir . '/' . $type . '/' . $file);
+                    $record = JsonUtils::readJsonFile($this->databasedir.'/'.$type.'/'.$file);
 
                     //
                     //copy some fields to index
@@ -478,7 +478,7 @@ class ContentService
             throw new Exception('empty type', 1);
         }
 
-        return $this->databasedir . '/' . $type . '/history/index-'.time() . '.json';
+        return $this->databasedir.'/'.$type.'/history/index-'.time().'.json';
     }
 
     /**
@@ -505,7 +505,7 @@ class ContentService
      */
     public function options(string $filename): string
     {
-        $file = $this->databasedir . '/' . $filename;
+        $file = $this->databasedir.'/'.$filename;
 
         return json_encode(JsonUtils::readJsonFile($file));
     }

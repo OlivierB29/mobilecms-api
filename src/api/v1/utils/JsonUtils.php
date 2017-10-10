@@ -8,8 +8,8 @@ include_once 'StringUtils.php';
 class JsonUtils
 {
     /**
-    * constructor
-    */
+     * constructor.
+     */
     public function __construct()
     {
     }
@@ -35,9 +35,9 @@ class JsonUtils
 
         try {
             if (file_exists($file) && !is_writable($file)) {
-                throw new Exception('Error opening output file' . $file);
+                throw new Exception('Error opening output file'.$file);
             }
-            $fh = fopen($file, 'w') or die('Error opening output file' . $file);
+            $fh = fopen($file, 'w') or die('Error opening output file'.$file);
             fwrite($fh, json_encode($data, JSON_PRETTY_PRINT));
             fclose($fh);
         } catch (Exception $e) {

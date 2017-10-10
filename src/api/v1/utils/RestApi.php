@@ -83,15 +83,14 @@ abstract class RestApi
     protected $headers = null;
 
     /**
-    * when enabled : send readable errors in responses.
-    */
+     * when enabled : send readable errors in responses.
+     */
     protected $displayApiErrors = true;
 
     /**
-    * root app dir
-    */
+     * root app dir.
+     */
     protected $rootDir = '';
-
 
     /**
      * /api/v1/content/save
@@ -269,7 +268,8 @@ abstract class RestApi
     }
 
     /**
-     * get current request
+     * get current request.
+     *
      * @return request
      */
     public function getRequest()
@@ -290,6 +290,7 @@ abstract class RestApi
 
     /**
      * Parse class, and call the method with the endpoint name.
+     *
      * @return response object
      */
     public function processAPI(): Response
@@ -303,11 +304,11 @@ abstract class RestApi
     }
 
     /**
-    * main function
-    * - parse request
-    * - execute backend
-    * - send response or error
-    */
+     * main function
+     * - parse request
+     * - execute backend
+     * - send response or error.
+     */
     public function execute()
     {
         $status = 400;
@@ -336,10 +337,9 @@ abstract class RestApi
         }
     }
 
-
-
     /**
-    * sanitize data
+     * sanitize data.
+     *
      * @param data resquest body
      */
     private function cleanInputs($data)
@@ -385,36 +385,40 @@ abstract class RestApi
     }
 
     /**
-    * set main working directory
-    * @param rootDir main working directory
-    */
+     * set main working directory.
+     *
+     * @param rootDir main working directory
+     */
     public function setRootDir(string $rootDir)
     {
         $this->rootDir = $rootDir;
     }
 
     /**
-    * get main working directory
-    * @return rootDir main working directory
-    */
+     * get main working directory.
+     *
+     * @return rootDir main working directory
+     */
     public function getRootDir(): string
     {
         return $this->rootDir;
     }
 
     /**
-    * get public directory
-    * @param publicdir main public directory
-    */
+     * get public directory.
+     *
+     * @param publicdir main public directory
+     */
     public function getPublicDirPath(): string
     {
         return $this->rootDir.$this->conf->{'publicdir'};
     }
 
     /**
-    * get privatedir directory
-    * @param privatedir main privatedir directory
-    */
+     * get privatedir directory.
+     *
+     * @param privatedir main privatedir directory
+     */
     public function getPrivateDirPath(): string
     {
         return $this->rootDir.$this->conf->{'privatedir'};

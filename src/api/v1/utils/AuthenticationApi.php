@@ -97,7 +97,7 @@ class AuthenticationApi extends RestApi
         }
 
         if ($this->method === 'POST') {
-                // login and get token
+            // login and get token
             // eg : { "user": "test@example.com", "password":"Sample#123456"}
 
             $logindata = json_decode($this->getRequestBody());
@@ -134,7 +134,7 @@ class AuthenticationApi extends RestApi
         }
 
         if ($this->method === 'POST') {
-                // login and get token
+            // login and get token
             // eg : { "user": "test@example.com", "password":"Sample#123456"}
 
             $logindata = json_decode($this->getRequestBody());

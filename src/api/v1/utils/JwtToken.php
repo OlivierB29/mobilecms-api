@@ -90,7 +90,7 @@ class JwtToken
      */
     private function initHeader(): string
     {
-        return base64_encode('{ "alg": "' . $this->algorithm . '","typ": "JWT"}');
+        return base64_encode('{ "alg": "'.$this->algorithm.'","typ": "JWT"}');
     }
 
     /**
@@ -104,7 +104,7 @@ class JwtToken
      */
     private function initPayload(string $username, string $email, string $role): string
     {
-        return base64_encode('{ "sub": "' . $email . '", "name": "' . $username . '", "role": "' . $role . '"}');
+        return base64_encode('{ "sub": "'.$email.'", "name": "'.$username.'", "role": "'.$role.'"}');
     }
 
     /**
@@ -113,11 +113,12 @@ class JwtToken
      * @param header header
      * @param payload payload
      * @param secretKey secretkey
+     *
      * @return default token
      */
     private function createToken(string $header, string $payload, string $secretKey): string
     {
-        return $header . '.' . $payload . '.' . $this->createSignature($header, $payload, $secretKey);
+        return $header.'.'.$payload.'.'.$this->createSignature($header, $payload, $secretKey);
     }
 
     /**
@@ -131,7 +132,7 @@ class JwtToken
      */
     private function createSignature(string $header, string $payload, string $secretKey): string
     {
-        return hash_hmac($this->algorithm, $header . '.' . $payload, $this->createSecret($secretKey));
+        return hash_hmac($this->algorithm, $header.'.'.$payload, $this->createSecret($secretKey));
     }
 
     /**
@@ -139,11 +140,12 @@ class JwtToken
      * This implementation create a valid secret for the current day.
      *
      * @param secret secret
+     *
      * @return secret and date
      */
     private function createSecret(string $secret): string
     {
-        return $secret . date('Yz');
+        return $secret.date('Yz');
     }
 
     /**
