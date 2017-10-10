@@ -1,5 +1,7 @@
 <?php
-
+/**
+* mail Utility
+*/
 class MailUtils
 {
     /**
@@ -7,52 +9,45 @@ class MailUtils
      */
     private $rootdir;
 
-    public function __construct($rootdir)
+    /**
+    * constructor
+    */
+    public function __construct(string $rootdir)
     {
         $this->rootdir = $rootdir;
     }
 
-    public function getHeaders($from) : string
+    /**
+    * @param from mail address
+    * @return mail headers
+    */
+    public function getHeaders(string $from) : string
     {
-        $headers = 'From: '.strip_tags($from)."\r\n";
-        $headers .= 'Reply-To: '.strip_tags($from)."\r\n";
-        $headers .= "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $headers = 'From: ' . strip_tags($from) . '\r\n';
+        $headers .= 'Reply-To: ' . strip_tags($from) . '\r\n';
+        $headers .= 'MIME-Version: 1.0\r\n';
+        $headers .= 'Content-Type: text/html; charset=UTF-8\r\n';
 
         return $headers;
     }
 
-    public function getNewPassword($subject, $password, $clientinfo) : string
+
+
+    /**
+    * Generate new password. Should separate technical functions and business.
+    *
+    * @param subject mail subject
+    * @param password new password
+    * @param clientinfo client data (IP, browser, ...)
+    * @return notification content
+    */
+    public function getNewPassword(string $subject, string $password, string $clientinfo) : string
     {
-        $message = file_get_contents($this->rootdir.'/api/v1/mail/newpassword.html');
+        $message = file_get_contents($this->rootdir . '/api/v1/mail/newpassword.html');
         $message = str_replace('%subject%', $subject, $message);
         $message = str_replace('%password%', $password, $message);
         $message = str_replace('%clientinfo%', $clientinfo, $message);
 
         return $message;
-    }
-
-    public function getMailData($subject, $text) : string
-    {
-        $mail_Data = '';
-        $mail_Data .= '<html>';
-        $mail_Data .= '<head>';
-        $mail_Data .= '<title>'.$subject.'</title>';
-        $mail_Data .= '</head>';
-        $mail_Data .= '<body>';
-        $mail_Data .= str_replace('\n', '<br>', $text);
-        $mail_Data .= '</body>';
-        $mail_Data .= '</html>';
-
-        return $mail_Data;
-    }
-
-    public function send($to, $from, $subject, $text)
-    {
-        return @mail($to, $Subject, $this->getMailData($subject, $text), $this->getHeaders($from));
-
-        /*if ($result === FALSE) {
-           throw new Exception('send error to ' . $to . ' ' .  $subject);
-   }*/
     }
 }

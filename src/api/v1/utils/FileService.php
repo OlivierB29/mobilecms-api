@@ -10,7 +10,7 @@ class FileService
     /**
      * Direct file children from dir.
      *
-     * @param $dir : users folder
+     * @param dir : users folder
      */
     public function getDescriptions($dir)
     {
@@ -29,8 +29,8 @@ class FileService
     /**
      * delete file JSON descriptions, if they don't exist.
      *
-     * @param $homedir : home folder
-     * @param $existing : existing descriptions
+     * @param homedir : home folder
+     * @param existing : existing descriptions
      */
     public function cleanDeletedFiles($homedir, $existing)
     {
@@ -49,8 +49,8 @@ class FileService
     /**
      * get updated file descriptions from a directory.
      *
-     * @param $dir : home folder
-     * @param $existing : existing descriptions
+     * @param dir : home folder
+     * @param existing : existing descriptions
      */
     public function updateDescriptions($dir, $existing)
     {
@@ -69,8 +69,8 @@ class FileService
     /**
      * get file info and build JSON response.
      *
-     * @param $destfile : destination file
-     * @param $title title
+     * @param destfile : destination file
+     * @param title title
      */
     public function getFileResponse($destfile, $title)
     {
@@ -92,9 +92,9 @@ class FileService
     /**
      * get real path of media files.
      *
-     * @param $mediadir eg: media
-     * @param $datatype eg: calendar
-     * @param $id eg: 1
+     * @param mediadir eg: media
+     * @param datatype eg: calendar
+     * @param id eg: 1
      *
      * @return eg : /var/www/html/media/calendar/1
      */

@@ -30,7 +30,7 @@ abstract class RestApi
     protected $enableHeaders = true;
 
     /**
-     * see _cleanInputs() below.
+     * see cleanInputs() below.
      */
     protected $enableCleanInputs = true;
 
@@ -82,11 +82,16 @@ abstract class RestApi
      */
     protected $headers = null;
 
-    protected $debugHttpApi = true;
+    /**
+    * when enabled : send readable errors in responses.
+    */
+    protected $displayApiErrors = true;
 
+    /**
+    * root app dir
+    */
     protected $rootDir = '';
 
-    protected $publicDir = '';
 
     /**
      * /api/v1/content/save
@@ -125,9 +130,9 @@ abstract class RestApi
     }
 
     /**
-     * @param $conf JSON configuration
+     * @param conf JSON configuration
      */
-    public function __construct($conf)
+    public function __construct(stdClass $conf)
     {
         if (isset($conf)) {
             $this->conf = $conf;
@@ -194,11 +199,11 @@ abstract class RestApi
      * Important : the variables are initialized in unit tests.
      * In real case, use null and the PHP variables will be used.
      *
-     * @param $REQUEST : must be the same content like the PHP variable
-     * @param $SERVER : must be the same content like the PHP variable
-     * @param $GET : must be the same content like the PHP variable
-     * @param $POST : must be the same content like the PHP variable
-     * @param $headers : http headers
+     * @param REQUEST : must be the same content like the PHP variable
+     * @param SERVER : must be the same content like the PHP variable
+     * @param GET : must be the same content like the PHP variable
+     * @param POST : must be the same content like the PHP variable
+     * @param headers : http headers
      */
     public function setRequest(array $REQUEST = null, array $SERVER = null, array $GET = null, array $POST = null, array $headers = null)
     {
@@ -240,20 +245,20 @@ abstract class RestApi
             case 'DELETE':
             case 'POST':
                 if ($this->postformdata === true) {
-                    $this->request = $this->enableCleanInputs ? $this->_cleanInputs($POST) : $POST;
+                    $this->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
                 } else {
-                    $this->request = $this->enableCleanInputs ? $this->_cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
+                    $this->request = $this->enableCleanInputs ? $this->cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
                 }
                 break;
             case 'OPTIONS':
                     $this->preflight();
                 break;
             case 'GET':
-                $this->request = $this->enableCleanInputs ? $this->_cleanInputs($GET) : $GET;
+                $this->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
                 break;
             case 'PUT':
-                $this->request = $this->enableCleanInputs ? $this->_cleanInputs($GET) : $GET;
-                //$this->request = $this->_cleanInputs($GET);
+                $this->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
+                //$this->request = $this->cleanInputs($GET);
                 // http://php.net/manual/en/wrappers.php.php
 
                 break;
@@ -264,6 +269,7 @@ abstract class RestApi
     }
 
     /**
+     * get current request
      * @return request
      */
     public function getRequest()
@@ -284,17 +290,24 @@ abstract class RestApi
 
     /**
      * Parse class, and call the method with the endpoint name.
+     * @return response object
      */
     public function processAPI(): Response
     {
         $apiResponse = $this->getDefaultResponse();
         if (method_exists($this, $this->endpoint)) {
-            $apiResponse = $this->{$this->endpoint} ($this->args);
+            $apiResponse = $this->{$this->endpoint}($this->args);
         }
 
         return $apiResponse;
     }
 
+    /**
+    * main function
+    * - parse request
+    * - execute backend
+    * - send response or error
+    */
     public function execute()
     {
         $status = 400;
@@ -311,7 +324,7 @@ abstract class RestApi
 
             $status = 500;
             error_log($e->getMessage());
-            if ($this->debugHttpApi) {
+            if ($this->displayApiErrors) {
                 $responseBody = json_encode(['error' => $e->getMessage()]);
             } else {
                 // security : should not display to much error reporting to an attacker
@@ -323,93 +336,24 @@ abstract class RestApi
         }
     }
 
-    /**
-     * send JSON response.
-     *
-     * @param $data : string data
-     * @param $status : http code
-     */
-    // protected function _response_old($data = null, $status = 0)
-    // {
-    //     if ($this->enableHeaders && $status > 0) {
-    //         header('HTTP/1.1 '.$status.' '.$this->_requestStatus($status));
-    //     }
-    //
-    //     //each endpoint should prepare an encoded response
-    //     return $data;
-    // }
 
-    // protected function _response($data = null, $status = 0)
-    // {
-    //
-    //     return $data;
-    // }
 
     /**
-     * send JSON response.
-     *
-     * @param $response : response from service or API
+    * sanitize data
+     * @param data resquest body
      */
-    // protected function _responseObj($response)
-    // {
-    //     if ($this->enableHeaders && $response->getCode() > 0) {
-    //         header('HTTP/1.1 '.$response->getCode().' '.$this->_requestStatus($response->getCode()));
-    //     }
-    //
-    //     //each endpoint should prepare an encoded response
-    //     return $response;
-    // }
-
-    /**
-     * @param $data resquest body
-     */
-    private function _cleanInputs($data)
+    private function cleanInputs($data)
     {
         $clean_input = [];
         if (is_array($data)) {
             foreach ($data as $k => $v) {
-                $clean_input[$k] = $this->_cleanInputs($v);
+                $clean_input[$k] = $this->cleanInputs($v);
             }
         } else {
             $clean_input = trim(strip_tags($data));
         }
 
         return $clean_input;
-    }
-
-    /**
-     * @param $code http status code
-     *
-     * @return code and text
-     */
-    // private function _requestStatus($code)
-    // {
-    //     $status = [
-    //             200 => 'OK',
-    //             400 => 'Bad Request',
-    //             401 => 'Unauthorized',
-    //             403 => 'Forbidden',
-    //             404 => 'Not Found',
-    //             405 => 'Method Not Allowed',
-    //             500 => 'Internal Server Error',
-    //             503 => 'Service unavailable',
-    //     ];
-    //
-    //     return (array_key_exists($code, $status)) ? $status[$code] : $status[500];
-    // }
-
-    /**
-     * @param $msg : some message
-     *
-     * @return JSON object
-     */
-    public function errorToJson(string $msg) : string
-    {
-        $json = json_decode('{}');
-
-        $json->{'error'} = $msg;
-
-        return json_encode($json);
     }
 
     /**
@@ -440,22 +384,38 @@ abstract class RestApi
         }
     }
 
-    public function setRootDir($rootDir)
+    /**
+    * set main working directory
+    * @param rootDir main working directory
+    */
+    public function setRootDir(string $rootDir)
     {
         $this->rootDir = $rootDir;
     }
 
-    public function getRootDir()
+    /**
+    * get main working directory
+    * @return rootDir main working directory
+    */
+    public function getRootDir(): string
     {
         return $this->rootDir;
     }
 
-    public function getPublicDirPath()
+    /**
+    * get public directory
+    * @param publicdir main public directory
+    */
+    public function getPublicDirPath(): string
     {
         return $this->rootDir.$this->conf->{'publicdir'};
     }
 
-    public function getPrivateDirPath()
+    /**
+    * get privatedir directory
+    * @param privatedir main privatedir directory
+    */
+    public function getPrivateDirPath(): string
     {
         return $this->rootDir.$this->conf->{'privatedir'};
     }

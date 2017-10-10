@@ -12,7 +12,7 @@ class JwtToken
     /**
      * set algorithm see http://php.net/manual/en/function.hash-algos.php.
      *
-     * @param $newval algorithm
+     * @param newval algorithm
      */
     public function setAlgorithm($newval): string
     {
@@ -32,12 +32,12 @@ class JwtToken
     /**
      * create a new token.
      *
-     * @param $username user
-     * @param $email email
-     * @param $role role
-     * @param $secretKey secret key
+     * @param username user
+     * @param email email
+     * @param role role
+     * @param secretKey secret key
      */
-    public function createTokenFromUser($username, $email, $role, $secretKey): string
+    public function createTokenFromUser(string $username, string $email, string $role, string $secretKey): string
     {
         return $this->createToken($this->initHeader(), $this->initPayload($username, $email, $role), $secretKey);
     }
@@ -45,11 +45,11 @@ class JwtToken
     /**
      * verify a token.
      *
-     * @param $token token data
-     * @param $secretKey secret key
+     * @param token token data
+     * @param secretKey secret key
      * @param success or error
      */
-    public function verifyToken($token, $secretKey): bool
+    public function verifyToken(string $token, string $secretKey): bool
     {
         $result = false;
 
@@ -69,11 +69,11 @@ class JwtToken
     }
 
     /**
-     * @param $token token data
+     * @param token token data
      *
      * @return payload part
      */
-    public function getPayload($token): string
+    public function getPayload(string $token): string
     {
         $result = '';
         $tokenArray = explode('.', $token);
@@ -90,64 +90,66 @@ class JwtToken
      */
     private function initHeader(): string
     {
-        return base64_encode('{ "alg": "'.$this->algorithm.'","typ": "JWT"}');
+        return base64_encode('{ "alg": "' . $this->algorithm . '","typ": "JWT"}');
     }
 
     /**
      * init payload with user.
      *
-     * @param $username username
-     * @param $email email
-     * @param $role role
+     * @param username username
+     * @param email email
+     * @param role role
      *
      * @return default payload
      */
     private function initPayload(string $username, string $email, string $role): string
     {
-        return base64_encode('{ "sub": "'.$email.'", "name": "'.$username.'", "role": "'.$role.'"}');
+        return base64_encode('{ "sub": "' . $email . '", "name": "' . $username . '", "role": "' . $role . '"}');
     }
 
     /**
      * Concat token fields.
      *
-     * @param $header header
-     * @param $payload payload
-     * @param $secretKey secretkey
+     * @param header header
+     * @param payload payload
+     * @param secretKey secretkey
+     * @return default token
      */
     private function createToken(string $header, string $payload, string $secretKey): string
     {
-        return $header.'.'.$payload.'.'.$this->createSignature($header, $payload, $secretKey);
+        return $header . '.' . $payload . '.' . $this->createSignature($header, $payload, $secretKey);
     }
 
     /**
      * create a signature.
      *
-     * @param $header header
-     * @param $payload payload
-     * @param $secretKey secretkey
+     * @param header header
+     * @param payload payload
+     * @param secretKey secretkey
      *
-     * @return signature
+     * @return signature data
      */
     private function createSignature(string $header, string $payload, string $secretKey): string
     {
-        return hash_hmac($this->algorithm, $header.'.'.$payload, $this->createSecret($secretKey));
+        return hash_hmac($this->algorithm, $header . '.' . $payload, $this->createSecret($secretKey));
     }
 
     /**
      * create secret.
      * This implementation create a valid secret for the current day.
      *
-     * @param $secret secret
+     * @param secret secret
+     * @return secret and date
      */
     private function createSecret(string $secret): string
     {
-        return $secret.date('Yz');
+        return $secret . date('Yz');
     }
 
     /**
      * parse header.
      *
-     * @param $payload encoded JSON
+     * @param payload encoded JSON
      *
      * @return JSON payload object
      */
@@ -159,7 +161,7 @@ class JwtToken
     /**
      * parse payload.
      *
-     * @param $payload encoded JSON
+     * @param payload encoded JSON
      *
      * @return JSON payload object
      */

@@ -16,9 +16,9 @@ class AuthenticationApi extends RestApi
     private $enablemail = false;
 
     /**
-     * @param $conf JSON configuration
+     * @param conf JSON configuration
      */
-    public function __construct($conf)
+    public function __construct(stdClass $conf)
     {
         parent::__construct($conf);
 
@@ -97,7 +97,6 @@ class AuthenticationApi extends RestApi
         }
 
         if ($this->method === 'POST') {
-
                 // login and get token
             // eg : { "user": "test@example.com", "password":"Sample#123456"}
 
@@ -135,7 +134,6 @@ class AuthenticationApi extends RestApi
         }
 
         if ($this->method === 'POST') {
-
                 // login and get token
             // eg : { "user": "test@example.com", "password":"Sample#123456"}
 
@@ -275,12 +273,12 @@ class AuthenticationApi extends RestApi
         return $response;
     }
 
-    public function getClientInfo()
+    public function getClientInfo(): string
     {
         return $this->getClientIp().' '.$_SERVER['HTTP_USER_AGENT'];
     }
 
-    public function getClientIp()
+    public function getClientIp(): string
     {
         $ipaddress = '';
         if (isset($_SERVER['HTTP_CLIENT_IP'])) {

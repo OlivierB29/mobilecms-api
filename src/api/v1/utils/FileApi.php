@@ -19,9 +19,9 @@ class FileApi extends SecureRestApi
     private $umask = 0775;
 
     /**
-     * @param $conf JSON configuration
+     * @param conf JSON configuration
      */
-    public function __construct($conf)
+    public function __construct(stdClass $conf)
     {
         parent::__construct($conf);
 
@@ -36,7 +36,7 @@ class FileApi extends SecureRestApi
     /**
      * basic file upload.
      */
-    protected function basicupload()
+    protected function basicupload(): Response
     {
         $response = $this->getDefaultResponse();
 
@@ -86,7 +86,7 @@ class FileApi extends SecureRestApi
         return $response;
     }
 
-    protected function delete()
+    protected function delete(): Response
     {
         $response = $this->getDefaultResponse();
 
@@ -119,7 +119,7 @@ class FileApi extends SecureRestApi
      * Sample request body :
      * [{ "url": "http://wwww.example.com/foobar.pdf", "title":"Foobar.pdf"}].
      */
-    protected function download()
+    protected function download(): Response
     {
         $response = $this->getDefaultResponse();
 
@@ -154,12 +154,12 @@ class FileApi extends SecureRestApi
     /**
      * upload files from $_FILES.
      *
-     * @param $type eg: calendar
-     * @param $id 123
+     * @param type eg: calendar
+     * @param id 123
      *
      * @return array of files descriptions
      */
-    private function uploadFiles($type, $id)
+    private function uploadFiles($type, $id): array
     {
         /*
       File properties example
@@ -204,11 +204,11 @@ class FileApi extends SecureRestApi
     /**
      * download files from specified URLs.
      *
-     * @param $type : news
-     * @param $id : 123
-     * @param $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
+     * @param type : news
+     * @param id : 123
+     * @param filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
-    private function downloadFiles($datatype, $id, $filesStr)
+    private function downloadFiles($datatype, $id, $filesStr): Response
     {
         $response = $this->getDefaultResponse();
 
@@ -255,11 +255,11 @@ class FileApi extends SecureRestApi
     /**
      * get file info and build JSON response.
      *
-     * @param $destfile : file
-     * @param $title : title of file
-     * @param $url : url
+     * @param destfile : file
+     * @param title : title of file
+     * @param url : url
      */
-    private function getFileResponse($destfile, $title, $url)
+    private function getFileResponse($destfile, $title, $url): stdClass
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
         $mimetype = finfo_file($finfo, $destfile);
@@ -302,11 +302,11 @@ class FileApi extends SecureRestApi
     /**
      * delete files.
      *
-     * @param $type news
-     * @param $id 123
-     * @param * @param $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
+     * @param type news
+     * @param id 123
+     * @param * @param filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
-    private function deleteFiles($datatype, $id, $filesStr)
+    private function deleteFiles($datatype, $id, $filesStr): Response
     {
         $response = $this->getDefaultResponse();
 
@@ -315,7 +315,6 @@ class FileApi extends SecureRestApi
         $result = json_decode('[]');
 
         foreach ($files as $formKey => $file) {
-
             // /var/www/html/media/calendar/1
             $destdir = $this->getRecordDirPath($datatype, $id);
 
@@ -363,7 +362,7 @@ class FileApi extends SecureRestApi
      *
      * @return eg : // /var/www/html/media
      */
-    public function getMediaDirPath()
+    public function getMediaDirPath(): string
     {
         return $this->getRootDir().$this->conf->{'media'};
     }
@@ -373,7 +372,7 @@ class FileApi extends SecureRestApi
      *
      * @return eg : // /var/www/html/media/calendar/1
      */
-    public function getRecordDirPath($type, $id)
+    public function getRecordDirPath($type, $id): string
     {
         return $this->getMediaDirPath().'/'.$type.'/'.$id;
     }

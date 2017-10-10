@@ -7,16 +7,25 @@ require_once 'ContentService.php';
  */
 class CmsApi extends SecureRestApi
 {
+    /**
+    * index subpath
+    * full path, eg : /var/www/html/public/calendar/index/index.json
+    */
     const INDEX_JSON = '/index/index.json';
 
+    /*
+    * reserved id column
+    */
     const ID = 'id';
-    const TYPE = 'type';
+
+    /*
+    */
     const FILE = 'file';
 
     /**
-     * @param $conf JSON configuration
+     * @param conf JSON configuration
      */
-    public function __construct($conf)
+    public function __construct(stdClass $conf)
     {
         parent::__construct($conf);
 
@@ -82,13 +91,11 @@ class CmsApi extends SecureRestApi
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
-
             // eg : /api/v1/content
             $response = $this->preflight();
         }
 
         if (!empty($datatype)) {
-
                 // eg : /api/v1/content/calendar
             if ($this->method === 'GET') {
                 if (!empty($pathId)) {
@@ -138,7 +145,6 @@ class CmsApi extends SecureRestApi
                     // step 1 : update Record
 
                     if ($response->getCode() === 200) {
-
                                 // step 2 : publish to index
                         $response = $service->rebuildIndex($datatype, self::ID);
                     }
@@ -197,6 +203,9 @@ class CmsApi extends SecureRestApi
         return $response;
     }
 
+    /**
+    * get type from request
+    */
     private function getDataType(): string
     {
         $datatype = '';
@@ -210,6 +219,9 @@ class CmsApi extends SecureRestApi
         return $datatype;
     }
 
+    /**
+    * get id from request
+    */
     private function getId(): string
     {
         $result = '';
@@ -220,6 +232,9 @@ class CmsApi extends SecureRestApi
         return $result;
     }
 
+    /**
+    * ensure minimal configuration values
+    */
     private function checkConfiguration()
     {
         if (!isset($this->conf->{'publicdir'})) {

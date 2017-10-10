@@ -14,7 +14,7 @@ class AdminApi extends SecureRestApi
     const EMAIL = 'email';
 
     /**
-     * @param $conf JSON configuration
+     * @param conf JSON configuration
      */
     public function __construct($conf)
     {
@@ -172,7 +172,7 @@ class AdminApi extends SecureRestApi
     /**
      * init a default user object.
      */
-    private function getDefaultUser()
+    private function getDefaultUser(): stdClass
     {
         return json_decode('{"name":"", "email":"", "password":"", "secretQuestion":"", "secretResponse":"" }');
     }
@@ -184,7 +184,7 @@ class AdminApi extends SecureRestApi
      *
      * @return JSON user string
      */
-    public function getUserResponse($userStr)
+    public function getUserResponse($userStr): string
     {
         $completeUserObj = json_decode($userStr);
         $responseUser = json_decode('{}');

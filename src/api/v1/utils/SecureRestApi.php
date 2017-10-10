@@ -27,14 +27,18 @@ abstract class SecureRestApi extends RestApi
     private $role = 'editor';
 
     /**
-     * @param $conf JSON configuration
+     * @param conf JSON configuration
      */
-    public function __construct($conf)
+    public function __construct(stdClass $conf)
     {
         parent::__construct($conf);
         $this->role = 'editor';
     }
 
+    /**
+    * override parent function
+    * @return response object
+    */
     public function processAPI(): Response
     {
         $response = $this->getDefaultResponse();
@@ -59,39 +63,39 @@ abstract class SecureRestApi extends RestApi
      * $headers : array containing result of apache_request_headers() and getallheaders(), if available.
      * Or send by test units.
      *
-     * @param $headers : send by test units.
-     * @param $SERVER : send by test units.
+     * @param headers : send by test units.
+     * @param SERVER : send by test units.
      */
-    public function authorize(array $headers = null, array $SERVER = null)
+    public function authorize(array $headers = null, array $SERVER = null): Response
     {
         $response = $this->getDefaultResponse();
         $response->setCode(401);
 
         switch ($this->method) {
-        case 'OPTIONS':
-              $response->setCode(200);
-              $response->setResult('{}');
-              break;
-        case 'GET':
-        case 'POST':
-        case 'PUT':
-        case 'DELETE':
-            $response = $this->doAuthorize($headers, $SERVER);
-            break;
-        default:
-            $response->getCode(405);
-            break;
-    }
+            case 'OPTIONS':
+                  $response->setCode(200);
+                  $response->setResult('{}');
+                break;
+            case 'GET':
+            case 'POST':
+            case 'PUT':
+            case 'DELETE':
+                $response = $this->doAuthorize($headers, $SERVER);
+                break;
+            default:
+                $response->getCode(405);
+                break;
+        }
 
         return $response;
     }
 
     /**
-     * set role.
+     * set required role.
      *
-     * @param $role editor, admin, ...
+     * @param role editor, admin, ...
      */
-    public function setRole($role)
+    public function setRole(string $role)
     {
         $this->role = $role;
     }
@@ -100,7 +104,7 @@ abstract class SecureRestApi extends RestApi
      * $headers : array containing result of apache_request_headers() and getallheaders(), if available.
      * Or send by test units.
      *
-     * @param $SERVER : send by test units.
+     * @param SERVER : send by test units.
      */
     public function doAuthorize(array $SERVER = null)
     {
@@ -152,10 +156,8 @@ abstract class SecureRestApi extends RestApi
             }
         }
 
-        //
         // USER TOKEN
         //string containing Bearer prefix and value eg : Bearer abcdef.abcdef....
-        //
         $bearerTokenValue = $this->getAuthorizationHeader();
 
         //for unit tests
@@ -192,7 +194,7 @@ abstract class SecureRestApi extends RestApi
      * Use a .htaccess file for generating HTTP_AUTHORIZATION :
      * http://php.net/manual/en/function.apache-request-headers.php
      *
-     * @param $SERVER : send same content as PHP variable when testing
+     * @param SERVER : send same content as PHP variable when testing
      */
     private function getAuthorizationHeader($SERVER = null)
     {
@@ -222,9 +224,9 @@ abstract class SecureRestApi extends RestApi
     /**
      *  token from headers.
      *
-     * @param $headerValue header value
+     * @param headerValue header value
      */
-    private function getBearerTokenValue($headerValue)
+    private function getBearerTokenValue(string $headerValue): string
     {
 
         // HEADER: Get the access token from the header
@@ -238,9 +240,9 @@ abstract class SecureRestApi extends RestApi
     /**
      * get access token from header.
      *
-     * @param $SERVER : send by test units.
+     * @param SERVER : send by test units.
      */
-    private function getBearerToken($SERVER = null)
+    private function getBearerToken($SERVER = null): string
     {
         $headers = $this->getAuthorizationHeader($SERVER);
         // HEADER: Get the access token from the header
