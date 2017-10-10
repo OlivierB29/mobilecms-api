@@ -36,9 +36,10 @@ abstract class SecureRestApi extends RestApi
     }
 
     /**
-    * override parent function
-    * @return response object
-    */
+     * override parent function.
+     *
+     * @return response object
+     */
     public function processAPI(): Response
     {
         $response = $this->getDefaultResponse();
