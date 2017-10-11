@@ -24,15 +24,15 @@ final class CmsApiTest extends TestCase
 
         $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-        $service = new UserService(realpath('tests-data').$this->conf->{'privatedir'}.'/users');
+        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
 
         $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
-        $this->token = 'Bearer '.$this->user->{'token'};
+        $this->token = 'Bearer ' . $this->user->{'token'};
 
         $response = $service->getToken('guest@example.com', 'Sample#123456');
         $this->guest = json_decode($response->getResult());
-        $this->guesttoken = 'Bearer '.$this->guest->{'token'};
+        $this->guesttoken = 'Bearer ' . $this->guest->{'token'};
 
         $this->memory();
     }
@@ -83,7 +83,7 @@ final class CmsApiTest extends TestCase
 
         $API = new CmsApi($this->conf);
         $API->setRootDir(realpath('tests-data')); // unit test only
-        $recordStr = file_get_contents($API->getPublicDirPath().'/big.json');
+        $recordStr = file_get_contents($API->getPublicDirPath() . '/big.json');
         //$recordStr = '{"id":"10","type" : "calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         // echo 'recordStr: ' . $this->memory();
         $POST = ['requestbody' => $recordStr];
@@ -255,10 +255,10 @@ final class CmsApiTest extends TestCase
         $dir = $API->getPublicDirPath();
 
         //clone backup to directory
-        $recordfile = $dir.'/calendar/'.$id.'.json';
-        copy($dir.'/calendar/backup/'.$id.'.json', $recordfile);
+        $recordfile = $dir . '/calendar/' . $id . '.json';
+        copy($dir . '/calendar/backup/' . $id . '.json', $recordfile);
 
-        $path = '/restapi/v1/content/calendar/'.$id;
+        $path = '/restapi/v1/content/calendar/' . $id;
 
         $recordStr = '';
 
@@ -277,7 +277,7 @@ final class CmsApiTest extends TestCase
 
         $this->assertTrue(!file_exists($recordfile));
 
-        $index_data = file_get_contents($dir.'/calendar/index/index.json');
+        $index_data = file_get_contents($dir . '/calendar/index/index.json');
 
         $this->assertTrue(!strpos($index_data, $id));
     }

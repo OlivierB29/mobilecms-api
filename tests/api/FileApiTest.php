@@ -13,10 +13,10 @@ final class FileApiTest extends TestCase
     {
         $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-        $service = new UserService(realpath('tests-data').$this->conf->{'privatedir'}.'/users');
+        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
         $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
-        $this->token = 'Bearer '.$this->user->{'token'};
+        $this->token = 'Bearer ' . $this->user->{'token'};
     }
 
     public function testDownload()
@@ -61,7 +61,7 @@ final class FileApiTest extends TestCase
         $this->assertTrue(strpos($result, '"url":"index.html"') !== false);
 
         // test download
-        $download = file_get_contents($API->getMediaDirPath().'/calendar/1/index.html');
+        $download = file_get_contents($API->getMediaDirPath() . '/calendar/1/index.html');
         $this->assertTrue(strpos($download, 'MIT License') !== false);
     }
 
@@ -72,9 +72,9 @@ final class FileApiTest extends TestCase
         // tests-data/fileapi/save -> tests-data/fileapi/media/calendar/2/
         $API = new FileApi($this->conf);
         $API->setRootDir(realpath('tests-data'));
-        $destfile = $API->getMediaDirPath().$record.'/'.$filename;
+        $destfile = $API->getMediaDirPath() . $record . '/' . $filename;
 
-        copy('tests-data/fileapi/save/'.$filename, $destfile);
+        copy('tests-data/fileapi/save/' . $filename, $destfile);
 
         // assert file exists before API call
         $this->assertTrue(file_exists($destfile));

@@ -45,7 +45,7 @@ final class ContentServiceTest extends TestCase
         $service = new ContentService($this->dir);
         $response = $service->post('calendar', 'id', $recordStr);
 
-        $file = $this->dir.'/calendar/10.json';
+        $file = $this->dir . '/calendar/10.json';
 
         $this->assertEquals(200, $response->getCode());
 
@@ -73,8 +73,8 @@ final class ContentServiceTest extends TestCase
         $response = $service->rebuildIndex('calendar', 'id');
 
         if ($response->getCode() !== 200) {
-            echo  '!!!!!!!!!!!'.$response->getResult();
-            echo '!!!!!!!!!!!'.$response->getMessage();
+            echo  '!!!!!!!!!!!' . $response->getResult();
+            echo '!!!!!!!!!!!' . $response->getMessage();
         }
 
         $this->assertEquals(200, $response->getCode());

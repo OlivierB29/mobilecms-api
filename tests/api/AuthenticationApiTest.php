@@ -46,7 +46,7 @@ final class AuthenticationApiTest extends TestCase
         $API = new AuthenticationApi($this->conf);
         $API->setRootDir(realpath('tests-data'));
 
-        $file = $API->getPrivateDirPath().'/users/'.$email.'.json';
+        $file = $API->getPrivateDirPath() . '/users/' . $email . '.json';
         if (file_exists($file)) {
             unlink($file);
         }
@@ -76,12 +76,12 @@ final class AuthenticationApiTest extends TestCase
     {
         $path = '/api/v1/changepassword';
         $user = 'changepassword@example.com';
-        $userFile = $user.'.json';
+        $userFile = $user . '.json';
         $API = new AuthenticationApi($this->conf);
         $API->setRootDir(realpath('tests-data'));
-        copy($API->getPrivateDirPath().'/save/'.$userFile, $API->getPrivateDirPath().'/users/'.$userFile);
+        copy($API->getPrivateDirPath() . '/save/' . $userFile, $API->getPrivateDirPath() . '/users/' . $userFile);
 
-        $recordStr = '{ "user": "'.$user.'", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
+        $recordStr = '{ "user": "' . $user . '", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
 
         $REQUEST = ['path' => $path];
         $headers = [];
@@ -96,14 +96,14 @@ final class AuthenticationApiTest extends TestCase
         $this->assertTrue($result != null && $result != '');
 
         // test new password with login
-        $loginRecordStr = '{ "email": "'.$user.'", "password":"Foobar!654321"}';
+        $loginRecordStr = '{ "email": "' . $user . '", "password":"Foobar!654321"}';
 
         $recordStr = '{ "user": "changepassword@example.com", "password":"Foobar!654321"}';
 
         $this->verifyChangePassword($user, $recordStr);
 
         // delete file
-        unlink($API->getPrivateDirPath().'/users/'.$userFile);
+        unlink($API->getPrivateDirPath() . '/users/' . $userFile);
     }
 
     private function verifyChangePassword($user, $recordStr)

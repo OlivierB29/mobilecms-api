@@ -194,7 +194,7 @@ class FileApi extends SecureRestApi
 
             // upload
             if (isset($file['tmp_name']) && isset($file['name'])) {
-                $destfile = $destdir.'/'.$file['name'];
+                $destfile = $destdir . '/' . $file['name'];
                 if (move_uploaded_file($file['tmp_name'], $destfile)) {
                     chmod($destfile, $this->umask);
                     $title = $file['name'];
@@ -202,7 +202,7 @@ class FileApi extends SecureRestApi
                     $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
-                    throw new Exception($file['name'].' KO');
+                    throw new Exception($file['name'] . ' KO');
                 }
             }
         }
@@ -241,7 +241,7 @@ class FileApi extends SecureRestApi
             if (isset($file->{'url'})) {
                 $current = file_get_contents($file->{'url'});
                 // get foobar.html from http://something.com/[...]/foobar.html
-                $destfile = $destdir.'/'.basename($file->{'url'});
+                $destfile = $destdir . '/' . basename($file->{'url'});
 
                 if (file_put_contents($destfile, $current)) {
                     chmod($destfile, $this->umask);
@@ -250,7 +250,7 @@ class FileApi extends SecureRestApi
                     $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
-                    throw new Exception($file['name'].' KO');
+                    throw new Exception($file['name'] . ' KO');
                 }
             }
         }
@@ -339,16 +339,16 @@ class FileApi extends SecureRestApi
             // upload
             if (isset($file->{'url'})) {
                 // get foobar.html from http://something.com/[...]/foobar.html
-                $destfile = $destdir.'/'.basename($file->{'url'});
+                $destfile = $destdir . '/' . basename($file->{'url'});
                 if (file_exists($destfile)) {
                     if (!unlink($destfile)) {
-                        throw new Exception('delete '.$file['url'].' KO');
+                        throw new Exception('delete ' . $file['url'] . ' KO');
                     }
                 } else {
                     // TODO add message
                 }
             } else {
-                throw new Exception('wrong file '.$file['url'].' KO');
+                throw new Exception('wrong file ' . $file['url'] . ' KO');
             }
         }
 
@@ -383,7 +383,7 @@ class FileApi extends SecureRestApi
      */
     public function getMediaDirPath(): string
     {
-        return $this->getRootDir().$this->conf->{'media'};
+        return $this->getRootDir() . $this->conf->{'media'};
     }
 
     /**
@@ -393,6 +393,6 @@ class FileApi extends SecureRestApi
      */
     public function getRecordDirPath($type, $id): string
     {
-        return $this->getMediaDirPath().'/'.$type.'/'.$id;
+        return $this->getMediaDirPath() . '/' . $type . '/' . $id;
     }
 }
