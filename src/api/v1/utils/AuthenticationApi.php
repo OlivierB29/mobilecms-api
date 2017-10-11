@@ -53,7 +53,7 @@ class AuthenticationApi extends RestApi
             //throw error if wrong configuration, such as empty directory
             $this->checkConfiguration();
 
-            $service = new UserService($this->getPrivateDirPath().'/users');
+            $service = new UserService($this->getPrivateDirPath() . '/users');
 
             // Preflight requests are send by Angular
             if ($this->method === 'OPTIONS') {
@@ -96,7 +96,7 @@ class AuthenticationApi extends RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->getPrivateDirPath().'/users');
+        $service = new UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -133,7 +133,7 @@ class AuthenticationApi extends RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->getPrivateDirPath().'/users');
+        $service = new UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -190,7 +190,7 @@ class AuthenticationApi extends RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->getPrivateDirPath().'/users');
+        $service = new UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -221,7 +221,7 @@ class AuthenticationApi extends RestApi
 
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
-        $service = new UserService($this->getPrivateDirPath().'/users');
+        $service = new UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -295,7 +295,7 @@ class AuthenticationApi extends RestApi
      */
     public function getClientInfo(): string
     {
-        return $this->getClientIp().' '.$_SERVER['HTTP_USER_AGENT'];
+        return $this->getClientIp() . ' ' . $_SERVER['HTTP_USER_AGENT'];
     }
 
     /**

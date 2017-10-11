@@ -60,7 +60,7 @@ class UserService
         }
 
         if (!empty($email)) {
-            return $this->databasedir.'/'.strtolower($email).'.json';
+            return $this->databasedir . '/' . strtolower($email) . '.json';
         } else {
             throw new Exception('getJsonUserFile : empty email');
         }
@@ -85,10 +85,10 @@ class UserService
             if (isset($jsonUser->{'name'}) && isset($jsonUser->{'password'})) {
                 $result = $jsonUser;
             } else {
-                throw new Exception('getJsonUser : empty user '.$email);
+                throw new Exception('getJsonUser : empty user ' . $email);
             }
         } else {
-            throw new Exception('getJsonUser : file not found '.$file);
+            throw new Exception('getJsonUser : file not found ' . $file);
         }
 
         return $result;
@@ -343,7 +343,7 @@ class UserService
             }
         } else {
             // wrong user
-            $loginmsg = 'wrong user '.$email;
+            $loginmsg = 'wrong user ' . $email;
             $debugmsg .= $email;
         }
 
@@ -397,7 +397,7 @@ class UserService
                 if (empty($updateMsg)) {
                     $response = $this->getPublicInfo($email);
                 } else {
-                    $response->setError(500, 'createUserWithSecret error '.$updateMsg);
+                    $response->setError(500, 'createUserWithSecret error ' . $updateMsg);
                 }
             } else {
                 // incorrect password
@@ -405,7 +405,7 @@ class UserService
             }
         } else {
             // wrong user
-            $loginmsg = 'wrong user '.$email;
+            $loginmsg = 'wrong user ' . $email;
             $debugmsg .= $email;
         }
 
@@ -570,11 +570,11 @@ class UserService
             if (empty($updateMsg)) {
                 $response = $this->getPublicInfo($email);
             } else {
-                $response->setError(500, 'createUserWithSecret error '.$updateMsg);
+                $response->setError(500, 'createUserWithSecret error ' . $updateMsg);
             }
         } else {
             // wrong user
-            $loginmsg = 'wrong user '.$email;
+            $loginmsg = 'wrong user ' . $email;
             $debugmsg .= $email;
         }
 

@@ -66,7 +66,7 @@ class CmsApi extends SecureRestApi
                 if (!empty($pathId)) {
                     //TODO get single index value
                 } else {
-                    $response = $service->getAll($datatype.'/index/index.json');
+                    $response = $service->getAll($datatype . '/index/index.json');
                 }
             } elseif ($this->method === 'POST') {
                 $response = $service->rebuildIndex($datatype, self::ID);

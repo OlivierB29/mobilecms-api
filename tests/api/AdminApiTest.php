@@ -24,19 +24,19 @@ final class AdminApiTest extends TestCase
 
         $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-        $service = new UserService(realpath('tests-data').$this->conf->{'privatedir'}.'/users');
+        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
 
         $response = $service->getToken('admin@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
-        $this->token = 'Bearer '.$this->user->{'token'};
+        $this->token = 'Bearer ' . $this->user->{'token'};
 
         $response = $service->getToken('guest@example.com', 'Sample#123456');
         $this->guest = json_decode($response->getResult());
-        $this->guesttoken = 'Bearer '.$this->guest->{'token'};
+        $this->guesttoken = 'Bearer ' . $this->guest->{'token'};
 
         $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->editor = json_decode($response->getResult());
-        $this->editortoken = 'Bearer '.$this->guest->{'token'};
+        $this->editortoken = 'Bearer ' . $this->guest->{'token'};
 
         $this->memory();
     }
@@ -53,19 +53,19 @@ final class AdminApiTest extends TestCase
     public function testUpdate()
     {
         $email = 'role@example.com';
-        $path = '/adminapi/v1/content/users/'.$email;
+        $path = '/adminapi/v1/content/users/' . $email;
 
         $API = new AdminApi($this->conf);
         $API->setRootDir(realpath('tests-data'));
-        $file = $API->getPrivateDirPath().'/users/'.$email.'.json';
-        $this->assertTrue(copy($API->getPrivateDirPath().'/save/'.$email.'.json', $file));
+        $file = $API->getPrivateDirPath() . '/users/' . $email . '.json';
+        $this->assertTrue(copy($API->getPrivateDirPath() . '/save/' . $email . '.json', $file));
 
         $headers = ['Authorization' => $this->token];
         $REQUEST = [];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
 
-        $recordStr = '{ "name": "test role", "email": "'.$email.'", "role":"editor"}';
+        $recordStr = '{ "name": "test role", "email": "' . $email . '", "role":"editor"}';
         $POST = ['requestbody' => $recordStr];
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);

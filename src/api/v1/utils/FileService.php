@@ -17,7 +17,7 @@ class FileService
         $result = json_decode('[]');
         $scanned_directory = array_diff(scandir($dir), ['..', '.']);
         foreach ($scanned_directory as $key => $value) {
-            $filePath = $dir.DIRECTORY_SEPARATOR.$value;
+            $filePath = $dir . DIRECTORY_SEPARATOR . $value;
             if (is_file($filePath)) {
                 array_push($result, $this->getFileResponse($filePath, $value));
             }
@@ -36,7 +36,7 @@ class FileService
     {
         $result = json_decode('[]');
         foreach ($existing as $key => $value) {
-            $filePath = $homedir.DIRECTORY_SEPARATOR.$value->{'url'};
+            $filePath = $homedir . DIRECTORY_SEPARATOR . $value->{'url'};
 
             if (is_file($filePath)) {
                 array_push($result, $value);
@@ -101,9 +101,9 @@ class FileService
     public function getRecordDirectory($mediadir, $datatype, $id): string
     {
         if (isset($mediadir) && isset($datatype) && isset($id)) {
-            return $mediadir.'/'.$datatype.'/'.$id;
+            return $mediadir . '/' . $datatype . '/' . $id;
         } else {
-            throw new Exception('getMediaDirectory mediadir:'.$mediadir.' type:'.$datatype.' id:'.$id);
+            throw new Exception('getMediaDirectory mediadir:' . $mediadir . ' type:' . $datatype . ' id:' . $id);
         }
     }
 }

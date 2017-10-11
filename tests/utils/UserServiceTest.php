@@ -90,7 +90,7 @@ final class UserServiceTest extends TestCase
         }
 
         $service = new UserService($tempdir);
-        $mail = 'test'.time().'@example.com';
+        $mail = 'test' . time() . '@example.com';
         $password = 'Sample#123456';
 
         $createresult = $service->createUserWithSecret($mail, $mail, $password, 'some secret', 'secret response', 'create');
@@ -102,7 +102,7 @@ final class UserServiceTest extends TestCase
         $userdir = 'tests-data/userservice';
         $email = 'modifypasssword@example.com';
 
-        copy($userdir.'/'.$email.'.backup.json', $userdir.'/'.$email.'.json');
+        copy($userdir . '/' . $email . '.backup.json', $userdir . '/' . $email . '.json');
 
         $oldPassword = 'Sample#123456';
 
@@ -116,7 +116,7 @@ final class UserServiceTest extends TestCase
 
         //login
         $result = $service->login($email, $newPassword);
-        echo '!!!!!'.$result;
+        echo '!!!!!' . $result;
         $this->assertTrue('' === $result);
     }
 }

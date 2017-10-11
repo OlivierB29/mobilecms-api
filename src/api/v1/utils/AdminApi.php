@@ -54,7 +54,7 @@ class AdminApi extends SecureRestApi
                 if (!empty($pathId)) {
                     //TODO get single index value
                 } else {
-                    $response = $service->getAll($datatype.'/index/index.json');
+                    $response = $service->getAll($datatype . '/index/index.json');
                 }
             } elseif ($this->method === 'POST') {
                 $response = $service->rebuildIndex($datatype, $userKey);
@@ -102,7 +102,7 @@ class AdminApi extends SecureRestApi
                     $response = $service->getAllObjects($datatype);
                 }
             } elseif ($this->method === 'POST') {
-                $userService = new UserService($this->getPrivateDirPath().'/users');
+                $userService = new UserService($this->getPrivateDirPath() . '/users');
 
                 if (!empty($pathId)) {
                     // save a record and update the index. eg : /api/v1/content/calendar
@@ -167,7 +167,7 @@ class AdminApi extends SecureRestApi
         }
         // set a timestamp response
         $tempResponse = json_decode($response->getResult());
-        $tempResponse->{'timestamp'} = ''.time();
+        $tempResponse->{'timestamp'} = '' . time();
         $response->setResult(json_encode($tempResponse));
 
         return $response;
