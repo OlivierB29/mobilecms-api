@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-
 final class AdminApiTest extends TestCase
 {
     private $user;
