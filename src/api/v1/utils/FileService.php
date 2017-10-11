@@ -3,7 +3,7 @@
 require_once 'Response.php';
 require_once 'JsonUtils.php';
 /**
- * file utility service.
+ * File utility service.
  */
 class FileService
 {
@@ -17,7 +17,7 @@ class FileService
         $result = json_decode('[]');
         $scanned_directory = array_diff(scandir($dir), ['..', '.']);
         foreach ($scanned_directory as $key => $value) {
-            $filePath = $dir.DIRECTORY_SEPARATOR.$value;
+            $filePath = $dir . DIRECTORY_SEPARATOR . $value;
             if (is_file($filePath)) {
                 array_push($result, $this->getFileResponse($filePath, $value));
             }
@@ -27,16 +27,16 @@ class FileService
     }
 
     /**
-     * delete file JSON descriptions, if they don't exist.
+     * Delete file JSON descriptions, if they don't exist.
      *
-     * @param homedir : home folder
-     * @param existing : existing descriptions
+     * @param homedir $homedir : home folder
+     * @param existing $existing : existing descriptions
      */
     public function cleanDeletedFiles($homedir, $existing)
     {
         $result = json_decode('[]');
         foreach ($existing as $key => $value) {
-            $filePath = $homedir.DIRECTORY_SEPARATOR.$value->{'url'};
+            $filePath = $homedir . DIRECTORY_SEPARATOR . $value->{'url'};
 
             if (is_file($filePath)) {
                 array_push($result, $value);
@@ -47,10 +47,10 @@ class FileService
     }
 
     /**
-     * get updated file descriptions from a directory.
+     * Get updated file descriptions from a directory.
      *
-     * @param dir : home folder
-     * @param existing : existing descriptions
+     * @param dir $dir : home folder
+     * @param existing $existing : existing descriptions
      */
     public function updateDescriptions($dir, $existing)
     {
@@ -67,10 +67,10 @@ class FileService
     }
 
     /**
-     * get file info and build JSON response.
+     * Get file info and build JSON response.
      *
-     * @param destfile : destination file
-     * @param title title
+     * @param destfile $destfile : destination file
+     * @param title $title title of file
      */
     public function getFileResponse($destfile, $title)
     {
@@ -90,20 +90,20 @@ class FileService
     }
 
     /**
-     * get real path of media files.
+     * Get real path of media files.
      *
-     * @param mediadir eg: media
-     * @param datatype eg: calendar
-     * @param id eg: 1
+     * @param string $mediadir eg: media
+     * @param string $datatype eg: calendar
+     * @param string $id eg: 1
      *
      * @return eg : /var/www/html/media/calendar/1
      */
     public function getRecordDirectory($mediadir, $datatype, $id): string
     {
         if (isset($mediadir) && isset($datatype) && isset($id)) {
-            return $mediadir.'/'.$datatype.'/'.$id;
+            return $mediadir . '/' . $datatype . '/' . $id;
         } else {
-            throw new Exception('getMediaDirectory mediadir:'.$mediadir.' type:'.$datatype.' id:'.$id);
+            throw new Exception('getMediaDirectory mediadir:' . $mediadir . ' type:' . $datatype . ' id:' . $id);
         }
     }
 }

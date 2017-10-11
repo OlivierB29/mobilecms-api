@@ -1,5 +1,5 @@
 <?php
-
+// File API endpoint
 require_once 'utils/FileApi.php';
 
 $conf = json_decode(file_get_contents('conf/conf.json'));

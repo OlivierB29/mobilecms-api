@@ -15,7 +15,7 @@ class Response
     private $code;
 
     /**
-     * constructor.
+     * Constructor.
      */
     public function __construct()
     {
@@ -23,9 +23,9 @@ class Response
     }
 
     /**
-     * set string result.
+     * Set string result.
      *
-     * @param newval set string result
+     * @param string $newval set string result
      */
     public function setResult(string $newval)
     {
@@ -33,7 +33,9 @@ class Response
     }
 
     /**
-     * @@return get string result
+     * Get result
+     * 
+     * @return get string result
      */
     public function getResult(): string
     {
@@ -41,7 +43,8 @@ class Response
     }
 
     /**
-     * @param newval set http status code
+     * Set http code
+     * @param string $newval set http status code
      */
     public function setCode(int $newval)
     {
@@ -49,7 +52,8 @@ class Response
     }
 
     /**
-     * @@return get get http status code
+     * Get http code
+     * @return get get http status code
      */
     public function getCode(): int
     {
@@ -57,10 +61,10 @@ class Response
     }
 
     /**
-     * set an error message and format to JSON.
+     * Set an error message and format it to JSON.
      *
-     * @param code http status code
-     * @param msg set error message
+     * @param string $code http status code
+     * @param string $msg set error message
      */
     public function setError(int $code, string $msg)
     {

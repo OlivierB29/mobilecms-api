@@ -8,27 +8,30 @@ include_once 'StringUtils.php';
 class JsonUtils
 {
     /**
-     * constructor.
+     * Constructor.
      */
     public function __construct()
     {
     }
 
     /**
-     * @param file : file
+     * Read a JSON file
+     * 
+     * @param string $file : file path
      *
-     * @return JSON object (array or stdClass)
+     * @return array or stdClass JSON object
      */
     public static function readJsonFile(string $file)
     {
         return json_decode(file_get_contents($file));
     }
 
-    /*
-    *  write JSON object (array or stdClass)
-    * @param file : file
-    * @param data : JSON object
-   */
+    /**
+     * Read a JSON file
+     * 
+     * @param string $file : file
+     * @param data $data : JSON object
+     */
     public static function writeJsonFile(string $file, $data)
     {
         $fh = null;
@@ -50,11 +53,11 @@ class JsonUtils
     }
 
     /**
-     * find a JSON object into a JSON array, by key=value.
+     * Find a JSON object into a JSON array, by key=value.
      *
-     * @param data : Array
-     * @param name : eg: id
-     * @param value : eg: 123
+     * @param array $data : Array
+     * @param string $name : eg: id
+     * @param string $value : eg: 123
      */
     public static function getByKey(array $data, string $name, string $value)
     {
@@ -75,9 +78,9 @@ class JsonUtils
      * If the JSON array previously contained a mapping for the key,
      * the old value is replaced by the specified value.
      *
-     * @param data : Array
-     * @param name : eg: id
-     * @param item : JSON object
+     * @param array $data : JSON Array
+     * @param string name : eg: id
+     * @param stdClass item : JSON object
      *
      * @return updated array
      */
@@ -95,11 +98,11 @@ class JsonUtils
     }
 
     /**
-     * copy properties of $source to $dest, without including the new properties
+     * Copy properties of $source to $dest, without including the new properties
      * convert to --> $dest = {"id":"1", "foo":"pub"}.
      *
-     * @param source = {"id":"1", "foo":"pub" , "hello":"world"}
-     * @param dest = {"id":"1", "foo":"bar"}
+     * @param stdClass source = {"id":"1", "foo":"pub" , "hello":"world"}
+     * @param stdClass dest = {"id":"1", "foo":"bar"}
      */
     public static function copy(stdClass $source, stdClass $dest)
     {
@@ -111,11 +114,11 @@ class JsonUtils
     }
 
     /**
-     * copy properties of $source to $dest, including the new properties
+     * Copy properties of $source to $dest, including the new properties
      * eg:--> $dest = {"id":"1", "foo":"pub" , "hello":"world"}.
      *
-     * @param source = {"id":"1", "foo":"pub" , "hello":"world"}
-     * @param dest = {"id":"1", "foo":"bar"}
+     * @param stdClass source = {"id":"1", "foo":"pub" , "hello":"world"}
+     * @param stdClass dest = {"id":"1", "foo":"bar"}
      */
     public static function replace(stdClass $source, stdClass $dest)
     {

@@ -22,12 +22,14 @@ abstract class SecureRestApi extends RestApi
     const HTTP_AUTHORIZATION = 'HTTP_AUTHORIZATION';
 
     /**
-     * required role for read / write throug API.
+     * Required role for read / write throug API.
      */
     private $role = 'editor';
 
     /**
-     * @param conf JSON configuration
+     * Constructor
+     * 
+     * @param stdClass conf JSON configuration
      */
     public function __construct(stdClass $conf)
     {
@@ -36,9 +38,9 @@ abstract class SecureRestApi extends RestApi
     }
 
     /**
-     * override parent function.
+     * Override parent function.
      *
-     * @return response object
+     * @return Response object
      */
     public function processAPI(): Response
     {
@@ -64,8 +66,8 @@ abstract class SecureRestApi extends RestApi
      * $headers : array containing result of apache_request_headers() and getallheaders(), if available.
      * Or send by test units.
      *
-     * @param headers : send by test units.
-     * @param SERVER : send by test units.
+     * @param array $headers : send by test units.
+     * @param array $SERVER : send by test units.
      */
     public function authorize(array $headers = null, array $SERVER = null): Response
     {
@@ -73,28 +75,28 @@ abstract class SecureRestApi extends RestApi
         $response->setCode(401);
 
         switch ($this->method) {
-            case 'OPTIONS':
+        case 'OPTIONS':
                   $response->setCode(200);
                   $response->setResult('{}');
-                break;
-            case 'GET':
-            case 'POST':
-            case 'PUT':
-            case 'DELETE':
+            break;
+        case 'GET':
+        case 'POST':
+        case 'PUT':
+        case 'DELETE':
                 $response = $this->doAuthorize($headers, $SERVER);
-                break;
-            default:
+            break;
+        default:
                 $response->getCode(405);
-                break;
+            break;
         }
 
         return $response;
     }
 
     /**
-     * set required role.
+     * Set required role.
      *
-     * @param role editor, admin, ...
+     * @param string $role editor, admin, ...
      */
     public function setRole(string $role)
     {
@@ -102,10 +104,11 @@ abstract class SecureRestApi extends RestApi
     }
 
     /**
-     * $headers : array containing result of apache_request_headers() and getallheaders(), if available.
-     * Or send by test units.
-     *
-     * @param SERVER : send by test units.
+     * Authorize current user
+     * 
+     * @param array $SERVER : send by test units.
+     * 
+     * @return Response object
      */
     public function doAuthorize(array $SERVER = null)
     {
@@ -195,7 +198,9 @@ abstract class SecureRestApi extends RestApi
      * Use a .htaccess file for generating HTTP_AUTHORIZATION :
      * http://php.net/manual/en/function.apache-request-headers.php
      *
-     * @param SERVER : send same content as PHP variable when testing
+     * @param array $SERVER : send same content as PHP variable when testing
+     * 
+     * @return array headers
      */
     private function getAuthorizationHeader($SERVER = null)
     {
@@ -223,9 +228,11 @@ abstract class SecureRestApi extends RestApi
     }
 
     /**
-     *  token from headers.
+     *  Get token from headers.
      *
-     * @param headerValue header value
+     * @param string $headerValue header value
+     * 
+     * @return string token value
      */
     private function getBearerTokenValue(string $headerValue): string
     {
@@ -239,11 +246,13 @@ abstract class SecureRestApi extends RestApi
     }
 
     /**
-     * get access token from header.
+     * Get access token from SERVER.
      *
-     * @param SERVER : send by test units.
+     * @param array $SERVER : send by test units.
+     * 
+     * @return string token value
      */
-    private function getBearerToken($SERVER = null): string
+    private function getBearerToken(array $SERVER = null): string
     {
         $headers = $this->getAuthorizationHeader($SERVER);
         // HEADER: Get the access token from the header

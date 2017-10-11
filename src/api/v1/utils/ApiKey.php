@@ -9,7 +9,7 @@ include_once 'JsonUtils.php';
 class ApiKey
 {
     /**
-     * basic implementation of API Key verification.
+     * Basic implementation of API Key verification.
      */
     public function verifyKey($keyfile, $key, $origin): bool
     {

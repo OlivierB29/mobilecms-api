@@ -4,9 +4,9 @@ require_once 'Response.php';
 require_once 'JsonUtils.php';
 
 /**
- * function used for sorting.
+ * Function used for sorting.
  *
- * @param key key name
+ * @param key $key name
  */
 function compareIndex(string $key)
 {
@@ -32,19 +32,19 @@ function compareIndex(string $key)
 class ContentService
 {
     /**
-     * create backup of history file.
+     * Create backup of history file.
      */
     private $enableIndexHistory = false;
 
     /**
-     * main directory (eg: /opt/foobar/data ).
+     * Main directory (eg: /opt/foobar/data ).
      */
     private $databasedir;
 
     /**
-     * constructor.
+     * Constructor.
      *
-     * @param databasedir eg : public
+     * @param databasedir $databasedir eg : public
      */
     public function __construct(string $databasedir)
     {
@@ -54,8 +54,8 @@ class ContentService
     /**
      * Get a single record.
      *
-     * @param type eg : calendar
-     * @param keyvalue : id value, eg :1
+     * @param string $type eg: calendar
+     * @param string $keyvalue : id value, eg :1
      */
     public function getRecord(string $type, string $keyvalue)
     {
@@ -76,10 +76,10 @@ class ContentService
     }
 
     /**
-     * delete a record.
+     * Delete a record.
      *
-     * @param type eg: calendar
-     * @param keyvalue eg: id
+     * @param string $type eg: calendar
+     * @param string $keyvalue : id value, eg :1
      */
     public function deleteRecord(string $type, string $keyvalue)
     {
@@ -108,9 +108,9 @@ class ContentService
      *
      * $filename : calendar/1.json , new/foobar.json, index/index.json , ...
      *
-     * @param filename file
+     * @param string $filename file
      *
-     * @return response object
+     * @return Response object
      */
     public function getFilePath(string $filename): Response
     {
@@ -137,14 +137,14 @@ class ContentService
     }
 
     /**
-     * return a single element, from a JSON array stored in file.
+     * Return a single element, from a JSON array stored in file.
      * $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}]
      * $keyname : primary key inside the file eg : id
      * $keyvalue : eg : 1.
      *
-     * @param filename : index.json
-     * @param keyname : id
-     * @param keyvalue : 1
+     * @param string $filename: index.json
+     * @param string $keyname : id
+     * @param string $keyvalue : 1
      *
      * @return : Response object with a JSON object eg : {"id":"1", "foo":"bar"}
      */
@@ -177,10 +177,10 @@ class ContentService
     }
 
     /**
-     * get all JSON files list of a directory
+     * Get all JSON files list of a directory
      * eg: [{"id":"1", "filename": "1.json"}, {"id":"2", "filename": "2.json"}].
      *
-     * @param type eg: calendar
+     * @param string $type eg: calendar
      */
     public function getAllObjects($type): Response
     {
@@ -208,9 +208,9 @@ class ContentService
     }
 
     /**
-     * get all elements from an array, contained in a single file.
+     * Get all elements from an array, contained in a single file.
      *
-     * @param filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}].
+     * @param string $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}].
      *
      * @return : Response object with a JSON array
      */
@@ -230,11 +230,11 @@ class ContentService
     }
 
     /**
-     * create a single element.
+     * Create a single element.
      *
-     * @param type : object type (eg : calendar)
-     * @param filename : JSON data filename
-     * @param keyname : primary key inside the file.
+     * @param string $type : object type (eg : calendar)
+     * @param string $keyname : JSON data filename
+     * @param string $recordStr : primary key inside the file.
      *
      * @return : Response object with a JSON object
      */
@@ -245,10 +245,10 @@ class ContentService
     }
 
     /**
-     * return a record file path.
+     * Return a record file path.
      *
-     * @param type : name of type eg : calendar
-     * @param id : unique id of record eg : 1.
+     * @param string $type : name of type eg : calendar
+     * @param string $id : unique id of record eg : 1
      *
      * @return /foobar/calendar/index.json
      */
@@ -265,10 +265,11 @@ class ContentService
     }
 
     /**
-     * return an index file path
-     * $type : eg : calendar.
+     * Return an index file path
+     * 
+     * @param string $type : name of type eg : calendar
      *
-     * @return /foobar/calendar/index.json
+     * @return string /foobar/calendar/index.json
      */
     public function getIndexFileName(string $type) : string
     {
@@ -280,9 +281,10 @@ class ContentService
     }
 
     /**
-     * return an template index file path
-     * $type : eg : calendar.
-     *
+     * Return a template index file path
+     * 
+     * @param string $type : name of type eg : calendar
+     * 
      * @return /foobar/calendar/index.json
      */
     private function getIndexTemplateFileName(string $type) : string
@@ -295,9 +297,11 @@ class ContentService
     }
 
     /**
-     * @param type : object type (eg : calendar)
-     * @param keyname : primary key inside the file.
-     * @param recordStr : JSON data
+     * Save a record
+     * 
+     * @param string $type : object type (eg : calendar)
+     * @param string $keyname : primary key inside the file.
+     * @param string $recordStr : JSON data
      */
     public function post(string $type, string $keyname, string $recordStr)
     {
@@ -327,9 +331,11 @@ class ContentService
     }
 
     /**
-     * @param type : object type (eg : calendar)
-     * @param keyname : primary key inside the file.
-     * @param recordStr : JSON data
+     * Update a record
+     * 
+     * @param string $type : object type (eg : calendar)
+     * @param string $keyname : primary key inside the file.
+     * @param string $recordStr : JSON data
      */
     public function update(string $type, string $keyname, string $recordStr): Response
     {
@@ -363,9 +369,9 @@ class ContentService
     /**
      * Add object id to index.
      *
-     * @param type : object type (eg : calendar)
-     * @param keyname : primary key inside the file.
-     * @param recordStr : JSON data
+     * @param string $type : object type (eg : calendar)
+     * @param string $keyname : primary key inside the file.
+     * @param string $recordStr : JSON data
      */
     public function publishById(string $type, string $keyname, string $keyvalue): Response
     {
@@ -412,8 +418,10 @@ class ContentService
     }
 
     /**
-     * @param type eg : calendar
-     * @param keyname : eg :id
+     * Rebuild an index
+     * 
+     * @param string $type : object type (eg : calendar)
+     * @param string $keyname : primary key inside the file.
      */
     public function rebuildIndex(string $type, string $keyname): Response
     {
@@ -466,9 +474,9 @@ class ContentService
     }
 
     /**
-     * generate a backup index file name.
+     * Generate a backup index file name.
      *
-     * @param type : eg calendar
+     * @param string  $type : eg calendar
      *
      * @return file name
      */
@@ -482,10 +490,10 @@ class ContentService
     }
 
     /**
-     * copy a file and create directory if necessary.
+     * Copy a file and create directory if necessary.
      *
-     * @param s1 : source
-     * @param s2 : dest
+     * @param string $s1 : source
+     * @param string $s2 : dest
      */
     private function mycopy(string $s1, string $s2)
     {
@@ -499,9 +507,10 @@ class ContentService
     }
 
     /**
-     * returns options files content.
+     * Options files content.
      *
-     * @param filename file
+     * @param string $filename file
+     * @return string options value
      */
     public function options(string $filename): string
     {
@@ -511,9 +520,9 @@ class ContentService
     }
 
     /**
-     * initialize a default Response object.
+     * Initialize a default Response object.
      *
-     * @return response object
+     * @return Response object
      */
     protected function getDefaultResponse() : Response
     {

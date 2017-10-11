@@ -9,7 +9,7 @@ class StringUtils
     /**
      * string is not empty.
      *
-     * @param question
+     * @param string $question
      */
     public static function isNotEmpty(string $question)
     {
@@ -17,10 +17,10 @@ class StringUtils
     }
 
     /**
-     * compare strings.
+     * Compare strings.
      *
-     * @param a str a
-     * @param b str b
+     * @param string $a str a
+     * @param string $b str b
      *
      * @return bool result
      */
@@ -30,10 +30,10 @@ class StringUtils
     }
 
     /**
-     * starts with string ?
+     * Starts with string ?
      *
-     * @param haystack eg "foobar"
-     * @param needle eg "foo"
+     * @param string $haystack eg "foobar"
+     * @param string $needle eg "foo"
      *
      * @return bool result
      */
@@ -45,10 +45,10 @@ class StringUtils
     }
 
     /**
-     * ends with string ?
+     * Ends with string ?
      *
-     * @param haystack eg "foobar"
-     * @param needle eg "bar"
+     * @param string $haystack eg "foobar"
+     * @param string $needle eg "bar"
      *
      * @return bool result
      */

@@ -10,12 +10,12 @@ require_once 'Response.php';
 abstract class RestApi
 {
     /**
-     * if needed : post form data instead of php://input.
+     * If needed : post form data instead of php://input.
      */
     const REQUESTBODY = 'requestbody';
 
     /**
-     * if needed : post form data instead of php://input.
+     * If needed : post form data instead of php://input.
      */
     protected $postformdata = false;
 
@@ -25,12 +25,12 @@ abstract class RestApi
     protected $conf;
 
     /**
-     * set to false when unit testing.
+     * Set to false when unit testing.
      */
     protected $enableHeaders = true;
 
     /**
-     * see cleanInputs() below.
+     * See cleanInputs() below.
      */
     protected $enableCleanInputs = true;
 
@@ -73,31 +73,34 @@ abstract class RestApi
     protected $file = null;
 
     /**
-     * request content from post data or JSON body.
+     * Request content from post data or JSON body.
      */
     protected $request = null;
 
     /**
-     * headers array.
+     * Headers array.
      */
     protected $headers = null;
 
     /**
-     * when enabled : send readable errors in responses.
+     * When enabled : send readable errors in responses.
      */
     protected $displayApiErrors = true;
 
     /**
-     * root app dir.
+     * Root app dir.
      */
     protected $rootDir = '';
 
     /**
+     * Set request URI eg:
      * /api/v1/content/save
-     * eg : /restapi/v1/recipe/cake/foo/bar.
+     * /restapi/v1/recipe/cake/foo/bar.
      * http://localhost/restapi/v1/file/?file=news/index/metadata.json.
+     *
+     * @param string $request uri
      */
-    public function setRequestUri($request)
+    public function setRequestUri(string $request)
     {
         $this->args = explode('/', rtrim(ltrim($request, '/'), '/'));
         // eg : api
@@ -129,7 +132,9 @@ abstract class RestApi
     }
 
     /**
-     * @param conf JSON configuration
+     * Constructor
+     *
+     * @param stdClass $conf JSON configuration
      */
     public function __construct(stdClass $conf)
     {
@@ -198,11 +203,11 @@ abstract class RestApi
      * Important : the variables are initialized in unit tests.
      * In real case, use null and the PHP variables will be used.
      *
-     * @param REQUEST : must be the same content like the PHP variable
-     * @param SERVER : must be the same content like the PHP variable
-     * @param GET : must be the same content like the PHP variable
-     * @param POST : must be the same content like the PHP variable
-     * @param headers : http headers
+     * @param array $REQUEST : must be the same content like the PHP variable
+     * @param array $SERVER : must be the same content like the PHP variable
+     * @param array $GET : must be the same content like the PHP variable
+     * @param array $POST : must be the same content like the PHP variable
+     * @param array $headers : http headers
      */
     public function setRequest(array $REQUEST = null, array $SERVER = null, array $GET = null, array $POST = null, array $headers = null)
     {
@@ -241,34 +246,34 @@ abstract class RestApi
         }
 
         switch ($this->method) {
-            case 'DELETE':
-            case 'POST':
-                if ($this->postformdata === true) {
-                    $this->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
-                } else {
-                    $this->request = $this->enableCleanInputs ? $this->cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
-                }
-                break;
-            case 'OPTIONS':
+        case 'DELETE':
+        case 'POST':
+            if ($this->postformdata === true) {
+                $this->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
+            } else {
+                $this->request = $this->enableCleanInputs ? $this->cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
+            }
+            break;
+        case 'OPTIONS':
                     $this->preflight();
-                break;
-            case 'GET':
+            break;
+        case 'GET':
                 $this->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
-                break;
-            case 'PUT':
+            break;
+        case 'PUT':
                 $this->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
                 //$this->request = $this->cleanInputs($GET);
                 // http://php.net/manual/en/wrappers.php.php
 
-                break;
-            default:
+            break;
+        default:
                 $this->_response('Invalid Method', 405);
-                break;
+            break;
         }
     }
 
     /**
-     * get current request.
+     * Get current request.
      *
      * @return request
      */
@@ -284,14 +289,14 @@ abstract class RestApi
      * header("Access-Control-Allow-Headers: Content-Type,
      *   Access-Control-Allow-Headers, Authorization, X-Requested-With");.
      *
-     * @return response object
+     * @return Response object
      */
     abstract public function preflight(): Response;
 
     /**
      * Parse class, and call the method with the endpoint name.
      *
-     * @return response object
+     * @return Response object
      */
     public function processAPI(): Response
     {
@@ -304,7 +309,7 @@ abstract class RestApi
     }
 
     /**
-     * main function
+     * Main function
      * - parse request
      * - execute backend
      * - send response or error.
@@ -338,9 +343,9 @@ abstract class RestApi
     }
 
     /**
-     * sanitize data.
+     * Sanitize data.
      *
-     * @param data resquest body
+     * @param data request body
      */
     private function cleanInputs($data)
     {
@@ -357,9 +362,9 @@ abstract class RestApi
     }
 
     /**
-     * initialize a default Response object.
+     * Initialize a default Response object.
      *
-     * @return response object
+     * @return Response object
      */
     protected function getDefaultResponse() : Response
     {
@@ -371,9 +376,9 @@ abstract class RestApi
     }
 
     /**
-     * get request body.
+     * Get request body.
      *
-     * @return post form data or JSON data
+     * @return string post form data or JSON data
      */
     public function getRequestBody(): string
     {
@@ -385,9 +390,9 @@ abstract class RestApi
     }
 
     /**
-     * set main working directory.
+     * Set main working directory.
      *
-     * @param rootDir main working directory
+     * @param string $rootDir main working directory
      */
     public function setRootDir(string $rootDir)
     {
@@ -395,9 +400,9 @@ abstract class RestApi
     }
 
     /**
-     * get main working directory.
+     * Get main working directory.
      *
-     * @return rootDir main working directory
+     * @return string rootDir main working directory
      */
     public function getRootDir(): string
     {
@@ -405,9 +410,9 @@ abstract class RestApi
     }
 
     /**
-     * get public directory.
+     * Get public directory.
      *
-     * @param publicdir main public directory
+     * @param string publicdir main public directory
      */
     public function getPublicDirPath(): string
     {
@@ -415,9 +420,9 @@ abstract class RestApi
     }
 
     /**
-     * get privatedir directory.
+     * Get privatedir directory.
      *
-     * @param privatedir main privatedir directory
+     * @param string privatedir main privatedir directory
      */
     public function getPrivateDirPath(): string
     {

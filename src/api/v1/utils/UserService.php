@@ -37,6 +37,7 @@ class UserService
     private $passwordHashCost = 12;
 
     /**
+     * Constructor
      * @param databasedir eg : public
      */
     public function __construct($databasedir)
@@ -45,11 +46,13 @@ class UserService
     }
 
     /**
-     * return the users directory.
+     * Return the json user file eg : foobar@example.org.json
      *
-     * @param email : email
+     * @param string $email : email
+     * 
+     * @return string json user file eg : foobar@example.org.json
      */
-    public function getJsonUserFile($email): string
+    public function getJsonUserFile(string $email): string
     {
         if (empty($this->databasedir)) {
             throw new Exception('getJsonUserFile : empty conf');
@@ -63,13 +66,13 @@ class UserService
     }
 
     /**
-     * return a JSON object of a user, null if not found.
+     * Return a JSON object of a user, null if not found.
      *
-     * @param email : email
+     * @param string $email : email
      *
-     * @return user object
+     * @return stdClass user object
      */
-    public function getJsonUser($email): stdClass
+    public function getJsonUser(string $email): stdClass
     {
         $result = null;
 
@@ -91,15 +94,15 @@ class UserService
     }
 
     /**
-     * update a user.
+     * Update a user.
      *
-     * @param email : email
-     * @param name : name
-     * @param password : password
-     * @param salt : private salt
-     * @param role : role none|editor|admin
+     * @param string $email : email
+     * @param string $name : name
+     * @param string $password : password
+     * @param string $salt : private salt
+     * @param string $role : role none|editor|admin
      */
-    public function updateUser($email, $name, $password, $salt, $role)
+    public function updateUser(string $email, string $name, string $password, string $salt, string $role)
     {
         $result = false;
 
@@ -134,17 +137,17 @@ class UserService
     }
 
     /**
-     * create a new user file.
+     * Create a new user file.
      *
-     * @param email : email
-     * @param name : name
-     * @param password : password
-     * @param salt : private salt
-     * @param role : role none|editor|admin
-     * @param secretQuestion : secret question (encoded)
-     * @param secretResponse : secret question (encocrypted)
+     * @param string $email : email
+     * @param string $name : name
+     * @param string $password : password
+     * @param string $salt : private salt
+     * @param string $role : role none|editor|admin
+     * @param string $secretQuestion : secret question (encoded)
+     * @param string $secretResponse : secret question (encrypted)
      */
-    private function addDbUserWithSecret($email, $name, $password, $salt, $role, $secretQuestion, $secretResponse)
+    private function addDbUserWithSecret(string $email, string $name, string $password, string $salt, string $role, string $secretQuestion, string $secretResponse)
     {
         if (!empty($email)) {
             $jsonUser = json_decode('{ "name" : "",  "email" : "",  "password" : "",  "salt" : "",  "secretQuestion" : "",  "secretResponse" : "",  "role" : ""}');
@@ -164,17 +167,17 @@ class UserService
     }
 
     /**
-     * create a new user.
+     * Create a new user.
      *
-     * @param username : email
-     * @param password : password
-     * @param salt : private salt
-     * @param role : role none|editor|admin
-     * @param secretQuestion : secret question (encoded)
-     * @param secretResponse : secret question (encocrypted)
-     * @param mode : create|update
+     * @param string $username : email
+     * @param string $password : password
+     * @param string $salt : private salt
+     * @param string $role : role none|editor|admin
+     * @param string $secretQuestion : secret question (encoded)
+     * @param string $secretResponse : secret question (encrypted)
+     * @param string $mode : create|update
      */
-    public function createUserWithSecret($username, $emailParam, $password, $secretQuestion, $secretResponse, $mode)
+    public function createUserWithSecret(string $username, string $emailParam, string $password, string $secretQuestion, string $secretResponse, string $mode)
     {
         $email = strtolower($emailParam);
 
@@ -240,11 +243,13 @@ class UserService
     }
 
     /**
-     * authenticate
+     * Authenticate
      * return an empty string if success.
      *
-     * @param emailParam : email
-     * @param password : pseudo clear password (must be hashed from client)
+     * @param string $emailParam : email
+     * @param string $password : pseudo clear password (must be hashed from client)
+     * 
+     * @return string return an empty string if success.
      */
     public function login($emailParam, $password)
     {
@@ -283,12 +288,12 @@ class UserService
     }
 
     /**
-     * authenticate and return a User object with a token.
+     * Authenticate and return a User object with a token.
      *
-     * @param emailParam : email
-     * @param password : pseudo clear password (must be hashed from client)
+     * @param string $emailParam : email
+     * @param string $password : pseudo clear password (must be hashed from client)
      *
-     * @return response object
+     * @return Response object
      */
     public function getToken($emailParam, $password): Response
     {
@@ -350,13 +355,13 @@ class UserService
     }
 
     /**
-     * authenticate and return a User object with a token.
+     * Authenticate and return a User object with a token.
      *
-     * @param emailParam : email
-     * @param password : pseudo clear password (must be hashed from client)
-     * @param newPassword : pseudo clear password (must be hashed from client)
+     * @param string $emailParam : email
+     * @param string $password : pseudo clear password (must be hashed from client)
+     * @param string $newPassword : pseudo clear password (must be hashed from client)
      *
-     * @return response object
+     * @return Response object
      */
     public function changePassword($emailParam, $password, $newPassword): Response
     {
@@ -412,10 +417,11 @@ class UserService
     }
 
     /**
-     * @param token : token
-     * @param role : role (editor ...)
+     * Verify token
+     * @param string $token : token
+     * @param string $role : role (editor ...)
      *
-     * @return response object
+     * @return Response object
      */
     public function verifyToken($token, $requiredRole): Response
     {
@@ -461,12 +467,12 @@ class UserService
     /**
      * Control if the current user has access to API.
      *
-     * @param user object
-     * @param requiredRole required role
+     * @param stdClass $user object
+     * @param string $requiredRole required role
      *
      * @return true if access is authorized
      */
-    private function isPermitted($user, $requiredRole): bool
+    private function isPermitted(stdClass $user, string $requiredRole): bool
     {
         $result = false;
         if (!empty($user) && !empty($user->{'role'}) && !empty($requiredRole)) {
@@ -485,11 +491,11 @@ class UserService
     /**
      * Control if the current user has access to an editor API.
      *
-     * @param user object
+     * @param stdClass user object
      *
      * @return true if access is authorized
      */
-    private function isPermittedEditor($user): bool
+    private function isPermittedEditor(stdClass $user): bool
     {
         $result = false;
         if (!empty($user) && !empty($user->{'role'})) {
@@ -506,7 +512,7 @@ class UserService
     /**
      * Control if the current user has access to an admin API.
      *
-     * @param user object
+     * @param stdClass user object
      *
      * @return true if access is authorized
      */
@@ -523,12 +529,12 @@ class UserService
     }
 
     /**
-     * authenticate and return a User object with a token.
+     * Authenticate and return a User object with a token.
      *
-     * @param emailParam email
-     * @param newPassword new password
+     * @param string $emailParam email
+     * @param string $newPassword new password
      *
-     * @return response object
+     * @return Response object
      */
     public function resetPassword($emailParam, $newPassword): Response
     {
@@ -579,9 +585,9 @@ class UserService
     }
 
     /**
-     * public info of a user.
+     * Public info of a user. Beware when doing updates
      *
-     * @param email user
+     * @param string $email user
      *
      * @return Response public info
      */
@@ -591,6 +597,7 @@ class UserService
 
         $user = $this->getJsonUser($email);
         if (isset($user)) {
+            // do not send private info such as password ...
             $info = json_decode('{"name":"", "clientalgorithm":"", "newpasswordrequired":""}');
             JsonUtils::copy($user, $info);
             $response->setResult(json_encode($info));
@@ -603,19 +610,19 @@ class UserService
     /**
      * Generate a US-ASCII random string.
      *
-     * @param length length to generate
+     * @param int $length to generate
      *
-     * @return US-ASCII random string
+     * @return string US-ASCII random string
      */
-    public function generateRandomString($length = 10): string
+    public function generateRandomString(int $length = 10): string
     {
         return base64_encode(random_bytes($length));
     }
 
     /**
-     * initialize a default Response object.
+     * Initialize a default Response object.
      *
-     * @return response object
+     * @return Response object
      */
     protected function getDefaultResponse() : Response
     {

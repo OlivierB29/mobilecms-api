@@ -4,8 +4,8 @@ require_once 'SecureRestApi.php';
 require_once 'ContentService.php';
 require_once 'UserService.php';
 require_once 'JsonUtils.php';
-/*
- * /api/v1/content/cake?filter=foobar
+/**
+ * Administration API (users, ...)
  */
 class AdminApi extends SecureRestApi
 {
@@ -14,7 +14,8 @@ class AdminApi extends SecureRestApi
     const EMAIL = 'email';
 
     /**
-     * @param conf JSON configuration
+     * Constructor
+     * @param stdClass $conf JSON configuration
      */
     public function __construct($conf)
     {
@@ -28,7 +29,9 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-     * @return response object
+     * Get or refresh index
+     * 
+     * @return Response object
      */
     protected function index() : Response
     {
@@ -61,9 +64,9 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-     * base API path /api/v1/content.
+     * Base API path /api/v1/content.
      *
-     * @return response object
+     * @return Response object
      */
     protected function content() : Response
     {
@@ -170,7 +173,8 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-     * init a default user object.
+     * Initialize a default user object.
+     * *@return stdClass user JSON object
      */
     private function getDefaultUser(): stdClass
     {
@@ -178,11 +182,11 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-     * basic user fields, without password.
+     * Basic user fields, without password.
      *
-     * @param JSON user string
+     * @param userStr $userStr JSON user string
      *
-     * @return JSON user string
+     * @return stdClass JSON user string
      */
     public function getUserResponse($userStr): string
     {
@@ -196,9 +200,9 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-     * get data type.
+     * Get data type.
      *
-     * @return data type
+     * @return string data type
      */
     private function getDataType(): string
     {
@@ -214,9 +218,9 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-     * get path id.
+     * Get path id.
      *
-     * @return id
+     * @return string id
      */
     private function getId(): string
     {
@@ -229,7 +233,7 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-     * check config and throw an exception if needed.
+     * Check config and throw an exception if needed.
      */
     private function checkConfiguration()
     {
@@ -239,9 +243,11 @@ class AdminApi extends SecureRestApi
     }
 
     /**
+     * Preflight response
+     * 
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return response object
+     * @return Response object
      */
     public function preflight(): Response
     {

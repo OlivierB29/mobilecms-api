@@ -8,7 +8,7 @@ require_once 'ContentService.php';
 class CmsApi extends SecureRestApi
 {
     /**
-     * index subpath
+     * Index subpath
      * full path, eg : /var/www/html/public/calendar/index/index.json.
      */
     const INDEX_JSON = '/index/index.json';
@@ -23,7 +23,9 @@ class CmsApi extends SecureRestApi
     const FILE = 'file';
 
     /**
-     * @param conf JSON configuration
+     * Constructor
+     * 
+     * @param stdClass $conf JSON configuration
      */
     public function __construct(stdClass $conf)
     {
@@ -37,7 +39,9 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * @return response object
+     * Get index
+     * 
+     * @return Response object
      */
     protected function index() : Response
     {
@@ -73,9 +77,9 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * base API path /api/v1/content.
+     * Base API path /api/v1/content.
      *
-     * @return response object
+     * @return Response object
      */
     protected function content() : Response
     {
@@ -165,7 +169,9 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * @return response object
+     * Get file info
+     * 
+     * @return Response object
      */
     protected function file() : Response
     {
@@ -204,7 +210,9 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * get type from request.
+     * Get type from request
+     * 
+     * @return type
      */
     private function getDataType(): string
     {
@@ -220,7 +228,9 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * get id from request.
+     * Get id from request
+     * 
+     * @return id
      */
     private function getId(): string
     {
@@ -233,7 +243,8 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * ensure minimal configuration values.
+     * Ensure minimal configuration values
+     * 
      */
     private function checkConfiguration()
     {
@@ -243,9 +254,10 @@ class CmsApi extends SecureRestApi
     }
 
     /**
+     * Preflight response
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return response object
+     * @return Response object
      */
     public function preflight(): Response
     {

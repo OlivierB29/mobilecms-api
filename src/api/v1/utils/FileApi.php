@@ -9,7 +9,7 @@ require_once 'FileService.php';
 class FileApi extends SecureRestApi
 {
     /**
-     * media directory (eg: media ).
+     * Media directory (eg: media ).
      */
     private $media;
 
@@ -19,6 +19,7 @@ class FileApi extends SecureRestApi
     private $umask = 0775;
 
     /**
+     * Constructor
      * @param conf JSON configuration
      */
     public function __construct(stdClass $conf)
@@ -34,7 +35,9 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * basic file upload.
+     * Basic file upload.
+     * 
+     * @return API response
      */
     protected function basicupload(): Response
     {
@@ -86,6 +89,11 @@ class FileApi extends SecureRestApi
         return $response;
     }
 
+    /**
+     * Delete file
+     * 
+     * @return API response
+     */
     protected function delete(): Response
     {
         $response = $this->getDefaultResponse();
@@ -115,9 +123,14 @@ class FileApi extends SecureRestApi
         return $response;
     }
 
+
     /**
+     * Download an external file and save it in the record structure
+     * 
      * Sample request body :
      * [{ "url": "http://wwww.example.com/foobar.pdf", "title":"Foobar.pdf"}].
+     * 
+     * @return API response
      */
     protected function download(): Response
     {
@@ -152,10 +165,10 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * upload files from $_FILES.
+     * Upload files from $_FILES.
      *
-     * @param type eg: calendar
-     * @param id 123
+     * @param string $type eg: calendar
+     * @param string $id 123
      *
      * @return array of files descriptions
      */
@@ -202,13 +215,13 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * download files from specified URLs.
+     * Download files from specified URLs.
      *
-     * @param type : news
-     * @param id : 123
-     * @param filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
+     * @param string $datatype : news
+     * @param string $id : 123
+     * @param string $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
-    private function downloadFiles($datatype, $id, $filesStr): Response
+    private function downloadFiles(string $datatype, string $id, string $filesStr): Response
     {
         $response = $this->getDefaultResponse();
 
@@ -253,11 +266,11 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * get file info and build JSON response.
+     * Get file info and build JSON response.
      *
-     * @param destfile : file
-     * @param title : title of file
-     * @param url : url
+     * @param string $destfile : file
+     * @param string $title : title of file
+     * @param string $url : url
      */
     private function getFileResponse($destfile, $title, $url): stdClass
     {
@@ -277,7 +290,9 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * @return datatype
+     * Get datatype from request
+     * 
+     * @return string datatype
      */
     private function getDataType(): string
     {
@@ -292,6 +307,9 @@ class FileApi extends SecureRestApi
         return $datatype;
     }
 
+    /**
+     * Verify minimal configuration
+     */
     private function checkConfiguration()
     {
         if (!isset($this->conf->{'media'})) {
@@ -300,11 +318,11 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * delete files.
+     * Delete files.
      *
-     * @param type news
-     * @param id 123
-     * @param * @param filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
+     * @param string $datatype news
+     * @param string $id 123
+     * @param string $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
     private function deleteFiles($datatype, $id, $filesStr): Response
     {
@@ -341,9 +359,10 @@ class FileApi extends SecureRestApi
     }
 
     /**
+     * Preflight response
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return response object
+     * @return Response object
      */
     public function preflight(): Response
     {
@@ -358,7 +377,7 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * main storage directory.
+     * Main storage directory.
      *
      * @return eg : // /var/www/html/media
      */
@@ -368,7 +387,7 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * record storage directory.
+     * Record storage directory.
      *
      * @return eg : // /var/www/html/media/calendar/1
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * mail Utility.
+ * Mail Utility.
  */
 class MailUtils
 {
@@ -10,7 +10,7 @@ class MailUtils
     private $rootdir;
 
     /**
-     * constructor.
+     * Constructor.
      */
     public function __construct(string $rootdir)
     {
@@ -18,9 +18,9 @@ class MailUtils
     }
 
     /**
-     * @param from mail address
+     * @param string $from mail address
      *
-     * @return mail headers
+     * @return string mail headers
      */
     public function getHeaders(string $from) : string
     {
@@ -35,11 +35,11 @@ class MailUtils
     /**
      * Generate new password. Should separate technical functions and business.
      *
-     * @param subject mail subject
-     * @param password new password
-     * @param clientinfo client data (IP, browser, ...)
+     * @param string $subject mail subject
+     * @param string $password new password
+     * @param string $clientinfo client data (IP, browser, ...)
      *
-     * @return notification content
+     * @return string notification content
      */
     public function getNewPassword(string $subject, string $password, string $clientinfo) : string
     {
