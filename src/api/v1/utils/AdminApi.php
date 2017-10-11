@@ -5,7 +5,7 @@ require_once 'ContentService.php';
 require_once 'UserService.php';
 require_once 'JsonUtils.php';
 /**
- * Administration API (users, ...)
+ * Administration API (users, ...).
  */
 class AdminApi extends SecureRestApi
 {
@@ -14,7 +14,8 @@ class AdminApi extends SecureRestApi
     const EMAIL = 'email';
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param stdClass $conf JSON configuration
      */
     public function __construct($conf)
@@ -29,8 +30,8 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-     * Get or refresh index
-     * 
+     * Get or refresh index.
+     *
      * @return Response object
      */
     protected function index() : Response
@@ -174,6 +175,7 @@ class AdminApi extends SecureRestApi
 
     /**
      * Initialize a default user object.
+     *
      * *@return stdClass user JSON object
      */
     private function getDefaultUser(): stdClass
@@ -243,8 +245,8 @@ class AdminApi extends SecureRestApi
     }
 
     /**
-     * Preflight response
-     * 
+     * Preflight response.
+     *
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
      * @return Response object

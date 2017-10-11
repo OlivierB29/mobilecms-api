@@ -132,7 +132,7 @@ abstract class RestApi
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param stdClass $conf JSON configuration
      */
@@ -204,9 +204,9 @@ abstract class RestApi
      * In real case, use null and the PHP variables will be used.
      *
      * @param array $REQUEST : must be the same content like the PHP variable
-     * @param array $SERVER : must be the same content like the PHP variable
-     * @param array $GET : must be the same content like the PHP variable
-     * @param array $POST : must be the same content like the PHP variable
+     * @param array $SERVER  : must be the same content like the PHP variable
+     * @param array $GET     : must be the same content like the PHP variable
+     * @param array $POST    : must be the same content like the PHP variable
      * @param array $headers : http headers
      */
     public function setRequest(array $REQUEST = null, array $SERVER = null, array $GET = null, array $POST = null, array $headers = null)

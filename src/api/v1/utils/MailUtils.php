@@ -35,8 +35,8 @@ class MailUtils
     /**
      * Generate new password. Should separate technical functions and business.
      *
-     * @param string $subject mail subject
-     * @param string $password new password
+     * @param string $subject    mail subject
+     * @param string $password   new password
      * @param string $clientinfo client data (IP, browser, ...)
      *
      * @return string notification content

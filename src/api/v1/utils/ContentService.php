@@ -54,7 +54,7 @@ class ContentService
     /**
      * Get a single record.
      *
-     * @param string $type eg: calendar
+     * @param string $type     eg: calendar
      * @param string $keyvalue : id value, eg :1
      */
     public function getRecord(string $type, string $keyvalue)
@@ -78,7 +78,7 @@ class ContentService
     /**
      * Delete a record.
      *
-     * @param string $type eg: calendar
+     * @param string $type     eg: calendar
      * @param string $keyvalue : id value, eg :1
      */
     public function deleteRecord(string $type, string $keyvalue)
@@ -143,8 +143,8 @@ class ContentService
      * $keyvalue : eg : 1.
      *
      * @param string $filename: index.json
-     * @param string $keyname : id
-     * @param string $keyvalue : 1
+     * @param string $keyname   : id
+     * @param string $keyvalue  : 1
      *
      * @return : Response object with a JSON object eg : {"id":"1", "foo":"bar"}
      */
@@ -232,8 +232,8 @@ class ContentService
     /**
      * Create a single element.
      *
-     * @param string $type : object type (eg : calendar)
-     * @param string $keyname : JSON data filename
+     * @param string $type      : object type (eg : calendar)
+     * @param string $keyname   : JSON data filename
      * @param string $recordStr : primary key inside the file.
      *
      * @return : Response object with a JSON object
@@ -248,7 +248,7 @@ class ContentService
      * Return a record file path.
      *
      * @param string $type : name of type eg : calendar
-     * @param string $id : unique id of record eg : 1
+     * @param string $id   : unique id of record eg : 1
      *
      * @return /foobar/calendar/index.json
      */
@@ -265,8 +265,8 @@ class ContentService
     }
 
     /**
-     * Return an index file path
-     * 
+     * Return an index file path.
+     *
      * @param string $type : name of type eg : calendar
      *
      * @return string /foobar/calendar/index.json
@@ -281,10 +281,10 @@ class ContentService
     }
 
     /**
-     * Return a template index file path
-     * 
+     * Return a template index file path.
+     *
      * @param string $type : name of type eg : calendar
-     * 
+     *
      * @return /foobar/calendar/index.json
      */
     private function getIndexTemplateFileName(string $type) : string
@@ -297,10 +297,10 @@ class ContentService
     }
 
     /**
-     * Save a record
-     * 
-     * @param string $type : object type (eg : calendar)
-     * @param string $keyname : primary key inside the file.
+     * Save a record.
+     *
+     * @param string $type      : object type (eg : calendar)
+     * @param string $keyname   : primary key inside the file.
      * @param string $recordStr : JSON data
      */
     public function post(string $type, string $keyname, string $recordStr)
@@ -331,10 +331,10 @@ class ContentService
     }
 
     /**
-     * Update a record
-     * 
-     * @param string $type : object type (eg : calendar)
-     * @param string $keyname : primary key inside the file.
+     * Update a record.
+     *
+     * @param string $type      : object type (eg : calendar)
+     * @param string $keyname   : primary key inside the file.
      * @param string $recordStr : JSON data
      */
     public function update(string $type, string $keyname, string $recordStr): Response
@@ -369,8 +369,8 @@ class ContentService
     /**
      * Add object id to index.
      *
-     * @param string $type : object type (eg : calendar)
-     * @param string $keyname : primary key inside the file.
+     * @param string $type      : object type (eg : calendar)
+     * @param string $keyname   : primary key inside the file.
      * @param string $recordStr : JSON data
      */
     public function publishById(string $type, string $keyname, string $keyvalue): Response
@@ -418,9 +418,9 @@ class ContentService
     }
 
     /**
-     * Rebuild an index
-     * 
-     * @param string $type : object type (eg : calendar)
+     * Rebuild an index.
+     *
+     * @param string $type    : object type (eg : calendar)
      * @param string $keyname : primary key inside the file.
      */
     public function rebuildIndex(string $type, string $keyname): Response
@@ -476,7 +476,7 @@ class ContentService
     /**
      * Generate a backup index file name.
      *
-     * @param string  $type : eg calendar
+     * @param string $type : eg calendar
      *
      * @return file name
      */
@@ -510,6 +510,7 @@ class ContentService
      * Options files content.
      *
      * @param string $filename file
+     *
      * @return string options value
      */
     public function options(string $filename): string

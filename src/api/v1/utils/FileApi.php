@@ -19,7 +19,8 @@ class FileApi extends SecureRestApi
     private $umask = 0775;
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param conf JSON configuration
      */
     public function __construct(stdClass $conf)
@@ -36,7 +37,7 @@ class FileApi extends SecureRestApi
 
     /**
      * Basic file upload.
-     * 
+     *
      * @return API response
      */
     protected function basicupload(): Response
@@ -90,8 +91,8 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * Delete file
-     * 
+     * Delete file.
+     *
      * @return API response
      */
     protected function delete(): Response
@@ -123,13 +124,12 @@ class FileApi extends SecureRestApi
         return $response;
     }
 
-
     /**
-     * Download an external file and save it in the record structure
-     * 
+     * Download an external file and save it in the record structure.
+     *
      * Sample request body :
      * [{ "url": "http://wwww.example.com/foobar.pdf", "title":"Foobar.pdf"}].
-     * 
+     *
      * @return API response
      */
     protected function download(): Response
@@ -168,7 +168,7 @@ class FileApi extends SecureRestApi
      * Upload files from $_FILES.
      *
      * @param string $type eg: calendar
-     * @param string $id 123
+     * @param string $id   123
      *
      * @return array of files descriptions
      */
@@ -218,7 +218,7 @@ class FileApi extends SecureRestApi
      * Download files from specified URLs.
      *
      * @param string $datatype : news
-     * @param string $id : 123
+     * @param string $id       : 123
      * @param string $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
     private function downloadFiles(string $datatype, string $id, string $filesStr): Response
@@ -269,8 +269,8 @@ class FileApi extends SecureRestApi
      * Get file info and build JSON response.
      *
      * @param string $destfile : file
-     * @param string $title : title of file
-     * @param string $url : url
+     * @param string $title    : title of file
+     * @param string $url      : url
      */
     private function getFileResponse($destfile, $title, $url): stdClass
     {
@@ -290,8 +290,8 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * Get datatype from request
-     * 
+     * Get datatype from request.
+     *
      * @return string datatype
      */
     private function getDataType(): string
@@ -308,7 +308,7 @@ class FileApi extends SecureRestApi
     }
 
     /**
-     * Verify minimal configuration
+     * Verify minimal configuration.
      */
     private function checkConfiguration()
     {
@@ -321,7 +321,7 @@ class FileApi extends SecureRestApi
      * Delete files.
      *
      * @param string $datatype news
-     * @param string $id 123
+     * @param string $id       123
      * @param string $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
     private function deleteFiles($datatype, $id, $filesStr): Response

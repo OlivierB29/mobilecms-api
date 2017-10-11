@@ -33,8 +33,8 @@ class Response
     }
 
     /**
-     * Get result
-     * 
+     * Get result.
+     *
      * @return get string result
      */
     public function getResult(): string
@@ -43,7 +43,8 @@ class Response
     }
 
     /**
-     * Set http code
+     * Set http code.
+     *
      * @param string $newval set http status code
      */
     public function setCode(int $newval)
@@ -52,7 +53,8 @@ class Response
     }
 
     /**
-     * Get http code
+     * Get http code.
+     *
      * @return get get http status code
      */
     public function getCode(): int
@@ -64,7 +66,7 @@ class Response
      * Set an error message and format it to JSON.
      *
      * @param string $code http status code
-     * @param string $msg set error message
+     * @param string $msg  set error message
      */
     public function setError(int $code, string $msg)
     {

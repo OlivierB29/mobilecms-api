@@ -23,8 +23,8 @@ class CmsApi extends SecureRestApi
     const FILE = 'file';
 
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param stdClass $conf JSON configuration
      */
     public function __construct(stdClass $conf)
@@ -39,8 +39,8 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * Get index
-     * 
+     * Get index.
+     *
      * @return Response object
      */
     protected function index() : Response
@@ -169,8 +169,8 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * Get file info
-     * 
+     * Get file info.
+     *
      * @return Response object
      */
     protected function file() : Response
@@ -210,8 +210,8 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * Get type from request
-     * 
+     * Get type from request.
+     *
      * @return type
      */
     private function getDataType(): string
@@ -228,8 +228,8 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * Get id from request
-     * 
+     * Get id from request.
+     *
      * @return id
      */
     private function getId(): string
@@ -243,8 +243,7 @@ class CmsApi extends SecureRestApi
     }
 
     /**
-     * Ensure minimal configuration values
-     * 
+     * Ensure minimal configuration values.
      */
     private function checkConfiguration()
     {
