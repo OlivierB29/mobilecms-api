@@ -47,7 +47,6 @@ class JwtToken
      *
      * @param string $token     token data
      * @param string $secretKey secret key
-     * @param string $success   or error
      *
      * @return bool true if success
      */

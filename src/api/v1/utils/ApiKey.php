@@ -1,6 +1,6 @@
 <?php
 
-include_once 'JsonUtils.php';
+require_once 'JsonUtils.php';
 
 /*
  * API Key verification for CORS

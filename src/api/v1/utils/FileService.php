@@ -10,9 +10,9 @@ class FileService
     /**
      * Direct file children from dir.
      *
-     * @param dir : users folder
+     * @param string $dir : users folder
      */
-    public function getDescriptions($dir)
+    public function getDescriptions(string $dir)
     {
         $result = json_decode('[]');
         $scanned_directory = array_diff(scandir($dir), ['..', '.']);
@@ -29,10 +29,10 @@ class FileService
     /**
      * Delete file JSON descriptions, if they don't exist.
      *
-     * @param homedir  $homedir  : home folder
-     * @param existing $existing : existing descriptions
+     * @param string $homedir  : home folder
+     * @param string $existing : existing descriptions
      */
-    public function cleanDeletedFiles($homedir, $existing)
+    public function cleanDeletedFiles(string $homedir, string $existing)
     {
         $result = json_decode('[]');
         foreach ($existing as $key => $value) {
@@ -49,8 +49,8 @@ class FileService
     /**
      * Get updated file descriptions from a directory.
      *
-     * @param dir      $dir      : home folder
-     * @param existing $existing : existing descriptions
+     * @param string $dir      : home folder
+     * @param string $existing : existing descriptions
      */
     public function updateDescriptions($dir, $existing)
     {
@@ -69,10 +69,10 @@ class FileService
     /**
      * Get file info and build JSON response.
      *
-     * @param destfile $destfile : destination file
-     * @param title    $title    title of file
+     * @param string $destfile : destination file
+     * @param string $title    title of file
      */
-    public function getFileResponse($destfile, $title)
+    public function getFileResponse(string $destfile, string $title)
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
         $mimetype = finfo_file($finfo, $destfile);
@@ -98,7 +98,7 @@ class FileService
      *
      * @return eg : /var/www/html/media/calendar/1
      */
-    public function getRecordDirectory($mediadir, $datatype, $id): string
+    public function getRecordDirectory(string $mediadir, string $datatype, string $id): string
     {
         if (isset($mediadir) && isset($datatype) && isset($id)) {
             return $mediadir . '/' . $datatype . '/' . $id;

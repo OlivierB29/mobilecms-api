@@ -29,7 +29,7 @@ abstract class SecureRestApi extends RestApi
     /**
      * Constructor.
      *
-     * @param stdClass conf JSON configuration
+     * @param stdClass $conf JSON configuration
      */
     public function __construct(stdClass $conf)
     {
@@ -75,19 +75,19 @@ abstract class SecureRestApi extends RestApi
         $response->setCode(401);
 
         switch ($this->method) {
-        case 'OPTIONS':
+            case 'OPTIONS':
                   $response->setCode(200);
                   $response->setResult('{}');
-            break;
-        case 'GET':
-        case 'POST':
-        case 'PUT':
-        case 'DELETE':
+                break;
+            case 'GET':
+            case 'POST':
+            case 'PUT':
+            case 'DELETE':
                 $response = $this->doAuthorize($headers, $SERVER);
-            break;
-        default:
+                break;
+            default:
                 $response->getCode(405);
-            break;
+                break;
         }
 
         return $response;
@@ -236,7 +236,6 @@ abstract class SecureRestApi extends RestApi
      */
     private function getBearerTokenValue(string $headerValue): string
     {
-
         // HEADER: Get the access token from the header
         if (!empty($headerValue)) {
             if (preg_match('/Bearer\s(\S+)/', $headerValue, $matches)) {

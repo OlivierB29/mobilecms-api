@@ -3,9 +3,9 @@
  * Inspired by http://fr.wikihow.com/cr%C3%A9er-un-script-de-connexion-s%C3%A9curis%C3%A9e-avec-PHP-et-MySQL
  * This fork uses JSON as storage data
  */
-include_once 'JsonUtils.php';
-include_once 'JwtToken.php';
-include_once 'Response.php';
+require_once 'JsonUtils.php';
+require_once 'JwtToken.php';
+require_once 'Response.php';
 /*
  * User management Utility.
  * Each user is stored in a separate JSON file.
@@ -39,9 +39,9 @@ class UserService
     /**
      * Constructor.
      *
-     * @param databasedir eg : public
+     * @param string $databasedir eg : public
      */
-    public function __construct($databasedir)
+    public function __construct(string $databasedir)
     {
         $this->databasedir = $databasedir;
     }
@@ -176,7 +176,9 @@ class UserService
      * @param string $role           : role none|editor|admin
      * @param string $secretQuestion : secret question (encoded)
      * @param string $secretResponse : secret question (encrypted)
-     * @param string $mode           : create|update
+     * @param string $mode           : values 'create' or 'update'
+     *
+     * @return string empty string if success
      */
     public function createUserWithSecret(string $username, string $emailParam, string $password, string $secretQuestion, string $secretResponse, string $mode)
     {
@@ -493,7 +495,7 @@ class UserService
     /**
      * Control if the current user has access to an editor API.
      *
-     * @param stdClass user object
+     * @param stdClass $user object
      *
      * @return true if access is authorized
      */
@@ -514,7 +516,7 @@ class UserService
     /**
      * Control if the current user has access to an admin API.
      *
-     * @param stdClass user object
+     * @param stdClass $user object
      *
      * @return true if access is authorized
      */

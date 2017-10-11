@@ -7,9 +7,9 @@ define('EMPTYSTR', '');
 class StringUtils
 {
     /**
-     * string is not empty.
+     * String is not empty.
      *
-     * @param string $question
+     * @param string $question string value
      */
     public static function isNotEmpty(string $question)
     {

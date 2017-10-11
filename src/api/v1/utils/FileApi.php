@@ -21,7 +21,7 @@ class FileApi extends SecureRestApi
     /**
      * Constructor.
      *
-     * @param conf JSON configuration
+     * @param stdClass $conf JSON configuration
      */
     public function __construct(stdClass $conf)
     {

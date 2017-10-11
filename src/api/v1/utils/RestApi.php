@@ -211,7 +211,6 @@ abstract class RestApi
      */
     public function setRequest(array $REQUEST = null, array $SERVER = null, array $GET = null, array $POST = null, array $headers = null)
     {
-
         // Useful for tests http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
 
         // set reference to avoid objet clone
@@ -246,29 +245,29 @@ abstract class RestApi
         }
 
         switch ($this->method) {
-        case 'DELETE':
-        case 'POST':
-            if ($this->postformdata === true) {
-                $this->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
-            } else {
-                $this->request = $this->enableCleanInputs ? $this->cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
-            }
-            break;
-        case 'OPTIONS':
+            case 'DELETE':
+            case 'POST':
+                if ($this->postformdata === true) {
+                    $this->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
+                } else {
+                    $this->request = $this->enableCleanInputs ? $this->cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
+                }
+                break;
+            case 'OPTIONS':
                     $this->preflight();
-            break;
-        case 'GET':
+                break;
+            case 'GET':
                 $this->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
-            break;
-        case 'PUT':
+                break;
+            case 'PUT':
                 $this->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
                 //$this->request = $this->cleanInputs($GET);
                 // http://php.net/manual/en/wrappers.php.php
 
-            break;
-        default:
+                break;
+            default:
                 $this->_response('Invalid Method', 405);
-            break;
+                break;
         }
     }
 
@@ -345,7 +344,7 @@ abstract class RestApi
     /**
      * Sanitize data.
      *
-     * @param data request body
+     * @param mixed $data request body
      */
     private function cleanInputs($data)
     {
@@ -412,7 +411,7 @@ abstract class RestApi
     /**
      * Get public directory.
      *
-     * @param string publicdir main public directory
+     * @return string publicdir main public directory
      */
     public function getPublicDirPath(): string
     {
@@ -422,7 +421,7 @@ abstract class RestApi
     /**
      * Get privatedir directory.
      *
-     * @param string privatedir main privatedir directory
+     * @return string privatedir main privatedir directory
      */
     public function getPrivateDirPath(): string
     {
