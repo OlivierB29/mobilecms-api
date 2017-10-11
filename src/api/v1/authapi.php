@@ -1,4 +1,5 @@
 <?php
+
 // Auth API endpoint
 require_once 'utils/AuthenticationApi.php';
 

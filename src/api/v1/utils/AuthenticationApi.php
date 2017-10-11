@@ -12,17 +12,17 @@ require_once 'MailUtils.php';
 class AuthenticationApi extends RestApi
 {
     /**
-     * Debug feature
+     * Debug feature.
      */
     private $debugResetPassword = false;
 
     /**
-     * Enable send mail
+     * Enable send mail.
      */
     private $enablemail = false;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param stdClass $conf JSON configuration
      */
@@ -41,7 +41,7 @@ class AuthenticationApi extends RestApi
     }
 
     /**
-     * Base API path /authapi/v1/authenticate
+     * Base API path /authapi/v1/authenticate.
      *
      * @return Response object
      */
@@ -53,7 +53,7 @@ class AuthenticationApi extends RestApi
             //throw error if wrong configuration, such as empty directory
             $this->checkConfiguration();
 
-            $service = new UserService($this->getPrivateDirPath() . '/users');
+            $service = new UserService($this->getPrivateDirPath().'/users');
 
             // Preflight requests are send by Angular
             if ($this->method === 'OPTIONS') {
@@ -96,7 +96,7 @@ class AuthenticationApi extends RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->getPrivateDirPath() . '/users');
+        $service = new UserService($this->getPrivateDirPath().'/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -133,7 +133,7 @@ class AuthenticationApi extends RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->getPrivateDirPath() . '/users');
+        $service = new UserService($this->getPrivateDirPath().'/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -190,7 +190,7 @@ class AuthenticationApi extends RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->getPrivateDirPath() . '/users');
+        $service = new UserService($this->getPrivateDirPath().'/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -221,7 +221,7 @@ class AuthenticationApi extends RestApi
 
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
-        $service = new UserService($this->getPrivateDirPath() . '/users');
+        $service = new UserService($this->getPrivateDirPath().'/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -255,7 +255,8 @@ class AuthenticationApi extends RestApi
     }
 
     /**
-     * Get id from URI
+     * Get id from URI.
+     *
      * @return string id from URI
      */
     private function getId(): string
@@ -269,7 +270,7 @@ class AuthenticationApi extends RestApi
     }
 
     /**
-     * Preflight response
+     * Preflight response.
      *
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
@@ -288,7 +289,7 @@ class AuthenticationApi extends RestApi
     }
 
     /**
-     * Get IP and user agent from client
+     * Get IP and user agent from client.
      *
      * @return string IP and user agent
      */
@@ -298,7 +299,7 @@ class AuthenticationApi extends RestApi
     }
 
     /**
-     * Get IP address
+     * Get IP address.
      *
      * @return string IP address
      */

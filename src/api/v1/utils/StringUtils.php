@@ -33,7 +33,7 @@ class StringUtils
      * Starts with string ?
      *
      * @param string $haystack eg "foobar"
-     * @param string $needle eg "foo"
+     * @param string $needle   eg "foo"
      *
      * @return bool result
      */
@@ -48,7 +48,7 @@ class StringUtils
      * Ends with string ?
      *
      * @param string $haystack eg "foobar"
-     * @param string $needle eg "bar"
+     * @param string $needle   eg "bar"
      *
      * @return bool result
      */

@@ -15,8 +15,8 @@ class JsonUtils
     }
 
     /**
-     * Read a JSON file
-     * 
+     * Read a JSON file.
+     *
      * @param string $file : file path
      *
      * @return array or stdClass JSON object
@@ -27,10 +27,10 @@ class JsonUtils
     }
 
     /**
-     * Read a JSON file
-     * 
+     * Read a JSON file.
+     *
      * @param string $file : file
-     * @param data $data : JSON object
+     * @param data   $data : JSON object
      */
     public static function writeJsonFile(string $file, $data)
     {
@@ -55,8 +55,8 @@ class JsonUtils
     /**
      * Find a JSON object into a JSON array, by key=value.
      *
-     * @param array $data : Array
-     * @param string $name : eg: id
+     * @param array  $data  : Array
+     * @param string $name  : eg: id
      * @param string $value : eg: 123
      */
     public static function getByKey(array $data, string $name, string $value)

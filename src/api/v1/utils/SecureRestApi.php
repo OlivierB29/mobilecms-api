@@ -27,8 +27,8 @@ abstract class SecureRestApi extends RestApi
     private $role = 'editor';
 
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param stdClass conf JSON configuration
      */
     public function __construct(stdClass $conf)
@@ -67,7 +67,7 @@ abstract class SecureRestApi extends RestApi
      * Or send by test units.
      *
      * @param array $headers : send by test units.
-     * @param array $SERVER : send by test units.
+     * @param array $SERVER  : send by test units.
      */
     public function authorize(array $headers = null, array $SERVER = null): Response
     {
@@ -104,10 +104,10 @@ abstract class SecureRestApi extends RestApi
     }
 
     /**
-     * Authorize current user
-     * 
+     * Authorize current user.
+     *
      * @param array $SERVER : send by test units.
-     * 
+     *
      * @return Response object
      */
     public function doAuthorize(array $SERVER = null)
@@ -199,7 +199,7 @@ abstract class SecureRestApi extends RestApi
      * http://php.net/manual/en/function.apache-request-headers.php
      *
      * @param array $SERVER : send same content as PHP variable when testing
-     * 
+     *
      * @return array headers
      */
     private function getAuthorizationHeader($SERVER = null)
@@ -231,7 +231,7 @@ abstract class SecureRestApi extends RestApi
      *  Get token from headers.
      *
      * @param string $headerValue header value
-     * 
+     *
      * @return string token value
      */
     private function getBearerTokenValue(string $headerValue): string
@@ -249,7 +249,7 @@ abstract class SecureRestApi extends RestApi
      * Get access token from SERVER.
      *
      * @param array $SERVER : send by test units.
-     * 
+     *
      * @return string token value
      */
     private function getBearerToken(array $SERVER = null): string

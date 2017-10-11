@@ -1,4 +1,5 @@
 <?php
+
 // File API endpoint
 require_once 'utils/FileApi.php';
 
