@@ -56,13 +56,13 @@ class UserService
     public function getJsonUserFile(string $email): string
     {
         if (empty($this->databasedir)) {
-            throw new Exception('getJsonUserFile : empty conf');
+            throw new Exception('getJsonUserFile()  empty conf');
         }
 
         if (!empty($email)) {
             return $this->databasedir . '/' . strtolower($email) . '.json';
         } else {
-            throw new Exception('getJsonUserFile : empty email');
+            throw new Exception('getJsonUserFile()  empty email');
         }
     }
 
@@ -85,10 +85,10 @@ class UserService
             if (isset($jsonUser->{'name'}) && isset($jsonUser->{'password'})) {
                 $result = $jsonUser;
             } else {
-                throw new Exception('getJsonUser : empty user ' . $email);
+                throw new Exception('getJsonUser() empty user ' . $email);
             }
         } else {
-            throw new Exception('getJsonUser : file not found ' . $file);
+            throw new Exception('getJsonUser() file not found ' . $file);
         }
 
         return $result;
@@ -163,7 +163,7 @@ class UserService
             $file = $this->getJsonUserFile($email);
             JsonUtils::writeJsonFile($file, $jsonUser);
         } else {
-            throw new Exception('addDbUserWithSecret : empty email');
+            throw new Exception('addDbUserWithSecret() empty email');
         }
     }
 

@@ -31,8 +31,8 @@ class AuthenticationApi extends RestApi
         parent::__construct($conf);
 
         // Default value is true
-        if (!empty($this->conf->{'debugnotifications'}) && 'false' === $this->conf->{'debugnotifications'}) {
-            $this->$debugResetPassword = true;
+        if (!empty($this->conf->{'debugnotifications'}) && 'true' === $this->conf->{'debugnotifications'}) {
+            $this->debugResetPassword = true;
         }
 
         if (!empty($this->conf->{'enablemail'}) && 'true' === $this->conf->{'enablemail'}) {

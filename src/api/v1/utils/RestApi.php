@@ -85,7 +85,7 @@ abstract class RestApi
     /**
      * When enabled : send readable errors in responses.
      */
-    protected $displayApiErrors = true;
+    protected $displayApiErrors = false;
 
     /**
      * Root app dir.
@@ -157,6 +157,11 @@ abstract class RestApi
         // Default value is true
         if (!empty($this->conf->{'postformdata'}) && 'true' === $this->conf->{'postformdata'}) {
             $this->postformdata = true;
+        }
+
+        // Default value is false
+        if (!empty($this->conf->{'debugapiexceptions'}) && 'true' === $this->conf->{'debugapiexceptions'}) {
+            $this->displayApiErrors = true;
         }
 
         if ($this->enableHeaders) {
@@ -329,6 +334,7 @@ abstract class RestApi
 
             $status = 500;
             error_log($e->getMessage());
+            // enable on local development server only https://www.owasp.org/index.php/Improper_Error_Handling
             if ($this->displayApiErrors) {
                 $responseBody = json_encode(['error' => $e->getMessage()]);
             } else {

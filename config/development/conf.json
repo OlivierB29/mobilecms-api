@@ -6,6 +6,7 @@
   "apikeyfile": "",
   "enablecleaninputs": "true",
   "https": "false",
+  "debugapiexceptions": "false",
   "errorlog": "true",
   "enableheaders": "true",
   "enableapikey": "false",

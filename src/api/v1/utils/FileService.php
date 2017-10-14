@@ -103,7 +103,7 @@ class FileService
         if (isset($mediadir) && isset($datatype) && isset($id)) {
             return $mediadir . '/' . $datatype . '/' . $id;
         } else {
-            throw new Exception('getMediaDirectory mediadir:' . $mediadir . ' type:' . $datatype . ' id:' . $id);
+            throw new Exception('getMediaDirectory() mediadir ' . $mediadir . ' type ' . $datatype . ' id ' . $id);
         }
     }
 }
