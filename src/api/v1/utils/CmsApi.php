@@ -189,7 +189,8 @@ class CmsApi extends SecureRestApi
             $response = $this->preflight();
         } elseif ($this->method === 'GET') {
             // eg : /api/v1/file?filename
-            // $this->args contains the remaining path parameters --> eg : /api/v1/file?file=/calendar/1/foo/bar/sample.json
+            // args contains the remaining path parameters
+            // --> eg : /api/v1/file?file=/calendar/1/foo/bar/sample.json
 
             if (array_key_exists(self::FILE, $this->getRequest())) {
                 // this

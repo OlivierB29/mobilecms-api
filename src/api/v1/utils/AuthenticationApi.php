@@ -40,49 +40,7 @@ class AuthenticationApi extends RestApi
         }
     }
 
-    /**
-     * Base API path /authapi/v1/authenticate.
-     *
-     * @return Response object
-     */
-    protected function authenticate() : Response
-    {
-        $response = $this->getDefaultResponse();
 
-        try {
-            //throw error if wrong configuration, such as empty directory
-            $this->checkConfiguration();
-
-            $service = new UserService($this->getPrivateDirPath() . '/users');
-
-            // Preflight requests are send by Angular
-            if ($this->method === 'OPTIONS') {
-                // eg : /authapi/v1/auth
-                $response = $service->preflight();
-            }
-
-            if ($this->method === 'POST') {
-                if (empty($this->getRequestBody())) {
-                    throw new Exception('no login request');
-                }
-                // login and get token
-                // eg : { "user": "test@example.com", "password":"Sample#123456"}
-                $logindata = json_decode($this->getRequestBody());
-
-                //TODO : user contains either email of name
-                if (!isset($logindata)) {
-                    throw new Exception('no login data');
-                }
-                $response = $service->getToken($logindata->{'user'}, $logindata->{'password'});
-                unset($logindata);
-                // free variables before response
-            }
-        } catch (Exception $e) {
-            $response->setError(401, $e->getMessage());
-        } finally {
-            return $response;
-        }
-    }
 
     /**
      * Base API path /authapi/v1/changepassword.
@@ -113,7 +71,11 @@ class AuthenticationApi extends RestApi
             //TODO : user contains either email of name
 
             // free variables before response
-            $response = $service->changePassword($logindata->{'user'}, $logindata->{'password'}, $logindata->{'newpassword'});
+            $response = $service->changePassword(
+                $logindata->{'user'},
+                $logindata->{'password'},
+                $logindata->{'newpassword'}
+            );
 
             unset($logindata);
         }
@@ -158,7 +120,12 @@ class AuthenticationApi extends RestApi
                 $u = new MailUtils();
 
                 if ($this->enablemail) {
-                    $CR_Mail = @mail($logindata->{'user'}, 'new password', $u->getNewPassword('new password', $clearPassword, $this->getClientInfo()), $u->getHeaders($this->conf->{'mailsender'}));
+                    $CR_Mail = @mail(
+                        $logindata->{'user'},
+                        'new password',
+                        $u->getNewPassword('new password', $clearPassword, $this->getClientInfo()),
+                        $u->getHeaders($this->conf->{'mailsender'})
+                    );
 
                     if ($CR_Mail === false) {
                         $response->setError(500, $CR_Mail);
@@ -232,7 +199,15 @@ class AuthenticationApi extends RestApi
         if ($this->method === 'POST') {
             $user = json_decode($this->getRequestBody());
             //returns a empty string if success, a string with the message otherwise
-            $createresult = $service->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
+
+            $createresult = $service->createUserWithSecret(
+                $user->{'name'},
+                $user->{'email'},
+                $user->{'password'},
+                $user->{'secretQuestion'},
+                $user->{'secretResponse'},
+                'create'
+            );
             if ($createresult === null) {
                 $response->setCode(200);
                 $response->setResult('{}');
@@ -244,30 +219,7 @@ class AuthenticationApi extends RestApi
         return $response;
     }
 
-    /**
-     * Check if directory is defined.
-     */
-    private function checkConfiguration()
-    {
-        if (!isset($this->conf->{'privatedir'})) {
-            throw new Exception('Empty privatedir');
-        }
-    }
 
-    /**
-     * Get id from URI.
-     *
-     * @return string id from URI
-     */
-    private function getId(): string
-    {
-        $result = '';
-        if (isset($this->args) && array_key_exists(0, $this->args)) {
-            $result = $this->args[0];
-        }
-
-        return $result;
-    }
 
     /**
      * Preflight response.
@@ -298,11 +250,57 @@ class AuthenticationApi extends RestApi
         return $this->getClientIp() . ' ' . $_SERVER['HTTP_USER_AGENT'];
     }
 
-    /**
-     * Get IP address.
-     *
-     * @return string IP address
-     */
+
+        /**
+         * Base API path /authapi/v1/authenticate.
+         *
+         * @return Response object
+         */
+    protected function authenticate() : Response
+    {
+        $response = $this->getDefaultResponse();
+
+        try {
+            // error if wrong configuration, such as empty directory
+            $this->checkConfiguration();
+
+            $service = new UserService($this->getPrivateDirPath() . '/users');
+
+            // Preflight requests are send by Angular
+            if ($this->method === 'OPTIONS') {
+                // eg : /authapi/v1/auth
+                $response = $service->preflight();
+            }
+
+            if ($this->method === 'POST') {
+                if (empty($this->getRequestBody())) {
+                    throw new Exception('no login request');
+                }
+                // login and get token
+                // eg : { "user": "test@example.com", "password":"Sample#123456"}
+                $logindata = json_decode($this->getRequestBody());
+
+                //TODO : user contains either email of name
+                if (!isset($logindata)) {
+                    throw new Exception('no login data');
+                }
+                $response = $service->getToken($logindata->{'user'}, $logindata->{'password'});
+                unset($logindata);
+                // free variables before response
+            }
+        } catch (Exception $e) {
+            $response->setError(401, $e->getMessage());
+        } finally {
+            return $response;
+        }
+    }
+
+
+        /**
+         * Get IP address.
+         *
+         * @return string IP address
+         */
     public function getClientIp(): string
     {
         $ipaddress = '';
@@ -323,5 +321,30 @@ class AuthenticationApi extends RestApi
         }
 
         return $ipaddress;
+    }
+
+    /**
+     * Check if directory is defined.
+     */
+    private function checkConfiguration()
+    {
+        if (!isset($this->conf->{'privatedir'})) {
+            throw new Exception('Empty privatedir');
+        }
+    }
+
+    /**
+     * Get id from URI.
+     *
+     * @return string id from URI
+     */
+    private function getId(): string
+    {
+        $result = '';
+        if (isset($this->args) && array_key_exists(0, $this->args)) {
+            $result = $this->args[0];
+        }
+
+        return $result;
     }
 }

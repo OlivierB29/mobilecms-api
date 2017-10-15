@@ -138,36 +138,6 @@ class UserService
     }
 
     /**
-     * Create a new user file.
-     *
-     * @param string $email          : email
-     * @param string $name           : name
-     * @param string $password       : password
-     * @param string $salt           : private salt
-     * @param string $role           : role none|editor|admin
-     * @param string $secretQuestion : secret question (encoded)
-     * @param string $secretResponse : secret question (encrypted)
-     */
-    private function addDbUserWithSecret(string $email, string $name, string $password, string $salt, string $role, string $secretQuestion, string $secretResponse)
-    {
-        if (!empty($email)) {
-            $jsonUser = json_decode('{ "name" : "",  "email" : "",  "password" : "",  "salt" : "",  "secretQuestion" : "",  "secretResponse" : "",  "role" : ""}');
-            $jsonUser->{'name'} = $name;
-            $jsonUser->{'email'} = $email;
-            $jsonUser->{'password'} = $password;
-            $jsonUser->{'salt'} = $salt;
-            $jsonUser->{'role'} = $role;
-            $jsonUser->{'secretQuestion'} = $secretQuestion;
-            $jsonUser->{'secretResponse'} = $secretResponse;
-
-            $file = $this->getJsonUserFile($email);
-            JsonUtils::writeJsonFile($file, $jsonUser);
-        } else {
-            throw new Exception('addDbUserWithSecret() empty email');
-        }
-    }
-
-    /**
      * Create a new user.
      *
      * @param string $username       : email
@@ -180,8 +150,15 @@ class UserService
      *
      * @return string empty string if success
      */
-    public function createUserWithSecret(string $username, string $emailParam, string $password, string $secretQuestion, string $secretResponse, string $mode)
-    {
+    public function createUserWithSecret(
+        string $username,
+        string $emailParam,
+        string $password,
+        string $secretQuestion,
+        string $secretResponse,
+        string $mode
+    ) {
+
         $email = strtolower($emailParam);
 
         $error_msg = null;
@@ -235,7 +212,15 @@ class UserService
 
             if ($mode === 'create') {
                 // create user
-                $this->addDbUserWithSecret($email, $username, $saltpassword, $random_salt, 'guest', $secretQuestion, $saltresponse);
+                $this->addDbUserWithSecret(
+                    $email,
+                    $username,
+                    $saltpassword,
+                    $random_salt,
+                    'guest',
+                    $secretQuestion,
+                    $saltresponse
+                );
             } else {
                 //role is not modified
                 $this->updateUser($email, '', $saltpassword, $random_salt, '');
@@ -321,7 +306,12 @@ class UserService
             if (password_verify($password, $user->{'password'})) {
                 $jwt = new JwtToken();
 
-                $token = $jwt->createTokenFromUser($user->{'name'}, $user->{'email'}, $user->{'role'}, $user->{'salt'});
+                $token = $jwt->createTokenFromUser(
+                    $user->{'name'},
+                    $user->{'email'},
+                    $user->{'role'},
+                    $user->{'salt'}
+                );
                 unset($jwt);
                 if (isset($token)) {
                     $response->setCode(200);
@@ -468,69 +458,6 @@ class UserService
         return $response;
     }
 
-    /**
-     * Control if the current user has access to API.
-     *
-     * @param stdClass $user         object
-     * @param string   $requiredRole required role
-     *
-     * @return true if access is authorized
-     */
-    private function isPermitted(stdClass $user, string $requiredRole): bool
-    {
-        $result = false;
-        if (!empty($user) && !empty($user->{'role'}) && !empty($requiredRole)) {
-            if ($requiredRole === 'editor') {
-                $result = $this->isPermittedEditor($user);
-            }
-
-            if ($requiredRole === 'admin') {
-                $result = $this->isPermittedAdmin($user);
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Control if the current user has access to an editor API.
-     *
-     * @param stdClass $user object
-     *
-     * @return true if access is authorized
-     */
-    private function isPermittedEditor(stdClass $user): bool
-    {
-        $result = false;
-        if (!empty($user) && !empty($user->{'role'})) {
-            if ($user->{'role'} === 'editor') {
-                $result = true;
-            } elseif ($user->{'role'} === 'admin') {
-                $result = true;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Control if the current user has access to an admin API.
-     *
-     * @param stdClass $user object
-     *
-     * @return true if access is authorized
-     */
-    private function isPermittedAdmin($user): bool
-    {
-        $result = false;
-        if (!empty($user) && !empty($user->{'role'})) {
-            if ($user->{'role'} === 'admin') {
-                $result = true;
-            }
-        }
-
-        return $result;
-    }
 
     /**
      * Authenticate and return a User object with a token.
@@ -635,5 +562,109 @@ class UserService
         $response->setResult('{}');
 
         return $response;
+    }
+
+
+        /**
+         * Create a new user file.
+         *
+         * @param string $email          : email
+         * @param string $name           : name
+         * @param string $password       : password
+         * @param string $salt           : private salt
+         * @param string $role           : role none|editor|admin
+         * @param string $secretQuestion : secret question (encoded)
+         * @param string $secretResponse : secret question (encrypted)
+         */
+    private function addDbUserWithSecret(
+        string $email,
+        string $name,
+        string $password,
+        string $salt,
+        string $role,
+        string $secretQuestion,
+        string $secretResponse
+    ) {
+
+        if (!empty($email)) {
+            $jsonUser = json_decode('{ "name" : "",  "email" : "",  "password" : "",  "salt" : "",  "secretQuestion" : "",  "secretResponse" : "",  "role" : ""}');
+            $jsonUser->{'name'} = $name;
+            $jsonUser->{'email'} = $email;
+            $jsonUser->{'password'} = $password;
+            $jsonUser->{'salt'} = $salt;
+            $jsonUser->{'role'} = $role;
+            $jsonUser->{'secretQuestion'} = $secretQuestion;
+            $jsonUser->{'secretResponse'} = $secretResponse;
+
+            $file = $this->getJsonUserFile($email);
+            JsonUtils::writeJsonFile($file, $jsonUser);
+        } else {
+            throw new Exception('addDbUserWithSecret() empty email');
+        }
+    }
+
+
+        /**
+         * Control if the current user has access to API.
+         *
+         * @param stdClass $user         object
+         * @param string   $requiredRole required role
+         *
+         * @return true if access is authorized
+         */
+    private function isPermitted(stdClass $user, string $requiredRole): bool
+    {
+        $result = false;
+        if (!empty($user) && !empty($user->{'role'}) && !empty($requiredRole)) {
+            if ($requiredRole === 'editor') {
+                $result = $this->isPermittedEditor($user);
+            }
+
+            if ($requiredRole === 'admin') {
+                $result = $this->isPermittedAdmin($user);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Control if the current user has access to an editor API.
+     *
+     * @param stdClass $user object
+     *
+     * @return true if access is authorized
+     */
+    private function isPermittedEditor(stdClass $user): bool
+    {
+        $result = false;
+        if (!empty($user) && !empty($user->{'role'})) {
+            if ($user->{'role'} === 'editor') {
+                $result = true;
+            } elseif ($user->{'role'} === 'admin') {
+                $result = true;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Control if the current user has access to an admin API.
+     *
+     * @param stdClass $user object
+     *
+     * @return true if access is authorized
+     */
+    private function isPermittedAdmin($user): bool
+    {
+        $result = false;
+        if (!empty($user) && !empty($user->{'role'})) {
+            if ($user->{'role'} === 'admin') {
+                $result = true;
+            }
+        }
+
+        return $result;
     }
 }

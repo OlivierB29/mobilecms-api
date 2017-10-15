@@ -8,9 +8,9 @@ require_once 'JsonUtils.php';
  */
 class ApiKey
 {
-    /**
-     * Basic implementation of API Key verification.
-     */
+  /**
+   * Basic implementation of API Key verification.
+   */
     public function verifyKey($keyfile, $key, $origin): bool
     {
         $result = false;
@@ -25,6 +25,7 @@ class ApiKey
 
             $result = ($jsonKey->{'key'} === $key && $jsonKey->{'origin'} === $origin);
         }
+
 
         return $result;
     }

@@ -29,40 +29,6 @@ class AdminApi extends SecureRestApi
         $this->role = 'admin';
     }
 
-    /**
-     * Get or refresh index.
-     *
-     * @return Response object
-     */
-    protected function index() : Response
-    {
-        $userKey = 'email';
-        $response = $this->getDefaultResponse();
-        $datatype = $this->getDataType();
-
-        $this->checkConfiguration();
-
-        // Preflight requests are send by Angular
-        if ($this->method === 'OPTIONS') {
-            // eg : /api/v1/content
-            $response = $this->preflight();
-        } elseif (!empty($datatype)) {
-            $service = new ContentService($this->getPrivateDirPath());
-
-            // eg : /api/v1/content/calendar
-            if ($this->method === 'GET') {
-                if (!empty($pathId)) {
-                    //TODO get single index value
-                } else {
-                    $response = $service->getAll($datatype . '/index/index.json');
-                }
-            } elseif ($this->method === 'POST') {
-                $response = $service->rebuildIndex($datatype, $userKey);
-            }
-        }
-
-        return $response;
-    }
 
     /**
      * Base API path /api/v1/content.
@@ -90,7 +56,8 @@ class AdminApi extends SecureRestApi
             // eg : /api/v1/content/calendar
             if ($this->method === 'GET') {
                 if (!empty($pathId)) {
-                    //get the full data of a single record. $this->args contains the remaining path parameters  eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
+                    // get the full data of a single record. $this->args contains the remaining path parameters
+                    // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
                     $tmpResponse = $service->getRecord($datatype, $pathId);
                     // basic user fields, without password
                     if ($tmpResponse->getCode() === 200) {
@@ -133,8 +100,15 @@ class AdminApi extends SecureRestApi
                     JsonUtils::copy($requestuser, $user);
 
                     //returns a empty string if success, a string with the message otherwise
-                    $createresult = $userService->createUserWithSecret($user->{'name'}, $user->{'email'}, $user->{'password'}, $user->{'secretQuestion'}, $user->{'secretResponse'}, 'create');
 
+                    $createresult = $userService->createUserWithSecret(
+                        $user->{'name'},
+                        $user->{'email'},
+                        $user->{'password'},
+                        $user->{'secretQuestion'},
+                        $user->{'secretResponse'},
+                        'create'
+                    );
                     if (empty($createresult)) {
                         $id = $user->{self::EMAIL};
                         $response = $service->publishById($datatype, self::EMAIL, $id);
@@ -173,15 +147,7 @@ class AdminApi extends SecureRestApi
         return $response;
     }
 
-    /**
-     * Initialize a default user object.
-     *
-     * *@return stdClass user JSON object
-     */
-    private function getDefaultUser(): stdClass
-    {
-        return json_decode('{"name":"", "email":"", "password":"", "secretQuestion":"", "secretResponse":"" }');
-    }
+
 
     /**
      * Basic user fields, without password.
@@ -199,6 +165,72 @@ class AdminApi extends SecureRestApi
         $responseUser->{'role'} = $completeUserObj->{'role'};
 
         return json_encode($responseUser);
+    }
+
+
+
+    /**
+     * Preflight response.
+     *
+     * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
+     *
+     * @return Response object
+     */
+    public function preflight(): Response
+    {
+        $response = new Response();
+        $response->setCode(200);
+        $response->setResult('{}');
+
+        header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+
+        return $response;
+    }
+
+    /**
+     * Get or refresh index.
+     *
+     * @return Response object
+     */
+    protected function index() : Response
+    {
+        $userKey = 'email';
+        $response = $this->getDefaultResponse();
+        $datatype = $this->getDataType();
+
+        $this->checkConfiguration();
+
+        // Preflight requests are send by Angular
+        if ($this->method === 'OPTIONS') {
+            // eg : /api/v1/content
+            $response = $this->preflight();
+        } elseif (!empty($datatype)) {
+            $service = new ContentService($this->getPrivateDirPath());
+
+            // eg : /api/v1/content/calendar
+            if ($this->method === 'GET') {
+                if (!empty($pathId)) {
+                    //TODO get single index value
+                } else {
+                    $response = $service->getAll($datatype . '/index/index.json');
+                }
+            } elseif ($this->method === 'POST') {
+                $response = $service->rebuildIndex($datatype, $userKey);
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * Initialize a default user object.
+     *
+     * *@return stdClass user JSON object
+     */
+    private function getDefaultUser(): stdClass
+    {
+        return json_decode('{"name":"", "email":"", "password":"", "secretQuestion":"", "secretResponse":"" }');
     }
 
     /**
@@ -242,24 +274,5 @@ class AdminApi extends SecureRestApi
         if (!isset($this->conf->{'privatedir'})) {
             throw new Exception('Empty publicdir');
         }
-    }
-
-    /**
-     * Preflight response.
-     *
-     * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
-     *
-     * @return Response object
-     */
-    public function preflight(): Response
-    {
-        $response = new Response();
-        $response->setCode(200);
-        $response->setResult('{}');
-
-        header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-
-        return $response;
     }
 }

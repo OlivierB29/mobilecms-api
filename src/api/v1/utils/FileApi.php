@@ -35,6 +35,7 @@ class FileApi extends SecureRestApi
         $this->media = $this->conf->{'media'};
     }
 
+
     /**
      * Basic file upload.
      *
@@ -162,6 +163,45 @@ class FileApi extends SecureRestApi
         }
 
         return $response;
+    }
+
+
+    /**
+     * Preflight response
+     * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
+     *
+     * @return Response object
+     */
+    public function preflight(): Response
+    {
+        $response = new Response();
+        $response->setCode(200);
+        $response->setResult('{}');
+
+        header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+
+        return $response;
+    }
+
+    /**
+     * Main storage directory.
+     *
+     * @return eg : // /var/www/html/media
+     */
+    public function getMediaDirPath(): string
+    {
+        return $this->getRootDir() . $this->conf->{'media'};
+    }
+
+    /**
+     * Record storage directory.
+     *
+     * @return eg : // /var/www/html/media/calendar/1
+     */
+    public function getRecordDirPath($type, $id): string
+    {
+        return $this->getMediaDirPath() . '/' . $type . '/' . $id;
     }
 
     /**
@@ -356,43 +396,5 @@ class FileApi extends SecureRestApi
         $response->setCode(200);
 
         return $response;
-    }
-
-    /**
-     * Preflight response
-     * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
-     *
-     * @return Response object
-     */
-    public function preflight(): Response
-    {
-        $response = new Response();
-        $response->setCode(200);
-        $response->setResult('{}');
-
-        header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-
-        return $response;
-    }
-
-    /**
-     * Main storage directory.
-     *
-     * @return eg : // /var/www/html/media
-     */
-    public function getMediaDirPath(): string
-    {
-        return $this->getRootDir() . $this->conf->{'media'};
-    }
-
-    /**
-     * Record storage directory.
-     *
-     * @return eg : // /var/www/html/media/calendar/1
-     */
-    public function getRecordDirPath($type, $id): string
-    {
-        return $this->getMediaDirPath() . '/' . $type . '/' . $id;
     }
 }

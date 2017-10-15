@@ -92,44 +92,17 @@ abstract class RestApi
      */
     protected $rootDir = '';
 
+
     /**
-     * Set request URI eg:
-     * /api/v1/content/save
-     * /restapi/v1/recipe/cake/foo/bar.
-     * http://localhost/restapi/v1/file/?file=news/index/metadata.json.
+     * Preflight requests are send by client framework, such as Angular
+     * Example :
+     * header("Access-Control-Allow-Methods: *");
+     * header("Access-Control-Allow-Headers: Content-Type,
+     *   Access-Control-Allow-Headers, Authorization, X-Requested-With");.
      *
-     * @param string $request uri
+     * @return Response object
      */
-    public function setRequestUri(string $request)
-    {
-        $this->args = explode('/', rtrim(ltrim($request, '/'), '/'));
-        // eg : api
-        array_shift($this->args);
-
-        // eg : v1
-        if (array_key_exists(0, $this->args)) {
-            $this->apiversion = array_shift($this->args);
-        }
-
-        //TODO better parse.
-        // issue when restapi/v1/file?file=news/index/metadata.json
-        // instead, use restapi/v1/file/?file=news/index/metadata.json
-        //
-        // eg : recipe
-        if (array_key_exists(0, $this->args)) {
-            $this->endpoint = array_shift($this->args);
-        }
-
-        // eg : cake
-        if (array_key_exists(0, $this->args)) {
-            $this->verb = array_shift($this->args);
-        }
-
-        // $this->args contains the remaining elements
-        // eg:
-        // [0] => foo
-        // [1] => bar
-    }
+    abstract public function preflight(): Response;
 
     /**
      * Constructor.
@@ -203,6 +176,47 @@ abstract class RestApi
         $this->rootDir = $_SERVER['DOCUMENT_ROOT'];
     }
 
+
+        /**
+         * Set request URI eg:
+         * /api/v1/content/save
+         * /restapi/v1/recipe/cake/foo/bar.
+         * http://localhost/restapi/v1/file/?file=news/index/metadata.json.
+         *
+         * @param string $request uri
+         */
+    public function setRequestUri(string $request)
+    {
+        $this->args = explode('/', rtrim(ltrim($request, '/'), '/'));
+       // eg : api
+        array_shift($this->args);
+
+       // eg : v1
+        if (array_key_exists(0, $this->args)) {
+            $this->apiversion = array_shift($this->args);
+        }
+
+       //TODO better parse.
+       // issue when restapi/v1/file?file=news/index/metadata.json
+       // instead, use restapi/v1/file/?file=news/index/metadata.json
+       //
+       // eg : recipe
+        if (array_key_exists(0, $this->args)) {
+            $this->endpoint = array_shift($this->args);
+        }
+
+       // eg : cake
+        if (array_key_exists(0, $this->args)) {
+            $this->verb = array_shift($this->args);
+        }
+
+       // $this->args contains the remaining elements
+       // eg:
+       // [0] => foo
+       // [1] => bar
+    }
+
+
     /**
      * Initialize parameters with request.
      * Important : the variables are initialized in unit tests.
@@ -214,9 +228,16 @@ abstract class RestApi
      * @param array $POST    : must be the same content like the PHP variable
      * @param array $headers : http headers
      */
-    public function setRequest(array $REQUEST = null, array $SERVER = null, array $GET = null, array $POST = null, array $headers = null)
-    {
-        // Useful for tests http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
+    public function setRequest(
+        array $REQUEST = null,
+        array $SERVER = null,
+        array $GET = null,
+        array $POST = null,
+        array $headers = null
+    ) {
+
+        // Useful for tests
+        // http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
 
         // set reference to avoid objet clone
         if ($SERVER === null) {
@@ -255,7 +276,8 @@ abstract class RestApi
                 if ($this->postformdata === true) {
                     $this->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
                 } else {
-                    $this->request = $this->enableCleanInputs ? $this->cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
+                    $this->request = $this->enableCleanInputs ?
+                    $this->cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
                 }
                 break;
             case 'OPTIONS':
@@ -286,16 +308,7 @@ abstract class RestApi
         return $this->request;
     }
 
-    /**
-     * Preflight requests are send by client framework, such as Angular
-     * Example :
-     * header("Access-Control-Allow-Methods: *");
-     * header("Access-Control-Allow-Headers: Content-Type,
-     *   Access-Control-Allow-Headers, Authorization, X-Requested-With");.
-     *
-     * @return Response object
-     */
-    abstract public function preflight(): Response;
+
 
     /**
      * Parse class, and call the method with the endpoint name.
@@ -347,24 +360,6 @@ abstract class RestApi
         }
     }
 
-    /**
-     * Sanitize data.
-     *
-     * @param mixed $data request body
-     */
-    private function cleanInputs($data)
-    {
-        $clean_input = [];
-        if (is_array($data)) {
-            foreach ($data as $k => $v) {
-                $clean_input[$k] = $this->cleanInputs($v);
-            }
-        } else {
-            $clean_input = trim(strip_tags($data));
-        }
-
-        return $clean_input;
-    }
 
     /**
      * Initialize a default Response object.
@@ -432,5 +427,25 @@ abstract class RestApi
     public function getPrivateDirPath(): string
     {
         return $this->rootDir . $this->conf->{'privatedir'};
+    }
+
+
+        /**
+         * Sanitize data.
+         *
+         * @param mixed $data request body
+         */
+    private function cleanInputs($data)
+    {
+        $clean_input = [];
+        if (is_array($data)) {
+            foreach ($data as $k => $v) {
+                $clean_input[$k] = $this->cleanInputs($v);
+            }
+        } else {
+            $clean_input = trim(strip_tags($data));
+        }
+
+        return $clean_input;
     }
 }

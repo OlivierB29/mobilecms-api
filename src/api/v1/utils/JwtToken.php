@@ -9,6 +9,7 @@ class JwtToken
      */
     private $algorithm = 'sha512';
 
+
     /**
      * set algorithm see http://php.net/manual/en/function.hash-algos.php.
      *

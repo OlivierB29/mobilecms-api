@@ -52,6 +52,77 @@ class ContentService
     }
 
     /**
+     * Return a record file path.
+     *
+     * @param string $type : name of type eg : calendar
+     * @param string $id   : unique id of record eg : 1
+     *
+     * @return /foobar/calendar/index.json
+     */
+    private function getItemFileName(string $type, string $id) : string
+    {
+        if (!isset($type)) {
+            throw new Exception('empty type', 1);
+        }
+        if (!isset($id)) {
+            throw new Exception('empty id', 1);
+        }
+
+        return $this->databasedir . '/' . $type . '/' . $id . '.json';
+    }
+
+    /**
+     * Return a template index file path.
+     *
+     * @param string $type : name of type eg : calendar
+     *
+     * @return /foobar/calendar/index.json
+     */
+    private function getIndexTemplateFileName(string $type) : string
+    {
+        if (!isset($type)) {
+            throw new Exception('empty type', 1);
+        }
+
+        return $this->databasedir . '/' . $type . '/index/index_template.json';
+    }
+
+    /**
+     * Generate a backup index file name.
+     *
+     * @param string $type : eg calendar
+     *
+     * @return file name
+     */
+    private function getBackupIndexFileName(string $type) : string
+    {
+        if (!isset($type)) {
+            throw new Exception('empty type', 1);
+        }
+
+        return $this->databasedir . '/' . $type . '/history/index-' . time() . '.json';
+    }
+
+
+        /**
+         * Copy a file and create directory if necessary.
+         *
+         * @param string $s1 : source
+         * @param string $s2 : dest
+         */
+    private function mycopy(string $s1, string $s2)
+    {
+        $path = pathinfo($s2);
+        if (!file_exists($path['dirname'])) {
+            mkdir($path['dirname'], 0777, true);
+        }
+        if (!copy($s1, $s2)) {
+            throw new Exception('copy failed ', 1);
+        }
+    }
+
+
+    /**
      * Get a single record.
      *
      * @param string $type     eg: calendar
@@ -244,25 +315,7 @@ class ContentService
         return $this->post($type, $keyname, $recordStr);
     }
 
-    /**
-     * Return a record file path.
-     *
-     * @param string $type : name of type eg : calendar
-     * @param string $id   : unique id of record eg : 1
-     *
-     * @return /foobar/calendar/index.json
-     */
-    private function getItemFileName(string $type, string $id) : string
-    {
-        if (!isset($type)) {
-            throw new Exception('empty type', 1);
-        }
-        if (!isset($id)) {
-            throw new Exception('empty id', 1);
-        }
 
-        return $this->databasedir . '/' . $type . '/' . $id . '.json';
-    }
 
     /**
      * Return an index file path.
@@ -280,21 +333,6 @@ class ContentService
         return $this->databasedir . '/' . $type . '/index/index.json';
     }
 
-    /**
-     * Return a template index file path.
-     *
-     * @param string $type : name of type eg : calendar
-     *
-     * @return /foobar/calendar/index.json
-     */
-    private function getIndexTemplateFileName(string $type) : string
-    {
-        if (!isset($type)) {
-            throw new Exception('empty type', 1);
-        }
-
-        return $this->databasedir . '/' . $type . '/index/index_template.json';
-    }
 
     /**
      * Save a record.
@@ -473,38 +511,7 @@ class ContentService
         return $response;
     }
 
-    /**
-     * Generate a backup index file name.
-     *
-     * @param string $type : eg calendar
-     *
-     * @return file name
-     */
-    private function getBackupIndexFileName(string $type) : string
-    {
-        if (!isset($type)) {
-            throw new Exception('empty type', 1);
-        }
 
-        return $this->databasedir . '/' . $type . '/history/index-' . time() . '.json';
-    }
-
-    /**
-     * Copy a file and create directory if necessary.
-     *
-     * @param string $s1 : source
-     * @param string $s2 : dest
-     */
-    private function mycopy(string $s1, string $s2)
-    {
-        $path = pathinfo($s2);
-        if (!file_exists($path['dirname'])) {
-            mkdir($path['dirname'], 0777, true);
-        }
-        if (!copy($s1, $s2)) {
-            throw new Exception('copy failed ', 1);
-        }
-    }
 
     /**
      * Options files content.
