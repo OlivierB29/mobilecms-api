@@ -251,11 +251,11 @@ class AuthenticationApi extends RestApi
     }
 
 
-        /**
-         * Base API path /authapi/v1/authenticate.
-         *
-         * @return Response object
-         */
+    /**
+     * Base API path /authapi/v1/authenticate.
+     *
+     * @return Response object
+     */
     protected function authenticate() : Response
     {
         $response = $this->getDefaultResponse();
@@ -296,11 +296,11 @@ class AuthenticationApi extends RestApi
     }
 
 
-        /**
-         * Get IP address.
-         *
-         * @return string IP address
-         */
+    /**
+     * Get IP address.
+     *
+     * @return string IP address
+     */
     public function getClientIp(): string
     {
         $ipaddress = '';

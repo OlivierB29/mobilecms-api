@@ -177,40 +177,40 @@ abstract class RestApi
     }
 
 
-        /**
-         * Set request URI eg:
-         * /api/v1/content/save
-         * /restapi/v1/recipe/cake/foo/bar.
-         * http://localhost/restapi/v1/file/?file=news/index/metadata.json.
-         *
-         * @param string $request uri
-         */
+    /**
+     * Set request URI eg:
+     * /api/v1/content/save
+     * /restapi/v1/recipe/cake/foo/bar.
+     * http://localhost/restapi/v1/file/?file=news/index/metadata.json.
+     *
+     * @param string $request uri
+     */
     public function setRequestUri(string $request)
     {
         $this->args = explode('/', rtrim(ltrim($request, '/'), '/'));
-       // eg : api
+        // eg : api
         array_shift($this->args);
 
-       // eg : v1
+        // eg : v1
         if (array_key_exists(0, $this->args)) {
             $this->apiversion = array_shift($this->args);
         }
 
-       //TODO better parse.
-       // issue when restapi/v1/file?file=news/index/metadata.json
-       // instead, use restapi/v1/file/?file=news/index/metadata.json
-       //
-       // eg : recipe
+        //TODO better parse.
+        // issue when restapi/v1/file?file=news/index/metadata.json
+        // instead, use restapi/v1/file/?file=news/index/metadata.json
+        //
+        // eg : recipe
         if (array_key_exists(0, $this->args)) {
             $this->endpoint = array_shift($this->args);
         }
 
-       // eg : cake
+        // eg : cake
         if (array_key_exists(0, $this->args)) {
             $this->verb = array_shift($this->args);
         }
 
-       // $this->args contains the remaining elements
+        // $this->args contains the remaining elements
        // eg:
        // [0] => foo
        // [1] => bar
@@ -430,11 +430,11 @@ abstract class RestApi
     }
 
 
-        /**
-         * Sanitize data.
-         *
-         * @param mixed $data request body
-         */
+    /**
+     * Sanitize data.
+     *
+     * @param mixed $data request body
+     */
     private function cleanInputs($data)
     {
         $clean_input = [];
