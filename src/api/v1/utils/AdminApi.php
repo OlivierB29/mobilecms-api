@@ -1,9 +1,9 @@
 <?php
 
-require_once 'SecureRestApi.php';
-require_once 'ContentService.php';
-require_once 'UserService.php';
-require_once 'JsonUtils.php';
+// require_once 'SecureRestApi.php';
+// require_once 'ContentService.php';
+// require_once 'UserService.php';
+// require_once 'JsonUtils.php';
 /**
  * Administration API (users, ...).
  */

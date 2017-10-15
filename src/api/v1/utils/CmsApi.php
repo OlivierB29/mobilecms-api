@@ -1,7 +1,7 @@
 <?php
 
-require_once 'SecureRestApi.php';
-require_once 'ContentService.php';
+// require_once 'SecureRestApi.php';
+// require_once 'ContentService.php';
 /*
  * /api/v1/content/cake?filter=foobar
  */

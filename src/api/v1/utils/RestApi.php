@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Response.php';
+// require_once 'Response.php';
 
 /*
  * Core REST Api without Authentication or API Key

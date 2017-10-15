@@ -1,7 +1,7 @@
 <?php
 
-require_once 'SecureRestApi.php';
-require_once 'FileService.php';
+// require_once 'SecureRestApi.php';
+// require_once 'FileService.php';
 /*
  * File API with authentication.
  * Basic file upload using _FILES

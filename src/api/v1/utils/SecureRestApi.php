@@ -1,8 +1,8 @@
 <?php
 
-require_once 'RestApi.php';
-require_once 'ApiKey.php';
-require_once 'UserService.php';
+// require_once 'RestApi.php';
+// require_once 'ApiKey.php';
+// require_once 'UserService.php';
 
 /**
  * Secure implementation of a REST api.

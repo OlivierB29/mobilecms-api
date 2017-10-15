@@ -1,7 +1,7 @@
 <?php
 
 // Admin API endpoint
-include 'utils/AdminApi.php';
+require_once 'autoload.php';
 
 $conf = json_decode(file_get_contents('conf/conf.json'));
 
