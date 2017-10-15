@@ -104,12 +104,12 @@ class ContentService
     }
 
 
-        /**
-         * Copy a file and create directory if necessary.
-         *
-         * @param string $s1 : source
-         * @param string $s2 : dest
-         */
+    /**
+     * Copy a file and create directory if necessary.
+     *
+     * @param string $s1 : source
+     * @param string $s2 : dest
+     */
     private function mycopy(string $s1, string $s2)
     {
         $path = pathinfo($s2);

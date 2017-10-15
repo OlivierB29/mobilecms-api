@@ -158,7 +158,6 @@ class UserService
         string $secretResponse,
         string $mode
     ) {
-
         $email = strtolower($emailParam);
 
         $error_msg = null;
@@ -565,17 +564,17 @@ class UserService
     }
 
 
-        /**
-         * Create a new user file.
-         *
-         * @param string $email          : email
-         * @param string $name           : name
-         * @param string $password       : password
-         * @param string $salt           : private salt
-         * @param string $role           : role none|editor|admin
-         * @param string $secretQuestion : secret question (encoded)
-         * @param string $secretResponse : secret question (encrypted)
-         */
+    /**
+     * Create a new user file.
+     *
+     * @param string $email          : email
+     * @param string $name           : name
+     * @param string $password       : password
+     * @param string $salt           : private salt
+     * @param string $role           : role none|editor|admin
+     * @param string $secretQuestion : secret question (encoded)
+     * @param string $secretResponse : secret question (encrypted)
+     */
     private function addDbUserWithSecret(
         string $email,
         string $name,
@@ -585,7 +584,6 @@ class UserService
         string $secretQuestion,
         string $secretResponse
     ) {
-
         if (!empty($email)) {
             $jsonUser = json_decode('{ "name" : "",  "email" : "",  "password" : "",  "salt" : "",  "secretQuestion" : "",  "secretResponse" : "",  "role" : ""}');
             $jsonUser->{'name'} = $name;
@@ -604,14 +602,14 @@ class UserService
     }
 
 
-        /**
-         * Control if the current user has access to API.
-         *
-         * @param stdClass $user         object
-         * @param string   $requiredRole required role
-         *
-         * @return true if access is authorized
-         */
+    /**
+     * Control if the current user has access to API.
+     *
+     * @param stdClass $user         object
+     * @param string   $requiredRole required role
+     *
+     * @return true if access is authorized
+     */
     private function isPermitted(stdClass $user, string $requiredRole): bool
     {
         $result = false;
