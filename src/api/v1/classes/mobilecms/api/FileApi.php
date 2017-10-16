@@ -54,10 +54,10 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
     public function setFiles(array $files = null)
     {
-      // Useful for tests
-      // http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
+        // Useful for tests
+        // http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
 
-      // set reference to avoid objet clone
+        // set reference to avoid objet clone
         if ($files !== null) {
             $this->files = &$files;
         } else {
