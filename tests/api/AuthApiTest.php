@@ -3,8 +3,6 @@ namespace mobilecms\api;
 
 abstract class AuthApiTest extends ApiTest
 {
-
-
     protected $user;
     protected $token;
     protected $conf;
