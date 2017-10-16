@@ -29,7 +29,7 @@ class Autoloader
                 $namespace = str_replace('/', '\\', $namespace) . '\\';
 
                 // eg: \foo\bar\MyClass
-                $namespaceClassName = $namespace  . $className;
+                $namespaceClassName = $namespace . $className;
 
                 self::registerClass($namespaceClassName, $file->getPathname());
             }
@@ -43,7 +43,6 @@ class Autoloader
 
     public static function loadClass($className)
     {
-
         if (isset(self::$classNames[$className])) {
             require_once self::$classNames[$className];
         }

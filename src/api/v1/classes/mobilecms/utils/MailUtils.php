@@ -1,4 +1,5 @@
 <?php namespace mobilecms\utils;
+
 /**
  * Mail Utility.
  */
