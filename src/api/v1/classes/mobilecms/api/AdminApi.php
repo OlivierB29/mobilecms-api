@@ -31,7 +31,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
     public function setConf(\stdClass $conf)
     {
         parent::setConf($conf);
-      // Default headers for RESTful API
+        // Default headers for RESTful API
         if ($this->enableHeaders) {
             header('Access-Control-Allow-Methods: *');
             header('Content-Type: application/json');

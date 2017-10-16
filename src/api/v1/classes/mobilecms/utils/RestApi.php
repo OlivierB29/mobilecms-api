@@ -113,7 +113,6 @@ abstract class RestApi
 
     public function loadConf(string $file)
     {
-
         if (\file_exists($file)) {
             $this->setConf(json_decode(file_get_contents($file)));
         } else {
@@ -128,7 +127,6 @@ abstract class RestApi
      */
     public function setConf(\stdClass $conf)
     {
-
         if (isset($conf)) {
             $this->conf = $conf;
         } else {
