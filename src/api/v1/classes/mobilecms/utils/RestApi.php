@@ -22,7 +22,7 @@ abstract class RestApi
     /**
      * JSON object with configuration.
      */
-    protected $conf;
+    private $conf;
 
     /**
      * Set to false when unit testing.
@@ -106,11 +106,29 @@ abstract class RestApi
 
     /**
      * Constructor.
+     */
+    public function __construct()
+    {
+    }
+
+    public function loadConf(string $file)
+    {
+
+        if (\file_exists($file)) {
+            $this->setConf(json_decode(file_get_contents($file)));
+        } else {
+            throw new \Exception('Empty conf file');
+        }
+    }
+
+    /**
+     * Init configuration.
      *
      * @param \stdClass $conf JSON configuration
      */
-    public function __construct(\stdClass $conf)
+    public function setConf(\stdClass $conf)
     {
+
         if (isset($conf)) {
             $this->conf = $conf;
         } else {
@@ -118,27 +136,28 @@ abstract class RestApi
         }
 
         // Default value is true
-        if (!empty($this->conf->{'enableheaders'}) && 'false' === $this->conf->{'enableheaders'}) {
+        if (!empty($this->getConf()->{'enableheaders'}) && 'false' === $this->getConf()->{'enableheaders'}) {
             $this->enableHeaders = false;
         }
 
+
         // Default value is true
-        if (!empty($this->conf->{'enablecleaninputs'}) && 'false' === $this->conf->{'enablecleaninputs'}) {
+        if (!empty($this->getConf()->{'enablecleaninputs'}) && 'false' === $this->getConf()->{'enablecleaninputs'}) {
             $this->enableCleanInputs = false;
         }
 
         // Default value is true
-        if (!empty($this->conf->{'postformdata'}) && 'true' === $this->conf->{'postformdata'}) {
+        if (!empty($this->getConf()->{'postformdata'}) && 'true' === $this->getConf()->{'postformdata'}) {
             $this->postformdata = true;
         }
 
         // Default value is false
-        if (!empty($this->conf->{'debugapiexceptions'}) && 'true' === $this->conf->{'debugapiexceptions'}) {
+        if (!empty($this->getConf()->{'debugapiexceptions'}) && 'true' === $this->getConf()->{'debugapiexceptions'}) {
             $this->displayApiErrors = true;
         }
 
         if ($this->enableHeaders) {
-            if (!empty($this->conf->{'crossdomain'}) && 'true' === $this->conf->{'crossdomain'}) {
+            if (!empty($this->getConf()->{'crossdomain'}) && 'true' === $this->getConf()->{'crossdomain'}) {
                 header('Access-Control-Allow-Origin: *');
             }
 
@@ -150,7 +169,7 @@ abstract class RestApi
                 $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
             }
 
-            if (!empty($this->conf->{'https'}) && 'true' === $this->conf->{'https'}) {
+            if (!empty($this->getConf()->{'https'}) && 'true' === $this->getConf()->{'https'}) {
                 //
                 // HTTPS
                 //
@@ -167,7 +186,7 @@ abstract class RestApi
             }
         }
 
-        if (!empty($this->conf->{'errorlog'}) && 'true' === $this->conf->{'errorlog'}) {
+        if (!empty($this->getConf()->{'errorlog'}) && 'true' === $this->getConf()->{'errorlog'}) {
             error_reporting(E_ALL);
             ini_set('display_errors', 'On');
             ini_set('log_errors', 'On');
@@ -419,7 +438,7 @@ abstract class RestApi
      */
     public function getPublicDirPath(): string
     {
-        return $this->rootDir . $this->conf->{'publicdir'};
+        return $this->rootDir . $this->getConf()->{'publicdir'};
     }
 
     /**
@@ -429,7 +448,7 @@ abstract class RestApi
      */
     public function getPrivateDirPath(): string
     {
-        return $this->rootDir . $this->conf->{'privatedir'};
+        return $this->rootDir . $this->getConf()->{'privatedir'};
     }
 
 
@@ -450,5 +469,14 @@ abstract class RestApi
         }
 
         return $clean_input;
+    }
+
+    /**
+    * get JSON conf
+    * @return \stdClass JSON conf
+    */
+    public function getConf()
+    {
+        return $this->conf;
     }
 }

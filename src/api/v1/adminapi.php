@@ -3,6 +3,7 @@
 // Admin API endpoint
 require_once 'autoload.php';
 
-$conf = json_decode(file_get_contents('conf/conf.json'));
-$API = new \mobilecms\api\AdminApi($conf);
+
+$API = new \mobilecms\api\AdminApi();
+$API->loadConf(realpath('conf/conf.json'));
 $API->execute();

@@ -27,9 +27,19 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
      *
      * @param \stdClass $conf JSON configuration
      */
-    public function __construct(\stdClass $conf)
+    public function __construct()
     {
-        parent::__construct($conf);
+        parent::__construct();
+    }
+
+    /**
+     * Init configuration.
+     *
+     * @param \stdClass $conf JSON configuration
+     */
+    public function setConf(\stdClass $conf)
+    {
+        parent::setConf($conf);
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {
@@ -248,7 +258,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
      */
     private function checkConfiguration()
     {
-        if (!isset($this->conf->{'publicdir'})) {
+        if (!isset($this->getConf()->{'publicdir'})) {
             throw new \Exception('Empty publicdir');
         }
     }

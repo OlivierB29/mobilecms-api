@@ -31,10 +31,9 @@ abstract class SecureRestApi extends RestApi
      *
      * @param \stdClass $conf JSON configuration
      */
-    public function __construct(\stdClass $conf)
+    public function __construct()
     {
-        parent::__construct($conf);
-        $this->role = 'editor';
+        parent::__construct();
     }
 
     /**
@@ -124,7 +123,7 @@ abstract class SecureRestApi extends RestApi
         //
 
         // api key provided ?
-        if ($this->conf->{'enableapikey'} === 'true' && isset($headers)) {
+        if ($this->getConf()->{'enableapikey'} === 'true' && isset($headers)) {
             if (array_key_exists('apiKey', $this->request) || array_key_exists('apiKey', $headers)) {
                 $origin = '';
                 if (array_key_exists('HTTP_ORIGIN', $SERVER)) {
@@ -150,7 +149,7 @@ abstract class SecureRestApi extends RestApi
 
                 // verify key
                 $APIKey = new ApiKey();
-                $verifyKeyResult = $APIKey->verifyKey($this->conf->{'apikeyfile'}, $apiKeyValue, $origin);
+                $verifyKeyResult = $APIKey->verifyKey($this->getConf()->{'apikeyfile'}, $apiKeyValue, $origin);
                 unset($APIKey);
                 if (!$verifyKeyResult) {
                     throw new \Exception('Invalid API Key');

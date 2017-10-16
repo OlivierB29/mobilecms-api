@@ -3,6 +3,6 @@
 // CMS API endpoint
 require_once 'autoload.php';
 
-$conf = json_decode(file_get_contents('conf/conf.json'));
-$API = new \mobilecms\api\CmsApi($conf);
+$API = new \mobilecms\api\CmsApi();
+$API->loadConf(realpath('conf/conf.json'));
 $API->execute();

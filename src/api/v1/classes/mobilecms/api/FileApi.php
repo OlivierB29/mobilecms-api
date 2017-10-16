@@ -27,16 +27,26 @@ class FileApi extends \mobilecms\utils\SecureRestApi
      *
      * @param \stdClass $conf JSON configuration
      */
-    public function __construct(\stdClass $conf)
+    public function __construct()
     {
-        parent::__construct($conf);
+        parent::__construct();
+    }
+
+    /**
+     * Init configuration.
+     *
+     * @param \stdClass $conf JSON configuration
+     */
+    public function setConf(\stdClass $conf)
+    {
+        parent::setConf($conf);
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {
             header('Access-Control-Allow-Methods: *');
         }
 
-        $this->media = $this->conf->{'media'};
+        $this->media = $this->getConf()->{'media'};
     }
 
     public function setRequest(
@@ -220,7 +230,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
      */
     public function getMediaDirPath(): string
     {
-        return $this->getRootDir() . $this->conf->{'media'};
+        return $this->getRootDir() . $this->getConf()->{'media'};
     }
 
     /**
@@ -402,7 +412,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
      */
     private function checkConfiguration()
     {
-        if (!isset($this->conf->{'media'})) {
+        if (!isset($this->getConf()->{'media'})) {
             throw new \Exception('Empty media dir');
         }
     }

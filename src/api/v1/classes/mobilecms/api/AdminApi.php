@@ -18,10 +18,20 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
      *
      * @param \stdClass $conf JSON configuration
      */
-    public function __construct($conf)
+    public function __construct()
     {
-        parent::__construct($conf);
-        // Default headers for RESTful API
+        parent::__construct();
+    }
+
+    /**
+     * Init configuration.
+     *
+     * @param \stdClass $conf JSON configuration
+     */
+    public function setConf(\stdClass $conf)
+    {
+        parent::setConf($conf);
+      // Default headers for RESTful API
         if ($this->enableHeaders) {
             header('Access-Control-Allow-Methods: *');
             header('Content-Type: application/json');
@@ -271,7 +281,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
      */
     private function checkConfiguration()
     {
-        if (!isset($this->conf->{'privatedir'})) {
+        if (!isset($this->getConf()->{'privatedir'})) {
             throw new \Exception('Empty publicdir');
         }
     }

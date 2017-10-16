@@ -55,7 +55,8 @@ final class AdminApiTest extends TestCase
         $email = 'role@example.com';
         $path = '/adminapi/v1/content/users/' . $email;
 
-        $API = new AdminApi($this->conf);
+        $API = new AdminApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data'));
         $file = $API->getPrivateDirPath() . '/users/' . $email . '.json';
         $this->assertTrue(copy($API->getPrivateDirPath() . '/save/' . $email . '.json', $file));

@@ -117,7 +117,6 @@ final class UserServiceTest extends TestCase
 
         //login
         $result = $service->login($email, $newPassword);
-        echo '!!!!!' . $result;
         $this->assertTrue('' === $result);
     }
 }

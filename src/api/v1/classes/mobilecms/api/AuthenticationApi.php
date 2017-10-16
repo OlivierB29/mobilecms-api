@@ -26,16 +26,26 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
      *
      * @param \stdClass $conf JSON configuration
      */
-    public function __construct(\stdClass $conf)
+    public function __construct()
     {
-        parent::__construct($conf);
+        parent::__construct();
+    }
+
+    /**
+     * Init configuration.
+     *
+     * @param \stdClass $conf JSON configuration
+     */
+    public function setConf(\stdClass $conf)
+    {
+        parent::setConf($conf);
 
         // Default value is true
-        if (!empty($this->conf->{'debugnotifications'}) && 'true' === $this->conf->{'debugnotifications'}) {
+        if (!empty($this->getConf()->{'debugnotifications'}) && 'true' === $this->getConf()->{'debugnotifications'}) {
             $this->debugResetPassword = true;
         }
 
-        if (!empty($this->conf->{'enablemail'}) && 'true' === $this->conf->{'enablemail'}) {
+        if (!empty($this->getConf()->{'enablemail'}) && 'true' === $this->getConf()->{'enablemail'}) {
             $this->enablemail = true;
         }
     }
@@ -124,7 +134,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
                         $logindata->{'user'},
                         'new password',
                         $u->getNewPassword('new password', $clearPassword, $this->getClientInfo()),
-                        $u->getHeaders($this->conf->{'mailsender'})
+                        $u->getHeaders($this->getConf()->{'mailsender'})
                     );
 
                     if ($CR_Mail === false) {
@@ -328,7 +338,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
      */
     private function checkConfiguration()
     {
-        if (!isset($this->conf->{'privatedir'})) {
+        if (!isset($this->getConf()->{'privatedir'})) {
             throw new \Exception('Empty privatedir');
         }
     }

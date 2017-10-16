@@ -7,11 +7,9 @@ use PHPUnit\Framework\TestCase;
 
 final class AuthenticationApiTest extends TestCase
 {
-    private $conf;
 
     protected function setUp()
     {
-        $this->conf = json_decode(file_get_contents('tests/conf.json'));
     }
 
     public function testLogin()
@@ -25,7 +23,8 @@ final class AuthenticationApiTest extends TestCase
         $GET = null;
         $POST = ['requestbody' => $recordStr];
 
-        $API = new AuthenticationApi($this->conf);
+        $API = new AuthenticationApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);
@@ -43,7 +42,8 @@ final class AuthenticationApiTest extends TestCase
     public function testRegister()
     {
         $email = 'testregister@example.com';
-        $API = new AuthenticationApi($this->conf);
+        $API = new AuthenticationApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data'));
 
         $file = $API->getPrivateDirPath() . '/users/' . $email . '.json';
@@ -77,7 +77,8 @@ final class AuthenticationApiTest extends TestCase
         $path = '/api/v1/changepassword';
         $user = 'changepassword@example.com';
         $userFile = $user . '.json';
-        $API = new AuthenticationApi($this->conf);
+        $API = new AuthenticationApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data'));
         copy($API->getPrivateDirPath() . '/save/' . $userFile, $API->getPrivateDirPath() . '/users/' . $userFile);
 
@@ -116,7 +117,8 @@ final class AuthenticationApiTest extends TestCase
         $GET = null;
         $POST = ['requestbody' => $recordStr];
 
-        $API = new AuthenticationApi($this->conf);
+        $API = new AuthenticationApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST);

@@ -3,6 +3,7 @@
 // Auth API endpoint
 require_once 'autoload.php';
 
-$conf = json_decode(file_get_contents('conf/conf.json'));
-$API = new \mobilecms\api\AuthenticationApi($conf);
+
+$API = new \mobilecms\api\AuthenticationApi();
+$API->loadConf(realpath('conf/conf.json'));
 $API->execute();

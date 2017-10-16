@@ -73,11 +73,6 @@ final class ContentServiceTest extends TestCase
         $service = new ContentService($this->dir);
         $response = $service->rebuildIndex('calendar', 'id');
 
-        if ($response->getCode() !== 200) {
-            echo  '!!!!!!!!!!!' . $response->getResult();
-            echo '!!!!!!!!!!!' . $response->getMessage();
-        }
-
         $this->assertEquals(200, $response->getCode());
     }
 }

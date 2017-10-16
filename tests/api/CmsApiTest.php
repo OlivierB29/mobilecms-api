@@ -56,7 +56,8 @@ final class CmsApiTest extends TestCase
         $GET = [];
         $POST = null;
 
-        $API = new CmsApi($this->conf);
+        $API = new CmsApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
@@ -81,7 +82,8 @@ final class CmsApiTest extends TestCase
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
 
-        $API = new CmsApi($this->conf);
+        $API = new CmsApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data')); // unit test only
         $recordStr = file_get_contents($API->getPublicDirPath() . '/big.json');
         //$recordStr = '{"id":"10","type" : "calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
@@ -122,7 +124,7 @@ final class CmsApiTest extends TestCase
             $GET = null;
             $POST = ['requestbody' => $recordStr];
 
-            $API = new CmsApi($this->conf);
+            $API = new CmsApi(); $API->loadConf(realpath('tests/conf.json'));
 
             $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
@@ -145,7 +147,8 @@ final class CmsApiTest extends TestCase
         $GET = ['requestbody' => '{}'];
         $POST = null;
 
-        $API = new CmsApi($this->conf);
+        $API = new CmsApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
@@ -166,7 +169,8 @@ final class CmsApiTest extends TestCase
         $GET = [];
         $POST = null;
 
-        $API = new CmsApi($this->conf);
+        $API = new CmsApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
@@ -189,7 +193,8 @@ final class CmsApiTest extends TestCase
         $GET = [];
         $POST = null;
 
-        $API = new CmsApi($this->conf);
+        $API = new CmsApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
@@ -213,7 +218,8 @@ final class CmsApiTest extends TestCase
         $GET = [];
         $POST = null;
 
-        $API = new CmsApi($this->conf);
+        $API = new CmsApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
@@ -231,7 +237,8 @@ final class CmsApiTest extends TestCase
         $GET = ['file' => 'calendar/index/metadata.json'];
         $POST = null;
 
-        $API = new CmsApi($this->conf);
+        $API = new CmsApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data')); // unit test only
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
@@ -250,7 +257,8 @@ final class CmsApiTest extends TestCase
     public function testDelete()
     {
         $id = 'exampleid';
-        $API = new CmsApi($this->conf);
+        $API = new CmsApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data')); // unit test only
         $dir = $API->getPublicDirPath();
 

@@ -41,7 +41,8 @@ final class FileApiTest extends TestCase
         $POST = ['requestbody' => $recordStr];
         unset($recordStr);
 
-        $API = new FileApi($this->conf);
+        $API = new FileApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
@@ -70,7 +71,8 @@ final class FileApiTest extends TestCase
         $filename = 'testdelete.pdf';
         $record = '/calendar/2';
         // tests-data/fileapi/save -> tests-data/fileapi/media/calendar/2/
-        $API = new FileApi($this->conf);
+        $API = new FileApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data'));
         $destfile = $API->getMediaDirPath() . $record . '/' . $filename;
 
@@ -118,7 +120,8 @@ final class FileApiTest extends TestCase
         $POST = null;
         unset($recordStr);
 
-        $API = new FileApi($this->conf);
+        $API = new FileApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setRootDir(realpath('tests-data'));
 
         $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
@@ -158,7 +161,8 @@ final class FileApiTest extends TestCase
 
 
         // API call
-        $API = new FileApi($this->conf);
+        $API = new FileApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setDebug(true);
         $API->setRootDir(realpath('tests-data'));
 
@@ -202,7 +206,8 @@ final class FileApiTest extends TestCase
 
 
         // API call
-        $API = new FileApi($this->conf);
+        $API = new FileApi();
+        $API->loadConf(realpath('tests/conf.json'));
         $API->setDebug(true);
         $API->setRootDir(realpath('tests-data'));
 
