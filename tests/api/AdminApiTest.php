@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
+namespace mobilecms\api;
 
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ final class AdminApiTest extends TestCase
 
         $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
+        $service = new \mobilecms\utils\UserService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
 
         $response = $service->getToken('admin@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());

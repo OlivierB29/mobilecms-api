@@ -1,4 +1,4 @@
-<?php
+<?php namespace mobilecms\utils;
 
 // require_once 'StringUtils.php';
 
@@ -19,7 +19,7 @@ class JsonUtils
      *
      * @param string $file : file path
      *
-     * @return array or stdClass JSON object
+     * @return array or \stdClass JSON object
      */
     public static function readJsonFile(string $file)
     {
@@ -38,7 +38,7 @@ class JsonUtils
 
         try {
             if (file_exists($file) && !is_writable($file)) {
-                throw new Exception('Error opening output file' . $file);
+                throw new \Exception('Error opening output file' . $file);
             }
             $fh = fopen($file, 'w');
             if (!$fh) {
@@ -47,7 +47,7 @@ class JsonUtils
 
             fwrite($fh, json_encode($data, JSON_PRETTY_PRINT));
             fclose($fh);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             if (isset($fh)) {
                 unset($fh);
             }
@@ -84,11 +84,11 @@ class JsonUtils
      *
      * @param array $data : JSON Array
      * @param string $name : eg: id
-     * @param stdClass $item : JSON object
+     * @param \stdClass $item : JSON object
      *
      * @return updated array
      */
-    public static function put(array $data, string $name, stdClass $item): array
+    public static function put(array $data, string $name, \stdClass $item): array
     {
         $existing = self::getByKey($data, $name, $item->{$name});
 
@@ -105,10 +105,10 @@ class JsonUtils
      * Copy properties of $source to $dest, without including the new properties
      * convert to --> $dest = {"id":"1", "foo":"pub"}.
      *
-     * @param stdClass $source = {"id":"1", "foo":"pub" , "hello":"world"}
-     * @param stdClass $dest = {"id":"1", "foo":"bar"}
+     * @param \stdClass $source = {"id":"1", "foo":"pub" , "hello":"world"}
+     * @param \stdClass $dest = {"id":"1", "foo":"bar"}
      */
-    public static function copy(stdClass $source, stdClass $dest)
+    public static function copy(\stdClass $source, \stdClass $dest)
     {
         foreach ($dest as $key => $value) {
             if (isset($source->{$key})) {
@@ -121,10 +121,10 @@ class JsonUtils
      * Copy properties of $source to $dest, including the new properties
      * eg:--> $dest = {"id":"1", "foo":"pub" , "hello":"world"}.
      *
-     * @param stdClass $source = {"id":"1", "foo":"pub" , "hello":"world"}
-     * @param stdClass $dest = {"id":"1", "foo":"bar"}
+     * @param \stdClass $source = {"id":"1", "foo":"pub" , "hello":"world"}
+     * @param \stdClass $dest = {"id":"1", "foo":"bar"}
      */
-    public static function replace(stdClass $source, stdClass $dest)
+    public static function replace(\stdClass $source, \stdClass $dest)
     {
         foreach ($source as $key => $value) {
             $dest->{$key} = $source->{$key};

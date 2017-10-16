@@ -1,4 +1,4 @@
-<?php
+<?php namespace mobilecms\utils;
 
 // require_once 'RestApi.php';
 // require_once 'ApiKey.php';
@@ -29,9 +29,9 @@ abstract class SecureRestApi extends RestApi
     /**
      * Constructor.
      *
-     * @param stdClass $conf JSON configuration
+     * @param \stdClass $conf JSON configuration
      */
-    public function __construct(stdClass $conf)
+    public function __construct(\stdClass $conf)
     {
         parent::__construct($conf);
         $this->role = 'editor';
@@ -51,7 +51,7 @@ abstract class SecureRestApi extends RestApi
         // - return a response
         try {
             $response = $this->authorize();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $response->setError(401, $e->getMessage());
         }
 
@@ -145,7 +145,7 @@ abstract class SecureRestApi extends RestApi
 
                 // api key not empty
                 if (strlen($apiKeyValue) === 0) {
-                    throw new Exception('Empty API Key');
+                    throw new \Exception('Empty API Key');
                 }
 
                 // verify key
@@ -153,10 +153,10 @@ abstract class SecureRestApi extends RestApi
                 $verifyKeyResult = $APIKey->verifyKey($this->conf->{'apikeyfile'}, $apiKeyValue, $origin);
                 unset($APIKey);
                 if (!$verifyKeyResult) {
-                    throw new Exception('Invalid API Key');
+                    throw new \Exception('Invalid API Key');
                 }
             } else {
-                throw new Exception('No API Key provided');
+                throw new \Exception('No API Key provided');
             }
         }
 
@@ -173,7 +173,7 @@ abstract class SecureRestApi extends RestApi
             $tokenValue = $this->getBearerTokenValue($bearerTokenValue);
 
             if (empty($tokenValue)) {
-                throw new Exception('Empty token !' . $bearerTokenValue);
+                throw new \Exception('Empty token !' . $bearerTokenValue);
             }
             unset($bearerTokenValue);
 
@@ -183,7 +183,7 @@ abstract class SecureRestApi extends RestApi
 
             unset($service);
         } else {
-            throw new Exception('No User Token provided');
+            throw new \Exception('No User Token provided');
         }
 
         return $response;

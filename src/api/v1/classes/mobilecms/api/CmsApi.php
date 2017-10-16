@@ -1,11 +1,11 @@
-<?php
+<?php namespace mobilecms\api;
 
 // require_once 'SecureRestApi.php';
-// require_once 'ContentService.php';
+// require_once '\mobilecms\utils\ContentService.php';
 /*
  * /api/v1/content/cake?filter=foobar
  */
-class CmsApi extends SecureRestApi
+class CmsApi extends \mobilecms\utils\SecureRestApi
 {
     /**
      * Index subpath
@@ -25,9 +25,9 @@ class CmsApi extends SecureRestApi
     /**
      * Constructor.
      *
-     * @param stdClass $conf JSON configuration
+     * @param \stdClass $conf JSON configuration
      */
-    public function __construct(stdClass $conf)
+    public function __construct(\stdClass $conf)
     {
         parent::__construct($conf);
 
@@ -41,9 +41,9 @@ class CmsApi extends SecureRestApi
     /**
      * Get index.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    protected function index() : Response
+    protected function index() : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -51,7 +51,7 @@ class CmsApi extends SecureRestApi
 
         $datatype = $this->getDataType();
 
-        $service = new ContentService($this->getPublicDirPath());
+        $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -79,9 +79,9 @@ class CmsApi extends SecureRestApi
     /**
      * Base API path /api/v1/content.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    protected function content() : Response
+    protected function content() : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -91,7 +91,7 @@ class CmsApi extends SecureRestApi
 
         $pathId = $this->getId();
 
-        $service = new ContentService($this->getPublicDirPath());
+        $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -171,15 +171,15 @@ class CmsApi extends SecureRestApi
     /**
      * Get file info.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    protected function file() : Response
+    protected function file() : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
         $this->checkConfiguration();
 
-        $service = new ContentService($this->getPublicDirPath());
+        $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -204,7 +204,7 @@ class CmsApi extends SecureRestApi
                 }
             }
         } else {
-            throw new Exception('bad request');
+            throw new \Exception('bad request');
         }
 
         return $response;
@@ -222,7 +222,7 @@ class CmsApi extends SecureRestApi
             $datatype = $this->verb;
         }
         if (!isset($datatype)) {
-            throw new Exception('Empty datatype');
+            throw new \Exception('Empty datatype');
         }
 
         return $datatype;
@@ -249,7 +249,7 @@ class CmsApi extends SecureRestApi
     private function checkConfiguration()
     {
         if (!isset($this->conf->{'publicdir'})) {
-            throw new Exception('Empty publicdir');
+            throw new \Exception('Empty publicdir');
         }
     }
 
@@ -257,11 +257,11 @@ class CmsApi extends SecureRestApi
      * Preflight response
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    public function preflight(): Response
+    public function preflight(): \mobilecms\utils\Response
     {
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(200);
         $response->setResult('{}');
 

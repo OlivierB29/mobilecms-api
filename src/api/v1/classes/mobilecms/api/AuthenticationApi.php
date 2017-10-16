@@ -1,7 +1,7 @@
-<?php
+<?php namespace mobilecms\api;
 
 // require_once 'RestApi.php';
-// require_once 'UserService.php';
+// require_once '\mobilecms\utils\UserService.php';
 // require_once 'MailUtils.php';
 
 /*
@@ -9,7 +9,7 @@
  * /authapi/v1/auth
  * /authapi/v1/register
  */
-class AuthenticationApi extends RestApi
+class AuthenticationApi extends \mobilecms\utils\RestApi
 {
     /**
      * Debug feature.
@@ -24,9 +24,9 @@ class AuthenticationApi extends RestApi
     /**
      * Constructor.
      *
-     * @param stdClass $conf JSON configuration
+     * @param \stdClass $conf JSON configuration
      */
-    public function __construct(stdClass $conf)
+    public function __construct(\stdClass $conf)
     {
         parent::__construct($conf);
 
@@ -45,16 +45,16 @@ class AuthenticationApi extends RestApi
     /**
      * Base API path /authapi/v1/changepassword.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    protected function changepassword() : Response
+    protected function changepassword() : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->getPrivateDirPath() . '/users');
+        $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -86,16 +86,16 @@ class AuthenticationApi extends RestApi
     /**
      * Base API path /authapi/v1/resetpassword.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    protected function resetpassword() : Response
+    protected function resetpassword() : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->getPrivateDirPath() . '/users');
+        $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -148,16 +148,16 @@ class AuthenticationApi extends RestApi
     /**
      * Base API path /authapi/v1/publicinfo.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    protected function publicinfo() : Response
+    protected function publicinfo() : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new UserService($this->getPrivateDirPath() . '/users');
+        $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -180,15 +180,15 @@ class AuthenticationApi extends RestApi
     /**
      * /authapi/v1/register.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    protected function register() : Response
+    protected function register() : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
-        $service = new UserService($this->getPrivateDirPath() . '/users');
+        $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -226,11 +226,11 @@ class AuthenticationApi extends RestApi
      *
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    public function preflight(): Response
+    public function preflight(): \mobilecms\utils\Response
     {
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(200);
         $response->setResult('{}');
 
@@ -254,9 +254,9 @@ class AuthenticationApi extends RestApi
     /**
      * Base API path /authapi/v1/authenticate.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    protected function authenticate() : Response
+    protected function authenticate() : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -264,7 +264,7 @@ class AuthenticationApi extends RestApi
             // error if wrong configuration, such as empty directory
             $this->checkConfiguration();
 
-            $service = new UserService($this->getPrivateDirPath() . '/users');
+            $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
             // Preflight requests are send by Angular
             if ($this->method === 'OPTIONS') {
@@ -274,7 +274,7 @@ class AuthenticationApi extends RestApi
 
             if ($this->method === 'POST') {
                 if (empty($this->getRequestBody())) {
-                    throw new Exception('no login request');
+                    throw new \Exception('no login request');
                 }
                 // login and get token
                 // eg : { "user": "test@example.com", "password":"Sample#123456"}
@@ -282,13 +282,13 @@ class AuthenticationApi extends RestApi
 
                 //TODO : user contains either email of name
                 if (!isset($logindata)) {
-                    throw new Exception('no login data');
+                    throw new \Exception('no login data');
                 }
                 $response = $service->getToken($logindata->{'user'}, $logindata->{'password'});
                 unset($logindata);
                 // free variables before response
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $response->setError(401, $e->getMessage());
         } finally {
             return $response;
@@ -329,7 +329,7 @@ class AuthenticationApi extends RestApi
     private function checkConfiguration()
     {
         if (!isset($this->conf->{'privatedir'})) {
-            throw new Exception('Empty privatedir');
+            throw new \Exception('Empty privatedir');
         }
     }
 

@@ -1,4 +1,4 @@
-<?php
+<?php namespace mobilecms\utils;
 /*
  * Inspired by http://fr.wikihow.com/cr%C3%A9er-un-script-de-connexion-s%C3%A9curis%C3%A9e-avec-PHP-et-MySQL
  * This fork uses JSON as storage data
@@ -56,13 +56,13 @@ class UserService
     public function getJsonUserFile(string $email): string
     {
         if (empty($this->databasedir)) {
-            throw new Exception('getJsonUserFile()  empty conf');
+            throw new \Exception('getJsonUserFile()  empty conf');
         }
 
         if (!empty($email)) {
             return $this->databasedir . '/' . strtolower($email) . '.json';
         } else {
-            throw new Exception('getJsonUserFile()  empty email');
+            throw new \Exception('getJsonUserFile()  empty email');
         }
     }
 
@@ -71,9 +71,9 @@ class UserService
      *
      * @param string $email : email
      *
-     * @return stdClass user object
+     * @return \stdClass user object
      */
-    public function getJsonUser(string $email): stdClass
+    public function getJsonUser(string $email): \stdClass
     {
         $result = null;
 
@@ -85,10 +85,10 @@ class UserService
             if (isset($jsonUser->{'name'}) && isset($jsonUser->{'password'})) {
                 $result = $jsonUser;
             } else {
-                throw new Exception('getJsonUser() empty user ' . $email);
+                throw new \Exception('getJsonUser() empty user ' . $email);
             }
         } else {
-            throw new Exception('getJsonUser() file not found ' . $file);
+            throw new \Exception('getJsonUser() file not found ' . $file);
         }
 
         return $result;
@@ -131,7 +131,7 @@ class UserService
             JsonUtils::writeJsonFile($file, $jsonUser);
             $result = true;
         } else {
-            throw new Exception('empty user');
+            throw new \Exception('empty user');
         }
 
         return $result;
@@ -421,7 +421,7 @@ class UserService
         $response = $this->getDefaultResponse();
 
         if (!isset($token)) {
-            throw new Exception('empty token');
+            throw new \Exception('empty token');
         }
 
         $jwt = new JwtToken();
@@ -431,12 +431,12 @@ class UserService
         $payload = $jwt->getPayload($token);
 
         if (!isset($payload)) {
-            throw new Exception('empty payload');
+            throw new \Exception('empty payload');
         }
 
         $payloadJson = json_decode($payload);
         if (!isset($payloadJson)) {
-            throw new Exception('empty payload');
+            throw new \Exception('empty payload');
         }
         // get the existing user
 
@@ -597,7 +597,7 @@ class UserService
             $file = $this->getJsonUserFile($email);
             JsonUtils::writeJsonFile($file, $jsonUser);
         } else {
-            throw new Exception('addDbUserWithSecret() empty email');
+            throw new \Exception('addDbUserWithSecret() empty email');
         }
     }
 
@@ -605,12 +605,12 @@ class UserService
     /**
      * Control if the current user has access to API.
      *
-     * @param stdClass $user         object
+     * @param \stdClass $user         object
      * @param string   $requiredRole required role
      *
      * @return true if access is authorized
      */
-    private function isPermitted(stdClass $user, string $requiredRole): bool
+    private function isPermitted(\stdClass $user, string $requiredRole): bool
     {
         $result = false;
         if (!empty($user) && !empty($user->{'role'}) && !empty($requiredRole)) {
@@ -629,11 +629,11 @@ class UserService
     /**
      * Control if the current user has access to an editor API.
      *
-     * @param stdClass $user object
+     * @param \stdClass $user object
      *
      * @return true if access is authorized
      */
-    private function isPermittedEditor(stdClass $user): bool
+    private function isPermittedEditor(\stdClass $user): bool
     {
         $result = false;
         if (!empty($user) && !empty($user->{'role'})) {
@@ -650,7 +650,7 @@ class UserService
     /**
      * Control if the current user has access to an admin API.
      *
-     * @param stdClass $user object
+     * @param \stdClass $user object
      *
      * @return true if access is authorized
      */

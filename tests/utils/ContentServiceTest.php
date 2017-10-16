@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+namespace mobilecms\utils;
 
 use PHPUnit\Framework\TestCase;
 
@@ -36,7 +37,7 @@ final class ContentServiceTest extends TestCase
         $this->assertJsonStringEqualsJsonString(
         json_encode(json_decode('    { "id": "1","date": "201509", "activity": "activitya", "title": "some seminar of activity A"}')),
         $response->getResult()
-      );
+        );
     }
 
     public function testPost()

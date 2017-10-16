@@ -1,12 +1,12 @@
-<?php
+<?php namespace mobilecms\api;
 
 // require_once 'SecureRestApi.php';
-// require_once 'FileService.php';
+// require_once '\mobilecms\utils\FileService.php';
 /*
  * File API with authentication.
  * Basic file upload using _FILES
  */
-class FileApi extends SecureRestApi
+class FileApi extends \mobilecms\utils\SecureRestApi
 {
     /**
      * Media directory (eg: media ).
@@ -18,12 +18,16 @@ class FileApi extends SecureRestApi
      */
     private $umask = 0775;
 
+    private $files;
+
+    private $debug;
+
     /**
      * Constructor.
      *
-     * @param stdClass $conf JSON configuration
+     * @param \stdClass $conf JSON configuration
      */
-    public function __construct(stdClass $conf)
+    public function __construct(\stdClass $conf)
     {
         parent::__construct($conf);
 
@@ -35,13 +39,38 @@ class FileApi extends SecureRestApi
         $this->media = $this->conf->{'media'};
     }
 
+    public function setRequest(
+        array $REQUEST = null,
+        array $SERVER = null,
+        array $GET = null,
+        array $POST = null,
+        array $headers = null,
+        array $files = null
+    ) {
+        parent::setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+
+        $this->setFiles($files);
+    }
+
+    public function setFiles(array $files = null)
+    {
+      // Useful for tests
+      // http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
+
+      // set reference to avoid objet clone
+        if ($files !== null) {
+            $this->files = &$files;
+        } else {
+            $this->files = &$_FILES;
+        }
+    }
 
     /**
      * Basic file upload.
      *
-     * @return API response
+     * @return \mobilecms\utils\Response response
      */
-    protected function basicupload(): Response
+    protected function basicupload(): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -65,7 +94,7 @@ class FileApi extends SecureRestApi
                     // object id
                     $id = $this->args[0];
                     // create service
-                    $service = new FileService();
+                    $service = new \mobilecms\utils\FileService();
 
                     // update files description
                     // /var/www/html/media/calendar/1
@@ -94,9 +123,9 @@ class FileApi extends SecureRestApi
     /**
      * Delete file.
      *
-     * @return API response
+     * @return \mobilecms\utils\Response response
      */
-    protected function delete(): Response
+    protected function delete(): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -131,9 +160,9 @@ class FileApi extends SecureRestApi
      * Sample request body :
      * [{ "url": "http://wwww.example.com/foobar.pdf", "title":"Foobar.pdf"}].
      *
-     * @return API response
+     * @return \mobilecms\utils\Response response
      */
-    protected function download(): Response
+    protected function download(): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -170,11 +199,11 @@ class FileApi extends SecureRestApi
      * Preflight response
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    public function preflight(): Response
+    public function preflight(): \mobilecms\utils\Response
     {
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(200);
         $response->setResult('{}');
 
@@ -223,8 +252,14 @@ class FileApi extends SecureRestApi
       - size:700
         */
         $result = json_decode('[]');
-        foreach ($_FILES as $formKey => $file) {
-            $destdir = $this->getRecordDirPath($datatype, $id);
+        // $_FILES
+
+        if (!isset($this->files) || count($this->files) === 0) {
+            throw new \Exception('no file.');
+        }
+
+        foreach ($this->files as $formKey => $file) {
+            $destdir = $this->getRecordDirPath($type, $id);
 
             // create directory if it doesn't exist
             if (!file_exists($destdir)) {
@@ -235,20 +270,29 @@ class FileApi extends SecureRestApi
             // upload
             if (isset($file['tmp_name']) && isset($file['name'])) {
                 $destfile = $destdir . '/' . $file['name'];
-                if (move_uploaded_file($file['tmp_name'], $destfile)) {
+                $moveResult = false;
+                // why not inline notation condition ? a : b;
+                // If an exception is thrown with IO, I prefer to be sure of the line in error.
+                if ($this->debug) {
+                    $moveResult = rename($file['tmp_name'], $destfile);
+                } else {
+                    $moveResult = move_uploaded_file($file['tmp_name'], $destfile);
+                }
+
+                if ($moveResult) {
                     chmod($destfile, $this->umask);
                     $title = $file['name'];
                     $url = $file['name'];
                     $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
-                    throw new Exception($file['name'] . ' KO');
+                    throw new \Exception($file['name'] . ' KO');
                 }
             }
         }
 
         if (count($result) === 0) {
-            throw new Exception('no file uploaded. Please check file size.');
+            throw new \Exception('no file uploaded. Please check file size.');
         }
 
         return $result;
@@ -260,8 +304,10 @@ class FileApi extends SecureRestApi
      * @param string $datatype : news
      * @param string $id       : 123
      * @param string $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
+     *
+     * @return \mobilecms\utils\Response result
      */
-    private function downloadFiles(string $datatype, string $id, string $filesStr): Response
+    private function downloadFiles(string $datatype, string $id, string $filesStr): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -290,13 +336,13 @@ class FileApi extends SecureRestApi
                     $fileResult = $this->getFileResponse($destfile, $title, $url);
                     array_push($result, $fileResult);
                 } else {
-                    throw new Exception($file['name'] . ' KO');
+                    throw new \Exception($file['name'] . ' KO');
                 }
             }
         }
 
         if (count($result) === 0) {
-            throw new Exception('no files');
+            throw new \Exception('no files');
         }
 
         $response->setResult(json_encode($result));
@@ -312,7 +358,7 @@ class FileApi extends SecureRestApi
      * @param string $title    : title of file
      * @param string $url      : url
      */
-    private function getFileResponse($destfile, $title, $url): stdClass
+    private function getFileResponse($destfile, $title, $url): \stdClass
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
         $mimetype = finfo_file($finfo, $destfile);
@@ -341,7 +387,7 @@ class FileApi extends SecureRestApi
             $datatype = $this->verb;
         }
         if (!isset($datatype)) {
-            throw new Exception('Empty datatype');
+            throw new \Exception('Empty datatype');
         }
 
         return $datatype;
@@ -353,7 +399,7 @@ class FileApi extends SecureRestApi
     private function checkConfiguration()
     {
         if (!isset($this->conf->{'media'})) {
-            throw new Exception('Empty media dir');
+            throw new \Exception('Empty media dir');
         }
     }
 
@@ -364,7 +410,7 @@ class FileApi extends SecureRestApi
      * @param string $id       123
      * @param string $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
-    private function deleteFiles($datatype, $id, $filesStr): Response
+    private function deleteFiles($datatype, $id, $filesStr): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -382,13 +428,13 @@ class FileApi extends SecureRestApi
                 $destfile = $destdir . '/' . basename($file->{'url'});
                 if (file_exists($destfile)) {
                     if (!unlink($destfile)) {
-                        throw new Exception('delete ' . $file['url'] . ' KO');
+                        throw new \Exception('delete ' . $file['url'] . ' KO');
                     }
                 } else {
                     // TODO add message
                 }
             } else {
-                throw new Exception('wrong file ' . $file['url'] . ' KO');
+                throw new \Exception('wrong file ' . $file['url'] . ' KO');
             }
         }
 
@@ -396,5 +442,14 @@ class FileApi extends SecureRestApi
         $response->setCode(200);
 
         return $response;
+    }
+
+    /**
+    * enable debug
+    * @param boolean value enable debug
+    */
+    public function setDebug(bool $value)
+    {
+        $this->debug = $value;
     }
 }

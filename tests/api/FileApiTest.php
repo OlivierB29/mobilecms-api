@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
+namespace mobilecms\api;
 
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +13,7 @@ final class FileApiTest extends TestCase
     {
         $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-        $service = new UserService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
+        $service = new \mobilecms\utils\UserService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
         $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());
         $this->token = 'Bearer ' . $this->user->{'token'};
@@ -133,5 +133,51 @@ final class FileApiTest extends TestCase
         $expected = '[{"title":"index.html","url":"index.html","size":2834,"mimetype":"text\/html"},{"title":"lorem ipsum.pdf","url":"lorem ipsum.pdf","size":24612,"mimetype":"application\/pdf"}]';
 
         $this->assertJsonStringEqualsJsonString($expected, $result);
+    }
+
+    public function testUploadFiles()
+    {
+
+          // echo 'testPostSuccess: ' . $this->memory();
+        $record = '/calendar/3';
+        $path = '/fileapi/v1/basicupload' . $record;
+
+        $REQUEST = []; // $REQUEST = ['path' => $path];
+        $headers = ['Authorization' => $this->token];
+        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $GET = ['requestbody' => '{}'];
+        $recordStr = '{}';
+
+        $filename = 'testupload.pdf';
+        $mockUploadedFile = realpath('tests-data/fileapi/save/') . '123456789.pdf';
+        copy('tests-data/fileapi/save/' . $filename, $mockUploadedFile);
+
+        $files = [
+          ['name'=>$filename,'type'=>'application/pdf','tmp_name'=> $mockUploadedFile,'error'=>0,'size'=>24612]
+        ];
+
+        $POST = null;
+        unset($recordStr);
+
+        $API = new FileApi($this->conf);
+        $API->setDebug(true);
+        $API->setRootDir(realpath('tests-data'));
+
+        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers, $files);
+
+        $API->authorize($headers, $SERVER);
+
+        $response = $API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(200, $response->getCode());
+
+        $this->assertTrue($result != null && $result != '');
+        $expected = '[{"title":"testupload.pdf","url":"testupload.pdf","size":24612,"mimetype":"application\/pdf"}]';
+
+        $this->assertJsonStringEqualsJsonString($expected, $result);
+
+        $mediaFile = $API->getMediaDirPath() . $record . '/' . $filename;
+        $this->assertTrue(file_exists($mediaFile));
+        unlink($mediaFile);
     }
 }

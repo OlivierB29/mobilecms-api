@@ -1,4 +1,4 @@
-<?php
+<?php namespace mobilecms\utils;
 
 // require_once 'Response.php';
 // require_once 'JsonUtils.php';
@@ -15,7 +15,7 @@ function compareIndex(string $key)
     * @param a first object to compare
     * @param b second object to compare
     */
-    return function (stdClass $a, stdClass $b) use ($key) {
+    return function (\stdClass $a, \stdClass $b) use ($key) {
         return strnatcmp($a->{$key}, $b->{$key});
     };
 }
@@ -62,10 +62,10 @@ class ContentService
     private function getItemFileName(string $type, string $id) : string
     {
         if (!isset($type)) {
-            throw new Exception('empty type', 1);
+            throw new \Exception('empty type', 1);
         }
         if (!isset($id)) {
-            throw new Exception('empty id', 1);
+            throw new \Exception('empty id', 1);
         }
 
         return $this->databasedir . '/' . $type . '/' . $id . '.json';
@@ -81,7 +81,7 @@ class ContentService
     private function getIndexTemplateFileName(string $type) : string
     {
         if (!isset($type)) {
-            throw new Exception('empty type', 1);
+            throw new \Exception('empty type', 1);
         }
 
         return $this->databasedir . '/' . $type . '/index/index_template.json';
@@ -97,7 +97,7 @@ class ContentService
     private function getBackupIndexFileName(string $type) : string
     {
         if (!isset($type)) {
-            throw new Exception('empty type', 1);
+            throw new \Exception('empty type', 1);
         }
 
         return $this->databasedir . '/' . $type . '/history/index-' . time() . '.json';
@@ -117,7 +117,7 @@ class ContentService
             mkdir($path['dirname'], 0777, true);
         }
         if (!copy($s1, $s2)) {
-            throw new Exception('copy failed ', 1);
+            throw new \Exception('copy failed ', 1);
         }
     }
 
@@ -191,7 +191,7 @@ class ContentService
         //forbid upper directory
         //
         if (strpos($filename, '..') !== false) {
-            throw new Exception('Invalid path ' . $filename, 1);
+            throw new \Exception('Invalid path ' . $filename, 1);
         }
 
         $file = $this->databasedir . '/' . $filename;
@@ -327,7 +327,7 @@ class ContentService
     public function getIndexFileName(string $type) : string
     {
         if (!isset($type)) {
-            throw new Exception('empty type', 1);
+            throw new \Exception('empty type', 1);
         }
 
         return $this->databasedir . '/' . $type . '/index/index.json';

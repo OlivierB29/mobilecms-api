@@ -1,4 +1,4 @@
-<?php
+<?php namespace mobilecms\utils;
 
 define('EMPTYSTR', '');
 /**

@@ -1,4 +1,4 @@
-<?php
+<?php namespace mobilecms\utils;
 
 // require_once 'Response.php';
 
@@ -107,14 +107,14 @@ abstract class RestApi
     /**
      * Constructor.
      *
-     * @param stdClass $conf JSON configuration
+     * @param \stdClass $conf JSON configuration
      */
-    public function __construct(stdClass $conf)
+    public function __construct(\stdClass $conf)
     {
         if (isset($conf)) {
             $this->conf = $conf;
         } else {
-            throw new Exception('Empty conf');
+            throw new \Exception('Empty conf');
         }
 
         // Default value is true
@@ -266,7 +266,7 @@ abstract class RestApi
             } elseif ($SERVER['HTTP_X_HTTP_METHOD'] == 'PUT') {
                 $this->method = 'PUT';
             } else {
-                throw new Exception('Unexpected Header');
+                throw new \Exception('Unexpected Header');
             }
         }
 
@@ -340,9 +340,10 @@ abstract class RestApi
             $this->setRequest();
 
             $response = $this->processAPI();
+
             $responseBody = $response->getResult();
             $status = $response->getCode();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // security : clear variables on exception
 
             $status = 500;

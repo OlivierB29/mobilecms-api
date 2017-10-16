@@ -1,13 +1,13 @@
-<?php
+<?php namespace mobilecms\api;
 
 // require_once 'SecureRestApi.php';
-// require_once 'ContentService.php';
-// require_once 'UserService.php';
+// require_once '\mobilecms\utils\ContentService.php';
+// require_once '\mobilecms\utils\UserService.php';
 // require_once 'JsonUtils.php';
 /**
  * Administration API (users, ...).
  */
-class AdminApi extends SecureRestApi
+class AdminApi extends \mobilecms\utils\SecureRestApi
 {
     const INDEX_JSON = '/index/index.json';
 
@@ -16,7 +16,7 @@ class AdminApi extends SecureRestApi
     /**
      * Constructor.
      *
-     * @param stdClass $conf JSON configuration
+     * @param \stdClass $conf JSON configuration
      */
     public function __construct($conf)
     {
@@ -33,16 +33,16 @@ class AdminApi extends SecureRestApi
     /**
      * Base API path /api/v1/content.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    protected function content() : Response
+    protected function content() : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
         $this->checkConfiguration();
         $datatype = $this->getDataType();
 
-        $service = new ContentService($this->getPrivateDirPath());
+        $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
 
         // Preflight requests are send by Angular
         if ($this->method === 'OPTIONS') {
@@ -69,7 +69,7 @@ class AdminApi extends SecureRestApi
                     $response = $service->getAllObjects($datatype);
                 }
             } elseif ($this->method === 'POST') {
-                $userService = new UserService($this->getPrivateDirPath() . '/users');
+                $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
                 if (!empty($pathId)) {
                     // save a record and update the index. eg : /api/v1/content/calendar
@@ -154,7 +154,7 @@ class AdminApi extends SecureRestApi
      *
      * @param userStr $userStr JSON user string
      *
-     * @return stdClass JSON user string
+     * @return \stdClass JSON user string
      */
     public function getUserResponse($userStr): string
     {
@@ -174,11 +174,11 @@ class AdminApi extends SecureRestApi
      *
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    public function preflight(): Response
+    public function preflight(): \mobilecms\utils\Response
     {
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(200);
         $response->setResult('{}');
 
@@ -191,9 +191,9 @@ class AdminApi extends SecureRestApi
     /**
      * Get or refresh index.
      *
-     * @return Response object
+     * @return \mobilecms\utils\Response object
      */
-    protected function index() : Response
+    protected function index() : \mobilecms\utils\Response
     {
         $userKey = 'email';
         $response = $this->getDefaultResponse();
@@ -206,7 +206,7 @@ class AdminApi extends SecureRestApi
             // eg : /api/v1/content
             $response = $this->preflight();
         } elseif (!empty($datatype)) {
-            $service = new ContentService($this->getPrivateDirPath());
+            $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
 
             // eg : /api/v1/content/calendar
             if ($this->method === 'GET') {
@@ -226,9 +226,9 @@ class AdminApi extends SecureRestApi
     /**
      * Initialize a default user object.
      *
-     * *@return stdClass user JSON object
+     * *@return \stdClass user JSON object
      */
-    private function getDefaultUser(): stdClass
+    private function getDefaultUser(): \stdClass
     {
         return json_decode('{"name":"", "email":"", "password":"", "secretQuestion":"", "secretResponse":"" }');
     }
@@ -245,7 +245,7 @@ class AdminApi extends SecureRestApi
             $datatype = $this->verb;
         }
         if (!isset($datatype)) {
-            throw new Exception('Empty datatype');
+            throw new \Exception('Empty datatype');
         }
 
         return $datatype;
@@ -272,7 +272,7 @@ class AdminApi extends SecureRestApi
     private function checkConfiguration()
     {
         if (!isset($this->conf->{'privatedir'})) {
-            throw new Exception('Empty publicdir');
+            throw new \Exception('Empty publicdir');
         }
     }
 }
