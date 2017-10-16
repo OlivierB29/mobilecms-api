@@ -5,51 +5,32 @@ namespace mobilecms\api;
 
 use PHPUnit\Framework\TestCase;
 
-final class FileApiTest extends TestCase
+final class FileApiTest extends AuthApiTest
 {
-    private $conf;
-
     protected function setUp()
     {
-        $this->conf = json_decode(file_get_contents('tests/conf.json'));
-
-        $service = new \mobilecms\utils\UserService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
-        $response = $service->getToken('editor@example.com', 'Sample#123456');
-        $this->user = json_decode($response->getResult());
-        $this->token = 'Bearer ' . $this->user->{'token'};
+        parent::setUp();
+        $this->API=new FileApi();
+        $this->API->loadConf(realpath('tests/conf.json'));
+        $this->API->setRootDir(realpath('tests-data')); // unit test only
     }
 
     public function testDownload()
     {
-        /*
-        *
-         * Sample request body :
-         * [{ "url": "http://wwww.example.com/foobar.pdf", "title":"Foobar.pdf"}].
+        $this->path = '/fileapi/v1/download/calendar/1';
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
 
-        protected function download()
-        */
-
-        // echo 'testPostSuccess: ' . $this->memory();
-        $path = '/fileapi/v1/download/calendar/1';
-
-        $REQUEST = [];
-        $headers = ['Authorization' => $this->token];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
         $recordStr = '[{ "url": "https://mit-license.org/index.html", "title":"MIT licence"}]';
 
-        $POST = ['requestbody' => $recordStr];
+        $this->POST = ['requestbody' => $recordStr];
         unset($recordStr);
 
-        $API = new FileApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data'));
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
 
-        $API->authorize($headers, $SERVER);
+        $this->API->authorize($this->headers, $this->SERVER);
 
-        $response = $API->processAPI();
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
 
@@ -62,7 +43,7 @@ final class FileApiTest extends TestCase
         $this->assertTrue(strpos($result, '"url":"index.html"') !== false);
 
         // test download
-        $download = file_get_contents($API->getMediaDirPath() . '/calendar/1/index.html');
+        $download = file_get_contents($this->API->getMediaDirPath() . '/calendar/1/index.html');
         $this->assertTrue(strpos($download, 'MIT License') !== false);
     }
 
@@ -71,31 +52,29 @@ final class FileApiTest extends TestCase
         $filename = 'testdelete.pdf';
         $record = '/calendar/2';
         // tests-data/fileapi/save -> tests-data/fileapi/media/calendar/2/
-        $API = new FileApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data'));
-        $destfile = $API->getMediaDirPath() . $record . '/' . $filename;
+
+
+
+        $destfile = $this->API->getMediaDirPath() . $record . '/' . $filename;
 
         copy('tests-data/fileapi/save/' . $filename, $destfile);
 
         // assert file exists before API call
         $this->assertTrue(file_exists($destfile));
-        $path = '/fileapi/v1/delete/calendar/2';
+        $this->path = '/fileapi/v1/delete/calendar/2';
 
-        $REQUEST = [];
-        $headers = ['Authorization' => $this->token];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
         $recordStr = '[{ "url": "testdelete.pdf", "title":"test"}]';
 
-        $POST = ['requestbody' => $recordStr];
+        $this->POST = ['requestbody' => $recordStr];
         unset($recordStr);
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
 
-        $API->authorize($headers, $SERVER);
+        $this->API->authorize($this->headers, $this->SERVER);
 
-        $response = $API->processAPI();
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
 
@@ -109,26 +88,23 @@ final class FileApiTest extends TestCase
     {
 
           // echo 'testPostSuccess: ' . $this->memory();
-        $path = '/fileapi/v1/basicupload/calendar/1';
-
-        $REQUEST = [];
-        $headers = ['Authorization' => $this->token];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = ['requestbody' => '{}'];
+        $this->path = '/fileapi/v1/basicupload/calendar/1';
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $this->GET = ['requestbody' => '{}'];
         $recordStr = '[{ "url": "https://mit-license.org/index.html", "title":"MIT licence"}]';
 
-        $POST = null;
+
         unset($recordStr);
 
-        $API = new FileApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data'));
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
-        $API->authorize($headers, $SERVER);
 
-        $response = $API->processAPI();
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $this->API->authorize($this->headers, $this->SERVER);
+
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
 
@@ -142,7 +118,7 @@ final class FileApiTest extends TestCase
     {
         // API request
         $record = '/calendar/3';
-        $path = '/fileapi/v1/basicupload' . $record;
+        $this->path = '/fileapi/v1/basicupload' . $record;
         $filename = 'testupload.pdf';
         // mock file
         $mockUploadedFile = realpath('tests-data/fileapi/save/') . '123456789.pdf';
@@ -150,27 +126,20 @@ final class FileApiTest extends TestCase
         $files = [
         ['name'=>$filename,'type'=>'application/pdf','tmp_name'=> $mockUploadedFile,'error'=>0,'size'=>24612]
         ];
-
-
         // mock HTTP parameters
-        $REQUEST = [];
-        $headers = ['Authorization' => $this->token];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
-        $POST = null;
-
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
 
         // API call
-        $API = new FileApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setDebug(true);
-        $API->setRootDir(realpath('tests-data'));
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers, $files);
 
-        $API->authorize($headers, $SERVER);
+        $this->API->setDebug(true);
 
-        $response = $API->processAPI();
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);
+
+        $this->API->authorize($this->headers, $this->SERVER);
+
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
 
@@ -179,7 +148,7 @@ final class FileApiTest extends TestCase
 
         $this->assertJsonStringEqualsJsonString($expected, $result);
 
-        $mediaFile = $API->getMediaDirPath() . $record . '/' . $filename;
+        $mediaFile = $this->API->getMediaDirPath() . $record . '/' . $filename;
         $this->assertTrue(file_exists($mediaFile));
         unlink($mediaFile);
     }
@@ -188,7 +157,7 @@ final class FileApiTest extends TestCase
     {
         // API request
         $record = '/calendar/3';
-        $path = '/fileapi/v1/basicupload' . $record;
+        $this->path = '/fileapi/v1/basicupload' . $record;
         $filename = 'testupload.pdf';
         // mock file
         $mockUploadedFile = realpath('tests-data/fileapi/save') . '/wrongfile.pdf';
@@ -196,26 +165,21 @@ final class FileApiTest extends TestCase
         ['name'=>$filename,'type'=>'application/pdf','tmp_name'=> $mockUploadedFile,'error'=>0,'size'=>24612]
         ];
 
-
         // mock HTTP parameters
-        $REQUEST = [];
-        $headers = ['Authorization' => $this->token];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
-        $POST = null;
 
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
 
         // API call
-        $API = new FileApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setDebug(true);
-        $API->setRootDir(realpath('tests-data'));
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers, $files);
 
-        $API->authorize($headers, $SERVER);
+        $this->API->setDebug(true);
 
-        $response = $API->processAPI();
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);
+
+        $this->API->authorize($this->headers, $this->SERVER);
+
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(500, $response->getCode());
 

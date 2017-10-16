@@ -372,16 +372,30 @@ abstract class RestApi
             $responseBody = $response->getResult();
             $status = $response->getCode();
         } catch (\Exception $e) {
-            // security : clear variables on exception
             $status = 500;
             error_log($e->getMessage());
             $responseBody = json_encode(['error' => 'internal error']);
         } finally {
             http_response_code($status);
             echo $responseBody;
+            // OWASP security : clear variables, especially on exception
+            $this->clearRequestParameters();
         }
     }
 
+    /**
+    * Clear all request parameters.
+    */
+    private function clearRequestParameters()
+    {
+        unset($this->request);
+        unset($this->headers);
+        unset($this->method);
+        unset($this->verb);
+        unset($this->endpoint);
+        unset($this->apiversion);
+        unset($this->args);
+    }
 
     /**
      * Initialize a default Response object.

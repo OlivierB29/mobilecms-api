@@ -3,65 +3,27 @@
 declare(strict_types=1);
 namespace mobilecms\api;
 
-use PHPUnit\Framework\TestCase;
-
-final class CmsApiTest extends TestCase
+final class CmsApiTest extends AuthApiTest
 {
-    private $user;
-    private $token;
-    private $conf;
 
-    private $guest;
-    private $guesttoken;
-
-    private $memory1 = 0;
-    private $memory2 = 0;
 
     protected function setUp()
     {
-        $this->memory1 = 0;
-        $this->memory2 = 0;
-
-        $this->conf = json_decode(file_get_contents('tests/conf.json'));
-
-        $service = new \mobilecms\utils\UserService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
-
-        $response = $service->getToken('editor@example.com', 'Sample#123456');
-        $this->user = json_decode($response->getResult());
-        $this->token = 'Bearer ' . $this->user->{'token'};
-
-        $response = $service->getToken('guest@example.com', 'Sample#123456');
-        $this->guest = json_decode($response->getResult());
-        $this->guesttoken = 'Bearer ' . $this->guest->{'token'};
-
-        $this->memory();
+        parent::setUp();
+        $this->API=new CmsApi();
+        $this->API->loadConf(realpath('tests/conf.json'));
+        $this->API->setRootDir(realpath('tests-data')); // unit test only
     }
 
-    private function memory()
-    {
-        $this->memory1 = $this->memory2;
-
-        $this->memory2 = memory_get_usage();
-
-        return $this->memory2 - $this->memory1;
-    }
 
     public function testTypes()
     {
-        $path = '/restapi/v1/content';
+        $this->path = '/restapi/v1/content';
+        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
 
-        $headers = ['Authorization' => $this->token,    'apiKey' => '123'];
-        $REQUEST = [];
-        $SERVER = ['REQUEST_URI' => $path,    'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = [];
-        $POST = null;
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
 
-        $API = new CmsApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data')); // unit test only
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
-
-        $response = $API->processAPI();
+        $response = $this->API->processAPI();
         $result = $response->getResult();
 
         $this->assertTrue($result != null);
@@ -75,29 +37,22 @@ final class CmsApiTest extends TestCase
     public function testPostSuccess()
     {
         // echo 'testPostSuccess: ' . $this->memory();
-        $path = '/restapi/v1/content/calendar';
+        $this->path = '/restapi/v1/content/calendar';
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
 
-        $REQUEST = [];
-        $headers = ['Authorization' => $this->token];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
-
-        $API = new CmsApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data')); // unit test only
-        $recordStr = file_get_contents($API->getPublicDirPath() . '/big.json');
+        $recordStr = file_get_contents($this->API->getPublicDirPath() . '/big.json');
         //$recordStr = '{"id":"10","type" : "calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         // echo 'recordStr: ' . $this->memory();
-        $POST = ['requestbody' => $recordStr];
+        $this->POST = ['requestbody' => $recordStr];
         unset($recordStr);
 
         // echo 'new CmsApi: ' . $this->memory();
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
         // echo 'setRequest: ' . $this->memory();
 
         // echo 'authorize: ' . $this->memory();
-        $response = $API->processAPI();
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
         // echo 'processAPI: ' . $this->memory();
@@ -106,53 +61,18 @@ final class CmsApiTest extends TestCase
         $this->assertTrue($jsonResult->{'timestamp'} != '');
     }
 
-    /*
-        public function testPut1()
-        {
-            $path = '/restapi/v1/content/calendar';
-            $id = 'test_'.rand(0, 999999);
-            $recordStr = '{"id":"'.$id.'","type" : "calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
 
-            $file = $this->conf->{'publicdir'} . $path . '/' . $id . '.json';
-
-            if (file_exists($file)) {
-                unlink($file);
-            }
-            $REQUEST = [];
-            $headers = ['Authorization' => $this->token];
-            $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'PUT', 'HTTP_ORIGIN' => 'foobar'];
-            $GET = null;
-            $POST = ['requestbody' => $recordStr];
-
-            $API = new CmsApi(); $API->loadConf(realpath('tests/conf.json'));
-
-            $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
-
-            $response = $API->processAPI(); $result = $response->getResult();
-            echo '!!!!!!!!!!!!!!!' . $result;
-
-
-            $this->assertEquals(200, $response->getCode());
-            $this->assertTrue($result != null && $result != '');
-
-
-        }
-    */
     public function testGetCalendarList()
     {
-        $path = '/restapi/v1/content/calendar';
-        $headers = ['Authorization' => $this->token];
-        $REQUEST = [];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = ['requestbody' => '{}'];
-        $POST = null;
+        $this->path = '/restapi/v1/content/calendar';
 
-        $API = new CmsApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data')); // unit test only
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
-        $response = $API->processAPI();
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $this->GET = ['requestbody' => '{}'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
 
@@ -162,43 +82,31 @@ final class CmsApiTest extends TestCase
 
     public function testGetByGuest()
     {
-        $path = '/restapi/v1/content/calendar/1';
-        $headers = ['Authorization' => $this->guesttoken];
-        $REQUEST = [];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = [];
-        $POST = null;
+        $this->path = '/restapi/v1/content/calendar/1';
+        $this->headers = ['Authorization' => $this->guesttoken];
 
-        $API = new CmsApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data')); // unit test only
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
 
-        $response = $API->processAPI();
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(403, $response->getCode());
         $this->assertTrue($result != null && $result != '');
 
-        $this->assertJsonStringEqualsJsonString(
-          '{"error":"wrong role"}',
-           $result);
+        $this->assertJsonStringEqualsJsonString('{"error":"wrong role"}', $result);
     }
 
     public function testGetCalendarRecord()
     {
-        $path = '/restapi/v1/content/calendar/1';
-        $headers = ['Authorization' => $this->token];
-        $REQUEST = [];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = [];
-        $POST = null;
+        $this->path = '/restapi/v1/content/calendar/1';
 
-        $API = new CmsApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data')); // unit test only
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
 
-        $response = $API->processAPI();
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
 
@@ -211,38 +119,27 @@ final class CmsApiTest extends TestCase
 
     public function testGetCalendarError()
     {
-        $path = '/restapi/v1/content/calendar/999999999';
-        $headers = ['Authorization' => $this->token];
-        $REQUEST = [];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = [];
-        $POST = null;
+        $this->path = '/restapi/v1/content/calendar/999999999';
 
-        $API = new CmsApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data')); // unit test only
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
 
-        $response = $API->processAPI();
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(404, $response->getCode());
     }
 
     public function testGetFile()
     {
-        $path = '/restapi/v1/file';
-        $headers = ['Authorization' => $this->token];
-        $REQUEST = [];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = ['file' => 'calendar/index/metadata.json'];
-        $POST = null;
+        $this->path = '/restapi/v1/file';
 
-        $API = new CmsApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data')); // unit test only
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $this->GET = ['file' => 'calendar/index/metadata.json'];
 
-        $response = $API->processAPI();
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
 
@@ -257,28 +154,23 @@ final class CmsApiTest extends TestCase
     public function testDelete()
     {
         $id = 'exampleid';
-        $API = new CmsApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data')); // unit test only
-        $dir = $API->getPublicDirPath();
+
+        $dir = $this->API->getPublicDirPath();
 
         //clone backup to directory
         $recordfile = $dir . '/calendar/' . $id . '.json';
         copy($dir . '/calendar/backup/' . $id . '.json', $recordfile);
 
-        $path = '/restapi/v1/content/calendar/' . $id;
+        $this->path = '/restapi/v1/content/calendar/' . $id;
 
-        $recordStr = '';
 
-        $REQUEST = [];
-        $headers = ['Authorization' => $this->token];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'DELETE', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = [];
-        $POST = null;
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST, $headers);
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'DELETE', 'HTTP_ORIGIN' => 'foobar'];
 
-        $response = $API->processAPI();
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');

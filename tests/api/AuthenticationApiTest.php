@@ -5,30 +5,30 @@ namespace mobilecms\api;
 
 use PHPUnit\Framework\TestCase;
 
-final class AuthenticationApiTest extends TestCase
+final class AuthenticationApiTest extends ApiTest
 {
-
     protected function setUp()
     {
+        parent::setUp();
+        $this->API=new AuthenticationApi();
+        $this->API->loadConf(realpath('tests/conf.json'));
+        $this->API->setRootDir(realpath('tests-data')); // unit test only
     }
+
 
     public function testLogin()
     {
-        $path = '/api/v1/authenticate';
+        $this->path = '/api/v1/authenticate';
         $recordStr = '{ "user": "test@example.com", "password":"Sample#123456"}';
 
-        $REQUEST = ['path' => $path];
-        $headers = [];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
-        $POST = ['requestbody' => $recordStr];
+        $this->REQUEST = ['path' => $this->path];
 
-        $API = new AuthenticationApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data'));
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $response = $API->processAPI();
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
@@ -42,27 +42,24 @@ final class AuthenticationApiTest extends TestCase
     public function testRegister()
     {
         $email = 'testregister@example.com';
-        $API = new AuthenticationApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data'));
 
-        $file = $API->getPrivateDirPath() . '/users/' . $email . '.json';
+        $file = $this->API->getPrivateDirPath() . '/users/' . $email . '.json';
         if (file_exists($file)) {
             unlink($file);
         }
 
-        $path = '/api/v1/register';
+        $this->path = '/api/v1/register';
 
         $recordStr = '{ "name": "test register", "email": "testregister@example.com", "password":"Sample#123456", "secretQuestion": "some secret" , "secretResponse": "secret response"}';
 
-        $REQUEST = ['path' => $path];
-        $headers = [];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
-        $POST = ['requestbody' => $recordStr];
+        $this->REQUEST = ['path' => $this->path];
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $response = $API->processAPI();
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
@@ -74,24 +71,22 @@ final class AuthenticationApiTest extends TestCase
 
     public function testChangePassword()
     {
-        $path = '/api/v1/changepassword';
+        $this->path = '/api/v1/changepassword';
         $user = 'changepassword@example.com';
         $userFile = $user . '.json';
-        $API = new AuthenticationApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data'));
-        copy($API->getPrivateDirPath() . '/save/' . $userFile, $API->getPrivateDirPath() . '/users/' . $userFile);
+
+        copy($this->API->getPrivateDirPath() . '/save/' . $userFile, $this->API->getPrivateDirPath() . '/users/' . $userFile);
 
         $recordStr = '{ "user": "' . $user . '", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
 
-        $REQUEST = ['path' => $path];
-        $headers = [];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
-        $POST = ['requestbody' => $recordStr];
+        $this->REQUEST = ['path' => $this->path];
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $response = $API->processAPI();
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
@@ -104,25 +99,21 @@ final class AuthenticationApiTest extends TestCase
         $this->verifyChangePassword($user, $recordStr);
 
         // delete file
-        unlink($API->getPrivateDirPath() . '/users/' . $userFile);
+        unlink($this->API->getPrivateDirPath() . '/users/' . $userFile);
     }
 
     private function verifyChangePassword($user, $recordStr)
     {
-        $path = '/api/v1/authenticate';
+        $this->path = '/api/v1/authenticate';
 
-        $REQUEST = ['path' => $path];
-        $headers = [];
-        $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-        $GET = null;
-        $POST = ['requestbody' => $recordStr];
+        $this->REQUEST = ['path' => $this->path];
 
-        $API = new AuthenticationApi();
-        $API->loadConf(realpath('tests/conf.json'));
-        $API->setRootDir(realpath('tests-data'));
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
 
-        $API->setRequest($REQUEST, $SERVER, $GET, $POST);
-        $response = $API->processAPI();
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
