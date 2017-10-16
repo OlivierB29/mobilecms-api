@@ -137,11 +137,11 @@ final class FileApiTest extends TestCase
 
     public function testUploadFile()
     {
-      // API request
+        // API request
         $record = '/calendar/3';
         $path = '/fileapi/v1/basicupload' . $record;
         $filename = 'testupload.pdf';
-      // mock file
+        // mock file
         $mockUploadedFile = realpath('tests-data/fileapi/save/') . '123456789.pdf';
         copy('tests-data/fileapi/save/' . $filename, $mockUploadedFile);
         $files = [
@@ -149,7 +149,7 @@ final class FileApiTest extends TestCase
         ];
 
 
-      // mock HTTP parameters
+        // mock HTTP parameters
         $REQUEST = [];
         $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
@@ -182,18 +182,18 @@ final class FileApiTest extends TestCase
 
     public function testUploadFileDoesNotExist()
     {
-      // API request
+        // API request
         $record = '/calendar/3';
         $path = '/fileapi/v1/basicupload' . $record;
         $filename = 'testupload.pdf';
-      // mock file
+        // mock file
         $mockUploadedFile = realpath('tests-data/fileapi/save') . '/wrongfile.pdf';
         $files = [
         ['name'=>$filename,'type'=>'application/pdf','tmp_name'=> $mockUploadedFile,'error'=>0,'size'=>24612]
         ];
 
 
-      // mock HTTP parameters
+        // mock HTTP parameters
         $REQUEST = [];
         $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
@@ -215,7 +215,7 @@ final class FileApiTest extends TestCase
         $this->assertEquals(500, $response->getCode());
 
         $this->assertTrue($result != null && $result != '');
-        $expected = '{"error":"Uploaded file not found ' .$mockUploadedFile . '"}';
+        $expected = '{"error":"Uploaded file not found ' . $mockUploadedFile . '"}';
 
         $this->assertJsonStringEqualsJsonString($expected, $result);
     }
