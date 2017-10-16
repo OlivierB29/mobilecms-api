@@ -317,7 +317,6 @@ abstract class RestApi
      */
     public function processAPI(): Response
     {
-
         $apiResponse = $this->getDefaultResponse();
         try {
             if (method_exists($this, $this->endpoint)) {
