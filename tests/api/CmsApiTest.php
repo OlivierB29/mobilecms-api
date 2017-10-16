@@ -51,7 +51,7 @@ final class CmsApiTest extends TestCase
         $path = '/restapi/v1/content';
 
         $headers = ['Authorization' => $this->token,    'apiKey' => '123'];
-        $REQUEST = []; // $REQUEST = ['path' => $path];
+        $REQUEST = []; 
         $SERVER = ['REQUEST_URI' => $path,    'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
         $GET = [];
         $POST = null;
@@ -76,7 +76,7 @@ final class CmsApiTest extends TestCase
         // echo 'testPostSuccess: ' . $this->memory();
         $path = '/restapi/v1/content/calendar';
 
-        $REQUEST = []; // $REQUEST = ['path' => $path];
+        $REQUEST = []; 
         $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $GET = null;
@@ -116,7 +116,7 @@ final class CmsApiTest extends TestCase
             if (file_exists($file)) {
                 unlink($file);
             }
-            $REQUEST = []; // $REQUEST = ['path' => $path];
+            $REQUEST = []; 
             $headers = ['Authorization' => $this->token];
             $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'PUT', 'HTTP_ORIGIN' => 'foobar'];
             $GET = null;
@@ -140,7 +140,7 @@ final class CmsApiTest extends TestCase
     {
         $path = '/restapi/v1/content/calendar';
         $headers = ['Authorization' => $this->token];
-        $REQUEST = []; // $REQUEST = ['path' => $path];
+        $REQUEST = []; 
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
         $GET = ['requestbody' => '{}'];
         $POST = null;
@@ -184,7 +184,7 @@ final class CmsApiTest extends TestCase
     {
         $path = '/restapi/v1/content/calendar/1';
         $headers = ['Authorization' => $this->token];
-        $REQUEST = []; // $REQUEST = ['path' => $path];
+        $REQUEST = []; 
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
         $GET = [];
         $POST = null;
@@ -208,7 +208,7 @@ final class CmsApiTest extends TestCase
     {
         $path = '/restapi/v1/content/calendar/999999999';
         $headers = ['Authorization' => $this->token];
-        $REQUEST = []; // $REQUEST = ['path' => $path];
+        $REQUEST = []; 
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
         $GET = [];
         $POST = null;
@@ -226,7 +226,7 @@ final class CmsApiTest extends TestCase
     {
         $path = '/restapi/v1/file';
         $headers = ['Authorization' => $this->token];
-        $REQUEST = []; // $REQUEST = ['path' => $path];
+        $REQUEST = []; 
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
         $GET = ['file' => 'calendar/index/metadata.json'];
         $POST = null;
@@ -262,7 +262,7 @@ final class CmsApiTest extends TestCase
 
         $recordStr = '';
 
-        $REQUEST = []; // $REQUEST = ['path' => $path];
+        $REQUEST = []; 
         $headers = ['Authorization' => $this->token];
         $SERVER = ['REQUEST_URI' => $path, 'REQUEST_METHOD' => 'DELETE', 'HTTP_ORIGIN' => 'foobar'];
         $GET = [];

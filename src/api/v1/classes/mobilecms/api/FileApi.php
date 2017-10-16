@@ -273,6 +273,10 @@ class FileApi extends \mobilecms\utils\SecureRestApi
                 $moveResult = false;
                 // why not inline notation condition ? a : b;
                 // If an exception is thrown with IO, I prefer to be sure of the line in error.
+                if (!file_exists($file['tmp_name'])) {
+                    throw new \Exception('Uploaded file not found ' . $file['tmp_name']);
+                }
+
                 if ($this->debug) {
                     $moveResult = rename($file['tmp_name'], $destfile);
                 } else {

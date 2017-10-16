@@ -23,6 +23,10 @@ Should stay to true, for safety. When enabled, sanitize inputs.
 -  "https": "true|false"
 Set if https is mandatory.
 
+- "debugapiexceptions": "true|false"
+If set to true, the API sends an exception message in HTTP response.
+Otherwise, the API sends a generic response {"error":"internal error"}
+
 -  "errorlog": "true"
 Enable error log on backend
 

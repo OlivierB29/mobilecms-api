@@ -317,9 +317,19 @@ abstract class RestApi
      */
     public function processAPI(): Response
     {
+
         $apiResponse = $this->getDefaultResponse();
-        if (method_exists($this, $this->endpoint)) {
-            $apiResponse = $this->{$this->endpoint}($this->args);
+        try {
+            if (method_exists($this, $this->endpoint)) {
+                $apiResponse = $this->{$this->endpoint}($this->args);
+            }
+        } catch (\Exception $e) {
+            // enable on local development server only https://www.owasp.org/index.php/Improper_Error_Handling
+            if ($this->displayApiErrors) {
+                $apiResponse->setError(500, $e->getMessage());
+            } else {
+                $apiResponse->setError(500, 'internal error');
+            }
         }
 
         return $apiResponse;
@@ -345,16 +355,9 @@ abstract class RestApi
             $status = $response->getCode();
         } catch (\Exception $e) {
             // security : clear variables on exception
-
             $status = 500;
             error_log($e->getMessage());
-            // enable on local development server only https://www.owasp.org/index.php/Improper_Error_Handling
-            if ($this->displayApiErrors) {
-                $responseBody = json_encode(['error' => $e->getMessage()]);
-            } else {
-                // security : should not display to much error reporting to an attacker
-                $responseBody = json_encode(['error' => 'internal error']);
-            }
+            $responseBody = json_encode(['error' => 'internal error']);
         } finally {
             http_response_code($status);
             echo $responseBody;
