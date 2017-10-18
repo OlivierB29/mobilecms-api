@@ -24,6 +24,8 @@ abstract class RestApi
      */
     private $conf;
 
+    private $properties;
+
     /**
      * Set to false when unit testing.
      */
@@ -34,53 +36,7 @@ abstract class RestApi
      */
     protected $enableCleanInputs = true;
 
-    /**
-     * Property: method
-     * The HTTP method this request was made in, either GET, POST, PUT or DELETE.
-     */
-    protected $method = '';
-    /**
-     * Property: endpoint
-     * The Model requested in the URI.
-     * eg: /files.
-     */
-    protected $endpoint = '';
-    /**
-     * Property: verb
-     * An optional additional descriptor about the endpoint, used for things that can
-     * not be handled by the basic methods.
-     * eg: /files/process.
-     */
-    protected $verb = '';
-
-    /**
-     * Property: apiversion
-     * eg : v1.
-     */
-    protected $apiversion = '';
-    /**
-     * Property: args
-     * Any additional URI components after the endpoint and verb have been removed, in our
-     * case, an integer ID for the resource.
-     * eg: /<endpoint>/<verb>/<arg0>/<arg1>
-     * or /<endpoint>/<arg0>.
-     */
-    protected $args = [];
-    /**
-     * Property: file
-     * Stores the input of the PUT request.
-     */
-    protected $file = null;
-
-    /**
-     * Request content from post data or JSON body.
-     */
-    protected $request = null;
-
-    /**
-     * Headers array.
-     */
-    protected $headers = null;
+    protected $requestObject;
 
     /**
      * When enabled : send readable errors in responses.
@@ -91,6 +47,8 @@ abstract class RestApi
      * Root app dir.
      */
     protected $rootDir = '';
+
+
 
 
     /**
@@ -113,6 +71,7 @@ abstract class RestApi
 
     public function loadConf(string $file)
     {
+
         if (\file_exists($file)) {
             $this->setConf(json_decode(file_get_contents($file)));
         } else {
@@ -194,6 +153,7 @@ abstract class RestApi
     }
 
 
+
     /**
      * Set request URI eg:
      * /api/v1/content/save
@@ -204,13 +164,15 @@ abstract class RestApi
      */
     public function setRequestUri(string $request)
     {
-        $this->args = explode('/', rtrim(ltrim($request, '/'), '/'));
+        $this->requestObject->uri = $request;
+
+        $this->requestObject->args = explode('/', rtrim(ltrim($request, '/'), '/'));
         // eg : api
-        array_shift($this->args);
+        array_shift($this->requestObject->args);
 
         // eg : v1
-        if (array_key_exists(0, $this->args)) {
-            $this->apiversion = array_shift($this->args);
+        if (array_key_exists(0, $this->requestObject->args)) {
+            $this->requestObject->apiversion = array_shift($this->requestObject->args);
         }
 
         //TODO better parse.
@@ -218,16 +180,16 @@ abstract class RestApi
         // instead, use restapi/v1/file/?file=news/index/metadata.json
         //
         // eg : recipe
-        if (array_key_exists(0, $this->args)) {
-            $this->endpoint = array_shift($this->args);
+        if (array_key_exists(0, $this->requestObject->args)) {
+            $this->requestObject->endpoint = array_shift($this->requestObject->args);
         }
 
         // eg : cake
-        if (array_key_exists(0, $this->args)) {
-            $this->verb = array_shift($this->args);
+        if (array_key_exists(0, $this->requestObject->args)) {
+            $this->requestObject->verb = array_shift($this->requestObject->args);
         }
 
-        // $this->args contains the remaining elements
+        // $this->requestObject->args contains the remaining elements
        // eg:
        // [0] => foo
        // [1] => bar
@@ -269,31 +231,32 @@ abstract class RestApi
         if ($REQUEST === null) {
             $REQUEST = &$_REQUEST;
         }
-
-        $this->headers = $headers;
+        $this->requestObject = new Request();
+        $this->requestObject->headers = $headers;
 
         // Parse URI
-        $this->setRequestUri($SERVER['REQUEST_URI']);
+
+        $this->setRequestUri($this->cleanInputs($SERVER['REQUEST_URI']));
 
         // detect method
-        $this->method = $SERVER['REQUEST_METHOD'];
-        if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $SERVER)) {
+        $this->requestObject->method = $SERVER['REQUEST_METHOD'];
+        if ($this->requestObject->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $SERVER)) {
             if ($SERVER['HTTP_X_HTTP_METHOD'] == 'DELETE') {
-                $this->method = 'DELETE';
+                $this->requestObject->method = 'DELETE';
             } elseif ($SERVER['HTTP_X_HTTP_METHOD'] == 'PUT') {
-                $this->method = 'PUT';
+                $this->requestObject->method = 'PUT';
             } else {
                 throw new \Exception('Unexpected Header');
             }
         }
 
-        switch ($this->method) {
+        switch ($this->requestObject->method) {
             case 'DELETE':
             case 'POST':
                 if ($this->postformdata === true) {
-                    $this->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
+                    $this->requestObject->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
                 } else {
-                    $this->request = $this->enableCleanInputs ?
+                    $this->requestObject->request = $this->enableCleanInputs ?
                     $this->cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
                 }
                 break;
@@ -301,11 +264,11 @@ abstract class RestApi
                     $this->preflight();
                 break;
             case 'GET':
-                $this->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
+                $this->requestObject->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
                 break;
             case 'PUT':
-                $this->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
-                //$this->request = $this->cleanInputs($GET);
+                $this->requestObject->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
+                //$this->requestObject->request = $this->cleanInputs($GET);
                 // http://php.net/manual/en/wrappers.php.php
 
                 break;
@@ -322,7 +285,7 @@ abstract class RestApi
      */
     public function getRequest()
     {
-        return $this->request;
+        return $this->requestObject->request;
     }
 
 
@@ -336,8 +299,8 @@ abstract class RestApi
     {
         $apiResponse = $this->getDefaultResponse();
         try {
-            if (method_exists($this, $this->endpoint)) {
-                $apiResponse = $this->{$this->endpoint}($this->args);
+            if (method_exists($this, $this->requestObject->endpoint)) {
+                $apiResponse = $this->{$this->requestObject->endpoint}($this->requestObject->args);
             }
         } catch (\Exception $e) {
             // enable on local development server only https://www.owasp.org/index.php/Improper_Error_Handling
@@ -386,13 +349,13 @@ abstract class RestApi
     */
     private function clearRequestParameters()
     {
-        unset($this->request);
-        unset($this->headers);
-        unset($this->method);
-        unset($this->verb);
-        unset($this->endpoint);
-        unset($this->apiversion);
-        unset($this->args);
+        unset($this->requestObject->request);
+        unset($this->requestObject->headers);
+        unset($this->requestObject->method);
+        unset($this->requestObject->verb);
+        unset($this->requestObject->endpoint);
+        unset($this->requestObject->apiversion);
+        unset($this->requestObject->args);
     }
 
     /**
@@ -417,9 +380,9 @@ abstract class RestApi
     public function getRequestBody(): string
     {
         if ($this->postformdata === true) {
-            return $this->request[self::REQUESTBODY];
+            return $this->requestObject->request[self::REQUESTBODY];
         } else {
-            return $this->request;
+            return $this->requestObject->request;
         }
     }
 

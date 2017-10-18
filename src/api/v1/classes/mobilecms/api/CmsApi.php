@@ -64,7 +64,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
         // Preflight requests are send by Angular
-        if ($this->method === 'OPTIONS') {
+        if ($this->requestObject->method === 'OPTIONS') {
             // eg : /api/v1/content
             $response = $this->preflight();
         }
@@ -72,13 +72,13 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         //
         if (!empty($datatype)) {
             // eg : /api/v1/content/calendar
-            if ($this->method === 'GET') {
+            if ($this->requestObject->method === 'GET') {
                 if (!empty($pathId)) {
                     //TODO get single index value
                 } else {
                     $response = $service->getAll($datatype . '/index/index.json');
                 }
-            } elseif ($this->method === 'POST') {
+            } elseif ($this->requestObject->method === 'POST') {
                 $response = $service->rebuildIndex($datatype, self::ID);
             }
         }
@@ -104,25 +104,25 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
         // Preflight requests are send by Angular
-        if ($this->method === 'OPTIONS') {
+        if ($this->requestObject->method === 'OPTIONS') {
             // eg : /api/v1/content
             $response = $this->preflight();
         }
 
         if (!empty($datatype)) {
             // eg : /api/v1/content/calendar
-            if ($this->method === 'GET') {
+            if ($this->requestObject->method === 'GET') {
                 if (!empty($pathId)) {
                     //get the full data of a single record
 
-                    // $this->args contains the remaining path parameters
+                    // $this->requestObject->args contains the remaining path parameters
                     // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
                     $response = $service->getRecord($datatype, $pathId);
                 } else {
                     //get all records in index
                     $response = $service->getAllObjects($datatype);
                 }
-            } elseif ($this->method === 'POST') {
+            } elseif ($this->requestObject->method === 'POST') {
                 // save a record and update the index. eg : /api/v1/content/calendar
 
                 // step 1 : update Record
@@ -134,7 +134,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 $id = $myobjectJson->{self::ID};
                 unset($myobjectJson);
                 $response = $service->publishById($datatype, self::ID, $id);
-            } elseif ($this->method === 'PUT') {
+            } elseif ($this->requestObject->method === 'PUT') {
                 // save a record and update the index
                 // path eg : /api/v1/content/calendar
 
@@ -148,11 +148,11 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 $id = $myobjectJson->{self::ID};
                 unset($myobjectJson);
                 $response = $service->publishById($datatype, self::ID, $id);
-            } elseif ($this->method === 'DELETE') {
+            } elseif ($this->requestObject->method === 'DELETE') {
                 if (!empty($pathId)) {
                     //delete a single record
 
-                    // $this->args contains the remaining path parameters
+                    // $this->requestObject->args contains the remaining path parameters
                     // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
 
                     $response = $service->deleteRecord($datatype, $pathId);
@@ -167,7 +167,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 // delete a record and update the index. eg : /api/v1/content/calendar/1.json
             }
         } else {
-            if ($this->method === 'GET') {
+            if ($this->requestObject->method === 'GET') {
                 //return the list of editable types. eg : /api/v1/content/
 
                 $response->setResult($service->options('types.json'));
@@ -192,12 +192,12 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
         // Preflight requests are send by Angular
-        if ($this->method === 'OPTIONS') {
+        if ($this->requestObject->method === 'OPTIONS') {
             // eg : /api/v1/content
             $response->setCode(200);
 
             $response = $this->preflight();
-        } elseif ($this->method === 'GET') {
+        } elseif ($this->requestObject->method === 'GET') {
             // eg : /api/v1/file?filename
             // args contains the remaining path parameters
             // --> eg : /api/v1/file?file=/calendar/1/foo/bar/sample.json
@@ -228,8 +228,8 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
     private function getDataType(): string
     {
         $datatype = '';
-        if (isset($this->verb)) {
-            $datatype = $this->verb;
+        if (isset($this->requestObject->verb)) {
+            $datatype = $this->requestObject->verb;
         }
         if (!isset($datatype)) {
             throw new \Exception('Empty datatype');
@@ -246,8 +246,8 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
     private function getId(): string
     {
         $result = '';
-        if (isset($this->args) && array_key_exists(0, $this->args)) {
-            $result = $this->args[0];
+        if (isset($this->requestObject->args) && array_key_exists(0, $this->requestObject->args)) {
+            $result = $this->requestObject->args[0];
         }
 
         return $result;

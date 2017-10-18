@@ -28,6 +28,7 @@ Media files
 
 ## Runtime Requirements
 - PHP 7.0
+- [php-gd](http://php.net/manual/en/book.image.php) for image resize (`sudo apt install php-gd` on Ubuntu)
 
 ## Dev dependencies (optional)
 - [Composer](https://getcomposer.org/download/)

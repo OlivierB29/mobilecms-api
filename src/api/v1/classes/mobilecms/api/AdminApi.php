@@ -55,7 +55,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
 
         // Preflight requests are send by Angular
-        if ($this->method === 'OPTIONS') {
+        if ($this->requestObject->method === 'OPTIONS') {
             // eg : /api/v1/content
             $response = $this->preflight();
         }
@@ -64,9 +64,9 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
             $pathId = $this->getId();
 
             // eg : /api/v1/content/calendar
-            if ($this->method === 'GET') {
+            if ($this->requestObject->method === 'GET') {
                 if (!empty($pathId)) {
-                    // get the full data of a single record. $this->args contains the remaining path parameters
+                    // get the full data of a single record. $this->requestObject->args contains the remaining path parameters
                     // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
                     $tmpResponse = $service->getRecord($datatype, $pathId);
                     // basic user fields, without password
@@ -78,7 +78,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                     //get all records in index
                     $response = $service->getAllObjects($datatype);
                 }
-            } elseif ($this->method === 'POST') {
+            } elseif ($this->requestObject->method === 'POST') {
                 $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
                 if (!empty($pathId)) {
@@ -129,10 +129,10 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                         $response->setError(400, $createresult);
                     }
                 }
-            } elseif ($this->method === 'PUT') {
-            } elseif ($this->method === 'DELETE') {
+            } elseif ($this->requestObject->method === 'PUT') {
+            } elseif ($this->requestObject->method === 'DELETE') {
                 if (!empty($pathId)) {
-                    // delete a single record. $this->args contains the remaining path parameters
+                    // delete a single record. $this->requestObject->args contains the remaining path parameters
                     // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
                     $response = $service->deleteRecord($datatype, $pathId);
                     if ($response->getCode() === 200) {
@@ -143,7 +143,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                 // delete a record and update the index. eg : /api/v1/content/calendar/1.json
             }
         } else {
-            if ($this->method === 'GET') {
+            if ($this->requestObject->method === 'GET') {
                 //return the list of editable types. eg : /api/v1/content/
                 $response->setResult($service->options('types.json'));
                 $response->setCode(200);
@@ -212,20 +212,20 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
         // Preflight requests are send by Angular
-        if ($this->method === 'OPTIONS') {
+        if ($this->requestObject->method === 'OPTIONS') {
             // eg : /api/v1/content
             $response = $this->preflight();
         } elseif (!empty($datatype)) {
             $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
 
             // eg : /api/v1/content/calendar
-            if ($this->method === 'GET') {
+            if ($this->requestObject->method === 'GET') {
                 if (!empty($pathId)) {
                     //TODO get single index value
                 } else {
                     $response = $service->getAll($datatype . '/index/index.json');
                 }
-            } elseif ($this->method === 'POST') {
+            } elseif ($this->requestObject->method === 'POST') {
                 $response = $service->rebuildIndex($datatype, $userKey);
             }
         }
@@ -251,8 +251,8 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
     private function getDataType(): string
     {
         $datatype = '';
-        if (isset($this->verb)) {
-            $datatype = $this->verb;
+        if (isset($this->requestObject->verb)) {
+            $datatype = $this->requestObject->verb;
         }
         if (!isset($datatype)) {
             throw new \Exception('Empty datatype');
@@ -269,8 +269,8 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
     private function getId(): string
     {
         $result = '';
-        if (isset($this->args) && array_key_exists(0, $this->args)) {
-            $result = $this->args[0];
+        if (isset($this->requestObject->args) && array_key_exists(0, $this->requestObject->args)) {
+            $result = $this->requestObject->args[0];
         }
 
         return $result;

@@ -6,15 +6,6 @@ define('EMPTYSTR', '');
  */
 class StringUtils
 {
-    /**
-     * String is not empty.
-     *
-     * @param string $question string value
-     */
-    public static function isNotEmpty(string $question)
-    {
-        return isset($question) && trim($question) != EMPTYSTR;
-    }
 
     /**
      * Compare strings.

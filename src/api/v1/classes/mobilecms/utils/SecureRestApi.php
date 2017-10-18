@@ -73,7 +73,7 @@ abstract class SecureRestApi extends RestApi
         $response = $this->getDefaultResponse();
         $response->setCode(401);
 
-        switch ($this->method) {
+        switch ($this->requestObject->method) {
             case 'OPTIONS':
                   $response->setCode(200);
                   $response->setResult('{}');
@@ -164,8 +164,8 @@ abstract class SecureRestApi extends RestApi
         $bearerTokenValue = $this->getAuthorizationHeader();
 
         //for unit tests
-        if (!empty($this->headers)) {
-            $bearerTokenValue = $this->headers[self::AUTHORIZATION];
+        if (!empty($this->requestObject->headers)) {
+            $bearerTokenValue = $this->requestObject->headers[self::AUTHORIZATION];
         }
 
         if (!empty($bearerTokenValue)) {

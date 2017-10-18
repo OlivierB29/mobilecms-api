@@ -67,12 +67,12 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
         $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
-        if ($this->method === 'OPTIONS') {
+        if ($this->requestObject->method === 'OPTIONS') {
             // eg : /authapi/v1/auth
             $response->setResult($service->preflight());
         }
 
-        if ($this->method === 'POST') {
+        if ($this->requestObject->method === 'POST') {
             // login and get token
             // eg : { "user": "test@example.com", "password":"Sample#123456"}
 
@@ -108,12 +108,12 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
         $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
-        if ($this->method === 'OPTIONS') {
+        if ($this->requestObject->method === 'OPTIONS') {
             // eg : /authapi/v1/auth
             $response->setResult($service->preflight());
         }
 
-        if ($this->method === 'POST') {
+        if ($this->requestObject->method === 'POST') {
             // login and get token
             // eg : { "user": "test@example.com", "password":"Sample#123456"}
 
@@ -170,15 +170,15 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
         $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
-        if ($this->method === 'OPTIONS') {
+        if ($this->requestObject->method === 'OPTIONS') {
             // eg : /authapi/v1/auth
             $response->setResult($service->preflight());
         }
 
-        if ($this->method === 'GET') {
+        if ($this->requestObject->method === 'GET') {
             $id = '';
-            if (isset($this->verb)) {
-                $id = $this->verb;
+            if (isset($this->requestObject->verb)) {
+                $id = $this->requestObject->verb;
             }
             $response = $service->getPublicInfo($id);
             unset($user);
@@ -201,12 +201,12 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
         $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
         // Preflight requests are send by Angular
-        if ($this->method === 'OPTIONS') {
+        if ($this->requestObject->method === 'OPTIONS') {
             $response->setResult($service->preflight());
         }
 
         // register and create a user
-        if ($this->method === 'POST') {
+        if ($this->requestObject->method === 'POST') {
             $user = json_decode($this->getRequestBody());
             //returns a empty string if success, a string with the message otherwise
 
@@ -277,12 +277,12 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
             $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
             // Preflight requests are send by Angular
-            if ($this->method === 'OPTIONS') {
+            if ($this->requestObject->method === 'OPTIONS') {
                 // eg : /authapi/v1/auth
                 $response = $service->preflight();
             }
 
-            if ($this->method === 'POST') {
+            if ($this->requestObject->method === 'POST') {
                 if (empty($this->getRequestBody())) {
                     throw new \Exception('no login request');
                 }
@@ -351,8 +351,8 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     private function getId(): string
     {
         $result = '';
-        if (isset($this->args) && array_key_exists(0, $this->args)) {
-            $result = $this->args[0];
+        if (isset($this->requestObject->args) && array_key_exists(0, $this->requestObject->args)) {
+            $result = $this->requestObject->args[0];
         }
 
         return $result;
