@@ -1,7 +1,5 @@
 <?php namespace mobilecms\api;
 
-// require_once 'SecureRestApi.php';
-// require_once '\mobilecms\utils\ContentService.php';
 /*
  * /api/v1/content/cake?filter=foobar
  */
@@ -67,13 +65,13 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
             $response = $this->preflight();
         }
 
-        if ($this->requestObject->match('/cmsapi/v1/content/{type}/index/index.json', $params)) {
-          //  $response = $service->getAllObjects($params['type']);
+        if ($this->requestObject->match('/cmsapi/v1/content/{type}/index/index.json')) {
+          //  $response = $service->getAllObjects($this->getParam('type'));
 
             if ($this->requestObject->method === 'GET') {
-                $response = $service->getAll($params['type'] . '/index/index.json');
+                $response = $service->getAll($this->getParam('type') . '/index/index.json');
             } elseif ($this->requestObject->method === 'POST') {
-                $response = $service->rebuildIndex($params['type'], self::ID);
+                $response = $service->rebuildIndex($this->getParam('type'), self::ID);
             }
         }
 
@@ -95,7 +93,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
 
 
-      //  $pathId = $this->getId();
+      //  $pathId = $this->getParam('id');
 
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
@@ -104,65 +102,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
             // eg : /api/v1/content
             $response = $this->preflight();
         }
-
-            $params = [];
-            // eg : /api/v1/content/calendar
-        if ($this->requestObject->method === 'GET') {
-            if ($this->requestObject->match('/cmsapi/v1/content/{type}/{id}', $params)) {
-                $response = $service->getRecord($params['type'], $params['id']);
-            } elseif ($this->requestObject->match('/cmsapi/v1/content/{type}', $params)) {
-                $response = $service->getAllObjects($params['type']);
-            }
-        }
-        if ($this->requestObject->match('/cmsapi/v1/content/{type}', $params)) {
-            if ($this->requestObject->method === 'POST') {
-                // save a record and update the index. eg : /api/v1/content/calendar
-
-
-                  //  $response = $service->getAllObjects($params['type']);
-                  // step 1 : update Record
-                    $putResponse = $service->post($params['type'], self::ID, urldecode($this->getRequestBody()));
-                    $myobjectJson = json_decode($putResponse->getResult());
-                    unset($putResponse);
-
-                  // step 2 : publish to index
-                    $id = $myobjectJson->{self::ID};
-                    unset($myobjectJson);
-                    $response = $service->publishById($params['type'], self::ID, $id);
-            } elseif ($this->requestObject->method === 'PUT') {
-                // save a record and update the index
-                // path eg : /api/v1/content/calendar
-
-                // step 1 : update Record
-                $putResponse = $service->post($params['type'], self::ID, $this->request);
-                $myobjectJson = json_decode($putResponse->getResult());
-                //TODO manage errors
-                unset($putResponse);
-
-                // step 2 : publish to index
-                $id = $myobjectJson->{self::ID};
-                unset($myobjectJson);
-                $response = $service->publishById($params['type'], self::ID, $id);
-            }
-        }
-        if ($this->requestObject->method === 'DELETE') {
-            if ($this->requestObject->match('/cmsapi/v1/content/{type}/{id}', $params)) {
-                //delete a single record
-                $response = $service->deleteRecord($params['type'], $params['id']);
-                // step 1 : update Record
-
-                if ($response->getCode() === 200) {
-                    // step 2 : publish to index
-                    $response = $service->rebuildIndex($params['type'], self::ID);
-                }
-            }
-
-
-
-
-            // delete a record and update the index. eg : /api/v1/content/calendar/1.json
-        }
-        if ($this->requestObject->match('/cmsapi/v1/content', $params)) {
+        if ($this->requestObject->match('/cmsapi/v1/content')) {
             if ($this->requestObject->method === 'GET') {
                 //return the list of editable types. eg : /api/v1/content/
 
@@ -170,8 +110,63 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 $response->setCode(200);
             }
         }
+        if ($this->requestObject->match('/cmsapi/v1/content/{type}')) {
+            if ($this->requestObject->method === 'GET') {
+                  $response = $service->getAllObjects($this->getParam('type'));
+            }
+            if ($this->requestObject->method === 'POST') {
+                // save a record and update the index. eg : /api/v1/content/calendar
+
+
+                  //  $response = $service->getAllObjects($this->getParam('type'));
+                  // step 1 : update Record
+                    $putResponse = $service->post($this->getParam('type'), self::ID, urldecode($this->getRequestBody()));
+                    $myobjectJson = json_decode($putResponse->getResult());
+                    unset($putResponse);
+
+                  // step 2 : publish to index
+                    $id = $myobjectJson->{self::ID};
+                    unset($myobjectJson);
+                    $response = $service->publishById($this->getParam('type'), self::ID, $id);
+            }
+            if ($this->requestObject->method === 'PUT') {
+                // save a record and update the index
+                // path eg : /api/v1/content/calendar
+
+                // step 1 : update Record
+                $putResponse = $service->post($this->getParam('type'), self::ID, $this->request);
+                $myobjectJson = json_decode($putResponse->getResult());
+                //TODO manage errors
+                unset($putResponse);
+
+                // step 2 : publish to index
+                $id = $myobjectJson->{self::ID};
+                unset($myobjectJson);
+                $response = $service->publishById($this->getParam('type'), self::ID, $id);
+            }
+        }
+
+        if ($this->requestObject->match('/cmsapi/v1/content/{type}/{id}')) {
+            if ($this->requestObject->method === 'GET') {
+                  $response = $service->getRecord($this->getParam('type'), $this->getParam('id'));
+            }
+            if ($this->requestObject->method === 'DELETE') {
+                //delete a single record
+                $response = $service->deleteRecord($this->getParam('type'), $this->getParam('id'));
+                // step 1 : update Record
+
+                if ($response->getCode() === 200) {
+                    // step 2 : publish to index
+                    $response = $service->rebuildIndex($this->getParam('type'), self::ID);
+                }
+
+                // delete a record and update the index. eg : /api/v1/content/calendar/1.json
+            }
+        }
+
         return $response;
     }
+
 
     /**
      * Get file info.
@@ -212,7 +207,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
             throw new \Exception('bad request');
         }
 
-        return $response;
+            return $response;
     }
 
 

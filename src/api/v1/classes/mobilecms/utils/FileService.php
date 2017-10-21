@@ -1,7 +1,5 @@
 <?php namespace mobilecms\utils;
 
-// require_once 'Response.php';
-// require_once 'JsonUtils.php';
 /**
  * File utility service.
  */

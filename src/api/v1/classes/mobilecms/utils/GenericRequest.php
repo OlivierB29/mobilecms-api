@@ -43,6 +43,7 @@ class GenericRequest
        */
   //  public $argsZZZZ = [];
 
+    public $params;
 
       /**
        * Request content from post data or JSON body.

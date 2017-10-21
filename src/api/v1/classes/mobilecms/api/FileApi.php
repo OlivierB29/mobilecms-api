@@ -1,7 +1,5 @@
 <?php namespace mobilecms\api;
 
-// require_once 'SecureRestApi.php';
-// require_once '\mobilecms\utils\FileService.php';
 /*
  * File API with authentication.
  * Basic file upload using _FILES
@@ -96,15 +94,15 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             $response = $this->preflight();
         }
 
-        $params = [];
-        if ($this->requestObject->match('/fileapi/v1/basicupload/{type}/{id}', $params)) {
+
+        if ($this->requestObject->match('/fileapi/v1/basicupload/{type}/{id}')) {
             if ($this->requestObject->method === 'GET') {
                   // create service
                   $service = new \mobilecms\utils\FileService();
 
                   // update files description
                   // /var/www/html/media/calendar/1
-                  $destdir = $this->getRecordDirPath($params['type'], $params['id']);
+                  $destdir = $this->getRecordDirPath($this->getParam('type'), $this->getParam('id'));
 
                   $uploadResult = $service->getDescriptions($destdir);
                   $response->setCode(200);
@@ -112,9 +110,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
                   $response->setResult(json_encode($uploadResult));
             } elseif ($this->requestObject->method === 'POST') {
                 if (array_key_exists(0, $this->requestObject->args)) {
-                    //get the full data of a single record $this->requestObject->args contains the remaining path parameters
+                    //get the full data of a single record
                     // eg : /api/v1/file/calendar/1
-                    $uploadResult = $this->uploadFiles($params['type'], $params['id']);
+                    $uploadResult = $this->uploadFiles($this->getParam('type'), $this->getParam('id'));
                     $response->setCode(200);
 
                     $response->setResult(json_encode($uploadResult));
@@ -149,9 +147,8 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         //
         if ($this->requestObject->method === 'POST') {
-            $params = [];
-            if ($this->requestObject->match('/fileapi/v1/delete/{type}/{id}', $params)) {
-                $deleteResult = $this->deleteFiles($params['type'], $params['id'], urldecode($this->getRequestBody()));
+            if ($this->requestObject->match('/fileapi/v1/delete/{type}/{id}')) {
+                $deleteResult = $this->deleteFiles($this->getParam('type'), $this->getParam('id'), urldecode($this->getRequestBody()));
                 $response->setCode(200);
 
                 $response->setResult(json_encode($deleteResult));
@@ -184,12 +181,12 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             // eg : /api/v1/content
             $response = $this->preflight();
         }
-        $params = [];
-        if ($this->requestObject->match('/fileapi/v1/download/{type}/{id}', $params)) {
+
+        if ($this->requestObject->match('/fileapi/v1/download/{type}/{id}')) {
             $service = new \mobilecms\utils\FileService();
 
             if ($this->requestObject->method === 'POST') {
-                    $response = $this->downloadFiles($params['type'], $params['id'], urldecode($this->getRequestBody()));
+                    $response = $this->downloadFiles($this->getParam('type'), $this->getParam('id'), urldecode($this->getRequestBody()));
             }
         }
 

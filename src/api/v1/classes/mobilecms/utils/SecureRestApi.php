@@ -1,9 +1,5 @@
 <?php namespace mobilecms\utils;
 
-// require_once 'RestApi.php';
-// require_once 'ApiKey.php';
-// require_once 'UserService.php';
-
 /**
  * Secure implementation of a REST api.
  * - apikey management

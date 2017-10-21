@@ -1,7 +1,5 @@
 <?php namespace mobilecms\utils;
 
-// require_once 'JsonUtils.php';
-
 /*
  * API Key verification for CORS
  * TODO hash impl

@@ -1,6 +1,6 @@
 {   "name": "mobilecms-api",
     "require-dev": {
-        "phpunit/phpunit": "^6.2",
+        "phpunit/phpunit": "^6.4",
         "cakephp/cakephp-codesniffer": "^3.0"
     }
 }

@@ -1,7 +1,5 @@
 <?php namespace mobilecms\utils;
 
-// require_once 'Response.php';
-
 /*
  * Core REST Api without Authentication or API Key
  * (Authentication : see SecureRestApi)
@@ -450,5 +448,11 @@ abstract class RestApi
     public function getConf()
     {
         return $this->conf;
+    }
+
+
+    protected function getParam($key)
+    {
+        return $this->requestObject->getParam($key);
     }
 }

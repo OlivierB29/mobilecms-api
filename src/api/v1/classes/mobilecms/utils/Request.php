@@ -2,6 +2,8 @@
 
 class Request extends GenericRequest
 {
+
+
   /**
   * test if an URI matches a pattern
   * @param string $pattern /store/order/{orderId}
@@ -9,8 +11,9 @@ class Request extends GenericRequest
 
   * @return array found parameters
   */
-    public function match(string $pattern, &$matches = null) : bool
+    public function match(string $pattern) : bool
     {
+        $this->params = [];
         $diffFound = false;
         if (empty($pattern)) {
             throw new \Exception('empty pattern');
@@ -28,9 +31,7 @@ class Request extends GenericRequest
             foreach ($patternArray as $key => $value) {
                 if ($this->isPathParameter($value)) {
                     // sample result [ 'bar' => '123']
-                    if (isset($matches)) {
-                        $matches[$this->getPathParameterName($value)] = $uriArray[$key];
-                    }
+                      $this->params[$this->getPathParameterName($value)] = $uriArray[$key];
                 } else {
                   //  /foo/{bar} VS /foo/123
 
@@ -47,19 +48,24 @@ class Request extends GenericRequest
 
 
         if ($diffFound) {
-            $matches = [];
+            $this->params = [];
         }
 
         return !$diffFound;
     }
 
-    public function matchRequest(string $method, string $pattern, &$matches = null) : bool
+    public function matchRequest(string $method, string $pattern) : bool
     {
         $result = false;
         if (!empty($method) && $method == $this->method) {
-            $result = $this->match($pattern, $matches);
+            $result = $this->match($pattern);
         }
         return $result;
+    }
+
+    public function getParam(string $key)
+    {
+        return $this->params[$key];
     }
 
     /**

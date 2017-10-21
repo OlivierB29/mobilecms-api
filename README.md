@@ -34,6 +34,7 @@ Media files
 - [Composer](https://getcomposer.org/download/)
 - [phpunit](https://phpunit.de) (use composer)
 - [Gulp](https://gulpjs.com/)
+- [php mbstring](http://php.net/manual/en/mbstring.installation.php) extension is required by PHPUnit
 
 ## Manual install
 - copy src/api to web server to the web directory eg: /var/www/html/api

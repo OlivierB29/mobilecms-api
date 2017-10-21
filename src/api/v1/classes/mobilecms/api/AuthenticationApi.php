@@ -1,9 +1,5 @@
 <?php namespace mobilecms\api;
 
-// require_once 'RestApi.php';
-// require_once '\mobilecms\utils\UserService.php';
-// require_once 'MailUtils.php';
-
 /*
  * Login API
  * /authapi/v1/auth
@@ -40,14 +36,8 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     {
         parent::setConf($conf);
 
-        // Default value is true
-        if (!empty($this->getConf()->{'debugnotifications'}) && 'true' === $this->getConf()->{'debugnotifications'}) {
-            $this->debugResetPassword = true;
-        }
-
-        if (!empty($this->getConf()->{'enablemail'}) && 'true' === $this->getConf()->{'enablemail'}) {
-            $this->enablemail = true;
-        }
+        $this->debugResetPassword = $this->properties->getBoolean('debugnotifications', true);
+        $this->enablemail = $this->properties->getBoolean('enablemail', true);
     }
 
 

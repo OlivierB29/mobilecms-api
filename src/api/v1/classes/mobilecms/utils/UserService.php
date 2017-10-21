@@ -4,9 +4,7 @@
  * Inspired by http://fr.wikihow.com/cr%C3%A9er-un-script-de-connexion-s%C3%A9curis%C3%A9e-avec-PHP-et-MySQL
  * This fork uses JSON as storage data
  */
-// require_once 'JsonUtils.php';
-// require_once 'JwtToken.php';
-// require_once 'Response.php';
+
 /*
  * User management Utility.
  * Each user is stored in a separate JSON file.

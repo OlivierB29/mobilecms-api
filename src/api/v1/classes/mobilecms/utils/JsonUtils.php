@@ -1,7 +1,5 @@
 <?php namespace mobilecms\utils;
 
-// require_once 'StringUtils.php';
-
 /**
  * JSON utility for PHP.
  */
