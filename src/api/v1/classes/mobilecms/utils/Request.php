@@ -22,7 +22,7 @@ class Request extends GenericRequest
 
         $patternArray = $this->toArray($pattern);
         $uriArray = $this->toArray($this->uri);
-      // basic test
+        // basic test
         if (count($patternArray) === count($uriArray)) {
             //
             // pattern /foo/{bar}
@@ -31,11 +31,11 @@ class Request extends GenericRequest
             foreach ($patternArray as $key => $value) {
                 if ($this->isPathParameter($value)) {
                     // sample result [ 'bar' => '123']
-                      $this->params[$this->getPathParameterName($value)] = $uriArray[$key];
+                    $this->params[$this->getPathParameterName($value)] = $uriArray[$key];
                 } else {
-                  //  /foo/{bar} VS /foo/123
+                    //  /foo/{bar} VS /foo/123
 
-                  // /foo/{bar} VS /aaa/123
+                    // /foo/{bar} VS /aaa/123
                     if ($value !== $uriArray[$key]) {
                         $diffFound = true;
                     }

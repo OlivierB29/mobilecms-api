@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 final class PropertiesTest extends TestCase
 {
-
     public function testConf()
     {
         $u = new Properties();

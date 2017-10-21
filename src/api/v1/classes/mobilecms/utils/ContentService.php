@@ -45,7 +45,6 @@ class ContentService
      */
     public function __construct(string $databasedir)
     {
-
         $this->databasedir = $databasedir;
     }
 

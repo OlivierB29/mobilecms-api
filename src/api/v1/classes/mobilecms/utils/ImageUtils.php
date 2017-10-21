@@ -23,7 +23,7 @@ class ImageUtils
             $ratio_orig = $width_orig/$height_orig;
             $height = $width/$ratio_orig;
 
-          // Resample
+            // Resample
             $image_p = \imagecreatetruecolor($width, $height);
 
             if ($mime_type) {
@@ -49,11 +49,10 @@ class ImageUtils
         return $result;
     }
 
-// ---------------------------------------------------------
+    // ---------------------------------------------------------
 
     public function isImage($file)
     {
-
         $result = false;
 
         if (!empty($file)) {
@@ -94,7 +93,6 @@ class ImageUtils
 
     public function createThumbnailImage($file, $thumbFile, $thumbWidth)
     {
-
         $name = basename($file);
         $dir = dirname($file);
 

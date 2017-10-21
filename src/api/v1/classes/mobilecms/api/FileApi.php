@@ -97,17 +97,17 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         if ($this->requestObject->match('/fileapi/v1/basicupload/{type}/{id}')) {
             if ($this->requestObject->method === 'GET') {
-                  // create service
-                  $service = new \mobilecms\utils\FileService();
+                // create service
+                $service = new \mobilecms\utils\FileService();
 
-                  // update files description
-                  // /var/www/html/media/calendar/1
-                  $destdir = $this->getRecordDirPath($this->getParam('type'), $this->getParam('id'));
+                // update files description
+                // /var/www/html/media/calendar/1
+                $destdir = $this->getRecordDirPath($this->getParam('type'), $this->getParam('id'));
 
-                  $uploadResult = $service->getDescriptions($destdir);
-                  $response->setCode(200);
+                $uploadResult = $service->getDescriptions($destdir);
+                $response->setCode(200);
 
-                  $response->setResult(json_encode($uploadResult));
+                $response->setResult(json_encode($uploadResult));
             } elseif ($this->requestObject->method === 'POST') {
                 if (array_key_exists(0, $this->requestObject->args)) {
                     //get the full data of a single record
@@ -186,7 +186,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             $service = new \mobilecms\utils\FileService();
 
             if ($this->requestObject->method === 'POST') {
-                    $response = $this->downloadFiles($this->getParam('type'), $this->getParam('id'), urldecode($this->getRequestBody()));
+                $response = $this->downloadFiles($this->getParam('type'), $this->getParam('id'), urldecode($this->getRequestBody()));
             }
         }
 

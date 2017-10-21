@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 final class UrlUtilsTest extends TestCase
 {
-
     public function testPathParam()
     {
         $u = new UrlUtils();

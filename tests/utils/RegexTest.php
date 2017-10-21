@@ -7,8 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 final class RegexTest extends TestCase
 {
-
-
     public function testPath()
     {
         $test = preg_match('/\/content\/([-a-zA-Z0-9_]*)\/([\p{L})-_\.]+)/ui', 'aaaaaaa/bbbbbbbbbbb/content/aaaa/bbb', $matches, PREG_OFFSET_CAPTURE);

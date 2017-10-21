@@ -1,6 +1,5 @@
 <?php namespace mobilecms\api;
 
-
 /**
  * Administration API (users, ...).
  */
@@ -67,27 +66,27 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                     $response->setResult($this->getUserResponse($tmpResponse->getResult()));
                 }
             } elseif ($this->requestObject->method === 'POST') {
-                      $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
+                $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
-                    // save a record and update the index. eg : /api/v1/content/calendar
-                    // step 1 : update Record
+                // save a record and update the index. eg : /api/v1/content/calendar
+                // step 1 : update Record
 
-                    // update password if needed
-                    $userParam = urldecode($this->getRequestBody());
-                    $user = json_decode($userParam);
+                // update password if needed
+                $userParam = urldecode($this->getRequestBody());
+                $user = json_decode($userParam);
                 if (isset($user->{'newpassword'})) {
                     $response = $userService->changePasswordByAdmin($user->{'email'}, $user->{'newpassword'});
                 }
 
-                    $putResponse = $service->update($this->getParam('type'), self::EMAIL, $this->getUserResponse($userParam));
+                $putResponse = $service->update($this->getParam('type'), self::EMAIL, $this->getUserResponse($userParam));
 
-                    $myobjectJson = json_decode($putResponse->getResult());
-                    unset($putResponse);
+                $myobjectJson = json_decode($putResponse->getResult());
+                unset($putResponse);
 
-                    // step 2 : publish to index
-                    $id = $myobjectJson->{self::EMAIL};
-                    unset($myobjectJson);
-                    $response = $service->publishById($this->getParam('type'), self::EMAIL, $id);
+                // step 2 : publish to index
+                $id = $myobjectJson->{self::EMAIL};
+                unset($myobjectJson);
+                $response = $service->publishById($this->getParam('type'), self::EMAIL, $id);
             } elseif ($this->requestObject->method === 'PUT') {
             } elseif ($this->requestObject->method === 'DELETE') {
                 // delete a single record.
@@ -104,21 +103,21 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
 
         if ($this->requestObject->match('/adminapi/v1/content/{type}')) {
             if ($this->requestObject->method === 'GET') {
-            //get all records in index
+                //get all records in index
                 $response = $service->getAllObjects($this->getParam('type'));
             }
             if ($this->requestObject->method === 'POST') {
 
               // get all properties of a user, unless $user->{'property'} will fail if the request is empty
-              $user = $this->getDefaultUser();
-              // get parameters from request
-              $requestuser = json_decode($this->getRequestBody());
+                $user = $this->getDefaultUser();
+                // get parameters from request
+                $requestuser = json_decode($this->getRequestBody());
 
-              JsonUtils::copy($requestuser, $user);
+                JsonUtils::copy($requestuser, $user);
 
-              //returns a empty string if success, a string with the message otherwise
+                //returns a empty string if success, a string with the message otherwise
 
-              $createresult = $userService->createUserWithSecret(
+                $createresult = $userService->createUserWithSecret(
               $user->{'name'},
               $user->{'email'},
               $user->{'password'},
@@ -126,17 +125,16 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
               $user->{'secretResponse'},
               'create'
               );
-              if (empty($createresult)) {
-                  $id = $user->{self::EMAIL};
-                  $response = $service->publishById($this->getParam('type'), self::EMAIL, $id);
-                  unset($user);
-                  $response->setResult('{}');
-                  $response->setCode(200);
-              } else {
-                  $response->setError(400, $createresult);
-              }
+                if (empty($createresult)) {
+                    $id = $user->{self::EMAIL};
+                    $response = $service->publishById($this->getParam('type'), self::EMAIL, $id);
+                    unset($user);
+                    $response->setResult('{}');
+                    $response->setCode(200);
+                } else {
+                    $response->setError(400, $createresult);
+                }
             }
-
         }
 
 
@@ -221,7 +219,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
             }
         }
 
-            return $response;
+        return $response;
     }
 
     /**

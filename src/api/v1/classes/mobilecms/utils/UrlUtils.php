@@ -23,7 +23,6 @@ class UrlUtils
     */
     public function match($pattern, $uri, &$matches = null) :bool
     {
-
         $diffFound = false;
         if (empty($pattern)) {
             throw new \Exception('empty pattern');
@@ -45,9 +44,9 @@ class UrlUtils
                         $matches[$this->getPathParameterName($value)] = $uriArray[$key];
                     }
                 } else {
-                  //  /foo/{bar} VS /foo/123
+                    //  /foo/{bar} VS /foo/123
 
-                  // /foo/{bar} VS /aaa/123
+                    // /foo/{bar} VS /aaa/123
                     if ($value !== $uriArray[$key]) {
                         $diffFound = true;
                     }
@@ -89,9 +88,9 @@ class UrlUtils
                     // sample result [ 'bar' => '123']
                     $matches[$this->getPathParameterName($value)] = $uriArray[$key];
                 } else {
-                  //  /foo/{bar} VS /foo/123
+                    //  /foo/{bar} VS /foo/123
 
-                  // /foo/{bar} VS /aaa/123
+                    // /foo/{bar} VS /aaa/123
                     if ($value !== $uriArray[$key]) {
                         $diffFound = true;
                     }
