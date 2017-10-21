@@ -38,4 +38,11 @@ abstract class ApiTest extends TestCase
 
         return $this->memory2 - $this->memory1;
     }
+
+    protected function printError(\mobilecms\utils\Response $response)
+    {
+        if ($response->getCode() != 200) {
+            echo 'ERROR ' . $response->getResult();
+        }
+    }
 }

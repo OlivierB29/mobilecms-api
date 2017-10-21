@@ -48,6 +48,7 @@ class ContentService
      */
     public function __construct(string $databasedir)
     {
+
         $this->databasedir = $databasedir;
     }
 
@@ -252,9 +253,14 @@ class ContentService
      * eg: [{"id":"1", "filename": "1.json"}, {"id":"2", "filename": "2.json"}].
      *
      * @param string $type eg: calendar
+     *
+     * @return : Response object with a JSON array
      */
-    public function getAllObjects($type): Response
+    public function getAllObjects(string $type): Response
     {
+        if (!isset($type)) {
+            throw new \Exception('empty type');
+        }
         $response = $this->getDefaultResponse();
 
         $thelist = [];
@@ -263,7 +269,6 @@ class ContentService
             while (false !== ($file = readdir($handle))) {
                 $fileObject = json_decode('{}');
                 if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
-                    // echo $file;
                     $fileObject->{'filename'} = $file;
                     $fileObject->{'id'} = str_replace('.json', '', $file);
                     array_push($thelist, $fileObject);

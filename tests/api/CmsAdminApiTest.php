@@ -39,6 +39,7 @@ final class CmsAdminApiTest extends AuthApiTest
 
         $result = $response->getResult();
 
+        $this->printError($response);
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
         $this->assertTrue(file_exists($file));

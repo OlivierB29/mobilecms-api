@@ -24,8 +24,6 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
     /**
      * Constructor.
-     *
-     * @param \stdClass $conf JSON configuration
      */
     public function __construct()
     {
@@ -59,7 +57,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        $datatype = $this->getDataType();
+
 
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
@@ -69,19 +67,16 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
             $response = $this->preflight();
         }
 
-        //
-        if (!empty($datatype)) {
-            // eg : /api/v1/content/calendar
+        if ($this->requestObject->match('/cmsapi/v1/content/{type}/index/index.json', $params)) {
+          //  $response = $service->getAllObjects($params['type']);
+
             if ($this->requestObject->method === 'GET') {
-                if (!empty($pathId)) {
-                    //TODO get single index value
-                } else {
-                    $response = $service->getAll($datatype . '/index/index.json');
-                }
+                $response = $service->getAll($params['type'] . '/index/index.json');
             } elseif ($this->requestObject->method === 'POST') {
-                $response = $service->rebuildIndex($datatype, self::ID);
+                $response = $service->rebuildIndex($params['type'], self::ID);
             }
         }
+
 
         return $response;
     }
@@ -93,13 +88,14 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
      */
     protected function content() : \mobilecms\utils\Response
     {
+
         $response = $this->getDefaultResponse();
 
         $this->checkConfiguration();
 
-        $datatype = $this->getDataType();
 
-        $pathId = $this->getId();
+
+      //  $pathId = $this->getId();
 
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
@@ -109,37 +105,36 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
             $response = $this->preflight();
         }
 
-        if (!empty($datatype)) {
+            $params = [];
             // eg : /api/v1/content/calendar
-            if ($this->requestObject->method === 'GET') {
-                if (!empty($pathId)) {
-                    //get the full data of a single record
-
-                    // $this->requestObject->args contains the remaining path parameters
-                    // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
-                    $response = $service->getRecord($datatype, $pathId);
-                } else {
-                    //get all records in index
-                    $response = $service->getAllObjects($datatype);
-                }
-            } elseif ($this->requestObject->method === 'POST') {
+        if ($this->requestObject->method === 'GET') {
+            if ($this->requestObject->match('/cmsapi/v1/content/{type}/{id}', $params)) {
+                $response = $service->getRecord($params['type'], $params['id']);
+            } elseif ($this->requestObject->match('/cmsapi/v1/content/{type}', $params)) {
+                $response = $service->getAllObjects($params['type']);
+            }
+        }
+        if ($this->requestObject->match('/cmsapi/v1/content/{type}', $params)) {
+            if ($this->requestObject->method === 'POST') {
                 // save a record and update the index. eg : /api/v1/content/calendar
 
-                // step 1 : update Record
-                $putResponse = $service->post($datatype, self::ID, urldecode($this->getRequestBody()));
-                $myobjectJson = json_decode($putResponse->getResult());
-                unset($putResponse);
 
-                // step 2 : publish to index
-                $id = $myobjectJson->{self::ID};
-                unset($myobjectJson);
-                $response = $service->publishById($datatype, self::ID, $id);
+                  //  $response = $service->getAllObjects($params['type']);
+                  // step 1 : update Record
+                    $putResponse = $service->post($params['type'], self::ID, urldecode($this->getRequestBody()));
+                    $myobjectJson = json_decode($putResponse->getResult());
+                    unset($putResponse);
+
+                  // step 2 : publish to index
+                    $id = $myobjectJson->{self::ID};
+                    unset($myobjectJson);
+                    $response = $service->publishById($params['type'], self::ID, $id);
             } elseif ($this->requestObject->method === 'PUT') {
                 // save a record and update the index
                 // path eg : /api/v1/content/calendar
 
                 // step 1 : update Record
-                $putResponse = $service->post($datatype, self::ID, $this->request);
+                $putResponse = $service->post($params['type'], self::ID, $this->request);
                 $myobjectJson = json_decode($putResponse->getResult());
                 //TODO manage errors
                 unset($putResponse);
@@ -147,26 +142,27 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 // step 2 : publish to index
                 $id = $myobjectJson->{self::ID};
                 unset($myobjectJson);
-                $response = $service->publishById($datatype, self::ID, $id);
-            } elseif ($this->requestObject->method === 'DELETE') {
-                if (!empty($pathId)) {
-                    //delete a single record
-
-                    // $this->requestObject->args contains the remaining path parameters
-                    // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
-
-                    $response = $service->deleteRecord($datatype, $pathId);
-                    // step 1 : update Record
-
-                    if ($response->getCode() === 200) {
-                        // step 2 : publish to index
-                        $response = $service->rebuildIndex($datatype, self::ID);
-                    }
-                }
-
-                // delete a record and update the index. eg : /api/v1/content/calendar/1.json
+                $response = $service->publishById($params['type'], self::ID, $id);
             }
-        } else {
+        }
+        if ($this->requestObject->method === 'DELETE') {
+            if ($this->requestObject->match('/cmsapi/v1/content/{type}/{id}', $params)) {
+                //delete a single record
+                $response = $service->deleteRecord($params['type'], $params['id']);
+                // step 1 : update Record
+
+                if ($response->getCode() === 200) {
+                    // step 2 : publish to index
+                    $response = $service->rebuildIndex($params['type'], self::ID);
+                }
+            }
+
+
+
+
+            // delete a record and update the index. eg : /api/v1/content/calendar/1.json
+        }
+        if ($this->requestObject->match('/cmsapi/v1/content', $params)) {
             if ($this->requestObject->method === 'GET') {
                 //return the list of editable types. eg : /api/v1/content/
 
@@ -174,7 +170,6 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 $response->setCode(200);
             }
         }
-
         return $response;
     }
 
@@ -220,38 +215,8 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         return $response;
     }
 
-    /**
-     * Get type from request.
-     *
-     * @return type
-     */
-    private function getDataType(): string
-    {
-        $datatype = '';
-        if (isset($this->requestObject->verb)) {
-            $datatype = $this->requestObject->verb;
-        }
-        if (!isset($datatype)) {
-            throw new \Exception('Empty datatype');
-        }
 
-        return $datatype;
-    }
 
-    /**
-     * Get id from request.
-     *
-     * @return id
-     */
-    private function getId(): string
-    {
-        $result = '';
-        if (isset($this->requestObject->args) && array_key_exists(0, $this->requestObject->args)) {
-            $result = $this->requestObject->args[0];
-        }
-
-        return $result;
-    }
 
     /**
      * Ensure minimal configuration values.

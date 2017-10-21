@@ -30,6 +30,7 @@ final class AuthenticationApiTest extends ApiTest
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
         $response = $this->API->processAPI();
         $result = $response->getResult();
+        $this->printError($response);
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
 
@@ -61,6 +62,7 @@ final class AuthenticationApiTest extends ApiTest
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
         $response = $this->API->processAPI();
         $result = $response->getResult();
+        $this->printError($response);
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
 
@@ -88,6 +90,7 @@ final class AuthenticationApiTest extends ApiTest
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
         $response = $this->API->processAPI();
         $result = $response->getResult();
+        $this->printError($response);
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
 
@@ -115,6 +118,7 @@ final class AuthenticationApiTest extends ApiTest
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
         $response = $this->API->processAPI();
         $result = $response->getResult();
+        $this->printError($response);
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
 

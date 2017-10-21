@@ -342,19 +342,4 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
             throw new \Exception('Empty privatedir');
         }
     }
-
-    /**
-     * Get id from URI.
-     *
-     * @return string id from URI
-     */
-    private function getId(): string
-    {
-        $result = '';
-        if (isset($this->requestObject->args) && array_key_exists(0, $this->requestObject->args)) {
-            $result = $this->requestObject->args[0];
-        }
-
-        return $result;
-    }
 }

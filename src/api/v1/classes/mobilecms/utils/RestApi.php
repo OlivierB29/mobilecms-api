@@ -23,8 +23,10 @@ abstract class RestApi
      * JSON object with configuration.
      */
     private $conf;
-
-    private $properties;
+    /**
+    * configuration
+    */
+    protected $properties ;
 
     /**
      * Set to false when unit testing.
@@ -41,13 +43,17 @@ abstract class RestApi
     /**
      * When enabled : send readable errors in responses.
      */
-    protected $displayApiErrors = false;
+    protected $displayApiErrors = true;
 
     /**
      * Root app dir.
      */
     protected $rootDir = '';
 
+    /**
+    * url utility
+    */
+    protected $urlUtils ;
 
 
 
@@ -67,16 +73,14 @@ abstract class RestApi
      */
     public function __construct()
     {
+        $this->urlUtils = new UrlUtils();
     }
 
     public function loadConf(string $file)
     {
-
-        if (\file_exists($file)) {
-            $this->setConf(json_decode(file_get_contents($file)));
-        } else {
-            throw new \Exception('Empty conf file');
-        }
+        $this->properties = new Properties();
+        $this->properties->loadConf($file);
+        $this->setConf($this->properties->getConf());
     }
 
     /**
@@ -92,29 +96,20 @@ abstract class RestApi
             throw new \Exception('Empty conf');
         }
 
-        // Default value is true
-        if (!empty($this->getConf()->{'enableheaders'}) && 'false' === $this->getConf()->{'enableheaders'}) {
-            $this->enableHeaders = false;
-        }
+        // enable of disable header()
+        $this->enableHeaders = $this->properties->getBoolean('enableheaders', true);
 
+        // sanitize inputs
+        $this->enableCleanInputs = $this->properties->getBoolean('enablecleaninputs', true);
 
-        // Default value is true
-        if (!empty($this->getConf()->{'enablecleaninputs'}) && 'false' === $this->getConf()->{'enablecleaninputs'}) {
-            $this->enableCleanInputs = false;
-        }
-
-        // Default value is true
-        if (!empty($this->getConf()->{'postformdata'}) && 'true' === $this->getConf()->{'postformdata'}) {
-            $this->postformdata = true;
-        }
+        // Default value is false for RESTful
+        $this->postformdata = $this->properties->getBoolean('postformdata', false);
 
         // Default value is false
-        if (!empty($this->getConf()->{'debugapiexceptions'}) && 'true' === $this->getConf()->{'debugapiexceptions'}) {
-            $this->displayApiErrors = true;
-        }
+        $this->displayApiErrors = $this->properties->getBoolean('debugapiexceptions', true);
 
         if ($this->enableHeaders) {
-            if (!empty($this->getConf()->{'crossdomain'}) && 'true' === $this->getConf()->{'crossdomain'}) {
+            if ($this->properties->getBoolean('crossdomain', false)) {
                 header('Access-Control-Allow-Origin: *');
             }
 
@@ -126,7 +121,7 @@ abstract class RestApi
                 $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
             }
 
-            if (!empty($this->getConf()->{'https'}) && 'true' === $this->getConf()->{'https'}) {
+            if ($this->properties->getBoolean('https', true)) {
                 //
                 // HTTPS
                 //
@@ -143,7 +138,7 @@ abstract class RestApi
             }
         }
 
-        if (!empty($this->getConf()->{'errorlog'}) && 'true' === $this->getConf()->{'errorlog'}) {
+        if ($this->properties->getBoolean('errorlog', true)) {
             error_reporting(E_ALL);
             ini_set('display_errors', 'On');
             ini_set('log_errors', 'On');
@@ -307,7 +302,7 @@ abstract class RestApi
             if ($this->displayApiErrors) {
                 $apiResponse->setError(500, $e->getMessage());
             } else {
-                $apiResponse->setError(500, 'internal error');
+                $apiResponse->setError(500, 'internal error ');
             }
         }
 
@@ -334,6 +329,7 @@ abstract class RestApi
             $status = $response->getCode();
         } catch (\Exception $e) {
             $status = 500;
+
             error_log($e->getMessage());
             $responseBody = json_encode(['error' => 'internal error']);
         } finally {
@@ -349,13 +345,14 @@ abstract class RestApi
     */
     private function clearRequestParameters()
     {
-        unset($this->requestObject->request);
-        unset($this->requestObject->headers);
-        unset($this->requestObject->method);
-        unset($this->requestObject->verb);
-        unset($this->requestObject->endpoint);
-        unset($this->requestObject->apiversion);
-        unset($this->requestObject->args);
+        // unset($this->requestObject->request);
+        // unset($this->requestObject->headers);
+        // unset($this->requestObject->method);
+        // unset($this->requestObject->verb);
+        // unset($this->requestObject->endpoint);
+        // unset($this->requestObject->apiversion);
+        // unset($this->requestObject->args);
+        unset($this->requestObject);
     }
 
     /**

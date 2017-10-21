@@ -5,8 +5,30 @@ class Properties
     private $conf;
 
 
-    public getBoolean(string $key, bool $default) : bool {
+    public function getBoolean(string $key, bool $default) : bool
+    {
+        $result = $default;
 
+        if (!empty($this->getConf()->{$key})) {
+            // if else with 'true' and 'false' string values :
+            // it allow to use a default value
+            if ('true' === $this->getConf()->{$key}) {
+                $result = true;
+            } elseif ('false' === $this->getConf()->{$key}) {
+                $result = false;
+            }
+        }
+        return $result;
+    }
+
+    public function getString(string $key) : bool
+    {
+        $result = '';
+
+        if (!empty($this->getConf()->{$key})) {
+            $result = $this->getConf()->{$key};
+        }
+        return $result;
     }
 
     public function loadConf(string $file)
@@ -27,7 +49,7 @@ class Properties
     * get JSON conf
     * @return \stdClass JSON conf
     */
-    public function getConf()
+    public function getConf(): \stdClass
     {
         return $this->conf;
     }

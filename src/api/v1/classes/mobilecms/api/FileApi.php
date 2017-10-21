@@ -86,7 +86,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        $datatype = $this->getDataType();
+
 
         //
         // Preflight requests are send by Angular
@@ -96,36 +96,32 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             $response = $this->preflight();
         }
 
-        //
-        if (isset($datatype) && strlen($datatype) > 0) {
-            // eg : /api/v1/content/calendar
+        $params = [];
+        if ($this->requestObject->match('/fileapi/v1/basicupload/{type}/{id}', $params)) {
             if ($this->requestObject->method === 'GET') {
-                if (array_key_exists(0, $this->requestObject->args)) {
-                    // object id
-                    $id = $this->requestObject->args[0];
-                    // create service
-                    $service = new \mobilecms\utils\FileService();
+                  // create service
+                  $service = new \mobilecms\utils\FileService();
 
-                    // update files description
-                    // /var/www/html/media/calendar/1
-                    $destdir = $this->getRecordDirPath($datatype, $id);
+                  // update files description
+                  // /var/www/html/media/calendar/1
+                  $destdir = $this->getRecordDirPath($params['type'], $params['id']);
 
-                    $uploadResult = $service->getDescriptions($destdir);
-                    $response->setCode(200);
+                  $uploadResult = $service->getDescriptions($destdir);
+                  $response->setCode(200);
 
-                    $response->setResult(json_encode($uploadResult));
-                }
+                  $response->setResult(json_encode($uploadResult));
             } elseif ($this->requestObject->method === 'POST') {
                 if (array_key_exists(0, $this->requestObject->args)) {
                     //get the full data of a single record $this->requestObject->args contains the remaining path parameters
                     // eg : /api/v1/file/calendar/1
-                    $uploadResult = $this->uploadFiles($datatype, $this->requestObject->args[0]);
+                    $uploadResult = $this->uploadFiles($params['type'], $params['id']);
                     $response->setCode(200);
 
                     $response->setResult(json_encode($uploadResult));
                 }
             }
         }
+
 
         return $response;
     }
@@ -141,7 +137,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        $datatype = $this->getDataType();
+
 
         //
         // Preflight requests are send by Angular
@@ -153,8 +149,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         //
         if ($this->requestObject->method === 'POST') {
-            if (array_key_exists(0, $this->requestObject->args)) {
-                $deleteResult = $this->deleteFiles($datatype, $this->requestObject->args[0], urldecode($this->getRequestBody()));
+            $params = [];
+            if ($this->requestObject->match('/fileapi/v1/delete/{type}/{id}', $params)) {
+                $deleteResult = $this->deleteFiles($params['type'], $params['id'], urldecode($this->getRequestBody()));
                 $response->setCode(200);
 
                 $response->setResult(json_encode($deleteResult));
@@ -178,7 +175,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        $datatype = $this->getDataType();
+
 
         //
         // Preflight requests are send by Angular
@@ -187,17 +184,12 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             // eg : /api/v1/content
             $response = $this->preflight();
         }
+        $params = [];
+        if ($this->requestObject->match('/fileapi/v1/download/{type}/{id}', $params)) {
+            $service = new \mobilecms\utils\FileService();
 
-        //
-        if (isset($datatype) && strlen($datatype) > 0) {
-            // eg : /api/v1/content/calendar
-            if ($this->requestObject->method === 'GET') {
-                // TODO get file
-            } elseif ($this->requestObject->method === 'POST') {
-                if (array_key_exists(0, $this->requestObject->args)) {
-                    // $datatype : calendar, $this->requestObject->args[0] : 1
-                    $response = $this->downloadFiles($datatype, $this->requestObject->args[0], urldecode($this->getRequestBody()));
-                }
+            if ($this->requestObject->method === 'POST') {
+                    $response = $this->downloadFiles($params['type'], $params['id'], urldecode($this->getRequestBody()));
             }
         }
 
@@ -389,23 +381,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         return $fileResult;
     }
 
-    /**
-     * Get datatype from request.
-     *
-     * @return string datatype
-     */
-    private function getDataType(): string
-    {
-        $datatype = '';
-        if (isset($this->requestObject->verb)) {
-            $datatype = $this->requestObject->verb;
-        }
-        if (!isset($datatype)) {
-            throw new \Exception('Empty datatype');
-        }
 
-        return $datatype;
-    }
 
     /**
      * Verify minimal configuration.

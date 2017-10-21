@@ -1,16 +1,29 @@
 <?php namespace mobilecms\utils;
 
-class Request extends GenericRequest
+class UrlUtils
 {
-  /**
-  * test if an URI matches a pattern
-  * @param string $pattern /store/order/{orderId}
-  * @param string $uri uri
-
-  * @return array found parameters
-  */
-    public function match(string $pattern, &$matches = null) : bool
+    /**
+    * URI to array
+    * @param string $uri request uri
+    *
+    * @return array uri parts
+    */
+    public function toArray(string $uri)
     {
+        return explode('/', rtrim(ltrim($uri, '/'), '/'));
+    }
+
+    /**
+    * test if an URI matches a pattern
+    *
+    * @param string $pattern /store/order/{orderId}
+    * @param string $uri uri
+
+    * @return array found parameters
+    */
+    public function match($pattern, $uri, &$matches = null) :bool
+    {
+
         $diffFound = false;
         if (empty($pattern)) {
             throw new \Exception('empty pattern');
@@ -18,8 +31,8 @@ class Request extends GenericRequest
 
 
         $patternArray = $this->toArray($pattern);
-        $uriArray = $this->toArray($this->uri);
-      // basic test
+        $uriArray = $this->toArray($uri);
+        // basic test
         if (count($patternArray) === count($uriArray)) {
             //
             // pattern /foo/{bar}
@@ -53,25 +66,48 @@ class Request extends GenericRequest
         return !$diffFound;
     }
 
-    public function matchRequest(string $method, string $pattern, &$matches = null) : bool
+    public function getPathParameters($pattern, $uri)
     {
-        $result = false;
-        if (!empty($method) && $method == $this->method) {
-            $result = $this->match($pattern, $matches);
+        $matches = null;
+        $diffFound = false;
+        if (empty($pattern)) {
+            throw new \Exception('empty pattern');
         }
-        return $result;
+
+
+        $patternArray = $this->toArray($pattern);
+        $uriArray = $this->toArray($uri);
+        // basic test
+        if (count($patternArray) === count($uriArray)) {
+            $matches = [];
+            //
+            // pattern /foo/{bar}
+            // uri /foo/123
+
+            foreach ($patternArray as $key => $value) {
+                if ($this->isPathParameter($value)) {
+                    // sample result [ 'bar' => '123']
+                    $matches[$this->getPathParameterName($value)] = $uriArray[$key];
+                } else {
+                  //  /foo/{bar} VS /foo/123
+
+                  // /foo/{bar} VS /aaa/123
+                    if ($value !== $uriArray[$key]) {
+                        $diffFound = true;
+                    }
+                }
+            }
+        }
+
+
+
+        if ($diffFound) {
+            $matches = null;
+        }
+
+        return $matches;
     }
 
-    /**
-    * URI to array
-    * @param string $uri request uri
-    *
-    * @return array uri parts
-    */
-    public function toArray(string $uri)
-    {
-        return explode('/', rtrim(ltrim($uri, '/'), '/'));
-    }
 
     /**
     * Test if path element is a parameter.
