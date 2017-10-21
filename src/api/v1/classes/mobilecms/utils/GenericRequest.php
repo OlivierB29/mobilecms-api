@@ -1,5 +1,8 @@
 <?php namespace mobilecms\utils;
 
+/**
+* Generic HTTP request data
+*/
 class GenericRequest
 {
     public $uri = '';
@@ -32,14 +35,12 @@ class GenericRequest
      * eg : v1.
      */
     public $apiversion = '';
+
     /**
-     * Property: args
-     * Any additional URI components after the endpoint and verb have been removed, in our
-     * case, an integer ID for the resource.
-     * eg: /<endpoint>/<verb>/<arg0>/<arg1>
+     * Any additional URI components
+     * eg: /<endpoint>/<verb>/<arg0>/foobar/<arg1>
      * or /<endpoint>/<arg0>.
      */
-    //  public $argsZZZZ = [];
 
     public $params;
 

@@ -65,7 +65,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
             $response = $this->preflight();
         }
 
-        if ($this->requestObject->match('/cmsapi/v1/content/{type}/index/index.json')) {
+        if ($this->requestObject->match('/cmsapi/v1/index/{type}')) {
             //  $response = $service->getAllObjects($this->getParam('type'));
 
             if ($this->requestObject->method === 'GET') {
