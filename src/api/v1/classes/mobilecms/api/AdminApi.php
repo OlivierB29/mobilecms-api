@@ -48,7 +48,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
         $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
-
+        $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
         // Preflight requests are send by Angular
         if ($this->requestObject->method === 'OPTIONS') {
             // eg : /api/v1/content
@@ -66,8 +66,6 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                     $response->setResult($this->getUserResponse($tmpResponse->getResult()));
                 }
             } elseif ($this->requestObject->method === 'POST') {
-                $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
-
                 // save a record and update the index. eg : /api/v1/content/calendar
                 // step 1 : update Record
 
@@ -107,24 +105,23 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                 $response = $service->getAllObjects($this->getParam('type'));
             }
             if ($this->requestObject->method === 'POST') {
-
               // get all properties of a user, unless $user->{'property'} will fail if the request is empty
                 $user = $this->getDefaultUser();
                 // get parameters from request
                 $requestuser = json_decode($this->getRequestBody());
 
-                JsonUtils::copy($requestuser, $user);
+                \mobilecms\utils\JsonUtils::copy($requestuser, $user);
 
                 //returns a empty string if success, a string with the message otherwise
 
                 $createresult = $userService->createUserWithSecret(
-              $user->{'name'},
-              $user->{'email'},
-              $user->{'password'},
-              $user->{'secretQuestion'},
-              $user->{'secretResponse'},
-              'create'
-              );
+                    $user->{'name'},
+                    $user->{'email'},
+                    $user->{'password'},
+                    $user->{'secretQuestion'},
+                    $user->{'secretResponse'},
+                    'create'
+                );
                 if (empty($createresult)) {
                     $id = $user->{self::EMAIL};
                     $response = $service->publishById($this->getParam('type'), self::EMAIL, $id);
@@ -208,7 +205,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         if ($this->requestObject->method === 'OPTIONS') {
             // eg : /api/v1/content
             $response = $this->preflight();
-        } elseif ($this->requestObject->match('/cmsapi/v1/index/{type}')) {
+        } elseif ($this->requestObject->match('/adminapi/v1/index/{type}')) {
             $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
 
             // eg : /api/v1/content/calendar
