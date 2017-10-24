@@ -1,0 +1,90 @@
+swagger: '2.0'
+info:
+  version: ''
+  title: mobilecms auth api
+  description: ''
+host: localhost
+basePath: /authapi/v1
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /authenticate:
+    post:
+      operationId: POST_authenticate
+      summary: authenticate
+      tags:
+        - Auth
+        - Authenticate
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              user:
+                type: string
+              password:
+                type: string
+      responses:
+        default:
+          description: ''
+  /changepassword:
+    post:
+      operationId: POST_changepassword
+      summary: changepassword
+      tags:
+        - Auth
+        - Changepassword
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              user:
+                type: string
+              password:
+                type: string
+              newpassword:
+                type: string
+      responses:
+        default:
+          description: ''
+  '/publicinfo/{user}':
+    parameters:
+      - name: user
+        in: path
+        required: true
+        type: string
+    get:
+      operationId: GET_publicinfo-user
+      summary: publicinfo
+      tags:
+        - Auth
+        - Publicinfo
+      responses:
+        default:
+          description: ''
+  /resetpassword:
+    post:
+      operationId: POST_resetpassword
+      summary: resetpassword
+      tags:
+        - Auth
+        - Resetpassword
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              user:
+                type: string
+      responses:
+        default:
+          description: ''
+definitions: {}

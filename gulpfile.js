@@ -26,7 +26,7 @@ var basedir = '.';
 /**
  * deploy php server code to local web server
  */
-gulp.task('deploy', function() {
+// gulp.task('deploy', function() {
   // Issue :
   // events.js:160
   //       throw er; // Unhandled 'error' event
@@ -38,15 +38,16 @@ gulp.task('deploy', function() {
   // -->  create /var/www/html with the current user
 
   // copy PHP and .htaccess
+
+  // ISSUE : v1/*.php are not deployed
+  // var srcPath = [basedir + '/src/**/.*', basedir + '/src/**'];
+  // var destPath = serverDeployDir + '/' + projectName;
   //
-  var srcPath = [basedir + '/src/**/.*', basedir + '/src/**'];
-  var destPath = serverDeployDir + '/' + projectName;
+  // console.log('Deploying server : ' + srcPath + ' --> ' + destPath);
+  //
+  // gulp.src(srcPath).pipe(gulp.dest(destPath));
 
-  console.log('Deploying server : ' + srcPath + ' --> ' + destPath);
-
-  gulp.src(srcPath).pipe(gulp.dest(destPath));
-
-});
+// });
 
 /**
  * deploy sampe data
