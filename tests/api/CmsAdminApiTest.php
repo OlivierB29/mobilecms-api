@@ -43,18 +43,17 @@ final class CmsAdminApiTest extends AuthApiTest
 
     public function testIndex()
     {
-
-          $this->path = '/adminapi/v1/index/users' ;
-
+        $this->path = '/adminapi/v1/index/users' ;
 
 
-          $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
 
-          $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-          $response = $this->API->processAPI();
-          $this->assertEquals(200, $response->getCode());
-          $result = $response->getResult();
-          $this->assertTrue($result != null && $result != '');
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+        $response = $this->API->processAPI();
+        $this->assertEquals(200, $response->getCode());
+        $result = $response->getResult();
+        $this->assertTrue($result != null && $result != '');
     }
     public function testUpdate()
     {

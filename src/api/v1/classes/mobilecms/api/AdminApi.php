@@ -105,7 +105,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                 $response = $service->getAllObjects($this->getParam('type'));
             }
             if ($this->requestObject->method === 'POST') {
-              // get all properties of a user, unless $user->{'property'} will fail if the request is empty
+                // get all properties of a user, unless $user->{'property'} will fail if the request is empty
                 $user = $this->getDefaultUser();
                 // get parameters from request
                 $requestuser = json_decode($this->getRequestBody());
