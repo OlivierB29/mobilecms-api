@@ -193,7 +193,6 @@ final class FileApiTest extends AuthApiTest
 
     public function testThumbnails()
     {
-
         $record = '/calendar/2';
         $this->path = '/fileapi/v1/thumbnails/calendar/2';
 
@@ -229,7 +228,6 @@ final class FileApiTest extends AuthApiTest
 
     public function testThumbnailsDefaultSizes()
     {
-
         $record = '/calendar/2';
         $this->path = '/fileapi/v1/thumbnails/calendar/2';
 
