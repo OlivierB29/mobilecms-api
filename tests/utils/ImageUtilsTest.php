@@ -46,4 +46,29 @@ final class ImageUtilsTest extends TestCase
         $this->assertFalse($result);
         $this->assertFalse(\file_exists($dest));
     }
+
+    public function testCreateThumbnails()
+    {
+        $sizes = [ 100, 200, 300, 400, 500 ];
+        $src = 'tests-data/imagesutils/tennis-178696_640.jpg';
+        $dir = 'tests-data/imagesutils/thumbnails';
+        $u = new ImageUtils();
+        $result = $u->multipleResize($src, $dir, $sizes);
+
+        $this->assertTrue(count($result) === count($sizes));
+        ;
+    }
+
+
+    public function testCreateThumbnailsTooBig()
+    {
+        $sizes = [ 100, 200, 300, 400, 500, 1000 ];
+        $src = 'tests-data/imagesutils/tennis-178696_640.jpg';
+        $dir = 'tests-data/imagesutils/thumbnails';
+        $u = new ImageUtils();
+        $result = $u->multipleResize($src, $dir, $sizes);
+        echo '!!!!' . count($result) ;
+        $this->assertTrue(count($result) === 5);
+        ;
+    }
 }

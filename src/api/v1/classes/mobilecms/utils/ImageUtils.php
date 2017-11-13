@@ -5,18 +5,60 @@
 class ImageUtils
 {
 
-
   /**
-  *
-  * @return bool true if smaller size is created
+  * Create a list of thumbnails
+  * @param string $fileName : file path
+  * @param string $dir : directory containing resized files
+  * @param array $sizes : array of new resized widths
+  * @return array created files
   */
-    public function resize($fileName, $thumbFile, $width)
+    public function multipleResize(string $file, string $dir, array $sizes)
+    {
+        $result = [];
+
+        $fileName = pathinfo($file, PATHINFO_FILENAME);
+        $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+        // create directory if necessary
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        foreach ($sizes as $width) {
+            // base name : foo-320.pg
+            $resizedFileName = $fileName . '-' . (string)$width . '.' . $extension;
+
+            // file name : foobar/foo-320.pg
+            $resizedFilePath = $dir . '/' . $resizedFileName;
+
+
+            if ($this->resize($file, $resizedFilePath, $width)) {
+                $thumbfileResult = \json_decode('{}');
+                $thumbfileResult->{'url'} = \basename($resizedFilePath);
+                $thumbfileResult->{'width'} = $width;
+                \array_push($result, $thumbfileResult);
+            }
+        }
+        return $result;
+    }
+
+
+
+    /**
+    * @param string $fileName : file path
+    * @param string $thumbFile : new resized file
+    * @param int $width : new resized width
+    * @return bool true if smaller size is created
+    */
+    public function resize(string $fileName, string $thumbFile, int $width)
     {
         $result = false;
+        // detect mime type
         $file_info = new \finfo(FILEINFO_MIME_TYPE);
         $mime_type = $file_info->buffer(\file_get_contents($fileName));
         unset($file_info);
 
+        // calculate height
         list($width_orig, $height_orig) = \getimagesize($fileName);
 
         if ($width_orig > $width) {
@@ -87,52 +129,5 @@ class ImageUtils
         }
 
         return $result;
-    }
-
-
-
-    public function createThumbnailImage($file, $thumbFile, $thumbWidth)
-    {
-        $name = basename($file);
-        $dir = dirname($file);
-
-
-        $thumbDir = dirname($thumbFile);
-
-        $result = null;
-        if ($this->isJpeg($file)) {
-            if (!file_exists($thumbFile) || true) {
-                if (!file_exists($thumbDir)) {
-                    if (!mkdir($thumbDir, 0777, true)) {
-                        throw new \Exception('Cannot create directory' . $thumbDir);
-                    }
-                }
-
-                // load image and get image size
-                $img = imagecreatefromjpeg($file);
-                $width = imagesx($img);
-                $height = imagesy($img);
-
-                // calculate thumbnail size
-                $new_width = $thumbWidth;
-                $new_height = floor($height * ($thumbWidth / $width));
-
-                // create a new temporary image
-                $tmp_img = imagecreatetruecolor($new_width, $new_height);
-
-                // copy and resize old image into new image
-                //imagecopyresized() : bad quality
-                imagecopyresampled($tmp_img, $img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-
-                // save thumbnail into a file
-                imagejpeg($tmp_img, $thumbFile, 100);
-            }
-
-            $result = $thumbFile;
-        }
-
-
-
-        return $result ;
     }
 }

@@ -20,6 +20,8 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
     private $debug;
 
+    private $thumbnailsizes = [];
+
     /**
      * Constructor.
      *
@@ -45,6 +47,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         }
 
         $this->media = $this->getConf()->{'media'};
+        $this->thumbnailsizes = $this->getConf()->{'thumbnailsizes'};
     }
 
     public function setRequest(
@@ -148,7 +151,11 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         //
         if ($this->requestObject->method === 'POST') {
             if ($this->requestObject->match('/fileapi/v1/delete/{type}/{id}')) {
-                $deleteResult = $this->deleteFiles($this->getParam('type'), $this->getParam('id'), urldecode($this->getRequestBody()));
+                $deleteResult = $this->deleteFiles(
+                    $this->getParam('type'),
+                    $this->getParam('id'),
+                    urldecode($this->getRequestBody())
+                );
                 $response->setCode(200);
 
                 $response->setResult(json_encode($deleteResult));
@@ -186,7 +193,11 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             $service = new \mobilecms\utils\FileService();
 
             if ($this->requestObject->method === 'POST') {
-                $response = $this->downloadFiles($this->getParam('type'), $this->getParam('id'), urldecode($this->getRequestBody()));
+                $response = $this->downloadFiles(
+                    $this->getParam('type'),
+                    $this->getParam('id'),
+                    urldecode($this->getRequestBody())
+                );
             }
         }
 
@@ -438,5 +449,48 @@ class FileApi extends \mobilecms\utils\SecureRestApi
     public function setDebug(bool $value)
     {
         $this->debug = $value;
+    }
+
+    /**
+     * Create thumbnails
+     *
+     * Sample request body :
+     * [{ "url": "foobar.jpg", "sizes": [100, 200, 300]}]
+     *
+     * @return \mobilecms\utils\Response response
+     */
+    protected function thumbnails(): \mobilecms\utils\Response
+    {
+        $response = $this->getDefaultResponse();
+
+        $this->checkConfiguration();
+
+
+
+        //
+        // Preflight requests are send by Angular
+        //
+        if ($this->requestObject->method === 'OPTIONS') {
+            // eg : /api/v1/content
+            $response = $this->preflight();
+        }
+
+        if ($this->requestObject->match('/fileapi/v1/thumbnails/{type}/{id}')) {
+            $service = new \mobilecms\utils\FileService();
+            $sizes = null;
+            $files = json_decode(urldecode($this->getRequestBody()));
+
+            if ($this->requestObject->method === 'POST') {
+                $response = $service->createThumbnails(
+                    $this->getMediaDirPath(),
+                    $this->getParam('type'),
+                    $this->getParam('id'),
+                    $files,
+                    $this->thumbnailsizes
+                );
+            }
+        }
+
+        return $response;
     }
 }

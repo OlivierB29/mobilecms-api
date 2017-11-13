@@ -26,28 +26,16 @@ var basedir = '.';
 /**
  * deploy php server code to local web server
  */
-// gulp.task('deploy', function() {
-  // Issue :
-  // events.js:160
-  //       throw er; // Unhandled 'error' event
-  //       ^
-  //
-  // Error: EPERM: operation not permitted, chmod '/var/www/html'
-  //     at Error (native)
-  //
-  // -->  create /var/www/html with the current user
+gulp.task('deploy', function() {
 
-  // copy PHP and .htaccess
+  var srcPath = [basedir + '/src/**/*'];
+  var destPath = serverDeployDir + '/' + projectName;
 
-  // ISSUE : v1/*.php are not deployed
-  // var srcPath = [basedir + '/src/**/.*', basedir + '/src/**'];
-  // var destPath = serverDeployDir + '/' + projectName;
-  //
-  // console.log('Deploying server : ' + srcPath + ' --> ' + destPath);
-  //
-  // gulp.src(srcPath).pipe(gulp.dest(destPath));
+  console.log('Deploying server : ' + srcPath + ' --> ' + destPath);
 
-// });
+  gulp.src(srcPath).pipe(gulp.dest(destPath));
+
+});
 
 /**
  * deploy sampe data
@@ -75,44 +63,10 @@ gulp.task('sampleprivate', function() {
   gulp.src(srcPath).pipe(gulp.dest(destPath));
 });
 
-/*
-* Run tests
-* Requirements : phpunit
-* https://phpunit.de/getting-started.html
-*/
-gulp.task('test-utils', function() {
-
-  console.log('phpunit tests :');
-
-
-
-  var run = require('gulp-run');
-
-  return run('phpunit --configuration phpunit-utils.xml').exec()
-    .pipe(gulp.dest('output'))
-  ;
-
-});
-
-gulp.task('test-api', function() {
-
-  console.log('phpunit tests :');
-
-
-
-  var run = require('gulp-run');
-
-  return run('phpunit --configuration phpunit-api.xml').exec()
-    .pipe(gulp.dest('output'))
-  ;
-
-});
-
 
 gulp.task('default', function() {
 
   console.log('Server : check directories, and then \n gulp deploy');
-  console.log('Tests :\n gulp test-utils test-api');
   console.log('Sampledata :\n gulp samplepublic sampleprivate');
 
 });

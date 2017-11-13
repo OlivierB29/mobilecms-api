@@ -175,9 +175,7 @@ final class FileApiTest extends AuthApiTest
 
         // API call
 
-
         $this->API->setDebug(true);
-
 
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);
 
@@ -191,5 +189,75 @@ final class FileApiTest extends AuthApiTest
         $expected = '{"error":"Uploaded file not found ' . $mockUploadedFile . '"}';
 
         $this->assertJsonStringEqualsJsonString($expected, $result);
+    }
+
+    public function testThumbnails()
+    {
+
+        $record = '/calendar/2';
+        $this->path = '/fileapi/v1/thumbnails/calendar/2';
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $recordStr = '[{ "url": "tennis.jpg", "sizes": [100, 200, 300]}]';
+
+        $this->POST = ['requestbody' => $recordStr];
+        unset($recordStr);
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $this->API->authorize($this->headers, $this->SERVER);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+
+        $this->assertEquals(200, $response->getCode());
+
+        $this->assertTrue($result != null && $result != '');
+
+        $expected = '[{"url":"tennis.jpg","thumbnails":[{"url":"tennis-100.jpg","width":100},{"url":"tennis-200.jpg","width":200},{"url":"tennis-300.jpg","width":300} ]}]';
+
+        $this->assertJsonStringEqualsJsonString($expected, $result);
+
+        $this->assertTrue(file_exists($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-100.jpg'));
+        unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-100.jpg');
+        $this->assertTrue(file_exists($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-200.jpg'));
+        unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-200.jpg');
+        $this->assertTrue(file_exists($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-300.jpg'));
+        unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-300.jpg');
+    }
+
+    public function testThumbnailsDefaultSizes()
+    {
+
+        $record = '/calendar/2';
+        $this->path = '/fileapi/v1/thumbnails/calendar/2';
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $recordStr = '[{ "url": "tennis.jpg"}]';
+
+        $this->POST = ['requestbody' => $recordStr];
+        unset($recordStr);
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $this->API->authorize($this->headers, $this->SERVER);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+
+        $this->assertTrue($result != null && $result != '');
+
+        $expected = '[{"url":"tennis.jpg","thumbnails":[{"url":"tennis-150.jpg","width":150},{"url":"tennis-300.jpg","width":300}]}]';
+
+        $this->assertJsonStringEqualsJsonString($expected, $result);
+
+        $this->assertTrue(file_exists($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-150.jpg'));
+        unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-150.jpg');
+        $this->assertTrue(file_exists($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-300.jpg'));
+        unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-300.jpg');
     }
 }

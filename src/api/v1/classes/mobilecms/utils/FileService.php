@@ -104,4 +104,77 @@ class FileService
             throw new \Exception('getMediaDirectory() mediadir ' . $mediadir . ' type ' . $datatype . ' id ' . $id);
         }
     }
+
+    /**
+     * Create thumbnails files from specified URLs.
+     * @param string $mediadir : destination directory
+     * @param string $datatype : news
+     * @param string $id       : 123
+     * @param string $files : [{ "url": "tennis.jpg", "sizes": [100, 200, 300]}]
+     * @param string $defaultsizes : [100, 200, 300, 400, 500]
+     *
+     * @return \mobilecms\utils\Response result
+     */
+    public function createThumbnails(string $mediadir, string $datatype, string $id, array $files, array $defaultsizes): \mobilecms\utils\Response
+    {
+
+        $response = $this->getDefaultResponse();
+        $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
+
+
+        $result = json_decode('[]');
+        $utils = new \mobilecms\utils\ImageUtils();
+        foreach ($files as $formKey => $file) {
+            // /var/www/html/media/calendar/1
+
+            // upload
+            if (isset($file->{'url'})) {
+                $sizes = null;
+                if (!empty($file->{'sizes'}) && count($file->{'sizes'}) > 0) {
+                    $sizes = $file->{'sizes'};
+                } else {
+                    $sizes = $defaultsizes;
+                }
+
+                // get foobar.html from http://something.com/[...]/foobar.html
+                $filePath = $destdir . '/' . basename($file->{'url'});
+
+                $thumbdir = $destdir . '/thumbnails';
+                if (file_exists($filePath)) {
+                    $thumbnails = $utils->multipleResize($filePath, $thumbdir, $sizes);
+                    if (count($thumbnails) === 0) {
+                        throw new \Exception('no thumbnails');
+                    }
+                    $fileResponse = \json_decode('{}');
+                    $fileResponse->{'url'} = basename($file->{'url'});
+                    $fileResponse->{'thumbnails'} = $thumbnails;
+                    \array_push($result, $fileResponse);
+                } else {
+                    // TODO add message
+                }
+            } else {
+                throw new \Exception('wrong file ' . $file['url'] . ' KO');
+            }
+        }
+
+        $response->setResult(json_encode($result));
+        $response->setCode(200);
+
+        return $response;
+    }
+
+
+        /**
+         * Initialize a default Response object.
+         *
+         * @return Response object
+         */
+    protected function getDefaultResponse() : Response
+    {
+        $response = new Response();
+        $response->setCode(400);
+        $response->setResult('{}');
+
+        return $response;
+    }
 }
