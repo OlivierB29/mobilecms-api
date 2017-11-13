@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: ''
+  version: '0.1.4'
   title: mobilecms content api
   description: ''
 host: localhost
