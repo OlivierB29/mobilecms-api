@@ -117,6 +117,7 @@ class FileService
      */
     public function createThumbnails(string $mediadir, string $datatype, string $id, array $files, array $defaultsizes): \mobilecms\utils\Response
     {
+
         $response = $this->getDefaultResponse();
         $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
 
@@ -144,8 +145,8 @@ class FileService
                     if (count($thumbnails) === 0) {
                         throw new \Exception('no thumbnails');
                     }
-                    $fileResponse = \json_decode('{}');
-                    $fileResponse->{'url'} = basename($file->{'url'});
+
+                    $fileResponse = $utils->imageInfo($filePath);
                     $fileResponse->{'thumbnails'} = $thumbnails;
                     \array_push($result, $fileResponse);
                 } else {
@@ -163,11 +164,11 @@ class FileService
     }
 
 
-    /**
-     * Initialize a default Response object.
-     *
-     * @return Response object
-     */
+        /**
+         * Initialize a default Response object.
+         *
+         * @return Response object
+         */
     protected function getDefaultResponse() : Response
     {
         $response = new Response();

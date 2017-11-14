@@ -297,7 +297,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
                     chmod($destfile, $this->umask);
                     $title = $file['name'];
                     $url = $file['name'];
+
                     $fileResult = $this->getFileResponse($destfile, $title, $url);
+
                     array_push($result, $fileResult);
                 } else {
                     throw new \Exception($file['name'] . ' KO');
@@ -374,22 +376,22 @@ class FileApi extends \mobilecms\utils\SecureRestApi
      */
     private function getFileResponse($destfile, $title, $url): \stdClass
     {
-        $finfo = finfo_open(FILEINFO_MIME_TYPE); // get mime type
-        $mimetype = finfo_file($finfo, $destfile);
-        finfo_close($finfo);
+        $result = null;
+        $utils = new \mobilecms\utils\ImageUtils();
 
-        $filesize = filesize($destfile);
+        if ($utils->isImage($destfile)) {
+            $result = $utils->imageInfo($destfile);
+        } else {
+            $result = \json_decode('{}');
+            $fileutils = new \mobilecms\utils\FileUtils();
+            $result->{'mimetype'} = $fileutils->getMimeType($destfile);
+        }
+        $result->{'url'} = $url;
+        $result->{'size'} = filesize($destfile);
+        $result->{'title'} = $title;
 
-        $fileResult = json_decode('{}');
-        $fileResult->{'title'} = $title;
-        $fileResult->{'url'} = $url;
-        $fileResult->{'size'} = $filesize;
-        $fileResult->{'mimetype'} = $mimetype;
-
-        return $fileResult;
+        return $result;
     }
-
-
 
     /**
      * Verify minimal configuration.
@@ -475,12 +477,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             $response = $this->preflight();
         }
 
-        if ($this->requestObject->match('/fileapi/v1/thumbnails/{type}/{id}')) {
-            $service = new \mobilecms\utils\FileService();
-            $sizes = null;
-            $files = json_decode(urldecode($this->getRequestBody()));
-
-            if ($this->requestObject->method === 'POST') {
+        if ($this->requestObject->method === 'POST' && $this->requestObject->match('/fileapi/v1/thumbnails/{type}/{id}')) {
+                    $service = new \mobilecms\utils\FileService();
+                $files = json_decode(urldecode($this->getRequestBody()));
                 $response = $service->createThumbnails(
                     $this->getMediaDirPath(),
                     $this->getParam('type'),
@@ -488,7 +487,6 @@ class FileApi extends \mobilecms\utils\SecureRestApi
                     $files,
                     $this->thumbnailsizes
                 );
-            }
         }
 
         return $response;

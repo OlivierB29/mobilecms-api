@@ -193,12 +193,13 @@ final class FileApiTest extends AuthApiTest
 
     public function testThumbnails()
     {
+
         $record = '/calendar/2';
         $this->path = '/fileapi/v1/thumbnails/calendar/2';
 
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
 
-        $recordStr = '[{ "url": "tennis.jpg", "sizes": [100, 200, 300]}]';
+        $recordStr = '[{ "url": "tennis.jpg", "sizes": ["100", "200", "300"]}]';
 
         $this->POST = ['requestbody' => $recordStr];
         unset($recordStr);
@@ -214,7 +215,7 @@ final class FileApiTest extends AuthApiTest
 
         $this->assertTrue($result != null && $result != '');
 
-        $expected = '[{"url":"tennis.jpg","thumbnails":[{"url":"tennis-100.jpg","width":100},{"url":"tennis-200.jpg","width":200},{"url":"tennis-300.jpg","width":300} ]}]';
+        $expected = '[{"width":"640","height":"476","url":"tennis.jpg","mimetype":"image\/jpeg","thumbnails":[{"width":"100","height":"74","url":"tennis-100.jpg"},{"width":"200","height":"149","url":"tennis-200.jpg"},{"width":"300","height":"223","url":"tennis-300.jpg"}]}]';
 
         $this->assertJsonStringEqualsJsonString($expected, $result);
 
@@ -228,6 +229,7 @@ final class FileApiTest extends AuthApiTest
 
     public function testThumbnailsDefaultSizes()
     {
+
         $record = '/calendar/2';
         $this->path = '/fileapi/v1/thumbnails/calendar/2';
 
@@ -249,7 +251,7 @@ final class FileApiTest extends AuthApiTest
 
         $this->assertTrue($result != null && $result != '');
 
-        $expected = '[{"url":"tennis.jpg","thumbnails":[{"url":"tennis-150.jpg","width":150},{"url":"tennis-300.jpg","width":300}]}]';
+        $expected = '[{"width":"640","height":"476","url":"tennis.jpg","mimetype":"image\/jpeg","thumbnails":[{"width":"150","height":"112","url":"tennis-150.jpg"},{"width":"300","height":"223","url":"tennis-300.jpg"}]}]';
 
         $this->assertJsonStringEqualsJsonString($expected, $result);
 

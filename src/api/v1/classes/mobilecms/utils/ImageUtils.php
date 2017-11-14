@@ -31,28 +31,44 @@ class ImageUtils
             // file name : foobar/foo-320.pg
             $resizedFilePath = $dir . '/' . $resizedFileName;
 
-
-            if ($this->resize($file, $resizedFilePath, $width)) {
-                $thumbfileResult = \json_decode('{}');
-                $thumbfileResult->{'url'} = \basename($resizedFilePath);
-                $thumbfileResult->{'width'} = $width;
+            $thumbfileResult = $this->resize($file, $resizedFilePath, $width);
+            if (!empty($thumbfileResult)) {
                 \array_push($result, $thumbfileResult);
             }
         }
         return $result;
     }
 
+    /**
+    * @param string $file : file path
+    * @return \stdClass true if smaller size is created
+    */
+    public function imageInfo(string $file)
+    {
+        $result = \json_decode('{}');
+        $fileutils = new \mobilecms\utils\FileUtils();
+        $result->{'mimetype'} = $fileutils->getMimeType($file);
 
+      // calculate height
+        list($width, $height) = \getimagesize($file);
+
+        $result->{'width'} = (string)$width;
+        $result->{'height'} = (string)$height;
+        $result->{'url'} = \basename($file);
+
+        
+        return $result;
+    }
 
     /**
     * @param string $fileName : file path
     * @param string $thumbFile : new resized file
     * @param int $width : new resized width
-    * @return bool true if smaller size is created
+    * @return \stdClass JSON image description
     */
     public function resize(string $fileName, string $thumbFile, int $width)
     {
-        $result = false;
+        $result = null;
         // detect mime type
         $file_info = new \finfo(FILEINFO_MIME_TYPE);
         $mime_type = $file_info->buffer(\file_get_contents($fileName));
@@ -63,18 +79,25 @@ class ImageUtils
 
         if ($width_orig > $width) {
             $ratio_orig = $width_orig/$height_orig;
-            $height = $width/$ratio_orig;
+            $height = intval(round($width/$ratio_orig, 0, PHP_ROUND_HALF_UP));
+
+
+
 
             // Resample
             $image_p = \imagecreatetruecolor($width, $height);
 
             if ($mime_type) {
+                $result = \json_decode('{}');
+                $result->{'width'} = (string)$width;
+                $result->{'height'} = (string)$height;
+                $result->{'url'} = \basename($thumbFile);
+
                 switch ($mime_type) {
                     case 'image/jpeg':
                         $image = \imagecreatefromjpeg($fileName);
                         \imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
                         \imagejpeg($image_p, $thumbFile, 100);
-                        $result = true;
                         break;
 
                     case 'image/png':
@@ -83,8 +106,9 @@ class ImageUtils
                         $image = \imagecreatefrompng($fileName);
                         \imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
                         \imagepng($image_p, $thumbFile);
-                        $result = true;
                         break;
+                    default:
+                        $result = null;
                 }
             }
         }

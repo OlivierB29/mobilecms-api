@@ -13,7 +13,7 @@ final class ImageUtilsTest extends TestCase
         $dest = 'tests-data/imagesutils/tennis-178696_320.jpg';
         $u = new ImageUtils();
         $result = $u->resize($src, $dest, 320);
-        $this->assertTrue($result);
+        $this->assertTrue(!empty($result));
         $this->assertTrue(\file_exists($dest));
     }
 
@@ -23,7 +23,7 @@ final class ImageUtilsTest extends TestCase
         $dest = 'tests-data/imagesutils/tennis-178696_1000.jpg';
         $u = new ImageUtils();
         $result = $u->resize($src, $dest, 1000);
-        $this->assertFalse($result);
+        $this->assertTrue(empty($result));
         $this->assertFalse(\file_exists($dest));
     }
 
@@ -33,7 +33,7 @@ final class ImageUtilsTest extends TestCase
         $dest = 'tests-data/imagesutils/tennis-178696_320.png';
         $u = new ImageUtils();
         $result = $u->resize($src, $dest, 320);
-        $this->assertTrue($result);
+        $this->assertTrue(!empty($result));
         $this->assertTrue(\file_exists($dest));
     }
 
@@ -43,7 +43,7 @@ final class ImageUtilsTest extends TestCase
         $dest = 'tests-data/imagesutils/tennis-178696_1000.png';
         $u = new ImageUtils();
         $result = $u->resize($src, $dest, 1000);
-        $this->assertFalse($result);
+        $this->assertTrue(empty($result));
         $this->assertFalse(\file_exists($dest));
     }
 
@@ -67,7 +67,7 @@ final class ImageUtilsTest extends TestCase
         $dir = 'tests-data/imagesutils/thumbnails';
         $u = new ImageUtils();
         $result = $u->multipleResize($src, $dir, $sizes);
-        echo '!!!!' . count($result) ;
+
         $this->assertTrue(count($result) === 5);
         ;
     }
