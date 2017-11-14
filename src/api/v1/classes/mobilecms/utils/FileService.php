@@ -117,7 +117,6 @@ class FileService
      */
     public function createThumbnails(string $mediadir, string $datatype, string $id, array $files, array $defaultsizes): \mobilecms\utils\Response
     {
-
         $response = $this->getDefaultResponse();
         $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
 
@@ -164,11 +163,11 @@ class FileService
     }
 
 
-        /**
-         * Initialize a default Response object.
-         *
-         * @return Response object
-         */
+    /**
+     * Initialize a default Response object.
+     *
+     * @return Response object
+     */
     protected function getDefaultResponse() : Response
     {
         $response = new Response();

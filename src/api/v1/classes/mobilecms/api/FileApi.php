@@ -478,9 +478,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         }
 
         if ($this->requestObject->method === 'POST' && $this->requestObject->match('/fileapi/v1/thumbnails/{type}/{id}')) {
-                    $service = new \mobilecms\utils\FileService();
-                $files = json_decode(urldecode($this->getRequestBody()));
-                $response = $service->createThumbnails(
+            $service = new \mobilecms\utils\FileService();
+            $files = json_decode(urldecode($this->getRequestBody()));
+            $response = $service->createThumbnails(
                     $this->getMediaDirPath(),
                     $this->getParam('type'),
                     $this->getParam('id'),
