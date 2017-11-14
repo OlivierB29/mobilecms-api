@@ -49,7 +49,7 @@ class ImageUtils
         $fileutils = new \mobilecms\utils\FileUtils();
         $result->{'mimetype'} = $fileutils->getMimeType($file);
 
-      // calculate height
+        // calculate height
         list($width, $height) = \getimagesize($file);
 
         $result->{'width'} = (string)$width;

@@ -4,8 +4,6 @@
  */
 class FileUtils
 {
-
-
     public function getMimeType(string $file)
     {
         $file_info = new \finfo(FILEINFO_MIME_TYPE);
