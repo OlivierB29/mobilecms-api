@@ -123,7 +123,6 @@ class FileService
         array $defaultsizes,
         int $quality
     ): \mobilecms\utils\Response {
-
         $response = $this->getDefaultResponse();
         $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
 
