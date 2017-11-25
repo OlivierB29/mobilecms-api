@@ -115,14 +115,22 @@ class FileService
      *
      * @return \mobilecms\utils\Response result
      */
-    public function createThumbnails(string $mediadir, string $datatype, string $id, array $files, array $defaultsizes): \mobilecms\utils\Response
-    {
+    public function createThumbnails(
+        string $mediadir,
+        string $datatype,
+        string $id,
+        array $files,
+        array $defaultsizes,
+        int $quality
+    ): \mobilecms\utils\Response {
+
         $response = $this->getDefaultResponse();
         $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
 
 
         $result = json_decode('[]');
         $utils = new \mobilecms\utils\ImageUtils();
+        $utils->setQuality($quality);
         foreach ($files as $formKey => $file) {
             // /var/www/html/media/calendar/1
 

@@ -313,7 +313,7 @@ class UserService
                 unset($jwt);
                 if (isset($token)) {
                     $response->setCode(200);
-                    $userResponse = json_decode('{"username":"", "email":"",  "role":"", "clientalgorithm":"", "newpasswordrequired":"", "token":""}');
+                    $userResponse = json_decode('{}');
                     $userResponse->{'name'} = $user->{'name'};
                     $userResponse->{'username'} = $user->{'name'};
                     $userResponse->{'email'} = $user->{'email'};
@@ -584,7 +584,7 @@ class UserService
         string $secretResponse
     ) {
         if (!empty($email)) {
-            $jsonUser = json_decode('{ "name" : "",  "email" : "",  "password" : "",  "salt" : "",  "secretQuestion" : "",  "secretResponse" : "",  "role" : ""}');
+            $jsonUser = json_decode('{}');
             $jsonUser->{'name'} = $name;
             $jsonUser->{'email'} = $email;
             $jsonUser->{'password'} = $password;

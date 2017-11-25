@@ -22,6 +22,8 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
     private $thumbnailsizes = [];
 
+    private $imagequality = 0;
+
     /**
      * Constructor.
      *
@@ -48,6 +50,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $this->media = $this->getConf()->{'media'};
         $this->thumbnailsizes = $this->getConf()->{'thumbnailsizes'};
+        $this->quality = $this->properties->getInteger('imagequality', 80);
     }
 
     public function setRequest(
@@ -477,16 +480,18 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             $response = $this->preflight();
         }
 
-        if ($this->requestObject->method === 'POST' && $this->requestObject->match('/fileapi/v1/thumbnails/{type}/{id}')) {
+        if ($this->requestObject->method === 'POST'
+            && $this->requestObject->match('/fileapi/v1/thumbnails/{type}/{id}')) {
             $service = new \mobilecms\utils\FileService();
             $files = json_decode(urldecode($this->getRequestBody()));
             $response = $service->createThumbnails(
-                    $this->getMediaDirPath(),
-                    $this->getParam('type'),
-                    $this->getParam('id'),
-                    $files,
-                    $this->thumbnailsizes
-                );
+                $this->getMediaDirPath(),
+                $this->getParam('type'),
+                $this->getParam('id'),
+                $files,
+                $this->thumbnailsizes,
+                $this->imagequality
+            );
         }
 
         return $response;

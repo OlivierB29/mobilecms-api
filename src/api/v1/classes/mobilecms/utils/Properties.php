@@ -4,6 +4,19 @@ class Properties
 {
     private $conf;
 
+    public function getInteger(string $key, int $default) : int
+    {
+        $result = $default;
+
+        if (!empty($this->getConf()->{$key})) {
+            if (\is_string($this->getConf()->{$key})) {
+                $result = (int)$this->getConf()->{$key};
+            } else {
+                $result = $this->getConf()->{$key};
+            }
+        }
+        return $result;
+    }
 
     public function getBoolean(string $key, bool $default) : bool
     {

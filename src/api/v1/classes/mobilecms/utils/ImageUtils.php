@@ -7,7 +7,7 @@ class ImageUtils
   /**
   * default image quality
   */
-    private $quality = 90;
+    private $quality = 80;
 
   /**
   * Create a list of thumbnails
@@ -117,6 +117,16 @@ class ImageUtils
             }
         }
         return $result;
+    }
+
+    /**
+     * Set quality.
+     *
+     * @param int $newval set quality
+     */
+    public function setQuality(int $newval)
+    {
+        $this->quality = $newval;
     }
 
     // ---------------------------------------------------------
