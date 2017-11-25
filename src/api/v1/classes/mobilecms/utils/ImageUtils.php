@@ -4,18 +4,18 @@
  */
 class ImageUtils
 {
-  /**
-  * default image quality
-  */
+    /**
+    * default image quality
+    */
     private $quality = 80;
 
-  /**
-  * Create a list of thumbnails
-  * @param string $fileName : file path
-  * @param string $dir : directory containing resized files
-  * @param array $sizes : array of new resized widths
-  * @return array created files
-  */
+    /**
+    * Create a list of thumbnails
+    * @param string $fileName : file path
+    * @param string $dir : directory containing resized files
+    * @param array $sizes : array of new resized widths
+    * @return array created files
+    */
     public function multipleResize(string $file, string $dir, array $sizes)
     {
         $result = [];
