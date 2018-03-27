@@ -2,5 +2,5 @@ language: php
 php:
   - '7.0'
 script:
-- vendor/bin/phpunit --configuration phpunit-utils.xml
-- vendor/bin/phpunit --configuration phpunit-api.xml
+- phpunit --configuration phpunit-utils.xml
+- phpunit --configuration phpunit-api.xml
