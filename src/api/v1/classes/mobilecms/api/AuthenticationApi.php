@@ -117,7 +117,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
             $response = $service->resetPassword($logindata->{'user'}, $clearPassword);
 
             if ($response->getCode() === 200) {
-                $u = new MailUtils();
+                $u = new \mobilecms\utils\MailUtils($this->getRootDir());
 
                 if ($this->enablemail) {
                     $CR_Mail = @mail(

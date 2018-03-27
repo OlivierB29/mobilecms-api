@@ -18,20 +18,7 @@ class MailUtils
         $this->rootdir = $rootdir;
     }
 
-    /**
-     * @param string $from mail address
-     *
-     * @return string mail headers
-     */
-    public function getHeaders(string $from) : string
-    {
-        $headers = 'From: ' . strip_tags($from) . '\r\n';
-        $headers .= 'Reply-To: ' . strip_tags($from) . '\r\n';
-        $headers .= 'MIME-Version: 1.0\r\n';
-        $headers .= 'Content-Type: text/html; charset=UTF-8\r\n';
 
-        return $headers;
-    }
 
     /**
      * Generate new password. Should separate technical functions and business.
@@ -50,5 +37,27 @@ class MailUtils
         $message = str_replace('%clientinfo%', $clientinfo, $message);
 
         return $message;
+    }
+
+    /**
+     * @param string $from mail address
+     *
+     * @return string mail headers
+     */
+    public function getHeaders(string $from) : string
+    {
+
+        if (empty($from)) {
+            $from = 'no-reply@'.$_SERVER[HTTP_HOST];
+        }
+        $name = $from;
+
+        $headers = 'From: ' . $name . '<'  .  $from  .  '>' . "\r\n";
+        $headers  .= 'Reply-To: '  .  $from  . "\r\n";
+        $headers  .= 'MIME-Version: 1.0' . "\r\n";
+        $headers  .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
+
+
+        return $headers;
     }
 }

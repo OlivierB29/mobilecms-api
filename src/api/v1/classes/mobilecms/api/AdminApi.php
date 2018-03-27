@@ -73,7 +73,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                 $userParam = urldecode($this->getRequestBody());
                 $user = json_decode($userParam);
                 if (isset($user->{'newpassword'})) {
-                    $response = $userService->changePasswordByAdmin($user->{'email'}, $user->{'newpassword'});
+                    $response = $userService->resetPassword($user->{'email'}, $user->{'newpassword'});
                 }
 
                 $putResponse = $service->update(
