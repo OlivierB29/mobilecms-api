@@ -22,6 +22,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
     private $thumbnailsizes = [];
 
+
+    private $fileExtensions = [];
+
     private $imagequality = 0;
 
     /**
@@ -50,6 +53,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $this->media = $this->getConf()->{'media'};
         $this->thumbnailsizes = $this->getConf()->{'thumbnailsizes'};
+        $this->fileExtensions = $this->getConf()->{'fileextensions'};
         $this->quality = $this->properties->getInteger('imagequality', 80);
     }
 
@@ -269,6 +273,13 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         if (!isset($this->files) || count($this->files) === 0) {
             throw new \Exception('no file.');
+        }
+
+        // Basic upload verification
+        foreach ($this->files as $formKey => $fileControl) {
+            if (!$this->isAllowedExtension($fileControl['name'])) {
+                throw new \Exception('forbidden file type');
+            }
         }
 
         foreach ($this->files as $formKey => $file) {
@@ -495,5 +506,22 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         }
 
         return $response;
+    }
+
+    /**
+    * Basic upload verification
+    * @param string $file file name
+    * @return bool
+    */
+    private function isAllowedExtension($file): bool
+    {
+        $result = false;
+        if ($file) {
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            if (isset($extension)) {
+                $result = in_array(strtolower($extension), $this->fileExtensions);
+            }
+        }
+        return $result;
     }
 }

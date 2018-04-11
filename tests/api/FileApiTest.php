@@ -162,9 +162,9 @@ final class FileApiTest extends AuthApiTest
         // API request
         $record = '/calendar/3';
         $this->path = '/fileapi/v1/basicupload' . $record;
-        $filename = 'testupload.pdf';
+        $filename = 'wrongfile.pdf';
         // mock file
-        $mockUploadedFile = realpath('tests-data/fileapi/save') . '/wrongfile.pdf';
+        $mockUploadedFile = realpath('tests-data/fileapi/save') . $filename;
         $files = [
         ['name'=>$filename,'type'=>'application/pdf','tmp_name'=> $mockUploadedFile,'error'=>0,'size'=>24612]
         ];
@@ -189,6 +189,41 @@ final class FileApiTest extends AuthApiTest
         $expected = '{"error":"Uploaded file not found ' . $mockUploadedFile . '"}';
 
         $this->assertJsonStringEqualsJsonString($expected, $result);
+    }
+
+
+    public function testUploadFileForbiddenExtension()
+    {
+            // API request
+            $record = '/calendar/3';
+            $this->path = '/fileapi/v1/basicupload' . $record;
+            $filename = 'testupload.bmp';
+            // mock file
+            $mockUploadedFile = realpath('tests-data/fileapi/save') . $filename;
+            $files = [
+            ['name'=>$filename,'type'=>'image/bmp','tmp_name'=> $mockUploadedFile,'error'=>0,'size'=>24612]
+            ];
+
+            // mock HTTP parameters
+
+            $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+            // API call
+
+            $this->API->setDebug(true);
+
+            $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);
+
+            $this->API->authorize($this->headers, $this->SERVER);
+
+            $response = $this->API->processAPI();
+            $result = $response->getResult();
+            $this->assertEquals(500, $response->getCode());
+
+            $this->assertTrue($result != null && $result != '');
+            $expected = '{"error":"forbidden file type"}';
+
+            $this->assertJsonStringEqualsJsonString($expected, $result);
     }
 
     public function testThumbnails()
