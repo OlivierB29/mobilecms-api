@@ -69,23 +69,23 @@ final class CmsAdminApiTest extends AuthApiTest
 
     public function testDelete()
     {
-            $email = 'delete@example.com';
-            $this->path = '/adminapi/v1/content/users/' . $email;
-            $file = $this->API->getPrivateDirPath() . '/users/' . $email . '.json';
+        $email = 'delete@example.com';
+        $this->path = '/adminapi/v1/content/users/' . $email;
+        $file = $this->API->getPrivateDirPath() . '/users/' . $email . '.json';
 
-            $this->assertTrue(copy($this->API->getPrivateDirPath() . '/save/' . $email . '.json', $file));
+        $this->assertTrue(copy($this->API->getPrivateDirPath() . '/save/' . $email . '.json', $file));
 
 
-            $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'DELETE', 'HTTP_ORIGIN' => 'foobar'];
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'DELETE', 'HTTP_ORIGIN' => 'foobar'];
 
-            $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-            $response = $this->API->processAPI();
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+        $response = $this->API->processAPI();
 
-            $result = $response->getResult();
-            $this->printError($response);
-            $this->assertEquals(200, $response->getCode());
-            $this->assertTrue($result != null && $result != '');
-            $this->assertTrue(!file_exists($file));
+        $result = $response->getResult();
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue(!file_exists($file));
     }
 
 
