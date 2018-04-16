@@ -244,7 +244,6 @@ abstract class RestApi
         }
 
         switch ($this->requestObject->method) {
-            case 'DELETE':
             case 'POST':
                 if ($this->postformdata === true) {
                     $this->requestObject->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
@@ -256,6 +255,7 @@ abstract class RestApi
             case 'OPTIONS':
                     $this->preflight();
                 break;
+            case 'DELETE':
             case 'GET':
                 $this->requestObject->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
                 break;

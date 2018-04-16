@@ -14,6 +14,31 @@ final class CmsAdminApiTest extends AuthApiTest
         $this->API->loadConf(realpath('tests/conf.json'));
         $this->API->setRootDir(realpath('tests-data')); // unit test only
     }
+
+    public function testGet()
+    {
+        $email = 'editor@example.com';
+        $this->path = '/adminapi/v1/content/users/' . $email;
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+        $response = $this->API->processAPI();
+
+        $result = $response->getResult();
+
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
+
+        $userObject = json_decode($result);
+        $this->assertTrue($userObject->{'name'} === 'editor@example.com');
+        $this->assertTrue($userObject->{'email'} === 'editor@example.com');
+        $this->assertTrue($userObject->{'role'} === 'editor');
+        $this->assertTrue(!isset($userObject->{'password'}));
+    }
+
+
     public function testCreate()
     {
         $email = 'newuser@example.com';
@@ -30,7 +55,6 @@ final class CmsAdminApiTest extends AuthApiTest
         $response = $this->API->processAPI();
 
         $result = $response->getResult();
-
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
@@ -40,6 +64,30 @@ final class CmsAdminApiTest extends AuthApiTest
             unlink($file);
         }
     }
+
+
+
+    public function testDelete()
+    {
+            $email = 'delete@example.com';
+            $this->path = '/adminapi/v1/content/users/' . $email;
+            $file = $this->API->getPrivateDirPath() . '/users/' . $email . '.json';
+
+            $this->assertTrue(copy($this->API->getPrivateDirPath() . '/save/' . $email . '.json', $file));
+
+
+            $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'DELETE', 'HTTP_ORIGIN' => 'foobar'];
+
+            $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+            $response = $this->API->processAPI();
+
+            $result = $response->getResult();
+            $this->printError($response);
+            $this->assertEquals(200, $response->getCode());
+            $this->assertTrue($result != null && $result != '');
+            $this->assertTrue(!file_exists($file));
+    }
+
 
     public function testIndex()
     {

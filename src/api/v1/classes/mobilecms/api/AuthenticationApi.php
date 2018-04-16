@@ -134,7 +134,8 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
                     }
                 } elseif ($this->debugResetPassword) {
                     $tmpResponse = json_decode($response->getResult());
-                    $tmpResponse->{'notification'} = $clearPassword;
+                    // test only
+                    $tmpResponse->{'notification'} = json_encode($u->getNewPassword('new password', $clearPassword, $this->getClientInfo()));
                     $response->setResult(json_encode($tmpResponse));
                 }
             }
@@ -247,7 +248,11 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
      */
     public function getClientInfo(): string
     {
-        return $this->getClientIp() . ' ' . $_SERVER['HTTP_USER_AGENT'];
+        $result = $this->getClientIp() . ' ';
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            $result .= $_SERVER['HTTP_USER_AGENT'];
+        }
+        return $result;
     }
 
 
