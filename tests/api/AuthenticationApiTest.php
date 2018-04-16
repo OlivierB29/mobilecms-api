@@ -42,6 +42,8 @@ final class AuthenticationApiTest extends ApiTest
 
     public function testRegister()
     {
+        $this->path = '/api/v1/register';
+
         $email = 'testregister@example.com';
 
         $file = $this->API->getPrivateDirPath() . '/users/' . $email . '.json';
@@ -49,7 +51,7 @@ final class AuthenticationApiTest extends ApiTest
             unlink($file);
         }
 
-        $this->path = '/api/v1/register';
+
 
         $recordStr = '{ "name": "test register", "email": "testregister@example.com", "password":"Sample#123456", "secretQuestion": "some secret" , "secretResponse": "secret response"}';
 
@@ -66,9 +68,52 @@ final class AuthenticationApiTest extends ApiTest
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
 
+
         if (file_exists($file)) {
             unlink($file);
         }
+    }
+
+    public function testResetPassword()
+    {
+        $this->path = '/api/v1/resetpassword';
+        $user = 'resetpassword@example.com';
+        $userFile = $user . '.json';
+
+        copy($this->API->getPrivateDirPath() . '/save/' . $userFile, $this->API->getPrivateDirPath() . '/users/' . $userFile);
+
+        $recordStr = '{ "user": "' . $user . '", "password":"Sample#123456", "newpassword":"Foobar!654321"}';
+
+        $this->REQUEST = ['path' => $this->path];
+
+        $this->SERVER = ['HTTP_USER_AGENT' => 'localhost', 'REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
+
+        $userObject = json_decode($result);
+
+        $this->assertTrue($userObject->{'name'} === $user);
+        $this->assertTrue($userObject->{'clientalgorithm'} === 'none');
+        $this->assertTrue($userObject->{'newpasswordrequired'} === 'true');
+        $this->assertTrue($userObject->{'notification'} != '');
+
+
+
+        $this->assertContains('DOCTYPE',  $userObject->{'notification'});
+        $this->assertContains('meta charset',  $userObject->{'notification'});
+        $this->assertContains('Password',  $userObject->{'notification'});
+        $this->assertContains('Connection info',  $userObject->{'notification'});
+
+        // delete file
+        unlink($this->API->getPrivateDirPath() . '/users/' . $userFile);
     }
 
     public function testChangePassword()
@@ -105,7 +150,7 @@ final class AuthenticationApiTest extends ApiTest
         unlink($this->API->getPrivateDirPath() . '/users/' . $userFile);
     }
 
-    private function verifyChangePassword($user, $recordStr)
+    public function verifyChangePassword($user, $recordStr)
     {
         $this->path = '/api/v1/authenticate';
 
@@ -126,5 +171,30 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->assertTrue($userObject->{'email'} === $user);
         $this->assertTrue(strlen($userObject->{'token'}) > 150);
+    }
+
+    public function testPublicInfo()
+    {
+        $this->path = '/api/v1/publicinfo/editor@example.com';
+
+        $this->REQUEST = ['path' => $this->path];
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
+
+        $userObject = json_decode($result);
+
+        $this->assertTrue($userObject->{'name'} === 'editor@example.com');
+        $this->assertTrue($userObject->{'clientalgorithm'} === 'hashmacbase64');
+        $this->assertTrue($userObject->{'newpasswordrequired'} === 'false');
+
+
     }
 }
