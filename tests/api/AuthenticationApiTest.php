@@ -107,10 +107,10 @@ final class AuthenticationApiTest extends ApiTest
 
 
 
-        $this->assertContains('DOCTYPE',  $userObject->{'notification'});
-        $this->assertContains('meta charset',  $userObject->{'notification'});
-        $this->assertContains('Password',  $userObject->{'notification'});
-        $this->assertContains('Connection info',  $userObject->{'notification'});
+        $this->assertContains('DOCTYPE', $userObject->{'notification'});
+        $this->assertContains('meta charset', $userObject->{'notification'});
+        $this->assertContains('Password', $userObject->{'notification'});
+        $this->assertContains('Connection info', $userObject->{'notification'});
 
         // delete file
         unlink($this->API->getPrivateDirPath() . '/users/' . $userFile);
@@ -194,7 +194,5 @@ final class AuthenticationApiTest extends ApiTest
         $this->assertTrue($userObject->{'name'} === 'editor@example.com');
         $this->assertTrue($userObject->{'clientalgorithm'} === 'hashmacbase64');
         $this->assertTrue($userObject->{'newpasswordrequired'} === 'false');
-
-
     }
 }
