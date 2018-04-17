@@ -6,13 +6,11 @@
   "fileextensions":["jpg","jpeg","png","gif","pdf","docx","xlsx","pptx","odt","ods","odp","mp4","m4v"],
   "imagequality":80,
   "crossdomain": "true",
-  "apikeyfile": "",
   "enablecleaninputs": "true",
   "https": "false",
   "debugapiexceptions": "true",
   "errorlog": "true",
   "enableheaders": "true",
-  "enableapikey": "false",
   "enablemail": "false",
   "mailsender": "sendmail@example.org",
   "debugnotifications": "true"

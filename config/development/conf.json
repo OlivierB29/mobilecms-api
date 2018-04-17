@@ -5,13 +5,11 @@
   "thumbnailsizes":[150, 300, 672, 768, 1024],
   "fileextensions":["jpg","jpeg","png","gif","pdf","docx","xlsx","pptx","odt","ods","odp","mp4","m4v"],
   "crossdomain": "true",
-  "apikeyfile": "",
   "enablecleaninputs": "true",
   "https": "false",
   "debugapiexceptions": "false",
   "errorlog": "true",
   "enableheaders": "true",
-  "enableapikey": "false",
   "enablemail": "false",
   "mailsender": "sendmail@example.org",
   "debugnotifications": "true"

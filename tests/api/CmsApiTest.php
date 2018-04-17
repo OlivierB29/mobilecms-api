@@ -11,11 +11,13 @@ final class CmsApiTest extends AuthApiTest
         $this->API=new CmsApi();
         $this->API->loadConf(realpath('tests/conf.json'));
         $this->API->setRootDir(realpath('tests-data')); // unit test only
+        $this->setAdmin();
     }
 
 
     public function testTypes()
     {
+
         $this->path = '/cmsapi/v1/content';
         $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
 
@@ -35,6 +37,7 @@ final class CmsApiTest extends AuthApiTest
 
     public function testPostSuccess()
     {
+
         // echo 'testPostSuccess: ' . $this->memory();
         $this->path = '/cmsapi/v1/content/calendar';
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
@@ -62,6 +65,7 @@ final class CmsApiTest extends AuthApiTest
 
     public function testGetCalendarList()
     {
+
         $this->path = '/cmsapi/v1/content/calendar';
 
 
@@ -82,8 +86,8 @@ final class CmsApiTest extends AuthApiTest
 
     public function testGetByGuest()
     {
+        $this->setGuest();
         $this->path = '/cmsapi/v1/content/calendar/1';
-        $this->headers = ['Authorization' => $this->guesttoken];
 
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
 
@@ -99,6 +103,7 @@ final class CmsApiTest extends AuthApiTest
 
     public function testGetCalendarRecord()
     {
+
         $this->path = '/cmsapi/v1/content/calendar/1';
 
 
@@ -120,6 +125,7 @@ final class CmsApiTest extends AuthApiTest
 
     public function testGetCalendarError()
     {
+
         $this->path = '/cmsapi/v1/content/calendar/999999999';
 
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];

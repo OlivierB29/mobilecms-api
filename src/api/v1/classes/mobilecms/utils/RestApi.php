@@ -107,6 +107,7 @@ abstract class RestApi
         $this->displayApiErrors = $this->properties->getBoolean('debugapiexceptions', true);
 
         if ($this->enableHeaders) {
+            // @codeCoverageIgnoreStart
             if ($this->properties->getBoolean('crossdomain', false)) {
                 header('Access-Control-Allow-Origin: *');
             }
@@ -134,6 +135,7 @@ abstract class RestApi
                     die();
                 }
             }
+            // @codeCoverageIgnoreEnd
         }
 
         if ($this->properties->getBoolean('errorlog', true)) {
@@ -266,7 +268,7 @@ abstract class RestApi
 
                 break;
             default:
-                $this->_response('Invalid Method', 405);
+                throw new \Exception('Invalid Method');
                 break;
         }
     }

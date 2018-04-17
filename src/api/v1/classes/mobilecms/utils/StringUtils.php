@@ -8,19 +8,6 @@ class StringUtils
 {
 
     /**
-     * Compare strings.
-     *
-     * @param string $a str a
-     * @param string $b str b
-     *
-     * @return bool result
-     */
-    public static function eq(string $a, string $b)
-    {
-        return strcmp($a, $b) == 0;
-    }
-
-    /**
      * Starts with string ?
      *
      * @param string $haystack eg "foobar"

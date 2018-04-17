@@ -1,0 +1,22 @@
+<phpunit bootstrap="tests/autoload.php">
+  <filter>
+    <whitelist>
+        <directory suffix=".php">src</directory>
+    </whitelist>
+</filter>
+<logging>
+    <log type="tap" target="build/tests/report.tap"/>
+    <log type="junit" target="build/tests/report.junit.xml"/>
+    <log type="coverage-html" target="build/tests/coverage" charset="UTF-8" yui="true" highlight="true"/>
+    <log type="coverage-text" target="build/tests/coverage.txt"/>
+    <log type="coverage-clover" target="build/tests/logs/clover.xml"/>
+</logging>
+  <testsuites>
+    <testsuite name="utils">
+      <directory>tests/utils</directory>
+    </testsuite>
+    <testsuite name="api">
+      <directory>tests/api</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

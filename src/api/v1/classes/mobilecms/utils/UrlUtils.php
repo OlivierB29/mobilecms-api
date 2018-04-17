@@ -65,47 +65,6 @@ class UrlUtils
         return !$diffFound;
     }
 
-    public function getPathParameters($pattern, $uri)
-    {
-        $matches = null;
-        $diffFound = false;
-        if (empty($pattern)) {
-            throw new \Exception('empty pattern');
-        }
-
-
-        $patternArray = $this->toArray($pattern);
-        $uriArray = $this->toArray($uri);
-        // basic test
-        if (count($patternArray) === count($uriArray)) {
-            $matches = [];
-            //
-            // pattern /foo/{bar}
-            // uri /foo/123
-
-            foreach ($patternArray as $key => $value) {
-                if ($this->isPathParameter($value)) {
-                    // sample result [ 'bar' => '123']
-                    $matches[$this->getPathParameterName($value)] = $uriArray[$key];
-                } else {
-                    //  /foo/{bar} VS /foo/123
-
-                    // /foo/{bar} VS /aaa/123
-                    if ($value !== $uriArray[$key]) {
-                        $diffFound = true;
-                    }
-                }
-            }
-        }
-
-
-
-        if ($diffFound) {
-            $matches = null;
-        }
-
-        return $matches;
-    }
 
 
     /**

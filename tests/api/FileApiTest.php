@@ -13,6 +13,7 @@ final class FileApiTest extends AuthApiTest
         $this->API=new FileApi();
         $this->API->loadConf(realpath('tests/conf.json'));
         $this->API->setRootDir(realpath('tests-data')); // unit test only
+        $this->setAdmin();
     }
 
     public function testDownload()

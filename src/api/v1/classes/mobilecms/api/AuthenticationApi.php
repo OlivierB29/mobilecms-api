@@ -235,8 +235,12 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
         $response->setCode(200);
         $response->setResult('{}');
 
-        header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
+        // @codeCoverageIgnoreStart
+        if ($this->enableHeaders) {
+            header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
+        }
+        // @codeCoverageIgnoreEnd
 
         return $response;
     }

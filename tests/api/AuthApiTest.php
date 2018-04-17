@@ -44,6 +44,21 @@ abstract class AuthApiTest extends ApiTest
 
         $this->memory();
 
-        $this->headers=['Authorization'=>$this->token];
+        // $this->headers=['Authorization'=>$this->token];
+    }
+
+    protected function setGuest()
+    {
+        $this->headers=['Authorization' => $this->guesttoken];
+    }
+
+    protected function setEditor()
+    {
+        $this->headers=['Authorization' => $this->editortoken];
+    }
+
+    protected function setAdmin()
+    {
+        $this->headers=['Authorization' => $this->admintoken];
     }
 }

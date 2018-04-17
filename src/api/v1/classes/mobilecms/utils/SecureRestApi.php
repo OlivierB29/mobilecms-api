@@ -2,7 +2,6 @@
 
 /**
  * Secure implementation of a REST api.
- * - apikey management
  * - JWT.
  */
 abstract class SecureRestApi extends RestApi
@@ -81,7 +80,7 @@ abstract class SecureRestApi extends RestApi
                 $response = $this->doAuthorize($headers, $SERVER);
                 break;
             default:
-                $response->getCode(405);
+                $response->setCode(405);
                 break;
         }
 
@@ -114,47 +113,6 @@ abstract class SecureRestApi extends RestApi
             $SERVER = &$_SERVER;
         }
 
-        //
-        // API KEY
-        //
-
-        // api key provided ?
-        if ($this->getConf()->{'enableapikey'} === 'true' && isset($headers)) {
-            if (array_key_exists('apiKey', $this->request) || array_key_exists('apiKey', $headers)) {
-                $origin = '';
-                if (array_key_exists('HTTP_ORIGIN', $SERVER)) {
-                    $origin = $SERVER['HTTP_ORIGIN'];
-                }
-                if (strlen($origin) == 0) {
-                    $origin = $SERVER['SERVER_NAME'];
-                }
-
-                $apiKeyValue = '';
-
-                // from request or header
-                if (array_key_exists('apiKey', $this->request)) {
-                    $apiKeyValue = $this->request['apiKey'];
-                } elseif (array_key_exists('apiKey', $headers)) {
-                    $apiKeyValue = $headers['apiKey'];
-                }
-
-                // api key not empty
-                if (strlen($apiKeyValue) === 0) {
-                    throw new \Exception('Empty API Key');
-                }
-
-                // verify key
-                $APIKey = new ApiKey();
-                $verifyKeyResult = $APIKey->verifyKey($this->getConf()->{'apikeyfile'}, $apiKeyValue, $origin);
-                unset($APIKey);
-                if (!$verifyKeyResult) {
-                    throw new \Exception('Invalid API Key');
-                }
-            } else {
-                throw new \Exception('No API Key provided');
-            }
-        }
-
         // USER TOKEN
         //string containing Bearer prefix and value eg : Bearer abcdef.abcdef....
         $bearerTokenValue = $this->getAuthorizationHeader();
@@ -168,7 +126,7 @@ abstract class SecureRestApi extends RestApi
             $tokenValue = $this->getBearerTokenValue($bearerTokenValue);
 
             if (empty($tokenValue)) {
-                throw new \Exception('Empty token !' . $bearerTokenValue);
+                throw new \Exception('Invalid token !');
             }
             unset($bearerTokenValue);
 
@@ -240,6 +198,7 @@ abstract class SecureRestApi extends RestApi
                 return $matches[1];
             }
         }
+        return '';
     }
 
     /**
