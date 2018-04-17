@@ -255,8 +255,6 @@ abstract class RestApi
                 }
                 break;
             case 'OPTIONS':
-                    $this->preflight();
-                break;
             case 'DELETE':
             case 'GET':
                 $this->requestObject->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
@@ -295,7 +293,13 @@ abstract class RestApi
         $apiResponse = $this->getDefaultResponse();
         try {
             if (method_exists($this, $this->requestObject->endpoint)) {
+              if ($this->requestObject->method === 'OPTIONS') {
+                  // eg : /authapi/v1/auth
+                $apiResponse = $this->preflight();
+              } else {
                 $apiResponse = $this->{$this->requestObject->endpoint}($this->requestObject->args);
+              }
+
             }
         } catch (\Exception $e) {
             // enable on local development server only https://www.owasp.org/index.php/Improper_Error_Handling
@@ -345,13 +349,6 @@ abstract class RestApi
     */
     private function clearRequestParameters()
     {
-        // unset($this->requestObject->request);
-        // unset($this->requestObject->headers);
-        // unset($this->requestObject->method);
-        // unset($this->requestObject->verb);
-        // unset($this->requestObject->endpoint);
-        // unset($this->requestObject->apiversion);
-        // unset($this->requestObject->args);
         unset($this->requestObject);
     }
 

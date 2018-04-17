@@ -39,8 +39,10 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {
+            // @codeCoverageIgnoreStart
             header('Access-Control-Allow-Methods: *');
             header('Content-Type: application/json');
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -58,12 +60,6 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
 
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
-
-        // Preflight requests are send by Angular
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /api/v1/content
-            $response = $this->preflight();
-        }
 
         if ($this->requestObject->match('/cmsapi/v1/index/{type}')) {
             //  $response = $service->getAllObjects($this->getParam('type'));
@@ -96,11 +92,6 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
-        // Preflight requests are send by Angular
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /api/v1/content
-            $response = $this->preflight();
-        }
         if ($this->requestObject->match('/cmsapi/v1/content')) {
             if ($this->requestObject->method === 'GET') {
                 //return the list of editable types. eg : /api/v1/content/
@@ -121,21 +112,6 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 // step 1 : update Record
                 $putResponse = $service->post($this->getParam('type'), self::ID, urldecode($this->getRequestBody()));
                 $myobjectJson = json_decode($putResponse->getResult());
-                unset($putResponse);
-
-                // step 2 : publish to index
-                $id = $myobjectJson->{self::ID};
-                unset($myobjectJson);
-                $response = $service->publishById($this->getParam('type'), self::ID, $id);
-            }
-            if ($this->requestObject->method === 'PUT') {
-                // save a record and update the index
-                // path eg : /api/v1/content/calendar
-
-                // step 1 : update Record
-                $putResponse = $service->post($this->getParam('type'), self::ID, $this->request);
-                $myobjectJson = json_decode($putResponse->getResult());
-                //TODO manage errors
                 unset($putResponse);
 
                 // step 2 : publish to index
@@ -180,13 +156,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
-        // Preflight requests are send by Angular
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /api/v1/content
-            $response->setCode(200);
-
-            $response = $this->preflight();
-        } elseif ($this->requestObject->method === 'GET') {
+        if ($this->requestObject->method === 'GET') {
             // eg : /api/v1/file?filename
             // args contains the remaining path parameters
             // --> eg : /api/v1/file?file=/calendar/1/foo/bar/sample.json
@@ -234,8 +204,12 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         $response->setCode(200);
         $response->setResult('{}');
 
-        header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+          if ($this->enableHeaders) {
+                      // @codeCoverageIgnoreStart
+                      header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
+                      header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+                      // @codeCoverageIgnoreEnd
+          }
 
         return $response;
     }

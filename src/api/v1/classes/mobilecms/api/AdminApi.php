@@ -29,8 +29,10 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         parent::setConf($conf);
         // Default headers for RESTful API
         if ($this->enableHeaders) {
+            // @codeCoverageIgnoreStart
             header('Access-Control-Allow-Methods: *');
             header('Content-Type: application/json');
+            // @codeCoverageIgnoreEnd
         }
         $this->role = 'admin';
     }
@@ -49,11 +51,6 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
 
         $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
         $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
-        // Preflight requests are send by Angular
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /api/v1/content
-            $response = $this->preflight();
-        }
 
 
         if ($this->requestObject->match('/adminapi/v1/content/{type}/{id}')) {
@@ -187,8 +184,12 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         $response->setCode(200);
         $response->setResult('{}');
 
-        header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+          if ($this->enableHeaders) {
+              // @codeCoverageIgnoreStart
+              header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
+              header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+              // @codeCoverageIgnoreEnd
+            }
 
         return $response;
     }
@@ -205,11 +206,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        // Preflight requests are send by Angular
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /api/v1/content
-            $response = $this->preflight();
-        } elseif ($this->requestObject->match('/adminapi/v1/index/{type}')) {
+        if ($this->requestObject->match('/adminapi/v1/index/{type}')) {
             $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
 
             // eg : /api/v1/content/calendar

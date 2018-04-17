@@ -15,6 +15,90 @@ final class AuthenticationApiTest extends ApiTest
         $this->API->setRootDir(realpath('tests-data')); // unit test only
     }
 
+    public function testAuthenticateOptions()
+    {
+
+        $this->path = '/api/v1/authenticate';
+        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+
+        $this->assertTrue($result != null);
+        $this->assertJsonStringEqualsJsonString('{}', $result);
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+    }
+
+    public function testRegisterOptions()
+    {
+
+        $this->path = '/api/v1/register';
+        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+
+        $this->assertTrue($result != null);
+        $this->assertJsonStringEqualsJsonString('{}', $result);
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+    }
+
+    public function testResetPasswordOptions()
+    {
+
+        $this->path = '/api/v1/resetpassword';
+        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+
+        $this->assertTrue($result != null);
+        $this->assertJsonStringEqualsJsonString('{}', $result);
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+    }
+    public function testChangePasswordOptions()
+    {
+
+        $this->path = '/api/v1/changepassword';
+        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+
+        $this->assertTrue($result != null);
+        $this->assertJsonStringEqualsJsonString('{}', $result);
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+    }
+
+    public function testAuthenticateNoBody()
+    {
+        $this->path = '/api/v1/authenticate';
+        $recordStr = '{ "user": "test@example.com", "password":"Sample#123456"}';
+
+        $this->REQUEST = ['path' => $this->path];
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->POST = ['requestbody' => ''];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(401, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
+    }
 
     public function testLogin()
     {

@@ -56,11 +56,6 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
 
         $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
-        // Preflight requests are send by Angular
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /authapi/v1/auth
-            $response->setResult($service->preflight());
-        }
 
         if ($this->requestObject->method === 'POST') {
             // login and get token
@@ -97,11 +92,6 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
 
         $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
-        // Preflight requests are send by Angular
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /authapi/v1/auth
-            $response->setResult($service->preflight());
-        }
 
         if ($this->requestObject->method === 'POST') {
             // login and get token
@@ -119,12 +109,18 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
             if ($response->getCode() === 200) {
                 $u = new \mobilecms\utils\MailUtils($this->getRootDir());
 
+                $email = $logindata->{'user'};
+                $notificationTitle = 'new password';
+                $notificationBody = $u->getNewPassword('new password', $clearPassword, $this->getClientInfo());
+                $notificationHeaders = $u->getHeaders($this->getConf()->{'mailsender'});
+
                 if ($this->enablemail) {
+                    // @codeCoverageIgnoreStart
                     $CR_Mail = @mail(
-                        $logindata->{'user'},
+                        $email,
                         'new password',
-                        $u->getNewPassword('new password', $clearPassword, $this->getClientInfo()),
-                        $u->getHeaders($this->getConf()->{'mailsender'})
+                        $notificationBody,
+                        $notificationHeaders
                     );
 
                     if ($CR_Mail === false) {
@@ -132,10 +128,11 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
                     } else {
                         $response->setCode(200);
                     }
+                    // @codeCoverageIgnoreEnd
                 } elseif ($this->debugResetPassword) {
                     $tmpResponse = json_decode($response->getResult());
                     // test only
-                    $tmpResponse->{'notification'} = json_encode($u->getNewPassword('new password', $clearPassword, $this->getClientInfo()));
+                    $tmpResponse->{'notification'} = json_encode($notificationBody);
                     $response->setResult(json_encode($tmpResponse));
                 }
             }
@@ -160,11 +157,6 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
 
         $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
-        // Preflight requests are send by Angular
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /authapi/v1/auth
-            $response->setResult($service->preflight());
-        }
 
         if ($this->requestObject->method === 'GET') {
             $id = '';
@@ -191,10 +183,6 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
         $this->checkConfiguration();
         $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
-        // Preflight requests are send by Angular
-        if ($this->requestObject->method === 'OPTIONS') {
-            $response->setResult($service->preflight());
-        }
 
         // register and create a user
         if ($this->requestObject->method === 'POST') {
@@ -254,7 +242,9 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     {
         $result = $this->getClientIp() . ' ';
         if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            // @codeCoverageIgnoreStart
             $result .= $_SERVER['HTTP_USER_AGENT'];
+            // @codeCoverageIgnoreEnd
         }
         return $result;
     }
@@ -274,12 +264,6 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
             $this->checkConfiguration();
 
             $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
-
-            // Preflight requests are send by Angular
-            if ($this->requestObject->method === 'OPTIONS') {
-                // eg : /authapi/v1/auth
-                $response = $service->preflight();
-            }
 
             if ($this->requestObject->method === 'POST') {
                 if (empty($this->getRequestBody())) {
@@ -313,6 +297,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     public function getClientIp(): string
     {
         $ipaddress = '';
+        // @codeCoverageIgnoreStart
         if (isset($_SERVER['HTTP_CLIENT_IP'])) {
             $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
         } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -325,6 +310,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
             $ipaddress = $_SERVER['HTTP_FORWARDED'];
         } elseif (isset($_SERVER['REMOTE_ADDR'])) {
             $ipaddress = $_SERVER['REMOTE_ADDR'];
+        // @codeCoverageIgnoreEnd
         } else {
             $ipaddress = 'UNKNOWN';
         }

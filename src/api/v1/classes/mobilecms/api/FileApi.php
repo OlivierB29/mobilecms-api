@@ -48,7 +48,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {
+            // @codeCoverageIgnoreStart
             header('Access-Control-Allow-Methods: *');
+            // @codeCoverageIgnoreEnd
         }
 
         $this->media = $this->getConf()->{'media'};
@@ -95,16 +97,6 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
 
-
-        //
-        // Preflight requests are send by Angular
-        //
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /api/v1/content
-            $response = $this->preflight();
-        }
-
-
         if ($this->requestObject->match('/fileapi/v1/basicupload/{type}/{id}')) {
             if ($this->requestObject->method === 'GET') {
                 // create service
@@ -145,17 +137,6 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-
-
-        //
-        // Preflight requests are send by Angular
-        //
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /api/v1/content
-            $response = $this->preflight();
-        }
-
-        //
         if ($this->requestObject->method === 'POST') {
             if ($this->requestObject->match('/fileapi/v1/delete/{type}/{id}')) {
                 $deleteResult = $this->deleteFiles(
@@ -186,16 +167,6 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-
-
-        //
-        // Preflight requests are send by Angular
-        //
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /api/v1/content
-            $response = $this->preflight();
-        }
-
         if ($this->requestObject->match('/fileapi/v1/download/{type}/{id}')) {
             $service = new \mobilecms\utils\FileService();
 
@@ -224,8 +195,12 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $response->setCode(200);
         $response->setResult('{}');
 
-        header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+          if ($this->enableHeaders) {
+            // @codeCoverageIgnoreStart
+            header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+            // @codeCoverageIgnoreEnd
+          }
 
         return $response;
     }
@@ -480,16 +455,6 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $response = $this->getDefaultResponse();
 
         $this->checkConfiguration();
-
-
-
-        //
-        // Preflight requests are send by Angular
-        //
-        if ($this->requestObject->method === 'OPTIONS') {
-            // eg : /api/v1/content
-            $response = $this->preflight();
-        }
 
         if ($this->requestObject->method === 'POST'
             && $this->requestObject->match('/fileapi/v1/thumbnails/{type}/{id}')) {

@@ -15,6 +15,23 @@ final class CmsAdminApiTest extends AuthApiTest
         $this->API->setRootDir(realpath('tests-data')); // unit test only
     }
 
+    public function testOptions()
+    {
+
+        $email = 'editor@example.com';
+        $this->path = '/adminapi/v1/content/users/' . $email;
+        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+
+        $this->assertTrue($result != null);
+        $this->assertJsonStringEqualsJsonString('{}', $result);
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+    }
 
 
     public function testWrongLogin()
@@ -82,7 +99,7 @@ final class CmsAdminApiTest extends AuthApiTest
     }
 
 
-    public function testCreate()
+    public function testCreatePost()
     {
         $this->setAdmin();
         $email = 'newuser@example.com';
