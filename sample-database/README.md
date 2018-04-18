@@ -11,3 +11,8 @@ Special files in public/calendar/index
 
 Media files
 * media/calendar/id1/foobar.jpg
+
+
+## Default password
+test@example.com
+Foobar#123

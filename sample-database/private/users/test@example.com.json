@@ -1,9 +1,11 @@
 {
     "name": "Test",
     "email": "test@example.com",
-    "password": "$2y$12$tE8HmFyRa6ltWvCFTP5kBOL9hGq78.vGpmznHxf50LdK6VUEkWT5y",
-    "salt": "dT2QmuQtKgJHVR40Nyn6OXD8m4q0k4gAWOja7fy\/6NvMxlpqe5yFnPZPQeCyzOEKb32XKGged87sakop5ZgRK\/TcCs8CwllI5iWFECnK0RtPWPRpsJHOXWjGnkge6fNUaUTMdXF3WLkAJBxGcX\/r8ZBftpJO7XiWMVIemQu4qqs=",
-    "secretQuestion": "some secret",
-    "secretResponse": "$2y$12$dtPDkgDMx7eP6VpAm1qWe.uXnwmLWJjTAyKUqzs05kEy2unPLvhja",
-    "role": "editor"
+    "password": "$2y$12$hyPjItF7k6Xg4rW2Mrl2feKKvogcXm90mGv5He6m4t3AWwiCzgmy2",
+    "salt": "X0OKE9HJTM4Q\/rLtoG4chgnTEi0rQkFmbgaj8Zugr49u8xCtS3PEv8N+5bQhyz5j2JhnFRyUUFmcghZqhS\/Zak8kW1biEKOcH8Vh4JzwrlxOyp5VcW7pgmrdxF7Trps01T0gJDLplehN7FHvSCk4vLhh0fDG8t8L7IshdeJotrY=",
+    "secretQuestion": "",
+    "secretResponse": "",
+    "role": "editor",
+    "clientalgorithm": "hashmacbase64",
+    "newpasswordrequired": "false"
 }

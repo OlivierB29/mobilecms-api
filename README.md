@@ -25,14 +25,6 @@ Assume `www/html/` is the web root context.
 
 ## Installation notes
 
-### Required : PHP 7.0 / 7.1
-Basically a hosted PHP should be OK. With a default Ubuntu 16.04, you may need : `sudo apt install php-gd php-mbstring php-xml`
-- php-gd : image features
-- php-mbstring php-xml : optional, for PHPUnit
-
-### Dev dependencies (optional)
-- [Composer](https://getcomposer.org/download/)
-- [Gulp](https://gulpjs.com/)
 
 ### API
 - Copy src/api to web server to the web directory eg: /var/www/html/api
@@ -46,8 +38,18 @@ Basically a hosted PHP should be OK. With a default Ubuntu 16.04, you may need :
 - Create '/var/www/private'
 
 ## Development install
-When editing the API and live testing to a local web server.
 
+When editing the API and live testing to a local web server.
+### Required : PHP 7.0 / 7.1
+Basically a hosted PHP should be OK. With a default Ubuntu 16.04, you may need : `sudo apt install libapache2-mod-php php-mcrypt php-gd php-mbstring php-xml`
+- php-gd : image features
+- php-mbstring php-xml : optional, for PHPUnit
+
+### Dev dependencies (optional)
+- [Composer](https://getcomposer.org/download/)
+- [Gulp](https://gulpjs.com/)
+
+### Dev tasks
 `npm install`
 `gulp` Print available gulp tasks
 
@@ -79,6 +81,6 @@ In future plans, with the growing data, the database may become useful. For now,
 - Q: When running phpunit : `Class 'DOMDocument' not found`
 - A: Install php-xml (https://stackoverflow.com/questions/14395239/class-domdocument-not-found#14395414)
 
-- Q: Each request returns 404
+- Q: Can't login and browser debugger prints 404
 - A: Install [mod_rewrite](https://stackoverflow.com/questions/17745310/how-to-enable-mod-rewrite-in-lamp-on-ubuntu#17745379)
 On Ubuntu 16.04, the file is /etc/apache2/sites-available/000-default.conf
