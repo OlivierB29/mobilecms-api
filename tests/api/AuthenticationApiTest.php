@@ -17,7 +17,6 @@ final class AuthenticationApiTest extends ApiTest
 
     public function testAuthenticateOptions()
     {
-
         $this->path = '/api/v1/authenticate';
         $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
 
@@ -34,7 +33,6 @@ final class AuthenticationApiTest extends ApiTest
 
     public function testRegisterOptions()
     {
-
         $this->path = '/api/v1/register';
         $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
 
@@ -51,7 +49,6 @@ final class AuthenticationApiTest extends ApiTest
 
     public function testResetPasswordOptions()
     {
-
         $this->path = '/api/v1/resetpassword';
         $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
 
@@ -67,7 +64,6 @@ final class AuthenticationApiTest extends ApiTest
     }
     public function testChangePasswordOptions()
     {
-
         $this->path = '/api/v1/changepassword';
         $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
 

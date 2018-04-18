@@ -17,7 +17,6 @@ final class CmsAdminApiTest extends AuthApiTest
 
     public function testOptions()
     {
-
         $email = 'editor@example.com';
         $this->path = '/adminapi/v1/content/users/' . $email;
         $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
