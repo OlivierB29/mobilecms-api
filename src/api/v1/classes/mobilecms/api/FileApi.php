@@ -195,12 +195,12 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $response->setCode(200);
         $response->setResult('{}');
 
-          if ($this->enableHeaders) {
+        if ($this->enableHeaders) {
             // @codeCoverageIgnoreStart
             header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
             header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
             // @codeCoverageIgnoreEnd
-          }
+        }
 
         return $response;
     }

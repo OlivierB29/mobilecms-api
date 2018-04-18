@@ -293,13 +293,12 @@ abstract class RestApi
         $apiResponse = $this->getDefaultResponse();
         try {
             if (method_exists($this, $this->requestObject->endpoint)) {
-              if ($this->requestObject->method === 'OPTIONS') {
-                  // eg : /authapi/v1/auth
-                $apiResponse = $this->preflight();
-              } else {
-                $apiResponse = $this->{$this->requestObject->endpoint}($this->requestObject->args);
-              }
-
+                if ($this->requestObject->method === 'OPTIONS') {
+                    // eg : /authapi/v1/auth
+                    $apiResponse = $this->preflight();
+                } else {
+                    $apiResponse = $this->{$this->requestObject->endpoint}($this->requestObject->args);
+                }
             }
         } catch (\Exception $e) {
             // enable on local development server only https://www.owasp.org/index.php/Improper_Error_Handling

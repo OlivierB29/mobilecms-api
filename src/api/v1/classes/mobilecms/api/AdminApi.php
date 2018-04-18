@@ -184,12 +184,12 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         $response->setCode(200);
         $response->setResult('{}');
 
-          if ($this->enableHeaders) {
-              // @codeCoverageIgnoreStart
-              header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
-              header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-              // @codeCoverageIgnoreEnd
-            }
+        if ($this->enableHeaders) {
+            // @codeCoverageIgnoreStart
+            header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+            // @codeCoverageIgnoreEnd
+        }
 
         return $response;
     }
