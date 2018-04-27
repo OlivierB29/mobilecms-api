@@ -41,9 +41,10 @@ Assume `www/html/` is the web root context.
 
 When editing the API and live testing to a local web server.
 ### Required : PHP 7.0 / 7.1
-Basically a hosted PHP should be OK. With a default Ubuntu 16.04, you may need : `sudo apt install libapache2-mod-php php-mcrypt php-gd php-mbstring php-xml`
+Basically a hosted PHP should be OK. With a default Ubuntu 16.04, you may need : `sudo apt install libapache2-mod-php php-mcrypt php-gd php-mbstring php-xml php-imagick`
 - php-gd : image features
 - php-mbstring php-xml : optional, for PHPUnit
+- php-imagick : preview PDF feature
 
 ### Dev dependencies (optional)
 - [Composer](https://getcomposer.org/download/)
