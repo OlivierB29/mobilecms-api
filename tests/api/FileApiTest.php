@@ -294,4 +294,55 @@ final class FileApiTest extends AuthApiTest
         $this->assertTrue(file_exists($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-300.jpg'));
         unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-300.jpg');
     }
+
+    public function testUploadPdfFileAndThumbnails()
+    {
+        // API request
+        $record = '/calendar/3';
+        $this->path = '/fileapi/v1/basicupload' . $record;
+        $filename = 'testupload2.pdf';
+        // mock file
+        $mockUploadedFile = realpath('tests-data/fileapi/save/') . 'foobar123.pdf';
+        copy('tests-data/fileapi/save/' . $filename, $mockUploadedFile);
+        $files = [
+        ['name'=>$filename,'type'=>'application/pdf','tmp_name'=> $mockUploadedFile,'error'=>0,'size'=>24612]
+        ];
+
+        //
+        // UPLOAD
+        //
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $this->API->setDebug(true);
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);
+        $this->API->authorize($this->headers, $this->SERVER);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
+        $expected = '[{"title":"'.$filename.'","url":"'.$filename.'","size":163452,"mimetype":"application\/pdf"}]';
+        $this->assertJsonStringEqualsJsonString($expected, $result);
+
+
+        //
+        // THUMBNAILS
+        //
+        $this->path = '/fileapi/v1/thumbnails/calendar/3';
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $recordStr = '[{ "url": "'.$filename.'", "sizes": ["100", "200", "300"]}]';
+        $this->POST = ['requestbody' => $recordStr];
+        unset($recordStr);
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+        $this->API->authorize($this->headers, $this->SERVER);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        echo '!!!'.$result;
+        $this->assertEquals(200, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
+        $expected = '[]';
+        $this->assertJsonStringEqualsJsonString($expected, $result);
+        $mediaFile = $this->API->getMediaDirPath() . $record . '/' . $filename;
+        $this->assertTrue(file_exists($mediaFile));
+        unlink($mediaFile);
+    }
 }

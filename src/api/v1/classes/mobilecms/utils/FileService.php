@@ -147,14 +147,30 @@ class FileService
 
                 $thumbdir = $destdir . '/thumbnails';
                 if (file_exists($filePath)) {
-                    $thumbnails = $utils->multipleResize($filePath, $thumbdir, $sizes);
-                    if (count($thumbnails) === 0) {
-                        throw new \Exception('no thumbnails');
+                    $thumbnails = null;
+                    $fileResponse = null;
+                    if ($utils->isImage($filePath)) {
+                        $thumbnails = $utils->multipleResize($filePath, $thumbdir, $sizes);
+                        if (count($thumbnails) === 0) {
+                            throw new \Exception('no thumbnails');
+                        }
+
+                        $fileResponse = $utils->imageInfo($filePath);
+
+                    } else {
+                      // future version with PDF preview : https://gist.github.com/umidjons/11037635
+                      $pdfUtils = new \mobilecms\utils\PdfUtils();
+                      $fileResponse = $pdfUtils->pdfInfo($filePath);
+                      $thumbnails = $pdfUtils->multipleResize($filePath, $thumbdir, $sizes);
                     }
 
-                    $fileResponse = $utils->imageInfo($filePath);
-                    $fileResponse->{'thumbnails'} = $thumbnails;
-                    \array_push($result, $fileResponse);
+                    if (isset($thumbnails)) {
+                      $fileResponse->{'thumbnails'} = $thumbnails;
+                      \array_push($result, $fileResponse);
+                    }
+
+
+
                 } else {
                     // TODO add message
                 }
