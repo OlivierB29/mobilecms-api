@@ -46,7 +46,7 @@ public  function resize($source, $target, $width = 210)
 
   if ('application/pdf' === $mime_type) {
 
-      $im     = new \Imagick($source);
+      $im     = new \Imagick(\realpath($source));
       $im->setIteratorIndex(0);
       $im->setCompression(\Imagick::COMPRESSION_JPEG);
       $im->setCompressionQuality(70);
