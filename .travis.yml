@@ -3,6 +3,8 @@ php:
   - '7.0'
   - '7.1'
   - '7.2'
+before_script:
+  - pecl install imagick
 script:
 - phpunit --configuration phpunit-utils.xml
 - phpunit --configuration phpunit-api.xml
