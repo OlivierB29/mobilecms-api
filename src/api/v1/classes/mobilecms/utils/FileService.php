@@ -156,21 +156,17 @@ class FileService
                         }
 
                         $fileResponse = $utils->imageInfo($filePath);
-
                     } else {
-                      // future version with PDF preview : https://gist.github.com/umidjons/11037635
-                      $pdfUtils = new \mobilecms\utils\PdfUtils();
-                      $fileResponse = $pdfUtils->pdfInfo($filePath);
-                      $thumbnails = $pdfUtils->multipleResize($filePath, $thumbdir, $sizes);
+                        // future version with PDF preview : https://gist.github.com/umidjons/11037635
+                        $pdfUtils = new \mobilecms\utils\PdfUtils();
+                        $fileResponse = $pdfUtils->pdfInfo($filePath);
+                        $thumbnails = $pdfUtils->multipleResize($filePath, $thumbdir, $sizes);
                     }
 
                     if (isset($thumbnails)) {
-                      $fileResponse->{'thumbnails'} = $thumbnails;
-                      \array_push($result, $fileResponse);
+                        $fileResponse->{'thumbnails'} = $thumbnails;
+                        \array_push($result, $fileResponse);
                     }
-
-
-
                 } else {
                     // TODO add message
                 }

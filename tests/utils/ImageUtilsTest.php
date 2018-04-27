@@ -56,7 +56,6 @@ final class ImageUtilsTest extends TestCase
         $result = $u->multipleResize($src, $dir, $sizes);
 
         $this->assertTrue(count($result) === count($sizes));
-
     }
 
 
@@ -69,6 +68,5 @@ final class ImageUtilsTest extends TestCase
         $result = $u->multipleResize($src, $dir, $sizes);
 
         $this->assertTrue(count($result) === 5);
-        
     }
 }
