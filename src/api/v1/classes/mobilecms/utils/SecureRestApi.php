@@ -80,8 +80,10 @@ abstract class SecureRestApi extends RestApi
                 $response = $this->doAuthorize($headers, $SERVER);
                 break;
             default:
+                // @codeCoverageIgnoreStart
                 $response->setCode(405);
                 break;
+                // @codeCoverageIgnoreEnd
         }
 
         return $response;
@@ -160,7 +162,7 @@ abstract class SecureRestApi extends RestApi
         if (!isset($SERVER)) {
             $SERVER = &$_SERVER;
         }
-
+        // @codeCoverageIgnoreStart
         $headers = null;
         if (isset($SERVER[self::AUTHORIZATION])) {
             $headers = trim($SERVER[self::AUTHORIZATION]);
@@ -179,7 +181,7 @@ abstract class SecureRestApi extends RestApi
                 $headers = trim($requestHeaders[self::AUTHORIZATION]);
             }
         }
-
+        // @codeCoverageIgnoreEnd
         return $headers;
     }
 

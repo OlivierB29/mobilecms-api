@@ -81,6 +81,21 @@ final class CmsApiTest extends AuthApiTest
         $this->assertTrue($jsonResult->{'timestamp'} != '');
     }
 
+    public function testEmptyToken()
+    {
+        $this->path = '/cmsapi/v1/content/calendar';
+        $this->headers=['Authorization' => ''];
+
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $this->GET = ['requestbody' => '{}'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(401, $response->getCode());
+    }
 
     public function testGetCalendarList()
     {
