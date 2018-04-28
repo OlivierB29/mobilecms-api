@@ -24,25 +24,6 @@ class FileService
         return $result;
     }
 
-    /**
-     * Delete file JSON descriptions, if they don't exist.
-     *
-     * @param string $homedir  : home folder
-     * @param string $existing : existing descriptions
-     */
-    public function cleanDeletedFiles(string $homedir, string $existing)
-    {
-        $result = json_decode('[]');
-        foreach ($existing as $key => $value) {
-            $filePath = $homedir . DIRECTORY_SEPARATOR . $value->{'url'};
-
-            if (is_file($filePath)) {
-                array_push($result, $value);
-            }
-        }
-
-        return $result;
-    }
 
     /**
      * Get updated file descriptions from a directory.
@@ -121,7 +102,9 @@ class FileService
         string $id,
         array $files,
         array $defaultsizes,
-        int $quality
+        int $quality,
+        array $defaultPdfsizes,
+        int $pdfQuality
     ): \mobilecms\utils\Response {
         $response = $this->getDefaultResponse();
         $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
@@ -136,17 +119,19 @@ class FileService
             // upload
             if (isset($file->{'url'})) {
                 $sizes = null;
-                if (!empty($file->{'sizes'}) && count($file->{'sizes'}) > 0) {
-                    $sizes = $file->{'sizes'};
-                } else {
-                    $sizes = $defaultsizes;
-                }
+
 
                 // get foobar.html from http://something.com/[...]/foobar.html
                 $filePath = $destdir . '/' . basename($file->{'url'});
 
                 $thumbdir = $destdir . '/thumbnails';
                 if (file_exists($filePath)) {
+                  // thumbnails sizes
+                    if (!empty($file->{'sizes'}) && count($file->{'sizes'}) > 0) {
+                        $sizes = $file->{'sizes'};
+                    } else {
+                        $sizes = $defaultsizes;
+                    }
                     $thumbnails = null;
                     $fileResponse = null;
                     if ($utils->isImage($filePath)) {
@@ -157,10 +142,21 @@ class FileService
 
                         $fileResponse = $utils->imageInfo($filePath);
                     } else {
+                      // thumbnails sizes
+                        if (!empty($file->{'sizes'}) && count($file->{'sizes'}) > 0) {
+                            $sizes = $file->{'sizes'};
+                        } else {
+                            $sizes = $defaultPdfsizes;
+                        }
                         // future version with PDF preview : https://gist.github.com/umidjons/11037635
                         $pdfUtils = new \mobilecms\utils\PdfUtils();
                         $fileResponse = $pdfUtils->pdfInfo($filePath);
+                        $pdfUtils->setQuality($pdfQuality);
                         $thumbnails = $pdfUtils->multipleResize($filePath, $thumbdir, $sizes);
+
+                        if (count($thumbnails) === 0) {
+                            throw new \Exception('no thumbnails');
+                        }
                     }
 
                     if (isset($thumbnails)) {

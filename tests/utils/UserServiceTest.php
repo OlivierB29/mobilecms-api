@@ -7,26 +7,35 @@ use PHPUnit\Framework\TestCase;
 
 final class UserServiceTest extends TestCase
 {
+
+  private $service;
+
+  protected function setUp()
+  {
+      $this->service = new UserService('tests-data/userservice');
+  }
+
+
     public function testCanRead()
     {
-        $service = new UserService('tests-data/userservice');
+
         $this->assertTrue(
-          $service->getJsonUser('test@example.com') !== null
+          $this->service->getJsonUser('test@example.com') !== null
         );
     }
 
     public function testLoginOk()
     {
-        $service = new UserService('tests-data/userservice');
-        $result = $service->login('test@example.com', 'Sample#123456');
+
+        $result = $this->service->login('test@example.com', 'Sample#123456');
 
         $this->assertTrue('' === $result);
     }
 
     public function testGetToken()
     {
-        $service = new UserService('tests-data/userservice');
-        $result = $service->getToken('test@example.com', 'Sample#123456');
+
+        $result = $this->service->getToken('test@example.com', 'Sample#123456');
         $this->assertTrue($result->getCode() === 200);
         $this->assertTrue(null != $result->getResult());
 
@@ -37,30 +46,96 @@ final class UserServiceTest extends TestCase
         $this->assertTrue(strlen($user->{'token'}) > 100);
     }
 
+    public function testEmptyToken()
+    {
+        $this->expectException(\Exception::class);
+        $result = $this->service->verifyToken(null, 'editor');
+    }
+
     public function testVerifyToken()
     {
-        $service = new UserService('tests-data/userservice');
-        $getTokenResponse = $service->getToken('test@example.com', 'Sample#123456');
+
+        $getTokenResponse = $this->service->getToken('test@example.com', 'Sample#123456');
 
         $user = json_decode($getTokenResponse->getResult());
 
-        $result = $service->verifyToken($user->{'token'}, 'editor');
+        $result = $this->service->verifyToken($user->{'token'}, 'editor');
+
+        $this->assertTrue($result->getCode() === 200);
+    }
+
+    public function testVerifyWrongToken()
+    {
+
+        $getTokenResponse = $this->service->getToken('test@example.com', 'Sample#123456');
+
+        $user = json_decode($getTokenResponse->getResult());
+
+        $result = $this->service->verifyToken($user->{'token'} . 'FOOBAR', 'editor');
+
+        $this->assertTrue($result->getCode() === 401);
+    }
+
+    public function testInsufficentEditorRole()
+    {
+
+        $getTokenResponse = $this->service->getToken('guest@example.com', 'Sample#123456');
+
+        $user = json_decode($getTokenResponse->getResult());
+
+        $result = $this->service->verifyToken($user->{'token'}, 'editor');
+
+        $this->assertTrue($result->getCode() === 403);
+    }
+
+    public function testInsufficentAdminRole()
+    {
+
+        $getTokenResponse = $this->service->getToken('test@example.com', 'Sample#123456');
+
+        $user = json_decode($getTokenResponse->getResult());
+
+        $result = $this->service->verifyToken($user->{'token'}, 'admin');
+
+        $this->assertTrue($result->getCode() === 403);
+    }
+
+    public function testVerifyEditorByAdmin()
+    {
+
+        $getTokenResponse = $this->service->getToken('admin@example.com', 'Sample#123456');
+
+        $user = json_decode($getTokenResponse->getResult());
+
+        $result = $this->service->verifyToken($user->{'token'}, 'editor');
+
+        $this->assertTrue($result->getCode() === 200);
+    }
+
+    public function testVerifyAdmin()
+    {
+
+        $getTokenResponse = $this->service->getToken('admin@example.com', 'Sample#123456');
+
+        $user = json_decode($getTokenResponse->getResult());
+
+        $result = $this->service->verifyToken($user->{'token'}, 'admin');
 
         $this->assertTrue($result->getCode() === 200);
     }
 
     public function testTokenKo()
     {
-        $service = new UserService('tests-data/userservice');
-        $result = $service->getToken('test@example.com', 'Sample#1234567');
+
+        $result = $this->service->getToken('test@example.com', 'Sample#1234567');
         $this->assertTrue($result->getCode() === 401);
         $this->assertTrue($result->getResult() === '{}');
     }
 
     public function testWrongLogin1()
     {
-        $service = new UserService('tests-data/userservice');
-        $result = $service->login('test@example.com', 'wrongpass');
+
+        $result = $this->service->login('test@example.com', 'wrongpass');
         $this->assertTrue(
           $result !== null
         );
@@ -68,8 +143,8 @@ final class UserServiceTest extends TestCase
 
     public function testWrongLogin2()
     {
-        $service = new UserService('tests-data/userservice');
-        $result = $service->login('test@example.com', 'Sample#12345');
+
+        $result = $this->service->login('test@example.com', 'Sample#12345');
         $this->assertTrue(
           $result !== null
         );
@@ -77,25 +152,97 @@ final class UserServiceTest extends TestCase
 
     public function testUpdateUser()
     {
-        $service = new UserService('tests-data/userservice');
+
         $this->assertTrue(
-          $service->updateUser('updateuser@example.com', 'updated', 'pass', 'salt', 'admin')
+          $this->service->updateUser('updateuser@example.com', 'updated', 'pass', 'salt', 'admin')
         );
     }
 
+    public function testResetPasswordWrongUser()
+    {
+        $this->expectException(\Exception::class);
+        $this->assertTrue(
+          $this->service->resetPassword('FOOBAR@example.com', 'foo')
+        );
+    }
+    public function testGetJsonUserFileEmptyEmail()
+    {
+        $this->expectException(\Exception::class);
+        $this->service->getJsonUserFile('');
+    }
+    public function testGetJsonUserFileEmptyDatabase()
+    {
+        $this->expectException(\Exception::class);
+        $service = new UserService('');
+        $service->getJsonUserFile('foo');
+    }
+
+
+
     public function testCreateUser()
     {
-        $tempdir = 'tests-data/temp';
-        if (!file_exists($tempdir)) {
-            mkdir($tempdir, 0777, true);
+        $mail = 'testcreate@example.com';
+        $file = 'tests-data/userservice/' . $mail . '.json';
+        if (file_exists($file)) {
+            unlink($file);
         }
-
-        $service = new UserService($tempdir);
-        $mail = 'test' . time() . '@example.com';
         $password = 'Sample#123456';
 
-        $createresult = $service->createUserWithSecret($mail, $mail, $password, 'some secret', 'secret response', 'create');
+        $createresult = $this->service->createUser($mail, $mail, $password, 'create');
         $this->assertTrue($createresult === null);
+        unlink($file);
+    }
+
+    public function testCreateUserAlreadyExists()
+    {
+        $mail = 'testcreate@example.com';
+        $file = 'tests-data/userservice/' . $mail . '.json';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        $password = 'Sample#123456';
+
+        $this->service->createUser($mail, $mail, $password, 'create');
+        $createresult = $this->service->createUser($mail, $mail, $password, 'create');
+        $this->assertTrue($createresult !== null);
+        unlink($file);
+    }
+
+
+    public function testCreateUserEmptyPassword()
+    {
+        $mail = 'testcreate@example.com';
+        $password = '';
+        $createresult = $this->service->createUser($mail, $mail, $password, 'create');
+        $this->assertTrue($createresult !== null);
+        $this->assertTrue(strpos($createresult, 'EmptyPassword') !== false);
+    }
+    public function testCreateUserEmptyUsername()
+    {
+        $mail = 'testcreate@example.com';
+        $password = 'foo';
+        $createresult = $this->service->createUser('', $mail, $password, 'create');
+        $this->assertTrue($createresult !== null);
+        $this->assertTrue(strpos($createresult, 'InvalidUser') !== false);
+    }
+
+
+    public function testCreateUserEmptyEmail()
+    {
+        $mail = '';
+        $password = 'foo';
+        $createresult = $this->service->createUser($mail, $mail, $password, 'create');
+        $this->assertTrue($createresult !== null);
+        $this->assertTrue(strpos($createresult, 'EmptyEmail') !== false);
+    }
+
+    public function testCreateUserInvalidEmail()
+    {
+        $mail = 'foobar';
+        $password = 'foo';
+        $createresult = $this->service->createUser($mail, $mail, $password, 'create');
+        $this->assertTrue($createresult !== null);
+        $this->assertTrue(strpos($createresult, 'InvalidEmail') !== false);
     }
 
     public function testModifyPassword()
@@ -111,12 +258,12 @@ final class UserServiceTest extends TestCase
 
         //change password
         $newPassword = 'somethingnew';
-        $createresult = $service->changePassword($email, $oldPassword, $newPassword);
+        $createresult = $this->service->changePassword($email, $oldPassword, $newPassword);
 
         $this->assertTrue($createresult->getCode() === 200);
 
         //login
-        $result = $service->login($email, $newPassword);
+        $result = $this->service->login($email, $newPassword);
         $this->assertTrue('' === $result);
     }
 }

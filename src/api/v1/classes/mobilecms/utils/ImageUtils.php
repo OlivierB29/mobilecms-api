@@ -68,7 +68,7 @@ class ImageUtils
     * @param string $fileName : file path
     * @param string $thumbFile : new resized file
     * @param int $width : new resized width
-    * @return \stdClass JSON image description
+    * @return \stdClass JSON image description {"width":"210","height":"297","url":"document.jpg"}
     */
     public function resize(string $fileName, string $thumbFile, int $width)
     {
@@ -112,7 +112,6 @@ class ImageUtils
                         \imagepng($image_p, $thumbFile);
                         break;
                     default:
-                        $result = null;
                 }
             }
         }
@@ -140,26 +139,6 @@ class ImageUtils
 
             $extension = $path_parts['extension'];
             if (!empty($extension) && in_array(strtolower($extension), array("jpeg", "jpg", "png", "gif"))) {
-                if (exif_imagetype($file) > 0) {
-                    $result = true;
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    public function isJpeg($file)
-    {
-        $result = false;
-
-        if (!empty($file)) {
-            $path_parts = pathinfo($file);
-
-            $extension = $path_parts['extension'];
-
-
-            if (!empty($extension) && in_array(strtolower($extension), array("jpeg", "jpg"))) {
                 if (exif_imagetype($file) > 0) {
                     $result = true;
                 }

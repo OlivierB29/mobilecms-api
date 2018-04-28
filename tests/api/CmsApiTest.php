@@ -15,6 +15,26 @@ final class CmsApiTest extends AuthApiTest
     }
 
 
+    public function testEmptyConf()
+    {
+        $this->expectException(\Exception::class);
+        $this->API->loadConf('tests/empty.json');
+        $this->path = '/cmsapi/v1/content';
+        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+
+        $this->assertTrue($result != null);
+        $this->assertJsonStringEqualsJsonString('[
+          {"type":"calendar", "labels": [ {"i18n":"en", "label":"Calendar"}, {"i18n":"fr", "label":"Calendrier"}]},
+          {"type":"news", "labels": [ {"i18n":"en", "label":"News"}, {"i18n":"fr", "label":"Actualités"}]}
+        ]', $result);
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+    }
     public function testTypes()
     {
         $this->path = '/cmsapi/v1/content';

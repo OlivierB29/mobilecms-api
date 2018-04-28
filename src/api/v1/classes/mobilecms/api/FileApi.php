@@ -22,6 +22,10 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
     private $thumbnailsizes = [];
 
+    private $pdfthumbnailsizes = [];
+
+    private $pdfimagequality = 80;
+
 
     private $fileExtensions = [];
 
@@ -30,7 +34,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
     /**
      * Constructor.
      *
-     * @param \stdClass $conf JSON configuration
+
      */
     public function __construct()
     {
@@ -40,11 +44,10 @@ class FileApi extends \mobilecms\utils\SecureRestApi
     /**
      * Init configuration.
      *
-     * @param \stdClass $conf JSON configuration
      */
-    public function setConf(\stdClass $conf)
+    public function setConf()
     {
-        parent::setConf($conf);
+        parent::setConf();
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {
@@ -55,6 +58,8 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $this->media = $this->getConf()->{'media'};
         $this->thumbnailsizes = $this->getConf()->{'thumbnailsizes'};
+        // width 214 * height 82
+        $this->pdfthumbnailsizes = [100, 200];
         $this->fileExtensions = $this->getConf()->{'fileextensions'};
         $this->quality = $this->properties->getInteger('imagequality', 80);
     }
@@ -466,7 +471,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
                 $this->getParam('id'),
                 $files,
                 $this->thumbnailsizes,
-                $this->imagequality
+                $this->imagequality,
+                $this->pdfthumbnailsizes,
+                $this->pdfimagequality
             );
         }
 

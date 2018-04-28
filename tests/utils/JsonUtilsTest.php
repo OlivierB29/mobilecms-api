@@ -14,6 +14,17 @@ final class JsonUtilsTest extends TestCase
                 json_encode(JsonUtils::readJsonFile('tests-data/jsonutils/mini.json'))
                 );
     }
+    public function testDirectoryNotFound()
+    {
+        $this->expectException(\Exception::class);
+        JsonUtils::writeJsonFile('BAD_PATH/test.json', \json_decode('{}'));
+    }
+
+    public function testWriteException()
+    {
+        $this->expectException(\Exception::class);
+        JsonUtils::writeJsonFile('/root/test.json', \json_decode('{}'));
+    }
 
     public function testGetByKey()
     {

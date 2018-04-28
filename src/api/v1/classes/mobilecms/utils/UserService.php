@@ -129,8 +129,6 @@ class UserService
             $file = $this->getJsonUserFile($email);
             JsonUtils::writeJsonFile($file, $jsonUser);
             $result = true;
-        } else {
-            throw new \Exception('empty user');
         }
 
         return $result;
@@ -143,23 +141,23 @@ class UserService
      * @param string $password       : password
      * @param string $salt           : private salt
      * @param string $role           : role none|editor|admin
-     * @param string $secretQuestion : secret question (encoded)
-     * @param string $secretResponse : secret question (encrypted)
      * @param string $mode           : values 'create' or 'update'
      *
      * @return string empty string if success
      */
-    public function createUserWithSecret(
+    public function createUser(
         string $username,
         string $emailParam,
         string $password,
-        string $secretQuestion,
-        string $secretResponse,
         string $mode
     ) {
         $email = strtolower($emailParam);
 
         $error_msg = null;
+
+        if (empty($email)) {
+            $error_msg .= 'EmptyEmail ';
+        }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             // invalid email
@@ -170,24 +168,21 @@ class UserService
             $error_msg .= 'EmptyPassword ';
         }
 
-        // Cf forms.js
-        // Ensure password length
-        if (strlen($password) > 128) {
-            $error_msg .= 'InvalidPassword ';
-        }
+        if (empty($error_msg)) {
+            $file = $this->getJsonUserFile($email);
 
-        $file = $this->getJsonUserFile($email);
+            if ($mode === 'create') {
+                if (empty($username)) {
+                    $error_msg .= 'InvalidUser ';
+                }
 
-        if ($mode === 'create') {
-            if (empty($username)) {
-                $error_msg .= 'InvalidUser ';
-            }
-
-            if (file_exists($file)) {
-                // user already exists
-                $error_msg .= 'AlreadyExists.';
+                if (file_exists($file)) {
+                    // user already exists
+                    $error_msg .= 'AlreadyExists.';
+                }
             }
         }
+
 
         if (empty($error_msg)) {
             // create a random for this user
@@ -202,23 +197,10 @@ class UserService
             ];
             $saltpassword = password_hash($password, PASSWORD_BCRYPT, $options);
 
-            // store a salted response
-            $saltresponse = '';
-            if (!empty($secretResponse)) {
-                $saltresponse = password_hash($secretResponse, PASSWORD_BCRYPT, $options);
-            }
 
             if ($mode === 'create') {
                 // create user
-                $this->addDbUserWithSecret(
-                    $email,
-                    $username,
-                    $saltpassword,
-                    $random_salt,
-                    'guest',
-                    $secretQuestion,
-                    $saltresponse
-                );
+                $this->addDbUser($email, $username, $saltpassword, $random_salt, 'guest');
             } else {
                 //role is not modified
                 $this->updateUser($email, '', $saltpassword, $random_salt, '');
@@ -241,10 +223,7 @@ class UserService
     {
         $loginmsg = '';
 
-        $debug = false;
-        $debugmsg = 'debugmsg ';
-
-        // if someone forgot to do this before
+          // if someone forgot to do this before
         $email = strtolower($emailParam);
 
         // return the existing user
@@ -259,15 +238,6 @@ class UserService
                 // incorrect password
                 $loginmsg = 'wrong passsword';
             }
-        } else {
-            // wrong user
-            $loginmsg = 'wrong user';
-            $debugmsg .= $email;
-        }
-
-        // return an empty string on success, so if debug is enabled, it's impossible to connect
-        if ($debug) {
-            $loginmsg .= $debugmsg;
         }
 
         return $loginmsg;
@@ -376,7 +346,7 @@ class UserService
         // user found
         if (!empty($user)) {
             if ($this->login($email, $password) === '') {
-                $updateMsg = $this->createUserWithSecret('', $email, $newPassword, '', '', 'update');
+                $updateMsg = $this->createUser('', $email, $newPassword, 'update');
 
                 // return the existing user
                 $user = $this->getJsonUser($email);
@@ -430,12 +400,16 @@ class UserService
         $payload = $jwt->getPayload($token);
 
         if (!isset($payload)) {
+            // @codeCoverageIgnoreStart
             throw new \Exception('empty payload');
+            // @codeCoverageIgnoreEnd
         }
 
         $payloadJson = json_decode($payload);
         if (!isset($payloadJson)) {
+            // @codeCoverageIgnoreStart
             throw new \Exception('empty payload');
+            // @codeCoverageIgnoreEnd
         }
         // get the existing user
 
@@ -475,9 +449,6 @@ class UserService
 
         $loginmsg = 'Wrong login';
 
-        $debug = false;
-        $debugmsg = 'debugmsg ';
-
         // if someone forgot to do this before
         $email = strtolower($emailParam);
 
@@ -486,7 +457,7 @@ class UserService
 
         // user found
         if (!empty($user)) {
-            $updateMsg = $this->createUserWithSecret('', $emailParam, $newPassword, '', '', 'update');
+            $updateMsg = $this->createUser('', $emailParam, $newPassword, 'update');
 
             // return the existing user
             $user = $this->getJsonUser($email);
@@ -497,17 +468,11 @@ class UserService
             if (empty($updateMsg)) {
                 $response = $this->getPublicInfo($email);
             } else {
-                $response->setError(500, 'createUserWithSecret error ' . $updateMsg);
+                // @codeCoverageIgnoreStart
+                // ignore test coverage : it should not happen and it is too specific
+                $response->setError(500, 'resetPassword error ' . $updateMsg);
+                // @codeCoverageIgnoreEnd
             }
-        } else {
-            // wrong user
-            $loginmsg = 'wrong user ' . $email;
-            $debugmsg .= $email;
-        }
-
-        // return an empty string on success, so if debug is enabled, it's impossible to connect
-        if ($debug) {
-            $loginmsg .= $debugmsg;
         }
 
         return $response;
@@ -571,17 +536,13 @@ class UserService
      * @param string $password       : password
      * @param string $salt           : private salt
      * @param string $role           : role none|editor|admin
-     * @param string $secretQuestion : secret question (encoded)
-     * @param string $secretResponse : secret question (encrypted)
      */
-    private function addDbUserWithSecret(
+    private function addDbUser(
         string $email,
         string $name,
         string $password,
         string $salt,
-        string $role,
-        string $secretQuestion,
-        string $secretResponse
+        string $role
     ) {
         if (!empty($email)) {
             $jsonUser = json_decode('{}');
@@ -590,13 +551,9 @@ class UserService
             $jsonUser->{'password'} = $password;
             $jsonUser->{'salt'} = $salt;
             $jsonUser->{'role'} = $role;
-            $jsonUser->{'secretQuestion'} = $secretQuestion;
-            $jsonUser->{'secretResponse'} = $secretResponse;
 
             $file = $this->getJsonUserFile($email);
             JsonUtils::writeJsonFile($file, $jsonUser);
-        } else {
-            throw new \Exception('addDbUserWithSecret() empty email');
         }
     }
 

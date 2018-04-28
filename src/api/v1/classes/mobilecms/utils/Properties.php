@@ -1,10 +1,23 @@
 <?php namespace mobilecms\utils;
 
+/**
+* Read a simple JSON configuration file.
+*/
 class Properties
 {
+    /**
+    * \stdClass JSON conf
+    */
     private $conf;
 
-    public function getInteger(string $key, int $default) : int
+    /**
+     * Read an integer property.
+     *
+     * @param string $key : key
+     * @param int $default : default value if configuration is empty
+     * @param int value
+     */
+    public function getInteger(string $key, int $default = 0) : int
     {
         $result = $default;
 
@@ -18,6 +31,13 @@ class Properties
         return $result;
     }
 
+    /**
+     * Read a boolean property.
+     *
+     * @param string $key : key
+     * @param bool $default : default value if configuration is empty
+     * @param bool value
+     */
     public function getBoolean(string $key, bool $default) : bool
     {
         $result = $default;
@@ -34,6 +54,12 @@ class Properties
         return $result;
     }
 
+    /**
+     * Read a boolean property.
+     *
+     * @param string $key : key
+     * @param string value
+     */
     public function getString(string $key) : bool
     {
         $result = '';
@@ -44,6 +70,12 @@ class Properties
         return $result;
     }
 
+    /**
+     * Read a JSON configuration file.
+     *
+     * @param string $file : file
+     * @param \stdClass JSON conf
+     */
     public function loadConf(string $file)
     {
         if (\file_exists($file)) {

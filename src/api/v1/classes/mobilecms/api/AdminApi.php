@@ -12,7 +12,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
     /**
      * Constructor.
      *
-     * @param \stdClass $conf JSON configuration
+
      */
     public function __construct()
     {
@@ -22,11 +22,11 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
     /**
      * Init configuration.
      *
-     * @param \stdClass $conf JSON configuration
+
      */
-    public function setConf(\stdClass $conf)
+    public function setConf()
     {
-        parent::setConf($conf);
+        parent::setConf();
         // Default headers for RESTful API
         if ($this->enableHeaders) {
             // @codeCoverageIgnoreStart
@@ -115,12 +115,10 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
 
                 //returns a empty string if success, a string with the message otherwise
 
-                $createresult = $userService->createUserWithSecret(
+                $createresult = $userService->createUser(
                     $user->{'name'},
                     $user->{'email'},
                     $user->{'password'},
-                    $user->{'secretQuestion'},
-                    $user->{'secretResponse'},
                     'create'
                 );
                 if (empty($createresult)) {
@@ -227,7 +225,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
      */
     private function getDefaultUser(): \stdClass
     {
-        return json_decode('{"name":"", "email":"", "password":"", "secretQuestion":"", "secretResponse":"" }');
+        return json_decode('{"name":"", "email":"", "password":"" }');
     }
 
 

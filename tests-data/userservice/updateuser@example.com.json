@@ -3,8 +3,6 @@
     "email": "updateuser@example.com",
     "password": "pass",
     "salt": "salt",
-    "secretQuestion": "some secret",
-    "secretResponse": "$2y$12$JFA5Vs\/Zg9Vxt2hLSctWR.xrojdfVMSqmRNbs67tBCTYnx\/L6z4l.",
     "role": "admin",
     "clientalgorithm": "hashmacbase64",
     "newpasswordrequired": "false"

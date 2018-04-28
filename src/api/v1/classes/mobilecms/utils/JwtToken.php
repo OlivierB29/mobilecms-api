@@ -16,7 +16,7 @@ class JwtToken
      *
      * @param string $newval algorithm
      */
-    public function setAlgorithm($newval): string
+    public function setAlgorithm($newval)
     {
         $this->algorithm = $newval;
     }
@@ -97,7 +97,7 @@ class JwtToken
      */
     private function initHeader(): string
     {
-        return base64_encode('{ "alg": "' . $this->algorithm . '","typ": "JWT"}');
+        return base64_encode('{ "alg": "' . $this->getAlgorithm() . '","typ": "JWT"}');
     }
 
     /**

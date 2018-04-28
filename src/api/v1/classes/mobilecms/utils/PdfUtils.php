@@ -4,6 +4,18 @@
  */
 class PdfUtils
 {
+    /**
+    * default image quality
+    */
+    private $quality = 80;
+
+    /**
+    * Create a list of thumbnails
+    * @param string $fileName : file path
+    * @param string $dir : directory containing resized files
+    * @param array $sizes : array of new resized widths
+    * @return array created files
+    */
     public function multipleResize(string $file, string $dir, array $sizes)
     {
         $result = [];
@@ -17,10 +29,10 @@ class PdfUtils
         }
 
         foreach ($sizes as $width) {
-            // base name : foo-320.pg
+            // base name : foo.pdf
             $resizedFileName = $fileName . '-' . (string)$width . '.' . $extension;
 
-            // file name : foobar/foo-320.pg
+            // file name : foobar/foo-320.jpg
             $resizedFilePath = $dir . '/' . $resizedFileName;
 
 
@@ -34,7 +46,14 @@ class PdfUtils
         return $result;
     }
 
+    /**
+    * Create a thumbnail of the first page
+    *
+    * @param string $source somewhere/foo.pdf
+    * @param string $uri thumbnails/foo.jpg
 
+    * @return \stdClass JSON image description {"width":"210","height":"297","url":"document.jpg"}
+    */
     public function resize($source, $target, $width = 210)
     {
         $result = null;
@@ -47,7 +66,7 @@ class PdfUtils
             $im     = new \Imagick(\realpath($source));
             $im->setIteratorIndex(0);
             $im->setCompression(\Imagick::COMPRESSION_JPEG);
-            $im->setCompressionQuality(70);
+            $im->setCompressionQuality($this->quality);
 
             $ratio_orig = $im->getImageWidth()/$im->getImageHeight();
             $height = \intval(\round($width/$ratio_orig, 0, PHP_ROUND_HALF_UP));
@@ -55,13 +74,15 @@ class PdfUtils
 
             $im->setImageFormat('jpeg');
             //https://stackoverflow.com/questions/41585848/imagickflattenimages-method-is-deprecated-and-its-use-should-be-avoided
-      $im->setImageAlphaChannel(11); // Imagick::ALPHACHANNEL_REMOVE
-      $im->mergeImageLayers(\Imagick::LAYERMETHOD_FLATTEN);
+            $im->setImageAlphaChannel(11); // Imagick::ALPHACHANNEL_REMOVE
+            $im->mergeImageLayers(\Imagick::LAYERMETHOD_FLATTEN);
             $im->setImageColorspace(255); // prevent image colors from inverting
             $im->resizeImage($width, $height, \Imagick::FILTER_LANCZOS, 1);
             $im->writeimage($target);
             $im->clear();
             $im->destroy();
+
+
 
 
 
@@ -90,5 +111,15 @@ class PdfUtils
 
 
         return $result;
+    }
+
+    /**
+     * Set quality.
+     *
+     * @param int $newval set quality
+     */
+    public function setQuality(int $newval)
+    {
+        $this->quality = $newval;
     }
 }

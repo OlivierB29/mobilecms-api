@@ -31,11 +31,11 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
     /**
      * Init configuration.
      *
-     * @param \stdClass $conf JSON configuration
+
      */
-    public function setConf(\stdClass $conf)
+    public function setConf()
     {
-        parent::setConf($conf);
+        parent::setConf();
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {

@@ -5,12 +5,6 @@
  */
 class JsonUtils
 {
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-    }
 
     /**
      * Read a JSON file.
@@ -35,19 +29,32 @@ class JsonUtils
         $fh = null;
 
         try {
+            $dir = dirname($file);
+            if (!file_exists($dir)) {
+                throw new \Exception('No such file or directory' . $dir);
+            }
+            if (file_exists($dir) && !is_writable($dir)) {
+                throw new \Exception('Access error to output dir' . $dir);
+            }
             if (file_exists($file) && !is_writable($file)) {
+                // @codeCoverageIgnoreStart
                 throw new \Exception('Error opening output file' . $file);
+                // @codeCoverageIgnoreEnd
             }
             $fh = fopen($file, 'w');
             if (!$fh) {
-                die('Error opening output file' . $file);
+                // @codeCoverageIgnoreStart
+                die('Error writing to output file' . $file);
+                // @codeCoverageIgnoreEnd
             }
 
             fwrite($fh, json_encode($data, JSON_PRETTY_PRINT));
             fclose($fh);
         } catch (\Exception $e) {
             if (isset($fh)) {
+                // @codeCoverageIgnoreStart
                 unset($fh);
+                // @codeCoverageIgnoreEnd
             }
 
             throw $e;

@@ -7,32 +7,39 @@ use PHPUnit\Framework\TestCase;
 
 final class JwtTokenTest extends TestCase
 {
+    private $util;
+
+    protected function setUp()
+    {
+        $this->util = new JwtToken();
+        $this->util->setAlgorithm('sha512');
+    }
+
     public function testBasic()
     {
-        $t = new JwtToken();
-        $token = $t->createTokenFromUser('test', 'test@example.com', 'guest', 'secret');
-        $this->assertTrue(
-          $token != null && strlen($token) > 100
-        );
+
+        $token = $this->util->createTokenFromUser('test', 'test@example.com', 'guest', 'secret');
+        $this->assertTrue($token != null);
+        $this->assertTrue(strlen($token) > 100);
     }
 
     public function testVerifyToken()
     {
-        $t = new JwtToken();
-        $token = $t->createTokenFromUser('test', 'test@example.com', 'guest', 'secret');
+
+        $token = $this->util->createTokenFromUser('test', 'test@example.com', 'guest', 'secret');
 
         $this->assertTrue(
-          $t->verifyToken($token, 'secret')
+            $this->util->verifyToken($token, 'secret')
         );
     }
 
     public function testVerifyWrongSecret()
     {
-        $t = new JwtToken();
-        $token = $t->createTokenFromUser('test', 'test@example.com', 'guest', 'secret');
+
+        $token = $this->util->createTokenFromUser('test', 'test@example.com', 'guest', 'secret');
 
         $this->assertFalse(
-          $t->verifyToken($token, 'wrongsecret')
+            $this->util->verifyToken($token, 'wrongsecret')
         );
     }
 }

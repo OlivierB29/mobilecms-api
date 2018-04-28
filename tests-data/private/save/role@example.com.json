@@ -3,8 +3,8 @@
     "email": "role@example.com",
     "password": "$2y$12$XVyt3diWTKn5ECQHW7xgPOnZ82XkI\/Xda.mfwYfGHRdRgS92go8va",
     "salt": "5jtvlL7SnB9\/G\/n\/5JeK387u8w4QAXGvcR3SfuP\/Cb8uvd2nKGraglc47ecdjgvUubK8T8jb\/ygcJmX2YIpMDGKnpXCYH8UUF4sBfEbVOhJp8NntkQss24d41scQqY\/37Bo\/DPg+D1Ncis6Rr2AbMzUpv1nfvy7RYy9LFr9\/RGw=",
-    "secretQuestion": "some secret",
-    "secretResponse": "$2y$12$JFA5Vs\/Zg9Vxt2hLSctWR.xrojdfVMSqmRNbs67tBCTYnx\/L6z4l.",
+    
+    
     "role": "guest"
 
 }

@@ -7,6 +7,7 @@ class Autoloader
     /**
      * Store the filename (sans extension) & full path of all ".php" files found.
      */
+     // @codeCoverageIgnoreStart
     public static function registerDirectory($dirName)
     {
         $classes = 'classes';
@@ -35,11 +36,15 @@ class Autoloader
             }
         }
     }
+    // @codeCoverageIgnoreEnd
 
+
+    // @codeCoverageIgnoreStart
     public static function registerClass($className, $fileName)
     {
         self::$classNames[$className] = $fileName;
     }
+    // @codeCoverageIgnoreEnd
 
     public static function loadClass($className)
     {

@@ -20,7 +20,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     /**
      * Constructor.
      *
-     * @param \stdClass $conf JSON configuration
+
      */
     public function __construct()
     {
@@ -30,11 +30,11 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     /**
      * Init configuration.
      *
-     * @param \stdClass $conf JSON configuration
+
      */
-    public function setConf(\stdClass $conf)
+    public function setConf()
     {
-        parent::setConf($conf);
+        parent::setConf();
 
         $this->debugResetPassword = $this->properties->getBoolean('debugnotifications', true);
         $this->enablemail = $this->properties->getBoolean('enablemail', true);
@@ -189,12 +189,10 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
             $user = json_decode($this->getRequestBody());
             //returns a empty string if success, a string with the message otherwise
 
-            $createresult = $service->createUserWithSecret(
+            $createresult = $service->createUser(
                 $user->{'name'},
                 $user->{'email'},
                 $user->{'password'},
-                $user->{'secretQuestion'},
-                $user->{'secretResponse'},
                 'create'
             );
             if ($createresult === null) {

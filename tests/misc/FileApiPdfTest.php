@@ -5,7 +5,7 @@ namespace mobilecms\api;
 
 use PHPUnit\Framework\TestCase;
 
-final class FileApiTest extends AuthApiTest
+final class FileApiPdfTest extends AuthApiTest
 {
     protected function setUp()
     {
@@ -50,20 +50,20 @@ final class FileApiTest extends AuthApiTest
         //
         $this->path = '/fileapi/v1/thumbnails/calendar/3';
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-        $recordStr = '[{ "url": "' . $filename . '", "sizes": ["100", "200", "300"]}]';
+        $recordStr = '[{ "url": "' . $filename . '", "sizes": ["100", "200"]}]';
         $this->POST = ['requestbody' => $recordStr];
         unset($recordStr);
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
         $this->API->authorize($this->headers, $this->SERVER);
         $response = $this->API->processAPI();
         $result = $response->getResult();
-        echo '!!!' . $result;
+
         $this->assertEquals(200, $response->getCode());
         $this->assertTrue($result != null && $result != '');
-        $expected = '[]';
+        $expected = '[{"mimetype":"application\/pdf","url":"testupload2.pdf","thumbnails":[{"width":"100","height":"142","url":"testupload2-100.jpg"},{"width":"200","height":"283","url":"testupload2-200.jpg"}]}]';
         $this->assertJsonStringEqualsJsonString($expected, $result);
         $mediaFile = $this->API->getMediaDirPath() . $record . '/' . $filename;
         $this->assertTrue(file_exists($mediaFile));
-        unlink($mediaFile);
+        //unlink($mediaFile);
     }
 }

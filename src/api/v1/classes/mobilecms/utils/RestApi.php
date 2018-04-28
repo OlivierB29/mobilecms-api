@@ -18,10 +18,6 @@ abstract class RestApi
     protected $postformdata = false;
 
     /**
-     * JSON object with configuration.
-     */
-    private $conf;
-    /**
     * configuration
     */
     protected $properties ;
@@ -86,13 +82,9 @@ abstract class RestApi
      *
      * @param \stdClass $conf JSON configuration
      */
-    public function setConf(\stdClass $conf)
+    public function setConf()
     {
-        if (isset($conf)) {
-            $this->conf = $conf;
-        } else {
-            throw new \Exception('Empty conf');
-        }
+
 
         // enable of disable header()
         $this->enableHeaders = $this->properties->getBoolean('enableheaders', true);
@@ -214,6 +206,7 @@ abstract class RestApi
         // http://stackoverflow.com/questions/21096537/simulating-http-request-for-unit-testing
 
         // set reference to avoid objet clone
+        // @codeCoverageIgnoreStart
         if ($SERVER === null) {
             $SERVER = &$_SERVER;
         }
@@ -226,6 +219,7 @@ abstract class RestApi
         if ($REQUEST === null) {
             $REQUEST = &$_REQUEST;
         }
+        // @codeCoverageIgnoreEnd
         $this->requestObject = new Request();
         $this->requestObject->headers = $headers;
 
@@ -250,8 +244,10 @@ abstract class RestApi
                 if ($this->postformdata === true) {
                     $this->requestObject->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
                 } else {
+                  // @codeCoverageIgnoreStart
                     $this->requestObject->request = $this->enableCleanInputs ?
                     $this->cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
+                  // @codeCoverageIgnoreEnd
                 }
                 break;
             case 'OPTIONS':
@@ -266,8 +262,10 @@ abstract class RestApi
 
                 break;
             default:
+            // @codeCoverageIgnoreStart
                 throw new \Exception('Invalid Method');
                 break;
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -305,7 +303,9 @@ abstract class RestApi
             if ($this->displayApiErrors) {
                 $apiResponse->setError(500, $e->getMessage());
             } else {
+              // @codeCoverageIgnoreStart
                 $apiResponse->setError(500, 'internal error ');
+              // @codeCoverageIgnoreEnd
             }
         }
 
@@ -318,6 +318,7 @@ abstract class RestApi
      * - execute backend
      * - send response or error.
      */
+    // @codeCoverageIgnoreStart
     public function execute()
     {
         $status = 400;
@@ -342,14 +343,17 @@ abstract class RestApi
             $this->clearRequestParameters();
         }
     }
+    // @codeCoverageIgnoreEnd
 
     /**
     * Clear all request parameters.
     */
+    // @codeCoverageIgnoreStart
     private function clearRequestParameters()
     {
         unset($this->requestObject);
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * Initialize a default Response object.
@@ -375,7 +379,9 @@ abstract class RestApi
         if ($this->postformdata === true) {
             return $this->requestObject->request[self::REQUESTBODY];
         } else {
+          // @codeCoverageIgnoreStart
             return $this->requestObject->request;
+          // @codeCoverageIgnoreEnd
         }
     }
 
@@ -445,7 +451,7 @@ abstract class RestApi
     */
     public function getConf()
     {
-        return $this->conf;
+        return $this->properties->getConf();
     }
 
 
