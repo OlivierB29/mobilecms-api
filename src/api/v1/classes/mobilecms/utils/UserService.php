@@ -457,7 +457,7 @@ class UserService
 
         // user found
         if (!empty($user)) {
-            $updateMsg = $this->createUser('', $emailParam, $newPassword, 'update');
+            $updateMsg = $this->createUser($emailParam, $emailParam, $newPassword, 'update');
 
             // return the existing user
             $user = $this->getJsonUser($email);
@@ -620,5 +620,32 @@ class UserService
         }
 
         return $result;
+    }
+
+    public function getAllUsers(): Response
+    {
+        $response = $this->getDefaultResponse();
+
+        $thelist = [];
+
+        if ($handle = opendir($this->databasedir)) {
+            while (false !== ($file = readdir($handle))) {
+                $fileObject = json_decode('{}');
+                if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
+                    $fileObject->{'filename'} = $file;
+                    $fileObject->{'email'} = str_replace('.json', '', $file);
+                    array_push($thelist, $fileObject);
+                }
+            }
+
+            closedir($handle);
+        }
+
+        $tmp = json_decode('{}');
+        $tmp->{'list'} = $thelist;
+        $response->setResult(json_encode($tmp));
+        $response->setCode(200);
+
+        return $response;
     }
 }

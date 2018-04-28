@@ -34,6 +34,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
             header('Content-Type: application/json');
             // @codeCoverageIgnoreEnd
         }
+        // role control is ensured by parent class
         $this->role = 'admin';
     }
 
@@ -52,8 +53,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
         $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
 
-
-        if ($this->requestObject->match('/adminapi/v1/content/{type}/{id}')) {
+        if ($this->requestObject->match('/adminapi/v1/content/{type}/{id}') && 'users' === $this->getParam('type')) {
             if ($this->requestObject->method === 'GET') {
                 $tmpResponse = $service->getRecord($this->getParam('type'), $this->getParam('id'));
                 // basic user fields, without password
@@ -62,30 +62,30 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                     $response->setCode(200);
                     $response->setResult($this->getUserResponse($tmpResponse->getResult()));
                 }
-            } elseif ($this->requestObject->method === 'POST') {
+            } elseif ($this->requestObject->method === 'POST' && 'users' === $this->getParam('type')) {
                 // save a record and update the index. eg : /api/v1/content/calendar
                 // step 1 : update Record
 
                 // update password if needed
                 $userParam = urldecode($this->getRequestBody());
+
                 $user = json_decode($userParam);
                 if (isset($user->{'newpassword'})) {
                     $response = $userService->resetPassword($user->{'email'}, $user->{'newpassword'});
+                } else {
+                    $putResponse = $service->update(
+                        $this->getParam('type'),
+                        self::EMAIL,
+                        $this->getUserResponse($userParam)
+                    );
+
+                    $myobjectJson = json_decode($putResponse->getResult());
+                    unset($putResponse);
+                    // step 2 : publish to index
+                    $id = $myobjectJson->{self::EMAIL};
+                    unset($myobjectJson);
+                    $response = $service->publishById($this->getParam('type'), self::EMAIL, $id);
                 }
-
-                $putResponse = $service->update(
-                    $this->getParam('type'),
-                    self::EMAIL,
-                    $this->getUserResponse($userParam)
-                );
-
-                $myobjectJson = json_decode($putResponse->getResult());
-                unset($putResponse);
-
-                // step 2 : publish to index
-                $id = $myobjectJson->{self::EMAIL};
-                unset($myobjectJson);
-                $response = $service->publishById($this->getParam('type'), self::EMAIL, $id);
             } elseif ($this->requestObject->method === 'PUT') {
             } elseif ($this->requestObject->method === 'DELETE') {
                 // delete a single record.
@@ -101,11 +101,16 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         }
 
         if ($this->requestObject->match('/adminapi/v1/content/{type}')) {
-            if ($this->requestObject->method === 'GET') {
-                //get all records in index
-                $response = $service->getAllObjects($this->getParam('type'));
+            if ($this->requestObject->method === 'GET' && 'users' === $this->getParam('type')) {
+                //get all records in directory
+                $usersResponse = $userService->getAllUsers();
+                $list = json_decode($usersResponse->getResult());
+                $tmp = json_decode('{}');
+                $tmp->{'list'} = $list;
+                $response->setResult(\json_encode($tmp));
+                $response->setCode($usersResponse->getCode());
             }
-            if ($this->requestObject->method === 'POST') {
+            if ($this->requestObject->method === 'POST' && 'users' === $this->getParam('type')) {
                 // get all properties of a user, unless $user->{'property'} will fail if the request is empty
                 $user = $this->getDefaultUser();
                 // get parameters from request
@@ -131,14 +136,12 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                     $response->setError(400, $createresult);
                 }
             }
-        }
-
-
-        if ($this->requestObject->matchRequest('GET', '/adminapi/v1/content')) {
+        } elseif ($this->requestObject->matchRequest('GET', '/adminapi/v1/content')) {
             //return the list of editable types. eg : /api/v1/content/
             $response->setResult($service->options('types.json'));
             $response->setCode(200);
         }
+
         // set a timestamp response
         $tempResponse = json_decode($response->getResult());
         $tempResponse->{'timestamp'} = '' . time();
@@ -235,7 +238,9 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
     private function checkConfiguration()
     {
         if (!isset($this->getConf()->{'privatedir'})) {
-            throw new \Exception('Empty publicdir');
+            // @codeCoverageIgnoreStart
+            throw new \Exception('Empty privatedir');
+            // @codeCoverageIgnoreEnd
         }
     }
 }
