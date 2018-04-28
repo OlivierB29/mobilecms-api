@@ -15,6 +15,23 @@ final class CmsAdminApiTest extends AuthApiTest
         $this->API->setRootDir(realpath('tests-data')); // unit test only
     }
 
+    public function testTypes()
+    {
+        $this->setAdmin();
+        $this->path = '/adminapi/v1/content';
+        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+
+        $this->assertTrue($result != null);
+
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+    }
+
     public function testOptions()
     {
         $email = 'editor@example.com';

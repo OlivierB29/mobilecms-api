@@ -527,6 +527,13 @@ class ContentService
 
         return json_encode(JsonUtils::readJsonFile($file));
     }
+    public function adminOptions(string $filename): string
+    {
+        $file = $this->databasedir . '/' . $filename;
+        $tmp = json_decode('{}');
+        $tmp->{'list'} = JsonUtils::readJsonFile($file);
+        return json_encode($tmp);
+    }
 
     /**
      * Initialize a default Response object.

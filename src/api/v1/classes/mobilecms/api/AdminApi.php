@@ -103,12 +103,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         if ($this->requestObject->match('/adminapi/v1/content/{type}')) {
             if ($this->requestObject->method === 'GET' && 'users' === $this->getParam('type')) {
                 //get all records in directory
-                $usersResponse = $userService->getAllUsers();
-                $list = json_decode($usersResponse->getResult());
-                $tmp = json_decode('{}');
-                $tmp->{'list'} = $list;
-                $response->setResult(\json_encode($tmp));
-                $response->setCode($usersResponse->getCode());
+                $response = $userService->getAllUsers();
             }
             if ($this->requestObject->method === 'POST' && 'users' === $this->getParam('type')) {
                 // get all properties of a user, unless $user->{'property'} will fail if the request is empty
@@ -138,7 +133,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
             }
         } elseif ($this->requestObject->matchRequest('GET', '/adminapi/v1/content')) {
             //return the list of editable types. eg : /api/v1/content/
-            $response->setResult($service->options('types.json'));
+            $response->setResult($service->adminOptions('types.json'));
             $response->setCode(200);
         }
 
