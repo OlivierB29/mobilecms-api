@@ -188,7 +188,7 @@ final class CmsAdminApiTest extends AuthApiTest
 
         $this->setAdmin();
 
-        $this->path = '/adminapi/v1/content/users/'.$email;
+        $this->path = '/adminapi/v1/content/users/' . $email;
 
 
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
