@@ -29,11 +29,11 @@ final class PropertiesTest extends TestCase
 
     public function testInteger1()
     {
-        $this->assertTrue(123 == $this->conf->getInteger('int1'), -1);
+        $this->assertTrue(123 === $this->conf->getInteger('int1', -1));
     }
 
     public function testInteger2()
     {
-        $this->assertTrue(456 == $this->conf->getInteger('int2'), -1);
+        $this->assertTrue(456 === $this->conf->getInteger('int2', -1));
     }
 }
