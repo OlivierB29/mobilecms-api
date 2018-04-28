@@ -15,6 +15,25 @@ final class AuthenticationApiTest extends ApiTest
         $this->API->setRootDir(realpath('tests-data')); // unit test only
     }
 
+
+    public function testEmptyConf()
+    {
+        $this->API->loadConf('tests/partial.json');
+        $this->path = '/api/v1/authenticate';
+        $recordStr = '{ "user": "test@example.com", "password":"Sample#123456"}';
+
+        $this->REQUEST = ['path' => $this->path];
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(401, $response->getCode());
+    }
+
     public function testAuthenticateOptions()
     {
         $this->path = '/api/v1/authenticate';
@@ -81,6 +100,19 @@ final class AuthenticationApiTest extends ApiTest
     public function testAuthenticateNoBody()
     {
         $this->path = '/api/v1/authenticate';
+        $this->REQUEST = ['path' => $this->path];
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(401, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
+    }
+
+    public function testAuthenticateEmptyBody()
+    {
+        $this->path = '/api/v1/authenticate';
         $recordStr = '{ "user": "test@example.com", "password":"Sample#123456"}';
 
         $this->REQUEST = ['path' => $this->path];
@@ -96,7 +128,7 @@ final class AuthenticationApiTest extends ApiTest
         $this->assertTrue($result != null && $result != '');
     }
 
-    public function testLogin()
+    public function testLoginByUser()
     {
         $this->path = '/api/v1/authenticate';
         $recordStr = '{ "user": "test@example.com", "password":"Sample#123456"}';
@@ -118,6 +150,81 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->assertTrue($userObject->{'email'} === 'test@example.com');
         $this->assertTrue(strlen($userObject->{'token'}) > 150);
+    }
+
+    public function testLoginByEmail()
+    {
+        $this->path = '/api/v1/authenticate';
+        $recordStr = '{ "email": "test@example.com", "password":"Sample#123456"}';
+
+        $this->REQUEST = ['path' => $this->path];
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
+
+        $userObject = json_decode($result);
+
+        $this->assertTrue($userObject->{'email'} === 'test@example.com');
+        $this->assertTrue(strlen($userObject->{'token'}) > 150);
+    }
+
+    public function testNoPassword()
+    {
+        $this->path = '/api/v1/authenticate';
+        $recordStr = '{ "user": "test@example.com"}';
+
+        $this->REQUEST = ['path' => $this->path];
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(401, $response->getCode());
+    }
+
+    public function testEmptyPassword()
+    {
+        $this->path = '/api/v1/authenticate';
+        $recordStr = '{ "user": "test@example.com", "password":""}';
+
+        $this->REQUEST = ['path' => $this->path];
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(401, $response->getCode());
+    }
+
+    public function testEmptyUser()
+    {
+        $this->path = '/api/v1/authenticate';
+        $recordStr = '{ "user": "","password":"foo"}';
+
+        $this->REQUEST = ['path' => $this->path];
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->assertEquals(401, $response->getCode());
     }
 
     public function testRegister()
@@ -152,6 +259,35 @@ final class AuthenticationApiTest extends ApiTest
         if (file_exists($file)) {
             unlink($file);
         }
+    }
+
+    public function testRegisterEmptyParam()
+    {
+        $this->path = '/api/v1/register';
+
+        $email = 'testregister@example.com';
+
+        $file = $this->API->getPrivateDirPath() . '/users/' . $email . '.json';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+
+
+        $recordStr = '{ "name": "test register", "email": "", "password":""}';
+
+        $this->REQUEST = ['path' => $this->path];
+
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->POST = ['requestbody' => $recordStr];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+
+        $this->assertEquals(400, $response->getCode());
+        $this->assertTrue($result != null && $result != '');
     }
 
     public function testResetPassword()

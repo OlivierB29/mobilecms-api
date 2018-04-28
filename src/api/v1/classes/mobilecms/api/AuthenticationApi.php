@@ -67,7 +67,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
 
             // free variables before response
             $response = $service->changePassword(
-                $logindata->{'user'},
+                $this->getUser($logindata),
                 $logindata->{'password'},
                 $logindata->{'newpassword'}
             );
@@ -104,12 +104,12 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
             // free variables before response
             $clearPassword = $service->generateRandomString(20);
 
-            $response = $service->resetPassword($logindata->{'user'}, $clearPassword);
+            $response = $service->resetPassword($this->getUser($logindata), $clearPassword);
 
             if ($response->getCode() === 200) {
                 $u = new \mobilecms\utils\MailUtils($this->getRootDir());
 
-                $email = $logindata->{'user'};
+                $email = $this->getUser($logindata);
                 $notificationTitle = 'new password';
                 $notificationBody = $u->getNewPassword('new password', $clearPassword, $this->getClientInfo());
                 $notificationHeaders = $u->getHeaders($this->getConf()->{'mailsender'});
@@ -261,7 +261,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
             // error if wrong configuration, such as empty directory
             $this->checkConfiguration();
 
-            $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
+
 
             if ($this->requestObject->method === 'POST') {
                 if (empty($this->getRequestBody())) {
@@ -271,19 +271,39 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
                 // eg : { "user": "test@example.com", "password":"Sample#123456"}
                 $logindata = json_decode($this->getRequestBody());
 
-                //TODO : user contains either email of name
-                if (!isset($logindata)) {
-                    throw new \Exception('no login data');
+                if (!isset($logindata->{'password'})) {
+                    throw new \Exception('no password data');
                 }
-                $response = $service->getToken($logindata->{'user'}, $logindata->{'password'});
+                $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
+                $response = $service->getToken($this->getUser($logindata), $logindata->{'password'});
                 unset($logindata);
                 // free variables before response
             }
         } catch (\Exception $e) {
             $response->setError(401, $e->getMessage());
+            // @codeCoverageIgnoreStart
         } finally {
+            // @codeCoverageIgnoreEnd
             return $response;
         }
+    }
+
+    private function getUser($logindata): string
+    {
+        $result = null;
+        if (isset($logindata->{'user'})) {
+            $result = $logindata->{'user'};
+        } else {
+            if (isset($logindata->{'email'})) {
+                $result = $logindata->{'email'};
+            } else {
+                // @codeCoverageIgnoreStart
+                throw new \Exception('no user data');
+                // @codeCoverageIgnoreEnd
+            }
+        }
+
+        return $result;
     }
 
 

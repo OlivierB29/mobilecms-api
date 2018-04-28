@@ -1,10 +1,8 @@
 {
     "name": "updated",
     "email": "modifypasssword@example.com",
-    "password": "$2y$12$g7kuGa9pNihwgEsno3DKheQ\/DrovXf00HAuo2hx2g0szZr1dmGMv6",
-    "salt": "G\/GS+5l73EXRHVm8bWvNQDQ7O8GoidSSN3dzN8w1f1qKJ9F4hR90lccVMhVzWuwGCszfiXUlju7+TC7zqA7gt6AEWK0caN6qgXkmcc676LPDGb\/cVRswL3fg8A9mF+w35wOjbkVDq\/j\/xlqoo9LA7D1QU3JOYH3As8PGmYK4wPA=",
-    "secretQuestion": "some secret",
-    "secretResponse": "$2y$12$JFA5Vs\/Zg9Vxt2hLSctWR.xrojdfVMSqmRNbs67tBCTYnx\/L6z4l.",
+    "password": "$2y$12$JL.Hx74NFtcbOkDELrm76uxTSe9qzCj.A9NWc2tYnRBz3\/AO7kxIO",
+    "salt": "+CRODbn355UbodJaNoHoRT7Ka\/80OnEz+6vVjzlrJgmvUElIadUdmyBY6DIXxGpFgEfbC0+j2+Smy6y7ShuHJbJKrW1SBxXbZENvJD0IyF17MljLJBZW3jfrF6ln2CCT2Tt\/5oa1f8N6mlydn5ajC+rDCI1ymEAAkra\/eaKfi+I=",
     "role": "guest",
     "clientalgorithm": "hashmacbase64",
     "newpasswordrequired": "false"
