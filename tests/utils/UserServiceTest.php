@@ -7,18 +7,16 @@ use PHPUnit\Framework\TestCase;
 
 final class UserServiceTest extends TestCase
 {
+    private $service;
 
-  private $service;
-
-  protected function setUp()
-  {
-      $this->service = new UserService('tests-data/userservice');
-  }
+    protected function setUp()
+    {
+        $this->service = new UserService('tests-data/userservice');
+    }
 
 
     public function testCanRead()
     {
-
         $this->assertTrue(
           $this->service->getJsonUser('test@example.com') !== null
         );
@@ -26,7 +24,6 @@ final class UserServiceTest extends TestCase
 
     public function testLoginOk()
     {
-
         $result = $this->service->login('test@example.com', 'Sample#123456');
 
         $this->assertTrue('' === $result);
@@ -34,7 +31,6 @@ final class UserServiceTest extends TestCase
 
     public function testGetToken()
     {
-
         $result = $this->service->getToken('test@example.com', 'Sample#123456');
         $this->assertTrue($result->getCode() === 200);
         $this->assertTrue(null != $result->getResult());
@@ -54,7 +50,6 @@ final class UserServiceTest extends TestCase
 
     public function testVerifyToken()
     {
-
         $getTokenResponse = $this->service->getToken('test@example.com', 'Sample#123456');
 
         $user = json_decode($getTokenResponse->getResult());
@@ -66,7 +61,6 @@ final class UserServiceTest extends TestCase
 
     public function testVerifyWrongToken()
     {
-
         $getTokenResponse = $this->service->getToken('test@example.com', 'Sample#123456');
 
         $user = json_decode($getTokenResponse->getResult());
@@ -78,7 +72,6 @@ final class UserServiceTest extends TestCase
 
     public function testInsufficentEditorRole()
     {
-
         $getTokenResponse = $this->service->getToken('guest@example.com', 'Sample#123456');
 
         $user = json_decode($getTokenResponse->getResult());
@@ -90,7 +83,6 @@ final class UserServiceTest extends TestCase
 
     public function testInsufficentAdminRole()
     {
-
         $getTokenResponse = $this->service->getToken('test@example.com', 'Sample#123456');
 
         $user = json_decode($getTokenResponse->getResult());
@@ -102,7 +94,6 @@ final class UserServiceTest extends TestCase
 
     public function testVerifyEditorByAdmin()
     {
-
         $getTokenResponse = $this->service->getToken('admin@example.com', 'Sample#123456');
 
         $user = json_decode($getTokenResponse->getResult());
@@ -114,7 +105,6 @@ final class UserServiceTest extends TestCase
 
     public function testVerifyAdmin()
     {
-
         $getTokenResponse = $this->service->getToken('admin@example.com', 'Sample#123456');
 
         $user = json_decode($getTokenResponse->getResult());
@@ -126,7 +116,6 @@ final class UserServiceTest extends TestCase
 
     public function testTokenKo()
     {
-
         $result = $this->service->getToken('test@example.com', 'Sample#1234567');
         $this->assertTrue($result->getCode() === 401);
         $this->assertTrue($result->getResult() === '{}');
@@ -134,7 +123,6 @@ final class UserServiceTest extends TestCase
 
     public function testWrongLogin1()
     {
-
         $result = $this->service->login('test@example.com', 'wrongpass');
         $this->assertTrue(
           $result !== null
@@ -143,7 +131,6 @@ final class UserServiceTest extends TestCase
 
     public function testWrongLogin2()
     {
-
         $result = $this->service->login('test@example.com', 'Sample#12345');
         $this->assertTrue(
           $result !== null
@@ -152,7 +139,6 @@ final class UserServiceTest extends TestCase
 
     public function testUpdateUser()
     {
-
         $this->assertTrue(
           $this->service->updateUser('updateuser@example.com', 'updated', 'pass', 'salt', 'admin')
         );

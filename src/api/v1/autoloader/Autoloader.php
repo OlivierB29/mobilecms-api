@@ -7,7 +7,7 @@ class Autoloader
     /**
      * Store the filename (sans extension) & full path of all ".php" files found.
      */
-     // @codeCoverageIgnoreStart
+    // @codeCoverageIgnoreStart
     public static function registerDirectory($dirName)
     {
         $classes = 'classes';

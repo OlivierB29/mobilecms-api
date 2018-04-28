@@ -244,10 +244,10 @@ abstract class RestApi
                 if ($this->postformdata === true) {
                     $this->requestObject->request = $this->enableCleanInputs ? $this->cleanInputs($POST) : $POST;
                 } else {
-                  // @codeCoverageIgnoreStart
+                    // @codeCoverageIgnoreStart
                     $this->requestObject->request = $this->enableCleanInputs ?
                     $this->cleanInputs(file_get_contents('php://input')) : file_get_contents('php://input');
-                  // @codeCoverageIgnoreEnd
+                    // @codeCoverageIgnoreEnd
                 }
                 break;
             case 'OPTIONS':
@@ -303,9 +303,9 @@ abstract class RestApi
             if ($this->displayApiErrors) {
                 $apiResponse->setError(500, $e->getMessage());
             } else {
-              // @codeCoverageIgnoreStart
+                // @codeCoverageIgnoreStart
                 $apiResponse->setError(500, 'internal error ');
-              // @codeCoverageIgnoreEnd
+                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -379,9 +379,9 @@ abstract class RestApi
         if ($this->postformdata === true) {
             return $this->requestObject->request[self::REQUESTBODY];
         } else {
-          // @codeCoverageIgnoreStart
+            // @codeCoverageIgnoreStart
             return $this->requestObject->request;
-          // @codeCoverageIgnoreEnd
+            // @codeCoverageIgnoreEnd
         }
     }
 
