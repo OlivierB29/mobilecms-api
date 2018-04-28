@@ -223,7 +223,7 @@ class UserService
     {
         $loginmsg = '';
 
-          // if someone forgot to do this before
+        // if someone forgot to do this before
         $email = strtolower($emailParam);
 
         // return the existing user

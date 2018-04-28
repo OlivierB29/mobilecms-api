@@ -17,7 +17,6 @@ final class JwtTokenTest extends TestCase
 
     public function testBasic()
     {
-
         $token = $this->util->createTokenFromUser('test', 'test@example.com', 'guest', 'secret');
         $this->assertTrue($token != null);
         $this->assertTrue(strlen($token) > 100);
@@ -25,7 +24,6 @@ final class JwtTokenTest extends TestCase
 
     public function testVerifyToken()
     {
-
         $token = $this->util->createTokenFromUser('test', 'test@example.com', 'guest', 'secret');
 
         $this->assertTrue(
@@ -35,7 +33,6 @@ final class JwtTokenTest extends TestCase
 
     public function testVerifyWrongSecret()
     {
-
         $token = $this->util->createTokenFromUser('test', 'test@example.com', 'guest', 'secret');
 
         $this->assertFalse(

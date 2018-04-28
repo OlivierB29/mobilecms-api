@@ -126,7 +126,7 @@ class FileService
 
                 $thumbdir = $destdir . '/thumbnails';
                 if (file_exists($filePath)) {
-                  // thumbnails sizes
+                    // thumbnails sizes
                     if (!empty($file->{'sizes'}) && count($file->{'sizes'}) > 0) {
                         $sizes = $file->{'sizes'};
                     } else {
@@ -142,7 +142,7 @@ class FileService
 
                         $fileResponse = $utils->imageInfo($filePath);
                     } else {
-                      // thumbnails sizes
+                        // thumbnails sizes
                         if (!empty($file->{'sizes'}) && count($file->{'sizes'}) > 0) {
                             $sizes = $file->{'sizes'};
                         } else {
