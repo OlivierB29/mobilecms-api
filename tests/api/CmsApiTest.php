@@ -199,6 +199,9 @@ final class CmsApiTest extends AuthApiTest
         $recordfile = $this->API->getPublicDirPath() . '/calendar/' . $id . '.json';
         copy($this->API->getPublicDirPath() . '/calendar/backup/' . $id . '.json', $recordfile);
 
+        $fileutils = new \mobilecms\utils\FileUtils();
+        $fileutils->copydir($this->API->getMediaDirPath() . '/calendar/backup/' . $id, $this->API->getMediaDirPath() . '/calendar/' . $id);
+
         $this->path = '/cmsapi/v1/content/calendar/' . $id;
 
 

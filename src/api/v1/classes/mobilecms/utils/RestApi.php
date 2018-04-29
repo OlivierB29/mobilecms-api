@@ -230,6 +230,7 @@ abstract class RestApi
         // detect method
         $this->requestObject->method = $SERVER['REQUEST_METHOD'];
         if ($this->requestObject->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $SERVER)) {
+            // @codeCoverageIgnoreStart
             if ($SERVER['HTTP_X_HTTP_METHOD'] == 'DELETE') {
                 $this->requestObject->method = 'DELETE';
             } elseif ($SERVER['HTTP_X_HTTP_METHOD'] == 'PUT') {
@@ -237,6 +238,7 @@ abstract class RestApi
             } else {
                 throw new \Exception('Unexpected Header');
             }
+            // @codeCoverageIgnoreEnd
         }
 
         switch ($this->requestObject->method) {
@@ -255,12 +257,13 @@ abstract class RestApi
             case 'GET':
                 $this->requestObject->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
                 break;
+                  // @codeCoverageIgnoreStart
             case 'PUT':
                 $this->requestObject->request = $this->enableCleanInputs ? $this->cleanInputs($GET) : $GET;
-                //$this->requestObject->request = $this->cleanInputs($GET);
                 // http://php.net/manual/en/wrappers.php.php
 
                 break;
+                // @codeCoverageIgnoreEnd
             default:
             // @codeCoverageIgnoreStart
                 throw new \Exception('Invalid Method');
@@ -413,6 +416,16 @@ abstract class RestApi
     public function getPublicDirPath(): string
     {
         return $this->rootDir . $this->getConf()->{'publicdir'};
+    }
+
+    /**
+     * Get public directory.
+     *
+     * @return string publicdir main public directory
+     */
+    public function getMediaDirPath(): string
+    {
+        return $this->rootDir . $this->getConf()->{'media'};
     }
 
     /**

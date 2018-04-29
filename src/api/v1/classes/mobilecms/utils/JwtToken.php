@@ -162,10 +162,12 @@ class JwtToken
      *
      * @return JSON payload object
      */
+    // @codeCoverageIgnoreStart
     private function parseHeader(string $payload): string
     {
         return json_decode(base64_decode($payload));
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * Parse payload.
@@ -174,8 +176,10 @@ class JwtToken
      *
      * @return string JSON payload object
      */
+    // @codeCoverageIgnoreStart
     private function parsePayload(string $payload): string
     {
         return json_decode(base64_decode($payload));
     }
+    // @codeCoverageIgnoreEnd
 }

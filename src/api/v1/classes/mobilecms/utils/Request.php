@@ -16,7 +16,9 @@ class Request extends GenericRequest
         $this->params = [];
         $diffFound = false;
         if (empty($pattern)) {
+            // @codeCoverageIgnoreStart
             throw new \Exception('empty pattern');
+            // @codeCoverageIgnoreEnd
         }
 
 

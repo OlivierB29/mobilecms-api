@@ -24,7 +24,7 @@ abstract class AuthApiTest extends ApiTest
 
         $this->conf = json_decode(file_get_contents('tests/conf.json'));
 
-        $service = new \mobilecms\utils\UserService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
+        $service = new \mobilecms\utils\AuthService(realpath('tests-data') . $this->conf->{'privatedir'} . '/users');
 
         $response = $service->getToken('editor@example.com', 'Sample#123456');
         $this->user = json_decode($response->getResult());

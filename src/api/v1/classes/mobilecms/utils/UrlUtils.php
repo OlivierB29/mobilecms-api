@@ -25,7 +25,9 @@ class UrlUtils
     {
         $diffFound = false;
         if (empty($pattern)) {
+            // @codeCoverageIgnoreStart
             throw new \Exception('empty pattern');
+            // @codeCoverageIgnoreEnd
         }
 
 

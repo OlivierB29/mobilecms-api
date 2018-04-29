@@ -28,10 +28,6 @@ function compareIndex(string $key)
  */
 class ContentService
 {
-    /**
-     * Create backup of history file.
-     */
-    private $enableIndexHistory = false;
 
     /**
      * Main directory (eg: /opt/foobar/data ).
@@ -135,7 +131,9 @@ class ContentService
 
             $response->setCode(200);
         } else {
+          // @codeCoverageIgnoreStart
             $response->setError(404, 'not found ' . $type . ' : ' . $keyvalue);
+          // @codeCoverageIgnoreEnd
         }
 
         return $response;
@@ -162,7 +160,9 @@ class ContentService
         //forbid upper directory
         //
         if (strpos($filename, '..') !== false) {
+            // @codeCoverageIgnoreStart
             throw new \Exception('Invalid path ' . $filename);
+            // @codeCoverageIgnoreEnd
         }
 
         $file = $this->databasedir . '/' . $filename;
@@ -172,7 +172,9 @@ class ContentService
             $response->setResult($file);
             $response->setCode(200);
         } else {
+          // @codeCoverageIgnoreStart
             $response->setError(404, 'not found ' . $file);
+          // @codeCoverageIgnoreEnd
         }
 
         return $response;
@@ -353,7 +355,9 @@ class ContentService
             unset($myobjectJson);
             $response->setCode(200);
         } else {
+            // @codeCoverageIgnoreStart
             $response->setError(400, 'Bad object parameters');
+            // @codeCoverageIgnoreEnd
         }
 
         return $response;
@@ -372,10 +376,6 @@ class ContentService
 
         // file name eg: index.json
         $file = $this->getIndexFileName($type);
-        // create a backup of previous index file eg: history/index-TIMESTAMP.json
-        if ($this->enableIndexHistory) {
-            $backupDone = $this->mycopy($file, $this->getBackupIndexFileName($type));
-        }
         /*
         Load a template for index.
         eg :

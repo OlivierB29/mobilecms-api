@@ -47,7 +47,9 @@ class MailUtils
     public function getHeaders(string $from) : string
     {
         if (empty($from)) {
+            // @codeCoverageIgnoreStart
             $from = 'no-reply@' . $_SERVER[HTTP_HOST];
+            // @codeCoverageIgnoreEnd
         }
         $name = $from;
 

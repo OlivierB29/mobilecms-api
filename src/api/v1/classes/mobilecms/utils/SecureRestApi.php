@@ -133,7 +133,7 @@ abstract class SecureRestApi extends RestApi
             unset($bearerTokenValue);
 
             // verify token
-            $service = new UserService($this->getPrivateDirPath() . '/users');
+            $service = new AuthService($this->getPrivateDirPath() . '/users');
             $response = $service->verifyToken($tokenValue, $this->role);
 
             unset($service);

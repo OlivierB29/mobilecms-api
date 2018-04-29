@@ -126,7 +126,16 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 $response = $service->getRecord($this->getParam('type'), $this->getParam('id'));
             }
             if ($this->requestObject->method === 'DELETE') {
-                //delete a single record
+                //delete media
+                $fileservice = new \mobilecms\utils\FileService();
+                $mediadir = $fileservice->getRecordDirectory($this->getMediaDirPath(), $this->getParam('type'), $this->getParam('id'));
+                unset($fileservice);
+                if (\file_exists($mediadir)) {
+                    $fileutils = new \mobilecms\utils\FileUtils();
+                    $fileutils->deleteDir($mediadir);
+                }
+
+                //delete record
                 $response = $service->deleteRecord($this->getParam('type'), $this->getParam('id'));
                 // step 1 : update Record
 

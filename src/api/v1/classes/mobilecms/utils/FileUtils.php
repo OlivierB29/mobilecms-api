@@ -19,18 +19,35 @@ class FileUtils
      * @param string $s1 : source
      * @param string $s2 : dest
      */
-    /*
-    public function mycopy(string $s1, string $s2)
+    // public function mycopy(string $s1, string $s2)
+    // {
+    //     $path = pathinfo($s2);
+    //     if (!file_exists($path['dirname'])) {
+    //         mkdir($path['dirname'], 0777, true);
+    //     }
+    //     if (!copy($s1, $s2)) {
+    //         throw new \Exception('copy failed ');
+    //     }
+    // }
+
+    /**
+     * Copy a directory to another
+     *
+     * @param string $source : source
+     * @param string $dest : dest
+     */
+    public function copydir($source, $dest)
     {
-        $path = pathinfo($s2);
-        if (!file_exists($path['dirname'])) {
-            mkdir($path['dirname'], 0777, true);
-        }
-        if (!copy($s1, $s2)) {
-            throw new \Exception('copy failed ');
+        mkdir($dest, 0755);
+        foreach ($iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $item) {
+            if ($item->isDir()) {
+                mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            } else {
+                copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            }
         }
     }
-    */
+
 
     public function deleteDir($dir)
     {

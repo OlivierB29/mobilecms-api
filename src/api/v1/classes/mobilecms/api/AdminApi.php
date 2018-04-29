@@ -51,7 +51,8 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
         $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
-        $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
+        $authService = new \mobilecms\utils\AuthService($this->getPrivateDirPath() . '/users');
+
 
         if ($this->requestObject->match('/adminapi/v1/content/{type}/{id}') && 'users' === $this->getParam('type')) {
             if ($this->requestObject->method === 'GET') {
@@ -71,7 +72,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
 
                 $user = json_decode($userParam);
                 if (isset($user->{'newpassword'})) {
-                    $response = $userService->resetPassword($user->{'email'}, $user->{'newpassword'});
+                    $response = $authService->resetPassword($user->{'email'}, $user->{'newpassword'});
                 } else {
                     $putResponse = $service->update(
                         $this->getParam('type'),
@@ -103,6 +104,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         if ($this->requestObject->match('/adminapi/v1/content/{type}')) {
             if ($this->requestObject->method === 'GET' && 'users' === $this->getParam('type')) {
                 //get all records in directory
+                $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
                 $response = $userService->getAllUsers();
             }
             if ($this->requestObject->method === 'POST' && 'users' === $this->getParam('type')) {
@@ -115,7 +117,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
 
                 //returns a empty string if success, a string with the message otherwise
 
-                $createresult = $userService->createUser(
+                $createresult = $authService->createUser(
                     $user->{'name'},
                     $user->{'email'},
                     $user->{'password'},

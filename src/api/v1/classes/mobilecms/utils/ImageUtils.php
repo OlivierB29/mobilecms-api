@@ -25,7 +25,9 @@ class ImageUtils
 
         // create directory if necessary
         if (!file_exists($dir)) {
+            // @codeCoverageIgnoreStart
             mkdir($dir, 0777, true);
+            // @codeCoverageIgnoreEnd
         }
 
         foreach ($sizes as $width) {

@@ -82,7 +82,9 @@ class FileService
         if (isset($mediadir) && isset($datatype) && isset($id)) {
             return $mediadir . '/' . $datatype . '/' . $id;
         } else {
+          // @codeCoverageIgnoreStart
             throw new \Exception('getMediaDirectory() mediadir ' . $mediadir . ' type ' . $datatype . ' id ' . $id);
+          // @codeCoverageIgnoreEnd
         }
     }
 
@@ -130,33 +132,29 @@ class FileService
                     if (!empty($file->{'sizes'}) && count($file->{'sizes'}) > 0) {
                         $sizes = $file->{'sizes'};
                     } else {
+                        // @codeCoverageIgnoreStart
                         $sizes = $defaultsizes;
+                        // @codeCoverageIgnoreEnd
                     }
                     $thumbnails = null;
                     $fileResponse = null;
                     if ($utils->isImage($filePath)) {
                         $thumbnails = $utils->multipleResize($filePath, $thumbdir, $sizes);
-                        if (count($thumbnails) === 0) {
-                            throw new \Exception('no thumbnails');
-                        }
-
                         $fileResponse = $utils->imageInfo($filePath);
                     } else {
                         // thumbnails sizes
                         if (!empty($file->{'sizes'}) && count($file->{'sizes'}) > 0) {
                             $sizes = $file->{'sizes'};
                         } else {
+                            // @codeCoverageIgnoreStart
                             $sizes = $defaultPdfsizes;
+                            // @codeCoverageIgnoreEnd
                         }
                         // future version with PDF preview : https://gist.github.com/umidjons/11037635
                         $pdfUtils = new \mobilecms\utils\PdfUtils();
                         $fileResponse = $pdfUtils->pdfInfo($filePath);
                         $pdfUtils->setQuality($pdfQuality);
                         $thumbnails = $pdfUtils->multipleResize($filePath, $thumbdir, $sizes);
-
-                        if (count($thumbnails) === 0) {
-                            throw new \Exception('no thumbnails');
-                        }
                     }
 
                     if (isset($thumbnails)) {

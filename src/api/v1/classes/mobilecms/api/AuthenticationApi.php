@@ -54,7 +54,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
+        $service = new \mobilecms\utils\AuthService($this->getPrivateDirPath() . '/users');
 
 
         if ($this->requestObject->method === 'POST') {
@@ -90,7 +90,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
+        $service = new \mobilecms\utils\AuthService($this->getPrivateDirPath() . '/users');
 
 
         if ($this->requestObject->method === 'POST') {
@@ -155,7 +155,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
 
-        $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
+        $service = new \mobilecms\utils\AuthService($this->getPrivateDirPath() . '/users');
 
 
         if ($this->requestObject->method === 'GET') {
@@ -181,7 +181,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
 
         //throw error if wrong configuration, such as empty directory
         $this->checkConfiguration();
-        $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
+        $service = new \mobilecms\utils\AuthService($this->getPrivateDirPath() . '/users');
 
 
         // register and create a user
@@ -274,7 +274,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
                 if (!isset($logindata->{'password'})) {
                     throw new \Exception('no password data');
                 }
-                $service = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
+                $service = new \mobilecms\utils\AuthService($this->getPrivateDirPath() . '/users');
                 $response = $service->getToken($this->getUser($logindata), $logindata->{'password'});
                 unset($logindata);
                 // free variables before response
