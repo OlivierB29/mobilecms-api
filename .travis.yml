@@ -8,7 +8,5 @@ before_script:
    - pecl channel-update pecl.php.net
    - yes | pecl install imagick
 script:
-- phpunit --configuration phpunit-utils.xml
-- phpunit --configuration phpunit-api.xml
-- phpunit --configuration phpunit-misc.xml
+- phpunit --configuration phpunit.xml
 - php coverage-checker.php tests/logs/clover.xml 95
