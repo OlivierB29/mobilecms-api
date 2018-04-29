@@ -252,6 +252,5 @@ final class AuthServiceTest extends TestCase
         $createresult = $this->service->changePassword($email, $oldPassword, $newPassword);
 
         $this->assertTrue($createresult->getCode() === 401);
-
     }
 }

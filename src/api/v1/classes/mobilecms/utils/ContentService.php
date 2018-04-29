@@ -131,9 +131,9 @@ class ContentService
 
             $response->setCode(200);
         } else {
-          // @codeCoverageIgnoreStart
+            // @codeCoverageIgnoreStart
             $response->setError(404, 'not found ' . $type . ' : ' . $keyvalue);
-          // @codeCoverageIgnoreEnd
+            // @codeCoverageIgnoreEnd
         }
 
         return $response;
@@ -172,9 +172,9 @@ class ContentService
             $response->setResult($file);
             $response->setCode(200);
         } else {
-          // @codeCoverageIgnoreStart
+            // @codeCoverageIgnoreStart
             $response->setError(404, 'not found ' . $file);
-          // @codeCoverageIgnoreEnd
+            // @codeCoverageIgnoreEnd
         }
 
         return $response;

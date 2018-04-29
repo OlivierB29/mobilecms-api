@@ -42,6 +42,4 @@ final class UserServiceTest extends TestCase
         $service = new UserService('');
         $service->getJsonUserFile('foo');
     }
-
-
 }
