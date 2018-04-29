@@ -26,7 +26,6 @@ final class FileApiTest extends AuthApiTest
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
 
         $this->API->processAPI();
-
     }
 
     public function testDownload()
