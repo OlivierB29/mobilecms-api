@@ -3,10 +3,11 @@ php:
   - '7.0'
   - '7.1'
   - '7.2'
-before_script:
-   - pear config-set preferred_state beta
-   - pecl channel-update pecl.php.net
-   - yes | pecl install imagick
+before_install:
+  - sudo apt-get -qq update
+  - yes | pecl install imagick
+  - sudo apt-get install -y ghostscript
+  - travis_retry composer self-update
 script:
 - phpunit --configuration phpunit.xml
 - php coverage-checker.php tests/logs/clover.xml 95
