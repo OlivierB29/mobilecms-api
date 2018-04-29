@@ -10,4 +10,5 @@ before_script:
 script:
 - phpunit --configuration phpunit-utils.xml
 - phpunit --configuration phpunit-api.xml
+- phpunit --configuration phpunit-misc.xml
 - php coverage-checker.php tests/logs/clover.xml 95
