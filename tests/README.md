@@ -9,10 +9,6 @@ Requirements : Composer, Xdebug
 `composer install`
 `vendor/bin/phpunit --configuration phpunit.xml`
 
-
-## Run specific tests
-`vendor/bin/phpunit --configuration phpunit-utils.xml`
-`vendor/bin/phpunit --configuration phpunit-api.xml`
 Windows variant : `vendor\bin\phpunit.bat --configuration ` ...
 
 ## Code style
