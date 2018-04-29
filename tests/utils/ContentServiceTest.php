@@ -65,7 +65,6 @@ final class ContentServiceTest extends TestCase
         $file = $this->dir . '/calendar/10.json';
 
         $this->assertEquals(400, $response->getCode());
-
     }
 
     public function testPost()

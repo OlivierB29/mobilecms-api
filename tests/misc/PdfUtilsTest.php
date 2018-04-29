@@ -35,6 +35,4 @@ final class PdfUtilsTest extends TestCase
         $fileutil = new FileUtils();
         $fileutil->deleteDir($dir);
     }
-
-
 }

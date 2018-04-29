@@ -58,14 +58,11 @@ class ContentService
      */
     private function getItemFileName(string $type, string $id) : string
     {
-
-
         return $this->databasedir . '/' . $type . '/' . $id . '.json';
     }
 
     private function checkParams(string $type, string $id)
     {
-
         $this->checkType($type);
         if (empty($id)) {
             throw new \Exception('empty id');
