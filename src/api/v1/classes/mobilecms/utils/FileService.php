@@ -82,9 +82,9 @@ class FileService
         if (isset($mediadir) && isset($datatype) && isset($id)) {
             return $mediadir . '/' . $datatype . '/' . $id;
         } else {
-          // @codeCoverageIgnoreStart
+            // @codeCoverageIgnoreStart
             throw new \Exception('getMediaDirectory() mediadir ' . $mediadir . ' type ' . $datatype . ' id ' . $id);
-          // @codeCoverageIgnoreEnd
+            // @codeCoverageIgnoreEnd
         }
     }
 
