@@ -351,10 +351,6 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             }
         }
 
-        if (count($result) === 0) {
-            throw new \Exception('no files');
-        }
-
         $response->setResult(json_encode($result));
         $response->setCode(200);
 

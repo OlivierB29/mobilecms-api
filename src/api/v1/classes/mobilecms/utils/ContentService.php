@@ -58,15 +58,27 @@ class ContentService
      */
     private function getItemFileName(string $type, string $id) : string
     {
-        if (!isset($type)) {
-            throw new \Exception('empty type', 1);
-        }
-        if (!isset($id)) {
-            throw new \Exception('empty id', 1);
-        }
+
 
         return $this->databasedir . '/' . $type . '/' . $id . '.json';
     }
+
+    private function checkParams(string $type, string $id)
+    {
+
+        $this->checkType($type);
+        if (empty($id)) {
+            throw new \Exception('empty id');
+        }
+    }
+
+    private function checkType(string $type)
+    {
+        if (empty($type)) {
+            throw new \Exception('empty type');
+        }
+    }
+
 
     /**
      * Return a template index file path.
@@ -77,46 +89,11 @@ class ContentService
      */
     private function getIndexTemplateFileName(string $type) : string
     {
-        if (!isset($type)) {
-            throw new \Exception('empty type', 1);
-        }
+        $this->checkType($type);
 
         return $this->databasedir . '/' . $type . '/index/index_template.json';
     }
 
-    /**
-     * Generate a backup index file name.
-     *
-     * @param string $type : eg calendar
-     *
-     * @return file name
-     */
-    private function getBackupIndexFileName(string $type) : string
-    {
-        if (!isset($type)) {
-            throw new \Exception('empty type', 1);
-        }
-
-        return $this->databasedir . '/' . $type . '/history/index-' . time() . '.json';
-    }
-
-
-    /**
-     * Copy a file and create directory if necessary.
-     *
-     * @param string $s1 : source
-     * @param string $s2 : dest
-     */
-    private function mycopy(string $s1, string $s2)
-    {
-        $path = pathinfo($s2);
-        if (!file_exists($path['dirname'])) {
-            mkdir($path['dirname'], 0777, true);
-        }
-        if (!copy($s1, $s2)) {
-            throw new \Exception('copy failed ', 1);
-        }
-    }
 
 
     /**
@@ -188,7 +165,7 @@ class ContentService
         //forbid upper directory
         //
         if (strpos($filename, '..') !== false) {
-            throw new \Exception('Invalid path ' . $filename, 1);
+            throw new \Exception('Invalid path ' . $filename);
         }
 
         $file = $this->databasedir . '/' . $filename;
@@ -254,9 +231,7 @@ class ContentService
      */
     public function getAllObjects(string $type): Response
     {
-        if (!isset($type)) {
-            throw new \Exception('empty type');
-        }
+        $this->checkType($type);
         $response = $this->getDefaultResponse();
 
         $thelist = [];
@@ -327,9 +302,7 @@ class ContentService
      */
     public function getIndexFileName(string $type) : string
     {
-        if (!isset($type)) {
-            throw new \Exception('empty type', 1);
-        }
+        $this->checkType($type);
 
         return $this->databasedir . '/' . $type . '/index/index.json';
     }
@@ -344,9 +317,10 @@ class ContentService
      */
     public function post(string $type, string $keyname, string $recordStr)
     {
+        $this->checkParams($type, $keyname);
         $response = $this->getDefaultResponse();
 
-        if (isset($recordStr)) {
+        if (!empty($recordStr)) {
             // Decode JSON
             $myobjectJson = json_decode($recordStr);
             $response->setResult($recordStr);
@@ -380,7 +354,7 @@ class ContentService
     {
         $response = $this->getDefaultResponse();
 
-        if (isset($recordStr)) {
+        if (!empty($recordStr)) {
             // Decode JSON
             $myobjectJson = json_decode($recordStr);
             $response->setResult($recordStr);

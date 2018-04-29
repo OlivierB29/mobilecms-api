@@ -16,9 +16,22 @@ final class FileApiTest extends AuthApiTest
         $this->setAdmin();
     }
 
+    public function testEmptyConf()
+    {
+        $this->expectException(\Exception::class);
+        $this->API->loadConf('tests/empty.json');
+        $this->path = '/fileapi/v1/download/calendar/4';
+        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $this->API->processAPI();
+
+    }
+
     public function testDownload()
     {
-        $this->path = '/fileapi/v1/download/calendar/1';
+        $this->path = '/fileapi/v1/download/calendar/4';
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
 
         $recordStr = '[{ "url": "https://mit-license.org/index.html", "title":"MIT licence"}]';
@@ -45,8 +58,58 @@ final class FileApiTest extends AuthApiTest
         $this->assertTrue(strpos($result, '"url":"index.html"') !== false);
 
         // test download
-        $download = file_get_contents($this->API->getMediaDirPath() . '/calendar/1/index.html');
+        $download = file_get_contents($this->API->getMediaDirPath() . '/calendar/4/index.html');
         $this->assertTrue(strpos($download, 'MIT License') !== false);
+        $fileutil = new \mobilecms\utils\FileUtils();
+        $fileutil->deleteDir($this->API->getMediaDirPath() . '/calendar/4');
+    }
+
+    public function testDownloadImage()
+    {
+        $this->path = '/fileapi/v1/download/calendar/5';
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
+        $recordStr = '[{ "url": "https://php.net/images/logos/new-php-logo.png", "title":"php logo"}]';
+
+        $this->POST = ['requestbody' => $recordStr];
+        unset($recordStr);
+
+
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+
+        $this->API->authorize($this->headers, $this->SERVER);
+
+        $response = $this->API->processAPI();
+        $result = $response->getResult();
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+
+        $this->assertTrue($result != null && $result != '');
+
+        // test JSON response
+
+        $this->assertTrue(strpos($result, 'title') !== false);
+        $this->assertTrue(strpos($result, 'url') !== false);
+        $this->assertTrue(strpos($result, '"url":"new-php-logo.png"') !== false);
+
+        // test download
+        $this->assertTrue(\file_exists($this->API->getMediaDirPath() . '/calendar/5/new-php-logo.png'));
+        $fileutil = new \mobilecms\utils\FileUtils();
+        $fileutil->deleteDir($this->API->getMediaDirPath() . '/calendar/5');
+    }
+
+
+    public function testDownloadNoFiles()
+    {
+        $this->path = '/fileapi/v1/download/calendar/4';
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $recordStr = '[{ "url": "/foobar/foo.html", "title":"foobar"}]';
+        $this->POST = ['requestbody' => $recordStr];
+        unset($recordStr);
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+        $this->API->authorize($this->headers, $this->SERVER);
+        $response = $this->API->processAPI();
+        $this->assertEquals(500, $response->getCode());
     }
 
     public function testDelete()

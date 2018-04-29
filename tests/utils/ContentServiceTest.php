@@ -40,6 +40,34 @@ final class ContentServiceTest extends TestCase
         );
     }
 
+    public function testPostEmptyType()
+    {
+        $this->expectException(\Exception::class);
+        $recordStr = '{"id":"10","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $service = new ContentService($this->dir);
+        $response = $service->post('', 'id', $recordStr);
+    }
+
+    public function testPostEmptyKey()
+    {
+        $this->expectException(\Exception::class);
+        $recordStr = '{"id":"10","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $service = new ContentService($this->dir);
+        $response = $service->post('calendar', '', $recordStr);
+    }
+
+    public function testPostEmptyRecord()
+    {
+        $recordStr = '';
+        $service = new ContentService($this->dir);
+        $response = $service->post('calendar', 'id', $recordStr);
+
+        $file = $this->dir . '/calendar/10.json';
+
+        $this->assertEquals(400, $response->getCode());
+
+    }
+
     public function testPost()
     {
         $recordStr = '{"id":"10","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
@@ -54,7 +82,20 @@ final class ContentServiceTest extends TestCase
             $file, $recordStr
         );
     }
+    public function testUpdate()
+    {
+        $recordStr = '{"id":"5","type":"calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $service = new ContentService($this->dir);
+        $response = $service->update('calendar', 'id', $recordStr);
 
+        $file = $this->dir . '/calendar/5.json';
+
+        $this->assertEquals(200, $response->getCode());
+
+        $this->assertJsonStringEqualsJsonFile(
+            $file, $recordStr
+        );
+    }
     public function testPublish()
     {
         $service = new ContentService($this->dir);
