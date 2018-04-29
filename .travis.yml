@@ -8,4 +8,4 @@ before_script:
 script:
 - phpunit --configuration phpunit-utils.xml
 - phpunit --configuration phpunit-api.xml
-- php coverage-checker.php build/tests/logs/clover.xml 95
+- php coverage-checker.php tests/logs/clover.xml 95

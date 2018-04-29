@@ -1,0 +1,1537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1525008036">
+  <project timestamp="1525008036">
+    <file name="/home/olivier/git/mobilecms-api/src/api/v1/adminapi.php">
+      <metrics loc="10" ncloc="4" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/olivier/git/mobilecms-api/src/api/v1/authapi.php">
+      <metrics loc="10" ncloc="4" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/olivier/git/mobilecms-api/src/api/v1/autoload.php">
+      <metrics loc="9" ncloc="3" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/olivier/git/mobilecms-api/src/api/v1/autoloader/Autoloader.php">
+      <class name="Autoloader" namespace="global">
+        <metrics complexity="9" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+      </class>
+      <line num="49" type="method" name="loadClass" visibility="public" complexity="2" crap="2" count="15"/>
+      <line num="51" type="stmt" count="15"/>
+      <line num="52" type="stmt" count="15"/>
+      <line num="54" type="stmt" count="15"/>
+      <metrics loc="55" ncloc="32" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+    </file>
+    <package name="mobilecms\api">
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/api/AdminApi.php">
+        <class name="mobilecms\api\AdminApi" namespace="mobilecms\api">
+          <metrics complexity="31" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="85" coveredstatements="85" elements="93" coveredelements="93"/>
+        </class>
+        <line num="17" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="19" type="stmt" count="13"/>
+        <line num="20" type="stmt" count="13"/>
+        <line num="27" type="method" name="setConf" visibility="public" complexity="2" crap="2" count="13"/>
+        <line num="29" type="stmt" count="13"/>
+        <line num="31" type="stmt" count="13"/>
+        <line num="38" type="stmt" count="13"/>
+        <line num="39" type="stmt" count="13"/>
+        <line num="47" type="method" name="content" visibility="protected" complexity="18" crap="18" count="7"/>
+        <line num="49" type="stmt" count="7"/>
+        <line num="51" type="stmt" count="7"/>
+        <line num="53" type="stmt" count="7"/>
+        <line num="54" type="stmt" count="7"/>
+        <line num="56" type="stmt" count="7"/>
+        <line num="57" type="stmt" count="4"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="60" type="stmt" count="1"/>
+        <line num="62" type="stmt" count="1"/>
+        <line num="63" type="stmt" count="1"/>
+        <line num="65" type="stmt" count="3"/>
+        <line num="70" type="stmt" count="2"/>
+        <line num="72" type="stmt" count="2"/>
+        <line num="73" type="stmt" count="2"/>
+        <line num="74" type="stmt" count="1"/>
+        <line num="76" type="stmt" count="1"/>
+        <line num="77" type="stmt" count="1"/>
+        <line num="78" type="stmt" count="1"/>
+        <line num="79" type="stmt" count="1"/>
+        <line num="82" type="stmt" count="1"/>
+        <line num="83" type="stmt" count="1"/>
+        <line num="85" type="stmt" count="1"/>
+        <line num="86" type="stmt" count="1"/>
+        <line num="87" type="stmt" count="2"/>
+        <line num="89" type="stmt" count="1"/>
+        <line num="90" type="stmt" count="1"/>
+        <line num="93" type="stmt" count="1"/>
+        <line num="94" type="stmt" count="1"/>
+        <line num="96" type="stmt" count="1"/>
+        <line num="103" type="stmt" count="7"/>
+        <line num="104" type="stmt" count="2"/>
+        <line num="106" type="stmt" count="1"/>
+        <line num="108" type="stmt" count="2"/>
+        <line num="110" type="stmt" count="1"/>
+        <line num="112" type="stmt" count="1"/>
+        <line num="114" type="stmt" count="1"/>
+        <line num="118" type="stmt" count="1"/>
+        <line num="119" type="stmt" count="1"/>
+        <line num="120" type="stmt" count="1"/>
+        <line num="121" type="stmt" count="1"/>
+        <line num="122" type="stmt" count="1"/>
+        <line num="124" type="stmt" count="1"/>
+        <line num="125" type="stmt" count="1"/>
+        <line num="126" type="stmt" count="1"/>
+        <line num="127" type="stmt" count="1"/>
+        <line num="128" type="stmt" count="1"/>
+        <line num="129" type="stmt" count="1"/>
+        <line num="131" type="stmt" count="2"/>
+        <line num="134" type="stmt" count="5"/>
+        <line num="136" type="stmt" count="1"/>
+        <line num="137" type="stmt" count="1"/>
+        <line num="141" type="stmt" count="7"/>
+        <line num="142" type="stmt" count="7"/>
+        <line num="143" type="stmt" count="7"/>
+        <line num="145" type="stmt" count="7"/>
+        <line num="157" type="method" name="getUserResponse" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="159" type="stmt" count="2"/>
+        <line num="160" type="stmt" count="2"/>
+        <line num="161" type="stmt" count="2"/>
+        <line num="162" type="stmt" count="2"/>
+        <line num="163" type="stmt" count="2"/>
+        <line num="165" type="stmt" count="2"/>
+        <line num="177" type="method" name="preflight" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="179" type="stmt" count="1"/>
+        <line num="180" type="stmt" count="1"/>
+        <line num="181" type="stmt" count="1"/>
+        <line num="183" type="stmt" count="1"/>
+        <line num="190" type="stmt" count="1"/>
+        <line num="198" type="method" name="index" visibility="protected" complexity="4" crap="4" count="2"/>
+        <line num="200" type="stmt" count="2"/>
+        <line num="201" type="stmt" count="2"/>
+        <line num="203" type="stmt" count="2"/>
+        <line num="205" type="stmt" count="2"/>
+        <line num="206" type="stmt" count="2"/>
+        <line num="209" type="stmt" count="2"/>
+        <line num="210" type="stmt" count="1"/>
+        <line num="211" type="stmt" count="1"/>
+        <line num="212" type="stmt" count="1"/>
+        <line num="216" type="stmt" count="2"/>
+        <line num="224" type="method" name="getDefaultUser" visibility="private" complexity="1" crap="1" count="1"/>
+        <line num="226" type="stmt" count="1"/>
+        <line num="233" type="method" name="checkConfiguration" visibility="private" complexity="2" crap="2" count="9"/>
+        <line num="235" type="stmt" count="9"/>
+        <line num="240" type="stmt" count="9"/>
+        <metrics loc="241" ncloc="146" classes="1" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="85" coveredstatements="85" elements="93" coveredelements="93"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/api/AuthenticationApi.php">
+        <class name="mobilecms\api\AuthenticationApi" namespace="mobilecms\api">
+          <metrics complexity="37" methods="12" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="95" coveredstatements="95" elements="107" coveredelements="107"/>
+        </class>
+        <line num="25" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="17"/>
+        <line num="27" type="stmt" count="17"/>
+        <line num="28" type="stmt" count="17"/>
+        <line num="35" type="method" name="setConf" visibility="public" complexity="1" crap="1" count="17"/>
+        <line num="37" type="stmt" count="17"/>
+        <line num="39" type="stmt" count="17"/>
+        <line num="40" type="stmt" count="17"/>
+        <line num="41" type="stmt" count="17"/>
+        <line num="50" type="method" name="changepassword" visibility="protected" complexity="2" crap="2" count="1"/>
+        <line num="52" type="stmt" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="57" type="stmt" count="1"/>
+        <line num="60" type="stmt" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="69" type="stmt" count="1"/>
+        <line num="70" type="stmt" count="1"/>
+        <line num="71" type="stmt" count="1"/>
+        <line num="72" type="stmt" count="1"/>
+        <line num="75" type="stmt" count="1"/>
+        <line num="78" type="stmt" count="1"/>
+        <line num="86" type="method" name="resetpassword" visibility="protected" complexity="6" crap="6" count="1"/>
+        <line num="88" type="stmt" count="1"/>
+        <line num="91" type="stmt" count="1"/>
+        <line num="93" type="stmt" count="1"/>
+        <line num="96" type="stmt" count="1"/>
+        <line num="100" type="stmt" count="1"/>
+        <line num="105" type="stmt" count="1"/>
+        <line num="107" type="stmt" count="1"/>
+        <line num="109" type="stmt" count="1"/>
+        <line num="110" type="stmt" count="1"/>
+        <line num="112" type="stmt" count="1"/>
+        <line num="113" type="stmt" count="1"/>
+        <line num="114" type="stmt" count="1"/>
+        <line num="115" type="stmt" count="1"/>
+        <line num="117" type="stmt" count="1"/>
+        <line num="132" type="stmt" count="1"/>
+        <line num="133" type="stmt" count="1"/>
+        <line num="135" type="stmt" count="1"/>
+        <line num="136" type="stmt" count="1"/>
+        <line num="140" type="stmt" count="1"/>
+        <line num="143" type="stmt" count="1"/>
+        <line num="151" type="method" name="publicinfo" visibility="protected" complexity="3" crap="3" count="1"/>
+        <line num="153" type="stmt" count="1"/>
+        <line num="156" type="stmt" count="1"/>
+        <line num="158" type="stmt" count="1"/>
+        <line num="161" type="stmt" count="1"/>
+        <line num="162" type="stmt" count="1"/>
+        <line num="163" type="stmt" count="1"/>
+        <line num="164" type="stmt" count="1"/>
+        <line num="166" type="stmt" count="1"/>
+        <line num="167" type="stmt" count="1"/>
+        <line num="170" type="stmt" count="1"/>
+        <line num="178" type="method" name="register" visibility="protected" complexity="3" crap="3" count="2"/>
+        <line num="180" type="stmt" count="2"/>
+        <line num="183" type="stmt" count="2"/>
+        <line num="184" type="stmt" count="2"/>
+        <line num="188" type="stmt" count="2"/>
+        <line num="189" type="stmt" count="2"/>
+        <line num="192" type="stmt" count="2"/>
+        <line num="193" type="stmt" count="2"/>
+        <line num="194" type="stmt" count="2"/>
+        <line num="195" type="stmt" count="2"/>
+        <line num="196" type="stmt" count="2"/>
+        <line num="198" type="stmt" count="2"/>
+        <line num="199" type="stmt" count="1"/>
+        <line num="200" type="stmt" count="1"/>
+        <line num="202" type="stmt" count="1"/>
+        <line num="206" type="stmt" count="2"/>
+        <line num="218" type="method" name="preflight" visibility="public" complexity="2" crap="2" count="4"/>
+        <line num="220" type="stmt" count="4"/>
+        <line num="221" type="stmt" count="4"/>
+        <line num="222" type="stmt" count="4"/>
+        <line num="231" type="stmt" count="4"/>
+        <line num="239" type="method" name="getClientInfo" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="241" type="stmt" count="1"/>
+        <line num="242" type="stmt" count="1"/>
+        <line num="247" type="stmt" count="1"/>
+        <line num="256" type="method" name="authenticate" visibility="protected" complexity="5" crap="5" count="9"/>
+        <line num="258" type="stmt" count="9"/>
+        <line num="262" type="stmt" count="9"/>
+        <line num="266" type="stmt" count="8"/>
+        <line num="267" type="stmt" count="8"/>
+        <line num="268" type="stmt" count="1"/>
+        <line num="272" type="stmt" count="6"/>
+        <line num="274" type="stmt" count="6"/>
+        <line num="275" type="stmt" count="1"/>
+        <line num="277" type="stmt" count="5"/>
+        <line num="278" type="stmt" count="5"/>
+        <line num="279" type="stmt" count="4"/>
+        <line num="282" type="stmt" count="5"/>
+        <line num="283" type="stmt" count="5"/>
+        <line num="287" type="stmt" count="9"/>
+        <line num="291" type="method" name="getUser" visibility="private" complexity="3" crap="3" count="6"/>
+        <line num="293" type="stmt" count="6"/>
+        <line num="294" type="stmt" count="6"/>
+        <line num="295" type="stmt" count="5"/>
+        <line num="297" type="stmt" count="1"/>
+        <line num="298" type="stmt" count="1"/>
+        <line num="306" type="stmt" count="6"/>
+        <line num="315" type="method" name="getClientIp" visibility="public" complexity="7" crap="7" count="1"/>
+        <line num="317" type="stmt" count="1"/>
+        <line num="333" type="stmt" count="1"/>
+        <line num="336" type="stmt" count="1"/>
+        <line num="342" type="method" name="checkConfiguration" visibility="private" complexity="2" crap="2" count="13"/>
+        <line num="344" type="stmt" count="13"/>
+        <line num="345" type="stmt" count="1"/>
+        <line num="347" type="stmt" count="12"/>
+        <metrics loc="348" ncloc="220" classes="1" methods="12" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="95" coveredstatements="95" elements="107" coveredelements="107"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/api/CmsApi.php">
+        <class name="mobilecms\api\CmsApi" namespace="mobilecms\api">
+          <metrics complexity="25" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="50" coveredstatements="50" elements="56" coveredelements="56"/>
+        </class>
+        <line num="26" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="11"/>
+        <line num="28" type="stmt" count="11"/>
+        <line num="29" type="stmt" count="11"/>
+        <line num="36" type="method" name="setConf" visibility="public" complexity="2" crap="2" count="11"/>
+        <line num="38" type="stmt" count="11"/>
+        <line num="41" type="stmt" count="11"/>
+        <line num="47" type="stmt" count="11"/>
+        <line num="54" type="method" name="index" visibility="protected" complexity="4" crap="4" count="1"/>
+        <line num="56" type="stmt" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="62" type="stmt" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="67" type="stmt" count="1"/>
+        <line num="68" type="stmt" count="1"/>
+        <line num="75" type="stmt" count="1"/>
+        <line num="83" type="method" name="content" visibility="protected" complexity="10" crap="10" count="6"/>
+        <line num="85" type="stmt" count="6"/>
+        <line num="87" type="stmt" count="6"/>
+        <line num="93" type="stmt" count="6"/>
+        <line num="95" type="stmt" count="6"/>
+        <line num="96" type="stmt" count="1"/>
+        <line num="99" type="stmt" count="1"/>
+        <line num="100" type="stmt" count="1"/>
+        <line num="103" type="stmt" count="6"/>
+        <line num="104" type="stmt" count="2"/>
+        <line num="105" type="stmt" count="1"/>
+        <line num="107" type="stmt" count="2"/>
+        <line num="113" type="stmt" count="1"/>
+        <line num="114" type="stmt" count="1"/>
+        <line num="115" type="stmt" count="1"/>
+        <line num="118" type="stmt" count="1"/>
+        <line num="119" type="stmt" count="1"/>
+        <line num="120" type="stmt" count="1"/>
+        <line num="124" type="stmt" count="6"/>
+        <line num="125" type="stmt" count="3"/>
+        <line num="126" type="stmt" count="2"/>
+        <line num="128" type="stmt" count="3"/>
+        <line num="130" type="stmt" count="1"/>
+        <line num="133" type="stmt" count="1"/>
+        <line num="135" type="stmt" count="1"/>
+        <line num="142" type="stmt" count="6"/>
+        <line num="151" type="method" name="file" visibility="protected" complexity="4" crap="4" count="1"/>
+        <line num="153" type="stmt" count="1"/>
+        <line num="155" type="stmt" count="1"/>
+        <line num="157" type="stmt" count="1"/>
+        <line num="159" type="stmt" count="1"/>
+        <line num="164" type="stmt" count="1"/>
+        <line num="167" type="stmt" count="1"/>
+        <line num="168" type="stmt" count="1"/>
+        <line num="169" type="stmt" count="1"/>
+        <line num="170" type="stmt" count="1"/>
+        <line num="172" type="stmt" count="1"/>
+        <line num="179" type="stmt" count="1"/>
+        <line num="188" type="method" name="checkConfiguration" visibility="private" complexity="2" crap="2" count="8"/>
+        <line num="190" type="stmt" count="8"/>
+        <line num="193" type="stmt" count="8"/>
+        <metrics loc="216" ncloc="132" classes="1" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="50" coveredstatements="50" elements="56" coveredelements="56"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/api/FileApi.php">
+        <class name="mobilecms\api\FileApi" namespace="mobilecms\api">
+          <metrics complexity="55" methods="17" coveredmethods="17" conditionals="0" coveredconditionals="0" statements="151" coveredstatements="151" elements="168" coveredelements="168"/>
+        </class>
+        <line num="39" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="41" type="stmt" count="12"/>
+        <line num="42" type="stmt" count="12"/>
+        <line num="48" type="method" name="setConf" visibility="public" complexity="2" crap="2" count="12"/>
+        <line num="50" type="stmt" count="12"/>
+        <line num="53" type="stmt" count="12"/>
+        <line num="59" type="stmt" count="12"/>
+        <line num="60" type="stmt" count="12"/>
+        <line num="62" type="stmt" count="12"/>
+        <line num="63" type="stmt" count="12"/>
+        <line num="64" type="stmt" count="12"/>
+        <line num="65" type="stmt" count="12"/>
+        <line num="67" type="method" name="setRequest" visibility="public" complexity="1" crap="1" count="11"/>
+        <line num="75" type="stmt" count="11"/>
+        <line num="77" type="stmt" count="11"/>
+        <line num="78" type="stmt" count="11"/>
+        <line num="80" type="method" name="setFiles" visibility="public" complexity="2" crap="2" count="11"/>
+        <line num="86" type="stmt" count="11"/>
+        <line num="87" type="stmt" count="4"/>
+        <line num="89" type="stmt" count="8"/>
+        <line num="91" type="stmt" count="11"/>
+        <line num="98" type="method" name="basicupload" visibility="protected" complexity="5" crap="5" count="5"/>
+        <line num="100" type="stmt" count="5"/>
+        <line num="102" type="stmt" count="5"/>
+        <line num="105" type="stmt" count="5"/>
+        <line num="106" type="stmt" count="5"/>
+        <line num="108" type="stmt" count="1"/>
+        <line num="112" type="stmt" count="1"/>
+        <line num="114" type="stmt" count="1"/>
+        <line num="115" type="stmt" count="1"/>
+        <line num="117" type="stmt" count="1"/>
+        <line num="118" type="stmt" count="4"/>
+        <line num="119" type="stmt" count="4"/>
+        <line num="122" type="stmt" count="4"/>
+        <line num="123" type="stmt" count="2"/>
+        <line num="125" type="stmt" count="2"/>
+        <line num="131" type="stmt" count="3"/>
+        <line num="139" type="method" name="delete" visibility="protected" complexity="3" crap="3" count="1"/>
+        <line num="141" type="stmt" count="1"/>
+        <line num="143" type="stmt" count="1"/>
+        <line num="145" type="stmt" count="1"/>
+        <line num="146" type="stmt" count="1"/>
+        <line num="147" type="stmt" count="1"/>
+        <line num="148" type="stmt" count="1"/>
+        <line num="149" type="stmt" count="1"/>
+        <line num="150" type="stmt" count="1"/>
+        <line num="152" type="stmt" count="1"/>
+        <line num="154" type="stmt" count="1"/>
+        <line num="158" type="stmt" count="1"/>
+        <line num="169" type="method" name="download" visibility="protected" complexity="3" crap="3" count="3"/>
+        <line num="171" type="stmt" count="3"/>
+        <line num="173" type="stmt" count="3"/>
+        <line num="175" type="stmt" count="3"/>
+        <line num="176" type="stmt" count="3"/>
+        <line num="178" type="stmt" count="3"/>
+        <line num="179" type="stmt" count="3"/>
+        <line num="180" type="stmt" count="3"/>
+        <line num="181" type="stmt" count="3"/>
+        <line num="182" type="stmt" count="3"/>
+        <line num="187" type="stmt" count="2"/>
+        <line num="218" type="method" name="getMediaDirPath" visibility="public" complexity="1" crap="1" count="10"/>
+        <line num="220" type="stmt" count="10"/>
+        <line num="228" type="method" name="getRecordDirPath" visibility="public" complexity="1" crap="1" count="8"/>
+        <line num="230" type="stmt" count="8"/>
+        <line num="241" type="method" name="uploadFiles" visibility="private" complexity="13" crap="13" count="4"/>
+        <line num="251" type="stmt" count="4"/>
+        <line num="254" type="stmt" count="4"/>
+        <line num="259" type="stmt" count="4"/>
+        <line num="260" type="stmt" count="4"/>
+        <line num="261" type="stmt" count="4"/>
+        <line num="265" type="stmt" count="3"/>
+        <line num="266" type="stmt" count="3"/>
+        <line num="269" type="stmt" count="3"/>
+        <line num="275" type="stmt" count="3"/>
+        <line num="276" type="stmt" count="3"/>
+        <line num="277" type="stmt" count="3"/>
+        <line num="280" type="stmt" count="3"/>
+        <line num="281" type="stmt" count="1"/>
+        <line num="284" type="stmt" count="2"/>
+        <line num="285" type="stmt" count="2"/>
+        <line num="290" type="stmt" count="2"/>
+        <line num="291" type="stmt" count="2"/>
+        <line num="292" type="stmt" count="2"/>
+        <line num="293" type="stmt" count="2"/>
+        <line num="295" type="stmt" count="2"/>
+        <line num="297" type="stmt" count="2"/>
+        <line num="299" type="stmt" count="2"/>
+        <line num="304" type="stmt" count="2"/>
+        <line num="308" type="stmt" count="2"/>
+        <line num="320" type="method" name="downloadFiles" visibility="private" complexity="5" crap="5" count="3"/>
+        <line num="322" type="stmt" count="3"/>
+        <line num="324" type="stmt" count="3"/>
+        <line num="326" type="stmt" count="3"/>
+        <line num="327" type="stmt" count="3"/>
+        <line num="328" type="stmt" count="3"/>
+        <line num="331" type="stmt" count="3"/>
+        <line num="332" type="stmt" count="2"/>
+        <line num="333" type="stmt" count="2"/>
+        <line num="337" type="stmt" count="3"/>
+        <line num="338" type="stmt" count="3"/>
+        <line num="340" type="stmt" count="2"/>
+        <line num="342" type="stmt" count="2"/>
+        <line num="343" type="stmt" count="2"/>
+        <line num="344" type="stmt" count="2"/>
+        <line num="345" type="stmt" count="2"/>
+        <line num="346" type="stmt" count="2"/>
+        <line num="347" type="stmt" count="2"/>
+        <line num="349" type="stmt" count="2"/>
+        <line num="354" type="stmt" count="2"/>
+        <line num="355" type="stmt" count="2"/>
+        <line num="357" type="stmt" count="2"/>
+        <line num="367" type="method" name="getFileResponse" visibility="private" complexity="2" crap="2" count="4"/>
+        <line num="369" type="stmt" count="4"/>
+        <line num="370" type="stmt" count="4"/>
+        <line num="372" type="stmt" count="4"/>
+        <line num="373" type="stmt" count="1"/>
+        <line num="375" type="stmt" count="3"/>
+        <line num="376" type="stmt" count="3"/>
+        <line num="377" type="stmt" count="3"/>
+        <line num="379" type="stmt" count="4"/>
+        <line num="380" type="stmt" count="4"/>
+        <line num="381" type="stmt" count="4"/>
+        <line num="383" type="stmt" count="4"/>
+        <line num="389" type="method" name="checkConfiguration" visibility="private" complexity="2" crap="2" count="11"/>
+        <line num="391" type="stmt" count="11"/>
+        <line num="394" type="stmt" count="11"/>
+        <line num="403" type="method" name="deleteFiles" visibility="private" complexity="5" crap="5" count="1"/>
+        <line num="405" type="stmt" count="1"/>
+        <line num="407" type="stmt" count="1"/>
+        <line num="409" type="stmt" count="1"/>
+        <line num="411" type="stmt" count="1"/>
+        <line num="413" type="stmt" count="1"/>
+        <line num="416" type="stmt" count="1"/>
+        <line num="418" type="stmt" count="1"/>
+        <line num="419" type="stmt" count="1"/>
+        <line num="420" type="stmt" count="1"/>
+        <line num="421" type="stmt" count="1"/>
+        <line num="423" type="stmt" count="1"/>
+        <line num="427" type="stmt" count="1"/>
+        <line num="431" type="stmt" count="1"/>
+        <line num="432" type="stmt" count="1"/>
+        <line num="434" type="stmt" count="1"/>
+        <line num="441" type="method" name="setDebug" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="443" type="stmt" count="4"/>
+        <line num="444" type="stmt" count="4"/>
+        <line num="454" type="method" name="thumbnails" visibility="protected" complexity="3" crap="3" count="3"/>
+        <line num="456" type="stmt" count="3"/>
+        <line num="458" type="stmt" count="3"/>
+        <line num="460" type="stmt" count="3"/>
+        <line num="461" type="stmt" count="3"/>
+        <line num="462" type="stmt" count="3"/>
+        <line num="463" type="stmt" count="3"/>
+        <line num="464" type="stmt" count="3"/>
+        <line num="465" type="stmt" count="3"/>
+        <line num="466" type="stmt" count="3"/>
+        <line num="467" type="stmt" count="3"/>
+        <line num="469" type="stmt" count="3"/>
+        <line num="470" type="stmt" count="3"/>
+        <line num="471" type="stmt" count="3"/>
+        <line num="472" type="stmt" count="3"/>
+        <line num="476" type="stmt" count="3"/>
+        <line num="484" type="method" name="isAllowedExtension" visibility="private" complexity="3" crap="3" count="4"/>
+        <line num="486" type="stmt" count="4"/>
+        <line num="487" type="stmt" count="4"/>
+        <line num="488" type="stmt" count="4"/>
+        <line num="489" type="stmt" count="4"/>
+        <line num="490" type="stmt" count="4"/>
+        <line num="493" type="stmt" count="4"/>
+        <metrics loc="495" ncloc="329" classes="1" methods="17" coveredmethods="17" conditionals="0" coveredconditionals="0" statements="151" coveredstatements="151" elements="168" coveredelements="168"/>
+      </file>
+    </package>
+    <package name="mobilecms\utils">
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/ContentService.php">
+        <class name="mobilecms\utils\ContentService" namespace="mobilecms\utils">
+          <metrics complexity="42" methods="20" coveredmethods="14" conditionals="0" coveredconditionals="0" statements="145" coveredstatements="137" elements="165" coveredelements="151"/>
+        </class>
+        <line num="16" type="stmt" count="4"/>
+        <line num="17" type="stmt" count="4"/>
+        <line num="46" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="26"/>
+        <line num="48" type="stmt" count="26"/>
+        <line num="49" type="stmt" count="26"/>
+        <line num="59" type="method" name="getItemFileName" visibility="private" complexity="1" crap="1" count="4"/>
+        <line num="63" type="stmt" count="4"/>
+        <line num="66" type="method" name="checkParams" visibility="private" complexity="2" crap="2" count="5"/>
+        <line num="69" type="stmt" count="5"/>
+        <line num="70" type="stmt" count="4"/>
+        <line num="71" type="stmt" count="1"/>
+        <line num="73" type="stmt" count="3"/>
+        <line num="75" type="method" name="checkType" visibility="private" complexity="2" crap="2" count="13"/>
+        <line num="77" type="stmt" count="13"/>
+        <line num="78" type="stmt" count="1"/>
+        <line num="80" type="stmt" count="12"/>
+        <line num="90" type="method" name="getIndexTemplateFileName" visibility="private" complexity="1" crap="1" count="8"/>
+        <line num="92" type="stmt" count="8"/>
+        <line num="94" type="stmt" count="8"/>
+        <line num="105" type="method" name="getRecord" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="107" type="stmt" count="3"/>
+        <line num="110" type="stmt" count="3"/>
+        <line num="113" type="stmt" count="3"/>
+        <line num="114" type="stmt" count="2"/>
+        <line num="115" type="stmt" count="2"/>
+        <line num="117" type="stmt" count="1"/>
+        <line num="120" type="stmt" count="3"/>
+        <line num="129" type="method" name="deleteRecord" visibility="public" complexity="2" crap="2.01" count="2"/>
+        <line num="131" type="stmt" count="2"/>
+        <line num="134" type="stmt" count="2"/>
+        <line num="136" type="stmt" count="2"/>
+        <line num="137" type="stmt" count="2"/>
+        <line num="139" type="stmt" count="2"/>
+        <line num="141" type="stmt" count="0"/>
+        <line num="144" type="stmt" count="2"/>
+        <line num="160" type="method" name="getFilePath" visibility="public" complexity="3" crap="3.10" count="1"/>
+        <line num="162" type="stmt" count="1"/>
+        <line num="167" type="stmt" count="1"/>
+        <line num="168" type="stmt" count="0"/>
+        <line num="171" type="stmt" count="1"/>
+        <line num="174" type="stmt" count="1"/>
+        <line num="175" type="stmt" count="1"/>
+        <line num="176" type="stmt" count="1"/>
+        <line num="178" type="stmt" count="0"/>
+        <line num="181" type="stmt" count="1"/>
+        <line num="196" type="method" name="get" visibility="public" complexity="3" crap="3.04" count="1"/>
+        <line num="198" type="stmt" count="1"/>
+        <line num="201" type="stmt" count="1"/>
+        <line num="202" type="stmt" count="1"/>
+        <line num="205" type="stmt" count="1"/>
+        <line num="207" type="stmt" count="1"/>
+        <line num="208" type="stmt" count="1"/>
+        <line num="209" type="stmt" count="1"/>
+        <line num="210" type="stmt" count="1"/>
+        <line num="213" type="stmt" count="1"/>
+        <line num="217" type="stmt" count="0"/>
+        <line num="218" type="stmt" count="0"/>
+        <line num="221" type="stmt" count="1"/>
+        <line num="232" type="method" name="getAllObjects" visibility="public" complexity="6" crap="6" count="1"/>
+        <line num="234" type="stmt" count="1"/>
+        <line num="235" type="stmt" count="1"/>
+        <line num="237" type="stmt" count="1"/>
+        <line num="239" type="stmt" count="1"/>
+        <line num="240" type="stmt" count="1"/>
+        <line num="241" type="stmt" count="1"/>
+        <line num="242" type="stmt" count="1"/>
+        <line num="243" type="stmt" count="1"/>
+        <line num="244" type="stmt" count="1"/>
+        <line num="245" type="stmt" count="1"/>
+        <line num="248" type="stmt" count="1"/>
+        <line num="251" type="stmt" count="1"/>
+        <line num="252" type="stmt" count="1"/>
+        <line num="254" type="stmt" count="1"/>
+        <line num="264" type="method" name="getAll" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="266" type="stmt" count="3"/>
+        <line num="269" type="stmt" count="3"/>
+        <line num="270" type="stmt" count="3"/>
+        <line num="271" type="stmt" count="3"/>
+        <line num="272" type="stmt" count="3"/>
+        <line num="273" type="stmt" count="3"/>
+        <line num="276" type="stmt" count="3"/>
+        <line num="288" type="method" name="put" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="291" type="stmt" count="0"/>
+        <line num="303" type="method" name="getIndexFileName" visibility="public" complexity="1" crap="1" count="8"/>
+        <line num="305" type="stmt" count="8"/>
+        <line num="307" type="stmt" count="8"/>
+        <line num="318" type="method" name="post" visibility="public" complexity="2" crap="2" count="5"/>
+        <line num="320" type="stmt" count="5"/>
+        <line num="321" type="stmt" count="3"/>
+        <line num="323" type="stmt" count="3"/>
+        <line num="325" type="stmt" count="2"/>
+        <line num="326" type="stmt" count="2"/>
+        <line num="327" type="stmt" count="2"/>
+        <line num="330" type="stmt" count="2"/>
+        <line num="333" type="stmt" count="2"/>
+        <line num="336" type="stmt" count="2"/>
+        <line num="337" type="stmt" count="2"/>
+        <line num="338" type="stmt" count="2"/>
+        <line num="340" type="stmt" count="1"/>
+        <line num="343" type="stmt" count="3"/>
+        <line num="353" type="method" name="update" visibility="public" complexity="2" crap="2.00" count="2"/>
+        <line num="355" type="stmt" count="2"/>
+        <line num="357" type="stmt" count="2"/>
+        <line num="359" type="stmt" count="2"/>
+        <line num="360" type="stmt" count="2"/>
+        <line num="361" type="stmt" count="2"/>
+        <line num="364" type="stmt" count="2"/>
+        <line num="366" type="stmt" count="2"/>
+        <line num="368" type="stmt" count="2"/>
+        <line num="369" type="stmt" count="2"/>
+        <line num="372" type="stmt" count="2"/>
+        <line num="373" type="stmt" count="2"/>
+        <line num="374" type="stmt" count="2"/>
+        <line num="376" type="stmt" count="0"/>
+        <line num="379" type="stmt" count="2"/>
+        <line num="389" type="method" name="publishById" visibility="public" complexity="2" crap="2.00" count="4"/>
+        <line num="391" type="stmt" count="4"/>
+        <line num="394" type="stmt" count="4"/>
+        <line num="396" type="stmt" count="4"/>
+        <line num="397" type="stmt" count="0"/>
+        <line num="405" type="stmt" count="4"/>
+        <line num="408" type="stmt" count="4"/>
+        <line num="410" type="stmt" count="4"/>
+        <line num="413" type="stmt" count="4"/>
+        <line num="414" type="stmt" count="4"/>
+        <line num="417" type="stmt" count="4"/>
+        <line num="418" type="stmt" count="4"/>
+        <line num="421" type="stmt" count="4"/>
+        <line num="422" type="stmt" count="4"/>
+        <line num="424" type="stmt" count="4"/>
+        <line num="426" type="stmt" count="4"/>
+        <line num="427" type="stmt" count="4"/>
+        <line num="428" type="stmt" count="4"/>
+        <line num="430" type="stmt" count="4"/>
+        <line num="439" type="method" name="rebuildIndex" visibility="public" complexity="6" crap="6" count="4"/>
+        <line num="441" type="stmt" count="4"/>
+        <line num="443" type="stmt" count="4"/>
+        <line num="447" type="stmt" count="4"/>
+        <line num="455" type="stmt" count="4"/>
+        <line num="457" type="stmt" count="4"/>
+        <line num="458" type="stmt" count="4"/>
+        <line num="459" type="stmt" count="4"/>
+        <line num="461" type="stmt" count="4"/>
+        <line num="466" type="stmt" count="4"/>
+        <line num="468" type="stmt" count="4"/>
+        <line num="469" type="stmt" count="4"/>
+        <line num="470" type="stmt" count="4"/>
+        <line num="471" type="stmt" count="4"/>
+        <line num="474" type="stmt" count="4"/>
+        <line num="478" type="stmt" count="4"/>
+        <line num="482" type="stmt" count="4"/>
+        <line num="483" type="stmt" count="4"/>
+        <line num="484" type="stmt" count="4"/>
+        <line num="486" type="stmt" count="4"/>
+        <line num="498" type="method" name="options" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="500" type="stmt" count="1"/>
+        <line num="502" type="stmt" count="1"/>
+        <line num="504" type="method" name="adminOptions" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="506" type="stmt" count="1"/>
+        <line num="507" type="stmt" count="1"/>
+        <line num="508" type="stmt" count="1"/>
+        <line num="509" type="stmt" count="1"/>
+        <line num="517" type="method" name="getDefaultResponse" visibility="protected" complexity="1" crap="1" count="20"/>
+        <line num="519" type="stmt" count="20"/>
+        <line num="520" type="stmt" count="20"/>
+        <line num="521" type="stmt" count="20"/>
+        <line num="523" type="stmt" count="20"/>
+        <metrics loc="525" ncloc="291" classes="1" methods="20" coveredmethods="14" conditionals="0" coveredconditionals="0" statements="147" coveredstatements="139" elements="167" coveredelements="153"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/FileService.php">
+        <class name="mobilecms\utils\FileService" namespace="mobilecms\utils">
+          <metrics complexity="24" methods="6" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="69" coveredstatements="65" elements="75" coveredelements="69"/>
+        </class>
+        <line num="13" type="method" name="getDescriptions" visibility="public" complexity="3" crap="3" count="3"/>
+        <line num="15" type="stmt" count="3"/>
+        <line num="16" type="stmt" count="3"/>
+        <line num="17" type="stmt" count="3"/>
+        <line num="18" type="stmt" count="3"/>
+        <line num="19" type="stmt" count="3"/>
+        <line num="20" type="stmt" count="3"/>
+        <line num="24" type="stmt" count="3"/>
+        <line num="34" type="method" name="updateDescriptions" visibility="public" complexity="3" crap="3" count="1"/>
+        <line num="36" type="stmt" count="1"/>
+        <line num="37" type="stmt" count="1"/>
+        <line num="38" type="stmt" count="1"/>
+        <line num="39" type="stmt" count="1"/>
+        <line num="40" type="stmt" count="1"/>
+        <line num="41" type="stmt" count="1"/>
+        <line num="45" type="stmt" count="1"/>
+        <line num="54" type="method" name="getFileResponse" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="56" type="stmt" count="3"/>
+        <line num="57" type="stmt" count="3"/>
+        <line num="58" type="stmt" count="3"/>
+        <line num="60" type="stmt" count="3"/>
+        <line num="62" type="stmt" count="3"/>
+        <line num="63" type="stmt" count="3"/>
+        <line num="64" type="stmt" count="3"/>
+        <line num="65" type="stmt" count="3"/>
+        <line num="66" type="stmt" count="3"/>
+        <line num="68" type="stmt" count="3"/>
+        <line num="80" type="method" name="getRecordDirectory" visibility="public" complexity="4" crap="4.59" count="3"/>
+        <line num="82" type="stmt" count="3"/>
+        <line num="83" type="stmt" count="3"/>
+        <line num="85" type="stmt" count="0"/>
+        <line num="99" type="method" name="createThumbnails" visibility="public" complexity="12" crap="12.07" count="3"/>
+        <line num="109" type="stmt" count="3"/>
+        <line num="110" type="stmt" count="3"/>
+        <line num="113" type="stmt" count="3"/>
+        <line num="114" type="stmt" count="3"/>
+        <line num="115" type="stmt" count="3"/>
+        <line num="116" type="stmt" count="3"/>
+        <line num="120" type="stmt" count="3"/>
+        <line num="121" type="stmt" count="3"/>
+        <line num="125" type="stmt" count="3"/>
+        <line num="127" type="stmt" count="3"/>
+        <line num="128" type="stmt" count="3"/>
+        <line num="130" type="stmt" count="3"/>
+        <line num="131" type="stmt" count="2"/>
+        <line num="133" type="stmt" count="1"/>
+        <line num="135" type="stmt" count="3"/>
+        <line num="136" type="stmt" count="3"/>
+        <line num="137" type="stmt" count="3"/>
+        <line num="138" type="stmt" count="2"/>
+        <line num="139" type="stmt" count="2"/>
+        <line num="140" type="stmt" count="0"/>
+        <line num="143" type="stmt" count="2"/>
+        <line num="146" type="stmt" count="1"/>
+        <line num="147" type="stmt" count="1"/>
+        <line num="149" type="stmt" count="0"/>
+        <line num="152" type="stmt" count="1"/>
+        <line num="153" type="stmt" count="1"/>
+        <line num="154" type="stmt" count="1"/>
+        <line num="155" type="stmt" count="1"/>
+        <line num="157" type="stmt" count="1"/>
+        <line num="158" type="stmt" count="0"/>
+        <line num="162" type="stmt" count="3"/>
+        <line num="163" type="stmt" count="3"/>
+        <line num="164" type="stmt" count="3"/>
+        <line num="166" type="stmt" count="3"/>
+        <line num="170" type="stmt" count="3"/>
+        <line num="174" type="stmt" count="3"/>
+        <line num="175" type="stmt" count="3"/>
+        <line num="177" type="stmt" count="3"/>
+        <line num="186" type="method" name="getDefaultResponse" visibility="protected" complexity="1" crap="1" count="3"/>
+        <line num="188" type="stmt" count="3"/>
+        <line num="189" type="stmt" count="3"/>
+        <line num="190" type="stmt" count="3"/>
+        <line num="192" type="stmt" count="3"/>
+        <metrics loc="194" ncloc="134" classes="1" methods="6" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="69" coveredstatements="65" elements="75" coveredelements="69"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/FileUtils.php">
+        <class name="mobilecms\utils\FileUtils" namespace="mobilecms\utils">
+          <metrics complexity="4" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="11" elements="14" coveredelements="12"/>
+        </class>
+        <line num="7" type="method" name="getMimeType" visibility="public" complexity="1" crap="1" count="6"/>
+        <line num="9" type="stmt" count="6"/>
+        <line num="10" type="stmt" count="6"/>
+        <line num="11" type="stmt" count="6"/>
+        <line num="12" type="stmt" count="6"/>
+        <line num="35" type="method" name="deleteDir" visibility="public" complexity="3" crap="3.02" count="3"/>
+        <line num="37" type="stmt" count="3"/>
+        <line num="38" type="stmt" count="3"/>
+        <line num="39" type="stmt" count="3"/>
+        <line num="40" type="stmt" count="3"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="43" type="stmt" count="3"/>
+        <line num="46" type="stmt" count="3"/>
+        <line num="47" type="stmt" count="3"/>
+        <metrics loc="48" ncloc="28" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="11" elements="14" coveredelements="12"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/GenericRequest.php">
+        <class name="mobilecms\utils\GenericRequest" namespace="mobilecms\utils">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="51" ncloc="18" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/ImageUtils.php">
+        <class name="mobilecms\utils\ImageUtils" namespace="mobilecms\utils">
+          <metrics complexity="16" methods="5" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="57" coveredstatements="56" elements="62" coveredelements="60"/>
+        </class>
+        <line num="19" type="method" name="multipleResize" visibility="public" complexity="4" crap="4.01" count="4"/>
+        <line num="21" type="stmt" count="4"/>
+        <line num="23" type="stmt" count="4"/>
+        <line num="24" type="stmt" count="4"/>
+        <line num="27" type="stmt" count="4"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="4"/>
+        <line num="33" type="stmt" count="4"/>
+        <line num="36" type="stmt" count="4"/>
+        <line num="38" type="stmt" count="4"/>
+        <line num="39" type="stmt" count="4"/>
+        <line num="40" type="stmt" count="4"/>
+        <line num="43" type="stmt" count="4"/>
+        <line num="50" type="method" name="imageInfo" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="52" type="stmt" count="3"/>
+        <line num="53" type="stmt" count="3"/>
+        <line num="54" type="stmt" count="3"/>
+        <line num="57" type="stmt" count="3"/>
+        <line num="59" type="stmt" count="3"/>
+        <line num="60" type="stmt" count="3"/>
+        <line num="61" type="stmt" count="3"/>
+        <line num="64" type="stmt" count="3"/>
+        <line num="73" type="method" name="resize" visibility="public" complexity="5" crap="5" count="8"/>
+        <line num="75" type="stmt" count="8"/>
+        <line num="77" type="stmt" count="8"/>
+        <line num="78" type="stmt" count="8"/>
+        <line num="79" type="stmt" count="8"/>
+        <line num="82" type="stmt" count="8"/>
+        <line num="84" type="stmt" count="8"/>
+        <line num="85" type="stmt" count="6"/>
+        <line num="86" type="stmt" count="6"/>
+        <line num="92" type="stmt" count="6"/>
+        <line num="94" type="stmt" count="6"/>
+        <line num="95" type="stmt" count="6"/>
+        <line num="96" type="stmt" count="6"/>
+        <line num="97" type="stmt" count="6"/>
+        <line num="98" type="stmt" count="6"/>
+        <line num="101" type="stmt" count="6"/>
+        <line num="102" type="stmt" count="5"/>
+        <line num="103" type="stmt" count="5"/>
+        <line num="104" type="stmt" count="5"/>
+        <line num="105" type="stmt" count="5"/>
+        <line num="107" type="stmt" count="1"/>
+        <line num="108" type="stmt" count="1"/>
+        <line num="109" type="stmt" count="1"/>
+        <line num="110" type="stmt" count="1"/>
+        <line num="111" type="stmt" count="1"/>
+        <line num="112" type="stmt" count="1"/>
+        <line num="113" type="stmt" count="1"/>
+        <line num="118" type="stmt" count="8"/>
+        <line num="126" type="method" name="setQuality" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="128" type="stmt" count="3"/>
+        <line num="129" type="stmt" count="3"/>
+        <line num="133" type="method" name="isImage" visibility="public" complexity="5" crap="5" count="6"/>
+        <line num="135" type="stmt" count="6"/>
+        <line num="137" type="stmt" count="6"/>
+        <line num="138" type="stmt" count="6"/>
+        <line num="140" type="stmt" count="6"/>
+        <line num="141" type="stmt" count="6"/>
+        <line num="142" type="stmt" count="3"/>
+        <line num="143" type="stmt" count="3"/>
+        <line num="148" type="stmt" count="6"/>
+        <metrics loc="150" ncloc="107" classes="1" methods="5" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="57" coveredstatements="56" elements="62" coveredelements="60"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/JsonUtils.php">
+        <class name="mobilecms\utils\JsonUtils" namespace="mobilecms\utils">
+          <metrics complexity="22" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="34" coveredstatements="34" elements="40" coveredelements="40"/>
+        </class>
+        <line num="16" type="method" name="readJsonFile" visibility="public" complexity="1" crap="1" count="68"/>
+        <line num="18" type="stmt" count="68"/>
+        <line num="27" type="method" name="writeJsonFile" visibility="public" complexity="9" crap="9" count="20"/>
+        <line num="29" type="stmt" count="20"/>
+        <line num="32" type="stmt" count="20"/>
+        <line num="33" type="stmt" count="20"/>
+        <line num="34" type="stmt" count="1"/>
+        <line num="36" type="stmt" count="19"/>
+        <line num="37" type="stmt" count="1"/>
+        <line num="39" type="stmt" count="18"/>
+        <line num="44" type="stmt" count="18"/>
+        <line num="45" type="stmt" count="18"/>
+        <line num="51" type="stmt" count="18"/>
+        <line num="52" type="stmt" count="18"/>
+        <line num="53" type="stmt" count="2"/>
+        <line num="54" type="stmt" count="2"/>
+        <line num="60" type="stmt" count="2"/>
+        <line num="62" type="stmt" count="18"/>
+        <line num="71" type="method" name="getByKey" visibility="public" complexity="5" crap="5" count="12"/>
+        <line num="73" type="stmt" count="12"/>
+        <line num="75" type="stmt" count="12"/>
+        <line num="76" type="stmt" count="12"/>
+        <line num="77" type="stmt" count="12"/>
+        <line num="78" type="stmt" count="12"/>
+        <line num="83" type="stmt" count="12"/>
+        <line num="96" type="method" name="put" visibility="public" complexity="2" crap="2" count="6"/>
+        <line num="98" type="stmt" count="6"/>
+        <line num="100" type="stmt" count="6"/>
+        <line num="101" type="stmt" count="3"/>
+        <line num="103" type="stmt" count="3"/>
+        <line num="106" type="stmt" count="6"/>
+        <line num="116" type="method" name="copy" visibility="public" complexity="3" crap="3" count="15"/>
+        <line num="118" type="stmt" count="15"/>
+        <line num="119" type="stmt" count="15"/>
+        <line num="120" type="stmt" count="15"/>
+        <line num="123" type="stmt" count="15"/>
+        <line num="132" type="method" name="replace" visibility="public" complexity="2" crap="2" count="4"/>
+        <line num="134" type="stmt" count="4"/>
+        <line num="135" type="stmt" count="4"/>
+        <line num="137" type="stmt" count="4"/>
+        <metrics loc="138" ncloc="79" classes="1" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="34" coveredstatements="34" elements="40" coveredelements="40"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/JwtToken.php">
+        <class name="mobilecms\utils\JwtToken" namespace="mobilecms\utils">
+          <metrics complexity="14" methods="12" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="23" elements="37" coveredelements="33"/>
+        </class>
+        <line num="19" type="method" name="setAlgorithm" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="21" type="stmt" count="3"/>
+        <line num="22" type="stmt" count="3"/>
+        <line num="29" type="method" name="getAlgorithm" visibility="public" complexity="1" crap="1" count="49"/>
+        <line num="31" type="stmt" count="49"/>
+        <line num="42" type="method" name="createTokenFromUser" visibility="public" complexity="1" crap="1" count="49"/>
+        <line num="44" type="stmt" count="49"/>
+        <line num="55" type="method" name="verifyToken" visibility="public" complexity="2" crap="2" count="39"/>
+        <line num="57" type="stmt" count="39"/>
+        <line num="59" type="stmt" count="39"/>
+        <line num="61" type="stmt" count="39"/>
+        <line num="62" type="stmt" count="39"/>
+        <line num="63" type="stmt" count="39"/>
+        <line num="64" type="stmt" count="39"/>
+        <line num="66" type="stmt" count="39"/>
+        <line num="68" type="stmt" count="39"/>
+        <line num="71" type="stmt" count="39"/>
+        <line num="81" type="method" name="getPayload" visibility="public" complexity="2" crap="2" count="37"/>
+        <line num="83" type="stmt" count="37"/>
+        <line num="84" type="stmt" count="37"/>
+        <line num="86" type="stmt" count="37"/>
+        <line num="87" type="stmt" count="37"/>
+        <line num="90" type="stmt" count="37"/>
+        <line num="98" type="method" name="initHeader" visibility="private" complexity="1" crap="1" count="49"/>
+        <line num="100" type="stmt" count="49"/>
+        <line num="112" type="method" name="initPayload" visibility="private" complexity="1" crap="1" count="49"/>
+        <line num="114" type="stmt" count="49"/>
+        <line num="126" type="method" name="createToken" visibility="private" complexity="1" crap="1" count="49"/>
+        <line num="128" type="stmt" count="49"/>
+        <line num="140" type="method" name="createSignature" visibility="private" complexity="1" crap="1" count="49"/>
+        <line num="142" type="stmt" count="49"/>
+        <line num="153" type="method" name="createSecret" visibility="private" complexity="1" crap="1" count="49"/>
+        <line num="155" type="stmt" count="49"/>
+        <line num="165" type="method" name="parseHeader" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="167" type="stmt" count="0"/>
+        <line num="177" type="method" name="parsePayload" visibility="private" complexity="1" crap="2" count="0"/>
+        <line num="179" type="stmt" count="0"/>
+        <metrics loc="181" ncloc="88" classes="1" methods="12" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="23" elements="37" coveredelements="33"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/MailUtils.php">
+        <class name="mobilecms\utils\MailUtils" namespace="mobilecms\utils">
+          <metrics complexity="4" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="14" elements="18" coveredelements="16"/>
+        </class>
+        <line num="16" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="18" type="stmt" count="2"/>
+        <line num="19" type="stmt" count="2"/>
+        <line num="32" type="method" name="getNewPassword" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="34" type="stmt" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="36" type="stmt" count="1"/>
+        <line num="37" type="stmt" count="1"/>
+        <line num="39" type="stmt" count="1"/>
+        <line num="47" type="method" name="getHeaders" visibility="public" complexity="2" crap="2.01" count="2"/>
+        <line num="49" type="stmt" count="2"/>
+        <line num="50" type="stmt" count="0"/>
+        <line num="52" type="stmt" count="2"/>
+        <line num="54" type="stmt" count="2"/>
+        <line num="55" type="stmt" count="2"/>
+        <line num="56" type="stmt" count="2"/>
+        <line num="57" type="stmt" count="2"/>
+        <line num="60" type="stmt" count="2"/>
+        <metrics loc="62" ncloc="39" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="14" elements="18" coveredelements="16"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/PdfUtils.php">
+        <class name="mobilecms\utils\PdfUtils" namespace="mobilecms\utils">
+          <metrics complexity="8" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="43" coveredstatements="43" elements="47" coveredelements="47"/>
+        </class>
+        <line num="19" type="method" name="multipleResize" visibility="public" complexity="4" crap="4" count="2"/>
+        <line num="21" type="stmt" count="2"/>
+        <line num="23" type="stmt" count="2"/>
+        <line num="24" type="stmt" count="2"/>
+        <line num="27" type="stmt" count="2"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="31" type="stmt" count="2"/>
+        <line num="33" type="stmt" count="2"/>
+        <line num="36" type="stmt" count="2"/>
+        <line num="41" type="stmt" count="2"/>
+        <line num="42" type="stmt" count="2"/>
+        <line num="43" type="stmt" count="2"/>
+        <line num="46" type="stmt" count="2"/>
+        <line num="57" type="method" name="resize" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="59" type="stmt" count="3"/>
+        <line num="61" type="stmt" count="3"/>
+        <line num="62" type="stmt" count="3"/>
+        <line num="63" type="stmt" count="3"/>
+        <line num="65" type="stmt" count="3"/>
+        <line num="66" type="stmt" count="3"/>
+        <line num="67" type="stmt" count="3"/>
+        <line num="68" type="stmt" count="3"/>
+        <line num="69" type="stmt" count="3"/>
+        <line num="71" type="stmt" count="3"/>
+        <line num="72" type="stmt" count="3"/>
+        <line num="75" type="stmt" count="3"/>
+        <line num="77" type="stmt" count="3"/>
+        <line num="78" type="stmt" count="3"/>
+        <line num="79" type="stmt" count="3"/>
+        <line num="80" type="stmt" count="3"/>
+        <line num="81" type="stmt" count="3"/>
+        <line num="82" type="stmt" count="3"/>
+        <line num="83" type="stmt" count="3"/>
+        <line num="89" type="stmt" count="3"/>
+        <line num="90" type="stmt" count="3"/>
+        <line num="91" type="stmt" count="3"/>
+        <line num="93" type="stmt" count="3"/>
+        <line num="97" type="stmt" count="3"/>
+        <line num="105" type="method" name="pdfInfo" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="107" type="stmt" count="1"/>
+        <line num="108" type="stmt" count="1"/>
+        <line num="109" type="stmt" count="1"/>
+        <line num="110" type="stmt" count="1"/>
+        <line num="113" type="stmt" count="1"/>
+        <line num="121" type="method" name="setQuality" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="123" type="stmt" count="1"/>
+        <line num="124" type="stmt" count="1"/>
+        <metrics loc="125" ncloc="82" classes="1" methods="4" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="43" coveredstatements="43" elements="47" coveredelements="47"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/Properties.php">
+        <class name="mobilecms\utils\Properties" namespace="mobilecms\utils">
+          <metrics complexity="13" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="24" elements="30" coveredelements="30"/>
+        </class>
+        <line num="20" type="method" name="getInteger" visibility="public" complexity="3" crap="3" count="14"/>
+        <line num="22" type="stmt" count="14"/>
+        <line num="24" type="stmt" count="14"/>
+        <line num="25" type="stmt" count="2"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="31" type="stmt" count="14"/>
+        <line num="41" type="method" name="getBoolean" visibility="public" complexity="4" crap="4" count="53"/>
+        <line num="43" type="stmt" count="53"/>
+        <line num="45" type="stmt" count="53"/>
+        <line num="48" type="stmt" count="53"/>
+        <line num="49" type="stmt" count="53"/>
+        <line num="50" type="stmt" count="53"/>
+        <line num="51" type="stmt" count="53"/>
+        <line num="54" type="stmt" count="53"/>
+        <line num="63" type="method" name="getString" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="65" type="stmt" count="1"/>
+        <line num="67" type="stmt" count="1"/>
+        <line num="68" type="stmt" count="1"/>
+        <line num="70" type="stmt" count="1"/>
+        <line num="79" type="method" name="loadConf" visibility="public" complexity="2" crap="2" count="57"/>
+        <line num="81" type="stmt" count="57"/>
+        <line num="82" type="stmt" count="57"/>
+        <line num="84" type="stmt" count="3"/>
+        <line num="86" type="stmt" count="57"/>
+        <line num="88" type="method" name="setConf" visibility="public" complexity="1" crap="1" count="57"/>
+        <line num="90" type="stmt" count="57"/>
+        <line num="91" type="stmt" count="57"/>
+        <line num="97" type="method" name="getConf" visibility="public" complexity="1" crap="1" count="56"/>
+        <line num="99" type="stmt" count="56"/>
+        <metrics loc="101" ncloc="61" classes="1" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="24" elements="30" coveredelements="30"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/Request.php">
+        <class name="mobilecms\utils\Request" namespace="mobilecms\utils">
+          <metrics complexity="17" methods="6" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="26" elements="33" coveredelements="31"/>
+        </class>
+        <line num="14" type="method" name="match" visibility="public" complexity="7" crap="7.01" count="27"/>
+        <line num="16" type="stmt" count="27"/>
+        <line num="17" type="stmt" count="27"/>
+        <line num="18" type="stmt" count="27"/>
+        <line num="19" type="stmt" count="0"/>
+        <line num="23" type="stmt" count="27"/>
+        <line num="24" type="stmt" count="27"/>
+        <line num="26" type="stmt" count="27"/>
+        <line num="31" type="stmt" count="27"/>
+        <line num="32" type="stmt" count="27"/>
+        <line num="34" type="stmt" count="25"/>
+        <line num="39" type="stmt" count="27"/>
+        <line num="40" type="stmt" count="27"/>
+        <line num="45" type="stmt" count="13"/>
+        <line num="50" type="stmt" count="27"/>
+        <line num="51" type="stmt" count="13"/>
+        <line num="54" type="stmt" count="27"/>
+        <line num="57" type="method" name="matchRequest" visibility="public" complexity="3" crap="3" count="5"/>
+        <line num="59" type="stmt" count="5"/>
+        <line num="60" type="stmt" count="5"/>
+        <line num="61" type="stmt" count="2"/>
+        <line num="63" type="stmt" count="5"/>
+        <line num="66" type="method" name="getParam" visibility="public" complexity="1" crap="1" count="25"/>
+        <line num="68" type="stmt" count="25"/>
+        <line num="77" type="method" name="toArray" visibility="public" complexity="1" crap="1" count="27"/>
+        <line num="79" type="stmt" count="27"/>
+        <line num="91" type="method" name="isPathParameter" visibility="public" complexity="2" crap="2" count="27"/>
+        <line num="95" type="stmt" count="27"/>
+        <line num="103" type="method" name="getPathParameterName" visibility="public" complexity="3" crap="3" count="25"/>
+        <line num="105" type="stmt" count="25"/>
+        <line num="107" type="stmt" count="25"/>
+        <line num="108" type="stmt" count="25"/>
+        <line num="111" type="stmt" count="25"/>
+        <metrics loc="113" ncloc="70" classes="1" methods="6" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="26" elements="33" coveredelements="31"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/Response.php">
+        <class name="mobilecms\utils\Response" namespace="mobilecms\utils">
+          <metrics complexity="6" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="13" elements="19" coveredelements="19"/>
+        </class>
+        <line num="21" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="71"/>
+        <line num="23" type="stmt" count="71"/>
+        <line num="24" type="stmt" count="71"/>
+        <line num="31" type="method" name="setResult" visibility="public" complexity="1" crap="1" count="71"/>
+        <line num="33" type="stmt" count="71"/>
+        <line num="34" type="stmt" count="71"/>
+        <line num="41" type="method" name="getResult" visibility="public" complexity="1" crap="1" count="64"/>
+        <line num="43" type="stmt" count="64"/>
+        <line num="51" type="method" name="setCode" visibility="public" complexity="1" crap="1" count="71"/>
+        <line num="53" type="stmt" count="71"/>
+        <line num="54" type="stmt" count="71"/>
+        <line num="61" type="method" name="getCode" visibility="public" complexity="1" crap="1" count="67"/>
+        <line num="63" type="stmt" count="67"/>
+        <line num="72" type="method" name="setError" visibility="public" complexity="1" crap="1" count="19"/>
+        <line num="74" type="stmt" count="19"/>
+        <line num="76" type="stmt" count="19"/>
+        <line num="77" type="stmt" count="19"/>
+        <line num="78" type="stmt" count="19"/>
+        <line num="79" type="stmt" count="19"/>
+        <metrics loc="80" ncloc="42" classes="1" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="13" elements="19" coveredelements="19"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/RestApi.php">
+        <class name="mobilecms\utils\RestApi" namespace="mobilecms\utils">
+          <metrics complexity="55" methods="16" coveredmethods="15" conditionals="0" coveredconditionals="0" statements="80" coveredstatements="72" elements="96" coveredelements="87"/>
+        </class>
+        <line num="68" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="53"/>
+        <line num="70" type="stmt" count="53"/>
+        <line num="71" type="stmt" count="53"/>
+        <line num="73" type="method" name="loadConf" visibility="public" complexity="1" crap="1" count="53"/>
+        <line num="75" type="stmt" count="53"/>
+        <line num="76" type="stmt" count="53"/>
+        <line num="77" type="stmt" count="53"/>
+        <line num="78" type="stmt" count="53"/>
+        <line num="85" type="method" name="setConf" visibility="public" complexity="8" crap="8" count="53"/>
+        <line num="90" type="stmt" count="53"/>
+        <line num="93" type="stmt" count="53"/>
+        <line num="96" type="stmt" count="53"/>
+        <line num="99" type="stmt" count="53"/>
+        <line num="101" type="stmt" count="53"/>
+        <line num="133" type="stmt" count="53"/>
+        <line num="134" type="stmt" count="53"/>
+        <line num="135" type="stmt" count="53"/>
+        <line num="136" type="stmt" count="53"/>
+        <line num="139" type="stmt" count="53"/>
+        <line num="140" type="stmt" count="53"/>
+        <line num="152" type="method" name="setRequestUri" visibility="public" complexity="4" crap="4" count="51"/>
+        <line num="154" type="stmt" count="51"/>
+        <line num="156" type="stmt" count="51"/>
+        <line num="158" type="stmt" count="51"/>
+        <line num="161" type="stmt" count="51"/>
+        <line num="162" type="stmt" count="51"/>
+        <line num="170" type="stmt" count="51"/>
+        <line num="171" type="stmt" count="51"/>
+        <line num="175" type="stmt" count="51"/>
+        <line num="176" type="stmt" count="32"/>
+        <line num="183" type="stmt" count="51"/>
+        <line num="197" type="method" name="setRequest" visibility="public" complexity="19" crap="32.37" count="51"/>
+        <line num="223" type="stmt" count="51"/>
+        <line num="224" type="stmt" count="51"/>
+        <line num="228" type="stmt" count="51"/>
+        <line num="231" type="stmt" count="51"/>
+        <line num="232" type="stmt" count="51"/>
+        <line num="233" type="stmt" count="0"/>
+        <line num="234" type="stmt" count="0"/>
+        <line num="235" type="stmt" count="0"/>
+        <line num="236" type="stmt" count="0"/>
+        <line num="238" type="stmt" count="0"/>
+        <line num="242" type="stmt" count="51"/>
+        <line num="243" type="stmt" count="51"/>
+        <line num="244" type="stmt" count="27"/>
+        <line num="245" type="stmt" count="26"/>
+        <line num="252" type="stmt" count="27"/>
+        <line num="253" type="stmt" count="24"/>
+        <line num="254" type="stmt" count="19"/>
+        <line num="255" type="stmt" count="17"/>
+        <line num="256" type="stmt" count="24"/>
+        <line num="257" type="stmt" count="24"/>
+        <line num="258" type="stmt" count="0"/>
+        <line num="259" type="stmt" count="0"/>
+        <line num="263" type="stmt" count="0"/>
+        <line num="270" type="stmt" count="51"/>
+        <line num="277" type="method" name="getRequest" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="279" type="stmt" count="1"/>
+        <line num="289" type="method" name="processAPI" visibility="public" complexity="5" crap="5" count="46"/>
+        <line num="291" type="stmt" count="46"/>
+        <line num="293" type="stmt" count="46"/>
+        <line num="294" type="stmt" count="46"/>
+        <line num="296" type="stmt" count="5"/>
+        <line num="298" type="stmt" count="46"/>
+        <line num="301" type="stmt" count="3"/>
+        <line num="303" type="stmt" count="3"/>
+        <line num="304" type="stmt" count="3"/>
+        <line num="312" type="stmt" count="46"/>
+        <line num="363" type="method" name="getDefaultResponse" visibility="protected" complexity="1" crap="1" count="51"/>
+        <line num="365" type="stmt" count="51"/>
+        <line num="366" type="stmt" count="51"/>
+        <line num="367" type="stmt" count="51"/>
+        <line num="369" type="stmt" count="51"/>
+        <line num="377" type="method" name="getRequestBody" visibility="public" complexity="2" crap="2" count="22"/>
+        <line num="379" type="stmt" count="22"/>
+        <line num="380" type="stmt" count="22"/>
+        <line num="393" type="method" name="setRootDir" visibility="public" complexity="1" crap="1" count="53"/>
+        <line num="395" type="stmt" count="53"/>
+        <line num="396" type="stmt" count="53"/>
+        <line num="403" type="method" name="getRootDir" visibility="public" complexity="1" crap="1" count="11"/>
+        <line num="405" type="stmt" count="11"/>
+        <line num="413" type="method" name="getPublicDirPath" visibility="public" complexity="1" crap="1" count="8"/>
+        <line num="415" type="stmt" count="8"/>
+        <line num="423" type="method" name="getPrivateDirPath" visibility="public" complexity="1" crap="1" count="40"/>
+        <line num="425" type="stmt" count="40"/>
+        <line num="434" type="method" name="cleanInputs" visibility="private" complexity="3" crap="3" count="51"/>
+        <line num="436" type="stmt" count="51"/>
+        <line num="437" type="stmt" count="51"/>
+        <line num="438" type="stmt" count="50"/>
+        <line num="439" type="stmt" count="50"/>
+        <line num="442" type="stmt" count="51"/>
+        <line num="445" type="stmt" count="51"/>
+        <line num="452" type="method" name="getConf" visibility="public" complexity="1" crap="1" count="45"/>
+        <line num="454" type="stmt" count="45"/>
+        <line num="458" type="method" name="getParam" visibility="protected" complexity="1" crap="1" count="25"/>
+        <line num="460" type="stmt" count="25"/>
+        <metrics loc="462" ncloc="241" classes="1" methods="16" coveredmethods="15" conditionals="0" coveredconditionals="0" statements="80" coveredstatements="72" elements="96" coveredelements="87"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/SecureRestApi.php">
+        <class name="mobilecms\utils\SecureRestApi" namespace="mobilecms\utils">
+          <metrics complexity="28" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="47" coveredstatements="47" elements="53" coveredelements="53"/>
+        </class>
+        <line num="29" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="36"/>
+        <line num="31" type="stmt" count="36"/>
+        <line num="32" type="stmt" count="36"/>
+        <line num="39" type="method" name="processAPI" visibility="public" complexity="3" crap="3" count="34"/>
+        <line num="41" type="stmt" count="34"/>
+        <line num="47" type="stmt" count="34"/>
+        <line num="48" type="stmt" count="2"/>
+        <line num="49" type="stmt" count="2"/>
+        <line num="52" type="stmt" count="34"/>
+        <line num="53" type="stmt" count="29"/>
+        <line num="56" type="stmt" count="5"/>
+        <line num="66" type="method" name="authorize" visibility="public" complexity="6" crap="6" count="34"/>
+        <line num="68" type="stmt" count="34"/>
+        <line num="69" type="stmt" count="34"/>
+        <line num="71" type="stmt" count="34"/>
+        <line num="72" type="stmt" count="34"/>
+        <line num="73" type="stmt" count="1"/>
+        <line num="74" type="stmt" count="1"/>
+        <line num="75" type="stmt" count="1"/>
+        <line num="76" type="stmt" count="33"/>
+        <line num="77" type="stmt" count="17"/>
+        <line num="78" type="stmt" count="2"/>
+        <line num="79" type="stmt" count="2"/>
+        <line num="80" type="stmt" count="33"/>
+        <line num="81" type="stmt" count="31"/>
+        <line num="89" type="stmt" count="32"/>
+        <line num="109" type="method" name="doAuthorize" visibility="public" complexity="5" crap="5" count="33"/>
+        <line num="111" type="stmt" count="33"/>
+        <line num="112" type="stmt" count="33"/>
+        <line num="114" type="stmt" count="33"/>
+        <line num="115" type="stmt" count="33"/>
+        <line num="120" type="stmt" count="33"/>
+        <line num="123" type="stmt" count="33"/>
+        <line num="124" type="stmt" count="33"/>
+        <line num="127" type="stmt" count="33"/>
+        <line num="128" type="stmt" count="32"/>
+        <line num="130" type="stmt" count="32"/>
+        <line num="131" type="stmt" count="1"/>
+        <line num="133" type="stmt" count="31"/>
+        <line num="136" type="stmt" count="31"/>
+        <line num="137" type="stmt" count="31"/>
+        <line num="139" type="stmt" count="31"/>
+        <line num="141" type="stmt" count="1"/>
+        <line num="144" type="stmt" count="31"/>
+        <line num="160" type="method" name="getAuthorizationHeader" visibility="private" complexity="6" crap="6" count="33"/>
+        <line num="162" type="stmt" count="33"/>
+        <line num="163" type="stmt" count="33"/>
+        <line num="185" type="stmt" count="33"/>
+        <line num="195" type="method" name="getBearerTokenValue" visibility="private" complexity="3" crap="3" count="32"/>
+        <line num="198" type="stmt" count="32"/>
+        <line num="199" type="stmt" count="32"/>
+        <line num="200" type="stmt" count="31"/>
+        <line num="203" type="stmt" count="1"/>
+        <metrics loc="223" ncloc="122" classes="1" methods="6" coveredmethods="6" conditionals="0" coveredconditionals="0" statements="47" coveredstatements="47" elements="53" coveredelements="53"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/StringUtils.php">
+        <class name="mobilecms\utils\StringUtils" namespace="mobilecms\utils">
+          <metrics complexity="3" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="5" elements="8" coveredelements="6"/>
+        </class>
+        <line num="3" type="stmt" count="1"/>
+        <line num="18" type="method" name="startsWith" visibility="public" complexity="1" crap="1" count="30"/>
+        <line num="20" type="stmt" count="30"/>
+        <line num="22" type="stmt" count="30"/>
+        <line num="33" type="method" name="endsWith" visibility="public" complexity="2" crap="2.06" count="28"/>
+        <line num="35" type="stmt" count="28"/>
+        <line num="36" type="stmt" count="28"/>
+        <line num="37" type="stmt" count="0"/>
+        <line num="40" type="stmt" count="28"/>
+        <metrics loc="42" ncloc="23" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="6" elements="9" coveredelements="7"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/UrlUtils.php">
+        <class name="mobilecms\utils\UrlUtils" namespace="mobilecms\utils">
+          <metrics complexity="14" methods="4" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="22" coveredstatements="21" elements="26" coveredelements="24"/>
+        </class>
+        <line num="11" type="method" name="toArray" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="13" type="stmt" count="1"/>
+        <line num="24" type="method" name="match" visibility="public" complexity="8" crap="8.02" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="1"/>
+        <line num="33" type="stmt" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="40" type="stmt" count="1"/>
+        <line num="41" type="stmt" count="1"/>
+        <line num="43" type="stmt" count="1"/>
+        <line num="44" type="stmt" count="1"/>
+        <line num="50" type="stmt" count="1"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="56" type="stmt" count="1"/>
+        <line num="61" type="stmt" count="1"/>
+        <line num="62" type="stmt" count="1"/>
+        <line num="65" type="stmt" count="1"/>
+        <line num="79" type="method" name="isPathParameter" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="83" type="stmt" count="2"/>
+        <line num="91" type="method" name="getPathParameterName" visibility="public" complexity="3" crap="3" count="1"/>
+        <line num="93" type="stmt" count="1"/>
+        <line num="95" type="stmt" count="1"/>
+        <line num="96" type="stmt" count="1"/>
+        <line num="99" type="stmt" count="1"/>
+        <metrics loc="101" ncloc="57" classes="1" methods="4" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="22" coveredstatements="21" elements="26" coveredelements="24"/>
+      </file>
+      <file name="/home/olivier/git/mobilecms-api/src/api/v1/classes/mobilecms/utils/UserService.php">
+        <class name="mobilecms\utils\UserService" namespace="mobilecms\utils">
+          <metrics complexity="73" methods="18" coveredmethods="16" conditionals="0" coveredconditionals="0" statements="208" coveredstatements="202" elements="226" coveredelements="218"/>
+        </class>
+        <line num="43" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="69"/>
+        <line num="45" type="stmt" count="69"/>
+        <line num="46" type="stmt" count="69"/>
+        <line num="55" type="method" name="getJsonUserFile" visibility="public" complexity="3" crap="3" count="64"/>
+        <line num="57" type="stmt" count="64"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="61" type="stmt" count="63"/>
+        <line num="62" type="stmt" count="61"/>
+        <line num="64" type="stmt" count="2"/>
+        <line num="75" type="method" name="getJsonUser" visibility="public" complexity="4" crap="4" count="58"/>
+        <line num="77" type="stmt" count="58"/>
+        <line num="80" type="stmt" count="58"/>
+        <line num="81" type="stmt" count="57"/>
+        <line num="82" type="stmt" count="56"/>
+        <line num="84" type="stmt" count="56"/>
+        <line num="85" type="stmt" count="56"/>
+        <line num="87" type="stmt" count="56"/>
+        <line num="90" type="stmt" count="1"/>
+        <line num="93" type="stmt" count="56"/>
+        <line num="105" type="method" name="updateUser" visibility="public" complexity="6" crap="6" count="5"/>
+        <line num="107" type="stmt" count="5"/>
+        <line num="109" type="stmt" count="5"/>
+        <line num="111" type="stmt" count="5"/>
+        <line num="112" type="stmt" count="5"/>
+        <line num="113" type="stmt" count="1"/>
+        <line num="116" type="stmt" count="5"/>
+        <line num="117" type="stmt" count="5"/>
+        <line num="120" type="stmt" count="5"/>
+        <line num="121" type="stmt" count="5"/>
+        <line num="124" type="stmt" count="5"/>
+        <line num="125" type="stmt" count="1"/>
+        <line num="129" type="stmt" count="5"/>
+        <line num="130" type="stmt" count="5"/>
+        <line num="131" type="stmt" count="5"/>
+        <line num="134" type="stmt" count="5"/>
+        <line num="148" type="method" name="createUser" visibility="public" complexity="10" crap="10" count="13"/>
+        <line num="154" type="stmt" count="13"/>
+        <line num="156" type="stmt" count="13"/>
+        <line num="158" type="stmt" count="13"/>
+        <line num="159" type="stmt" count="2"/>
+        <line num="162" type="stmt" count="13"/>
+        <line num="164" type="stmt" count="3"/>
+        <line num="167" type="stmt" count="13"/>
+        <line num="168" type="stmt" count="2"/>
+        <line num="171" type="stmt" count="13"/>
+        <line num="172" type="stmt" count="9"/>
+        <line num="174" type="stmt" count="9"/>
+        <line num="175" type="stmt" count="5"/>
+        <line num="176" type="stmt" count="1"/>
+        <line num="179" type="stmt" count="5"/>
+        <line num="181" type="stmt" count="1"/>
+        <line num="187" type="stmt" count="13"/>
+        <line num="190" type="stmt" count="8"/>
+        <line num="196" type="stmt" count="8"/>
+        <line num="198" type="stmt" count="8"/>
+        <line num="201" type="stmt" count="8"/>
+        <line num="203" type="stmt" count="4"/>
+        <line num="206" type="stmt" count="4"/>
+        <line num="210" type="stmt" count="13"/>
+        <line num="222" type="method" name="login" visibility="public" complexity="3" crap="3" count="5"/>
+        <line num="224" type="stmt" count="5"/>
+        <line num="227" type="stmt" count="5"/>
+        <line num="230" type="stmt" count="5"/>
+        <line num="233" type="stmt" count="5"/>
+        <line num="234" type="stmt" count="5"/>
+        <line num="236" type="stmt" count="3"/>
+        <line num="239" type="stmt" count="2"/>
+        <line num="243" type="stmt" count="5"/>
+        <line num="254" type="method" name="getToken" visibility="public" complexity="5" crap="5.02" count="49"/>
+        <line num="257" type="stmt" count="49"/>
+        <line num="258" type="stmt" count="49"/>
+        <line num="259" type="stmt" count="49"/>
+        <line num="261" type="stmt" count="49"/>
+        <line num="263" type="stmt" count="49"/>
+        <line num="264" type="stmt" count="49"/>
+        <line num="267" type="stmt" count="49"/>
+        <line num="270" type="stmt" count="49"/>
+        <line num="273" type="stmt" count="48"/>
+        <line num="274" type="stmt" count="48"/>
+        <line num="275" type="stmt" count="46"/>
+        <line num="277" type="stmt" count="46"/>
+        <line num="278" type="stmt" count="46"/>
+        <line num="279" type="stmt" count="46"/>
+        <line num="280" type="stmt" count="46"/>
+        <line num="281" type="stmt" count="46"/>
+        <line num="283" type="stmt" count="46"/>
+        <line num="284" type="stmt" count="46"/>
+        <line num="285" type="stmt" count="46"/>
+        <line num="286" type="stmt" count="46"/>
+        <line num="287" type="stmt" count="46"/>
+        <line num="288" type="stmt" count="46"/>
+        <line num="289" type="stmt" count="46"/>
+        <line num="290" type="stmt" count="46"/>
+        <line num="291" type="stmt" count="46"/>
+        <line num="292" type="stmt" count="46"/>
+        <line num="294" type="stmt" count="46"/>
+        <line num="296" type="stmt" count="46"/>
+        <line num="298" type="stmt" count="46"/>
+        <line num="302" type="stmt" count="48"/>
+        <line num="306" type="stmt" count="0"/>
+        <line num="307" type="stmt" count="0"/>
+        <line num="311" type="stmt" count="48"/>
+        <line num="312" type="stmt" count="0"/>
+        <line num="315" type="stmt" count="48"/>
+        <line num="327" type="method" name="changePassword" visibility="public" complexity="5" crap="5.05" count="2"/>
+        <line num="330" type="stmt" count="2"/>
+        <line num="331" type="stmt" count="2"/>
+        <line num="333" type="stmt" count="2"/>
+        <line num="335" type="stmt" count="2"/>
+        <line num="337" type="stmt" count="2"/>
+        <line num="338" type="stmt" count="2"/>
+        <line num="341" type="stmt" count="2"/>
+        <line num="344" type="stmt" count="2"/>
+        <line num="347" type="stmt" count="2"/>
+        <line num="348" type="stmt" count="2"/>
+        <line num="349" type="stmt" count="2"/>
+        <line num="352" type="stmt" count="2"/>
+        <line num="353" type="stmt" count="2"/>
+        <line num="354" type="stmt" count="2"/>
+        <line num="355" type="stmt" count="2"/>
+        <line num="357" type="stmt" count="2"/>
+        <line num="358" type="stmt" count="2"/>
+        <line num="360" type="stmt" count="2"/>
+        <line num="364" type="stmt" count="2"/>
+        <line num="368" type="stmt" count="0"/>
+        <line num="369" type="stmt" count="0"/>
+        <line num="373" type="stmt" count="2"/>
+        <line num="374" type="stmt" count="0"/>
+        <line num="377" type="stmt" count="2"/>
+        <line num="388" type="method" name="verifyToken" visibility="public" complexity="6" crap="6" count="38"/>
+        <line num="390" type="stmt" count="38"/>
+        <line num="392" type="stmt" count="38"/>
+        <line num="393" type="stmt" count="1"/>
+        <line num="396" type="stmt" count="37"/>
+        <line num="400" type="stmt" count="37"/>
+        <line num="402" type="stmt" count="37"/>
+        <line num="408" type="stmt" count="37"/>
+        <line num="409" type="stmt" count="37"/>
+        <line num="416" type="stmt" count="37"/>
+        <line num="419" type="stmt" count="37"/>
+        <line num="420" type="stmt" count="36"/>
+        <line num="421" type="stmt" count="31"/>
+        <line num="424" type="stmt" count="36"/>
+        <line num="427" type="stmt" count="1"/>
+        <line num="430" type="stmt" count="37"/>
+        <line num="442" type="method" name="resetPassword" visibility="public" complexity="3" crap="3" count="3"/>
+        <line num="445" type="stmt" count="3"/>
+        <line num="446" type="stmt" count="3"/>
+        <line num="448" type="stmt" count="3"/>
+        <line num="450" type="stmt" count="3"/>
+        <line num="453" type="stmt" count="3"/>
+        <line num="456" type="stmt" count="3"/>
+        <line num="459" type="stmt" count="2"/>
+        <line num="460" type="stmt" count="2"/>
+        <line num="463" type="stmt" count="2"/>
+        <line num="464" type="stmt" count="2"/>
+        <line num="465" type="stmt" count="2"/>
+        <line num="466" type="stmt" count="2"/>
+        <line num="468" type="stmt" count="2"/>
+        <line num="469" type="stmt" count="2"/>
+        <line num="478" type="stmt" count="2"/>
+        <line num="488" type="method" name="getPublicInfo" visibility="public" complexity="2" crap="2" count="5"/>
+        <line num="490" type="stmt" count="5"/>
+        <line num="492" type="stmt" count="5"/>
+        <line num="493" type="stmt" count="5"/>
+        <line num="495" type="stmt" count="5"/>
+        <line num="496" type="stmt" count="5"/>
+        <line num="497" type="stmt" count="5"/>
+        <line num="498" type="stmt" count="5"/>
+        <line num="501" type="stmt" count="5"/>
+        <line num="511" type="method" name="generateRandomString" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="513" type="stmt" count="1"/>
+        <line num="521" type="method" name="getDefaultResponse" visibility="protected" complexity="1" crap="1" count="42"/>
+        <line num="523" type="stmt" count="42"/>
+        <line num="524" type="stmt" count="42"/>
+        <line num="525" type="stmt" count="42"/>
+        <line num="527" type="stmt" count="42"/>
+        <line num="540" type="method" name="addDbUser" visibility="private" complexity="2" crap="2" count="4"/>
+        <line num="547" type="stmt" count="4"/>
+        <line num="548" type="stmt" count="4"/>
+        <line num="549" type="stmt" count="4"/>
+        <line num="550" type="stmt" count="4"/>
+        <line num="551" type="stmt" count="4"/>
+        <line num="552" type="stmt" count="4"/>
+        <line num="553" type="stmt" count="4"/>
+        <line num="555" type="stmt" count="4"/>
+        <line num="556" type="stmt" count="4"/>
+        <line num="558" type="stmt" count="4"/>
+        <line num="569" type="method" name="isPermitted" visibility="private" complexity="6" crap="6" count="36"/>
+        <line num="571" type="stmt" count="36"/>
+        <line num="572" type="stmt" count="36"/>
+        <line num="573" type="stmt" count="36"/>
+        <line num="574" type="stmt" count="34"/>
+        <line num="577" type="stmt" count="36"/>
+        <line num="578" type="stmt" count="2"/>
+        <line num="582" type="stmt" count="36"/>
+        <line num="592" type="method" name="isPermittedEditor" visibility="private" complexity="5" crap="5" count="34"/>
+        <line num="594" type="stmt" count="34"/>
+        <line num="595" type="stmt" count="34"/>
+        <line num="596" type="stmt" count="34"/>
+        <line num="597" type="stmt" count="29"/>
+        <line num="598" type="stmt" count="5"/>
+        <line num="599" type="stmt" count="1"/>
+        <line num="603" type="stmt" count="34"/>
+        <line num="613" type="method" name="isPermittedAdmin" visibility="private" complexity="4" crap="4" count="2"/>
+        <line num="615" type="stmt" count="2"/>
+        <line num="616" type="stmt" count="2"/>
+        <line num="617" type="stmt" count="2"/>
+        <line num="618" type="stmt" count="1"/>
+        <line num="622" type="stmt" count="2"/>
+        <line num="625" type="method" name="getAllUsers" visibility="public" complexity="6" crap="6" count="1"/>
+        <line num="627" type="stmt" count="1"/>
+        <line num="629" type="stmt" count="1"/>
+        <line num="631" type="stmt" count="1"/>
+        <line num="632" type="stmt" count="1"/>
+        <line num="633" type="stmt" count="1"/>
+        <line num="634" type="stmt" count="1"/>
+        <line num="635" type="stmt" count="1"/>
+        <line num="636" type="stmt" count="1"/>
+        <line num="637" type="stmt" count="1"/>
+        <line num="641" type="stmt" count="1"/>
+        <line num="644" type="stmt" count="1"/>
+        <line num="645" type="stmt" count="1"/>
+        <line num="646" type="stmt" count="1"/>
+        <line num="647" type="stmt" count="1"/>
+        <line num="649" type="stmt" count="1"/>
+        <metrics loc="651" ncloc="400" classes="1" methods="18" coveredmethods="16" conditionals="0" coveredconditionals="0" statements="208" coveredstatements="202" elements="226" coveredelements="218"/>
+      </file>
+    </package>
+    <file name="/home/olivier/git/mobilecms-api/src/api/v1/cmsapi.php">
+      <metrics loc="9" ncloc="3" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/olivier/git/mobilecms-api/src/api/v1/fileapi.php">
+      <metrics loc="10" ncloc="4" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <metrics files="27" loc="4650" ncloc="2759" classes="21" methods="166" coveredmethods="147" conditionals="0" coveredconditionals="0" statements="1214" coveredstatements="1180" elements="1380" coveredelements="1327"/>
+  </project>
+</coverage>
