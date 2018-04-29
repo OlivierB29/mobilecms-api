@@ -274,23 +274,6 @@ class ContentService
     }
 
     /**
-     * Create a single element.
-     *
-     * @param string $type      : object type (eg : calendar)
-     * @param string $keyname   : JSON data filename
-     * @param string $recordStr : primary key inside the file.
-     *
-     * @return : Response object with a JSON object
-     */
-    public function put(string $type, string $keyname, string $recordStr): Response
-    {
-        // TODO : throw an exception if existing file
-        return $this->post($type, $keyname, $recordStr);
-    }
-
-
-
-    /**
      * Return an index file path.
      *
      * @param string $type : name of type eg : calendar
