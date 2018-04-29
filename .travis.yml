@@ -4,7 +4,9 @@ php:
   - '7.1'
   - '7.2'
 before_script:
-  - printf "\n" | pecl install imagick
+   - pear config-set preferred_state beta
+   - pecl channel-update pecl.php.net
+   - yes | pecl install imagick
 script:
 - phpunit --configuration phpunit-utils.xml
 - phpunit --configuration phpunit-api.xml
