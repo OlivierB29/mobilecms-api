@@ -24,12 +24,12 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('POST', $this->path);
 
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+
+
         $result = $response->getResult();
         $this->assertEquals(401, $response->getCode());
     }
@@ -37,11 +37,11 @@ final class AuthenticationApiTest extends ApiTest
     public function testAuthenticateOptions()
     {
         $this->path = '/api/v1/authenticate';
-        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('OPTIONS', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
 
-        $response = $this->API->processAPI();
+
+
         $result = $response->getResult();
 
         $this->assertTrue($result != null);
@@ -53,11 +53,11 @@ final class AuthenticationApiTest extends ApiTest
     public function testRegisterOptions()
     {
         $this->path = '/api/v1/register';
-        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('OPTIONS', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
 
-        $response = $this->API->processAPI();
+
+
         $result = $response->getResult();
 
         $this->assertTrue($result != null);
@@ -69,11 +69,11 @@ final class AuthenticationApiTest extends ApiTest
     public function testResetPasswordOptions()
     {
         $this->path = '/api/v1/resetpassword';
-        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('OPTIONS', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
 
-        $response = $this->API->processAPI();
+
+
         $result = $response->getResult();
 
         $this->assertTrue($result != null);
@@ -84,11 +84,11 @@ final class AuthenticationApiTest extends ApiTest
     public function testChangePasswordOptions()
     {
         $this->path = '/api/v1/changepassword';
-        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('OPTIONS', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
 
-        $response = $this->API->processAPI();
+
+
         $result = $response->getResult();
 
         $this->assertTrue($result != null);
@@ -101,10 +101,10 @@ final class AuthenticationApiTest extends ApiTest
     {
         $this->path = '/api/v1/authenticate';
         $this->REQUEST = ['path' => $this->path];
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('POST', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+
+
         $result = $response->getResult();
         $this->assertEquals(401, $response->getCode());
         $this->assertTrue($result != null && $result != '');
@@ -117,12 +117,12 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('POST', $this->path);
 
         $this->POST = ['requestbody' => ''];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+
+
         $result = $response->getResult();
         $this->assertEquals(401, $response->getCode());
         $this->assertTrue($result != null && $result != '');
@@ -135,12 +135,11 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
 
         $this->POST = ['requestbody' => $recordStr];
+        $response = $this->request('POST', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
         $result = $response->getResult();
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
@@ -159,12 +158,11 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
 
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
+
         $result = $response->getResult();
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
@@ -183,12 +181,12 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
 
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
+
         $result = $response->getResult();
         $this->assertEquals(401, $response->getCode());
     }
@@ -200,12 +198,12 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
 
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
+
         $result = $response->getResult();
         $this->assertEquals(401, $response->getCode());
     }
@@ -217,12 +215,12 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
 
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
+
         $result = $response->getResult();
         $this->assertEquals(401, $response->getCode());
     }
@@ -244,12 +242,12 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
 
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
+
         $result = $response->getResult();
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
@@ -278,12 +276,11 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
 
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
+
         $result = $response->getResult();
 
         $this->assertEquals(400, $response->getCode());
@@ -302,12 +299,12 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['HTTP_USER_AGENT' => 'localhost', 'REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+
 
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
+
         $result = $response->getResult();
 
         $this->printError($response);
@@ -344,12 +341,8 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-
         $this->POST = ['requestbody' => $recordStr];
-
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
         $result = $response->getResult();
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
@@ -371,13 +364,8 @@ final class AuthenticationApiTest extends ApiTest
         $this->path = '/api/v1/authenticate';
 
         $this->REQUEST = ['path' => $this->path];
-
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-
         $this->POST = ['requestbody' => $recordStr];
-
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
         $result = $response->getResult();
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
@@ -395,11 +383,11 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->REQUEST = ['path' => $this->path];
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('GET', $this->path);
 
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST);
-        $response = $this->API->processAPI();
+
+
         $result = $response->getResult();
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());

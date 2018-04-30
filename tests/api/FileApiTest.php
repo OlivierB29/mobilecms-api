@@ -192,20 +192,9 @@ final class FileApiTest extends AuthApiTest
         $files = [
         ['name'=>$filename,'type'=>'application/pdf','tmp_name'=> $mockUploadedFile,'error'=>0,'size'=>24612]
         ];
-        // mock HTTP parameters
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-
-        // API call
-
 
         $this->API->setDebug(true);
-
-
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);
-
-        $this->API->authorize($this->headers, $this->SERVER);
-
-        $response = $this->API->processAPI();
+        $response = $this->filerequest('POST', $this->path, $files);
         $result = $response->getResult();
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
@@ -234,17 +223,10 @@ final class FileApiTest extends AuthApiTest
 
         // mock HTTP parameters
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-
-        // API call
-
         $this->API->setDebug(true);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);
 
-        $this->API->authorize($this->headers, $this->SERVER);
-
-        $response = $this->API->processAPI();
+        $response = $this->filerequest('POST', $this->path, $files);
         $result = $response->getResult();
         $this->assertEquals(500, $response->getCode());
 
@@ -267,22 +249,11 @@ final class FileApiTest extends AuthApiTest
             ['name'=>$filename,'type'=>'image/bmp','tmp_name'=> $mockUploadedFile,'error'=>0,'size'=>24612]
             ];
 
-        // mock HTTP parameters
-
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-
-        // API call
-
         $this->API->setDebug(true);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);
-
-        $this->API->authorize($this->headers, $this->SERVER);
-
-        $response = $this->API->processAPI();
-        $result = $response->getResult();
+        $response = $this->filerequest('POST', $this->path, $files);
         $this->assertEquals(500, $response->getCode());
-
+        $result = $response->getResult();
         $this->assertTrue($result != null && $result != '');
         $expected = '{"error":"forbidden file type"}';
 
@@ -294,18 +265,13 @@ final class FileApiTest extends AuthApiTest
         $record = '/calendar/2';
         $this->path = '/fileapi/v1/thumbnails/calendar/2';
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-
         $recordStr = '[{ "url": "tennis.jpg", "sizes": ["100", "200", "300"]}]';
 
         $this->POST = ['requestbody' => $recordStr];
         unset($recordStr);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
 
-        $this->API->authorize($this->headers, $this->SERVER);
-
-        $response = $this->API->processAPI();
+        $response = $this->authrequest('POST', $this->path);
         $result = $response->getResult();
 
         $this->assertEquals(200, $response->getCode());
@@ -329,18 +295,12 @@ final class FileApiTest extends AuthApiTest
         $record = '/calendar/2';
         $this->path = '/fileapi/v1/thumbnails/calendar/2';
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-
         $recordStr = '[{ "url": "tennis.jpg"}]';
 
         $this->POST = ['requestbody' => $recordStr];
         unset($recordStr);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-
-        $this->API->authorize($this->headers, $this->SERVER);
-
-        $response = $this->API->processAPI();
+        $response = $this->authrequest('POST', $this->path);
         $result = $response->getResult();
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
@@ -355,5 +315,13 @@ final class FileApiTest extends AuthApiTest
         unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-150.jpg');
         $this->assertTrue(file_exists($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-300.jpg'));
         unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-300.jpg');
+    }
+
+    protected function filerequest($verb, $path, $files): \mobilecms\utils\Response
+    {
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => $verb, 'HTTP_ORIGIN' => 'foobar'];
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);
+        $this->API->authorize($this->headers, $this->SERVER);
+        return $this->API->processAPI();
     }
 }

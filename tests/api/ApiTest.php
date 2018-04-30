@@ -45,4 +45,19 @@ abstract class ApiTest extends TestCase
             echo 'ERROR ' . $response->getResult();
         }
     }
+
+    protected function request($verb, $path): \mobilecms\utils\Response
+    {
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => $verb, 'HTTP_ORIGIN' => 'foobar'];
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+        return $this->API->processAPI();
+    }
+
+    protected function authrequest($verb, $path): \mobilecms\utils\Response
+    {
+        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => $verb, 'HTTP_ORIGIN' => 'foobar'];
+        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+        $this->API->authorize($this->headers, $this->SERVER);
+        return $this->API->processAPI();
+    }
 }

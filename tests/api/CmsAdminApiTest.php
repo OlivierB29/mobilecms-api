@@ -19,11 +19,9 @@ final class CmsAdminApiTest extends AuthApiTest
     {
         $this->setAdmin();
         $this->path = '/adminapi/v1/content';
-        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
+        $response = $this->request('GET', $this->path);
 
-        $response = $this->API->processAPI();
         $result = $response->getResult();
 
         $this->assertTrue($result != null);
@@ -36,13 +34,9 @@ final class CmsAdminApiTest extends AuthApiTest
     {
         $email = 'editor@example.com';
         $this->path = '/adminapi/v1/content/users/' . $email;
-        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'OPTIONS', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('OPTIONS', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-
-        $response = $this->API->processAPI();
         $result = $response->getResult();
-
         $this->assertTrue($result != null);
         $this->assertJsonStringEqualsJsonString('{}', $result);
         $this->printError($response);
@@ -57,13 +51,9 @@ final class CmsAdminApiTest extends AuthApiTest
         $email = 'editor@example.com';
         $this->path = '/adminapi/v1/content/users/' . $email;
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
-
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
+        $response = $this->request('GET', $this->path);
 
         $result = $response->getResult();
-
 
         $this->assertEquals(401, $response->getCode());
         $this->assertTrue($result != null && $result != '');
@@ -77,10 +67,8 @@ final class CmsAdminApiTest extends AuthApiTest
         $email = 'editor@example.com';
         $this->path = '/adminapi/v1/content/users/' . $email;
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('GET', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
 
         $result = $response->getResult();
 
@@ -96,10 +84,8 @@ final class CmsAdminApiTest extends AuthApiTest
         $email = 'guest@example.com';
         $this->path = '/adminapi/v1/content/users/' . $email;
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('GET', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
 
         $result = $response->getResult();
 
@@ -115,10 +101,8 @@ final class CmsAdminApiTest extends AuthApiTest
         $email = 'editor@example.com';
         $this->path = '/adminapi/v1/content/users/' . $email;
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('GET', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
 
         $result = $response->getResult();
 
@@ -139,10 +123,8 @@ final class CmsAdminApiTest extends AuthApiTest
         $email = 'editor@example.com';
         $this->path = '/adminapi/v1/content/users';
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('GET', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
 
         $result = $response->getResult();
 
@@ -159,14 +141,11 @@ final class CmsAdminApiTest extends AuthApiTest
         $this->path = '/adminapi/v1/content/users/';
         $file = $this->API->getPrivateDirPath() . '/users/' . $email . '.json';
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-
-
         $recordStr = '{ "name": "test role", "email": "' . $email . '", "role":"editor", "password":"Something1234567890"}';
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
+
 
         $result = $response->getResult();
         $this->printError($response);
@@ -190,15 +169,11 @@ final class CmsAdminApiTest extends AuthApiTest
 
         $this->path = '/adminapi/v1/content/users/' . $email;
 
-
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-
-
         $recordStr = '{ "name": "test", "email": "' . $email . '", "role":"editor", "newpassword":"Something1234567890"}';
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
+        $response = $this->request('POST', $this->path);
+
 
         $result = $response->getResult();
         $this->printError($response);
@@ -221,10 +196,8 @@ final class CmsAdminApiTest extends AuthApiTest
         $this->assertTrue(copy($this->API->getPrivateDirPath() . '/save/' . $email . '.json', $file));
 
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'DELETE', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('DELETE', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
 
         $result = $response->getResult();
         $this->printError($response);
@@ -241,10 +214,8 @@ final class CmsAdminApiTest extends AuthApiTest
 
 
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('GET', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
         $this->assertEquals(200, $response->getCode());
         $result = $response->getResult();
         $this->assertTrue($result != null && $result != '');
@@ -256,10 +227,10 @@ final class CmsAdminApiTest extends AuthApiTest
 
 
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('POST', $this->path);
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
+
+
         $this->assertEquals(200, $response->getCode());
         $result = $response->getResult();
         $this->assertTrue($result != null && $result != '');
@@ -278,15 +249,12 @@ final class CmsAdminApiTest extends AuthApiTest
 
 
 
-        $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
-
 
         $recordStr = '{ "name": "test role", "email": "' . $email . '", "role":"editor"}';
         $this->POST = ['requestbody' => $recordStr];
 
-        $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
-        $response = $this->API->processAPI();
-
+        $response = $this->request('POST', $this->path);
+        
         $result = $response->getResult();
 
         $this->printError($response);

@@ -11,6 +11,7 @@ It is initially intended to manage a sport organization, with such content : New
 - Authentication with JSON web tokens
 - Password encryption
 - All the data is public, by default. (except users)
+- Create thumbnails for images and PDF files
 
 ## Internal database
 [database.md](database.md)
@@ -40,7 +41,7 @@ Assume `www/html/` is the web root context.
 ## Development install
 
 When editing the API and live testing to a local web server.
-### Required : PHP 7.0 / 7.1
+### Required : PHP 7.0+
 Basically a hosted PHP should be OK. With a default Ubuntu 16.04, you may need : `sudo apt install libapache2-mod-php php-mcrypt php-gd php-mbstring php-xml php-imagick`
 - php-gd : image features
 - php-mbstring php-xml : optional, for PHPUnit
