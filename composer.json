@@ -5,6 +5,11 @@
         "cakephp/cakephp-codesniffer": "^3.0"
     },
     "require": {
-
+      "php": ">=7.0",
+      "ext-json": "*",
+      "ext-gd": "*",
+      "ext-mbstring": "*",
+      "ext-mcrypt": "*",
+      "ext-imagick": "*"
     }
 }
