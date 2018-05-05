@@ -491,8 +491,8 @@ class ContentService
     public function adminOptions(string $filename)
     {
         $file = $this->databasedir . '/' . $filename;
-      //  $tmp = json_decode('{}');
-      //  $tmp->{'list'} = JsonUtils::readJsonFile($file);
+        //  $tmp = json_decode('{}');
+        //  $tmp->{'list'} = JsonUtils::readJsonFile($file);
         $tmp = JsonUtils::readJsonFile($file);
 
         return $tmp;
