@@ -44,17 +44,18 @@ final class FileApiTest extends AuthApiTest
         $this->API->authorize($this->headers, $this->SERVER);
 
         $response = $this->API->processAPI();
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
 
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
         // test JSON response
+        $this->assertTrue(count($response->getResult()) === 1);
+        $imageData = $response->getResult()[0];
+        $this->assertTrue($imageData->{'url'} === 'index.html');
+        $this->assertTrue($imageData->{'title'} === 'MIT licence');
 
-        $this->assertTrue(strpos($result, 'title') !== false);
-        $this->assertTrue(strpos($result, 'url') !== false);
-        $this->assertTrue(strpos($result, '"url":"index.html"') !== false);
 
         // test download
         $download = file_get_contents($this->API->getMediaDirPath() . '/calendar/4/index.html');
@@ -79,17 +80,17 @@ final class FileApiTest extends AuthApiTest
         $this->API->authorize($this->headers, $this->SERVER);
 
         $response = $this->API->processAPI();
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
 
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
         // test JSON response
-
-        $this->assertTrue(strpos($result, 'title') !== false);
-        $this->assertTrue(strpos($result, 'url') !== false);
-        $this->assertTrue(strpos($result, '"url":"new-php-logo.png"') !== false);
+        $this->assertTrue(count($response->getResult()) === 1);
+        $imageData = $response->getResult()[0];
+        $this->assertTrue($imageData->{'url'} === 'new-php-logo.png');
+        $this->assertTrue($imageData->{'title'} === 'php logo');
 
         // test download
         $this->assertTrue(\file_exists($this->API->getMediaDirPath() . '/calendar/5/new-php-logo.png'));
@@ -139,11 +140,11 @@ final class FileApiTest extends AuthApiTest
         $this->API->authorize($this->headers, $this->SERVER);
 
         $response = $this->API->processAPI();
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
 
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
         // test deleted file
         $this->assertTrue(!file_exists($destfile));
@@ -170,14 +171,14 @@ final class FileApiTest extends AuthApiTest
         $this->API->authorize($this->headers, $this->SERVER);
 
         $response = $this->API->processAPI();
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
 
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
         $expected = '[{"title":"index.html","url":"index.html","size":2834,"mimetype":"text\/html"},{"title":"lorem ipsum.pdf","url":"lorem ipsum.pdf","size":24612,"mimetype":"application\/pdf"}]';
 
-        $this->assertJsonStringEqualsJsonString($expected, $result);
+        $this->assertJsonStringEqualsJsonString($expected, $response->getEncodedResult());
     }
 
     public function testUploadFile()
@@ -195,14 +196,14 @@ final class FileApiTest extends AuthApiTest
 
         $this->API->setDebug(true);
         $response = $this->filerequest('POST', $this->path, $files);
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
 
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
         $expected = '[{"title":"testupload.pdf","url":"testupload.pdf","size":24612,"mimetype":"application\/pdf"}]';
 
-        $this->assertJsonStringEqualsJsonString($expected, $result);
+        $this->assertJsonStringEqualsJsonString($expected, $response->getEncodedResult());
 
         $mediaFile = $this->API->getMediaDirPath() . $record . '/' . $filename;
         $this->assertTrue(file_exists($mediaFile));
@@ -227,13 +228,13 @@ final class FileApiTest extends AuthApiTest
 
 
         $response = $this->filerequest('POST', $this->path, $files);
-        $result = $response->getResult();
+
         $this->assertEquals(500, $response->getCode());
 
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
         $expected = '{"error":"Uploaded file not found ' . $mockUploadedFile . '"}';
 
-        $this->assertJsonStringEqualsJsonString($expected, $result);
+        $this->assertJsonStringEqualsJsonString($expected, $response->getEncodedResult());
     }
 
 
@@ -253,11 +254,11 @@ final class FileApiTest extends AuthApiTest
 
         $response = $this->filerequest('POST', $this->path, $files);
         $this->assertEquals(500, $response->getCode());
-        $result = $response->getResult();
-        $this->assertTrue($result != null && $result != '');
+
+        $this->assertTrue($response != null);
         $expected = '{"error":"forbidden file type"}';
 
-        $this->assertJsonStringEqualsJsonString($expected, $result);
+        $this->assertJsonStringEqualsJsonString($expected, $response->getEncodedResult());
     }
 
     public function testThumbnails()
@@ -272,15 +273,15 @@ final class FileApiTest extends AuthApiTest
 
 
         $response = $this->authrequest('POST', $this->path);
-        $result = $response->getResult();
+
 
         $this->assertEquals(200, $response->getCode());
 
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
         $expected = '[{"width":"640","height":"476","url":"tennis.jpg","mimetype":"image\/jpeg","thumbnails":[{"width":"100","height":"74","url":"tennis-100.jpg"},{"width":"200","height":"149","url":"tennis-200.jpg"},{"width":"300","height":"223","url":"tennis-300.jpg"}]}]';
 
-        $this->assertJsonStringEqualsJsonString($expected, $result);
+        $this->assertJsonStringEqualsJsonString($expected, $response->getEncodedResult());
 
         $this->assertTrue(file_exists($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-100.jpg'));
         unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-100.jpg');
@@ -301,15 +302,15 @@ final class FileApiTest extends AuthApiTest
         unset($recordStr);
 
         $response = $this->authrequest('POST', $this->path);
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
 
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
         $expected = '[{"width":"640","height":"476","url":"tennis.jpg","mimetype":"image\/jpeg","thumbnails":[{"width":"150","height":"112","url":"tennis-150.jpg"},{"width":"300","height":"223","url":"tennis-300.jpg"}]}]';
 
-        $this->assertJsonStringEqualsJsonString($expected, $result);
+        $this->assertJsonStringEqualsJsonString($expected, $response->getEncodedResult());
 
         $this->assertTrue(file_exists($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-150.jpg'));
         unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-150.jpg');

@@ -52,7 +52,7 @@ class UserService
 
         $tmp = json_decode('{}');
         $tmp->{'list'} = $thelist;
-        $response->setResult(json_encode($tmp));
+        $response->setResult($tmp);
         $response->setCode(200);
 
         return $response;
@@ -100,10 +100,10 @@ class UserService
             if (isset($jsonUser->{'name'}) && isset($jsonUser->{'password'})) {
                 $result = $jsonUser;
             } else {
-                throw new \Exception('getJsonUser() empty user ' . $email);
+                throw new \Exception('empty user ');
             }
         } else {
-            throw new \Exception('getJsonUser() file not found ' . $file);
+            throw new \Exception('not found');
         }
 
         return $result;
@@ -160,7 +160,7 @@ class UserService
     {
         $response = new Response();
         $response->setCode(400);
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         return $response;
     }

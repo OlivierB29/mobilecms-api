@@ -28,7 +28,7 @@ class Response
      *
      * @param string $newval set string result
      */
-    public function setResult(string $newval)
+    public function setResult($newval)
     {
         $this->result = $newval;
     }
@@ -38,9 +38,19 @@ class Response
      *
      * @return get string result
      */
-    public function getResult(): string
+    public function getResult()
     {
         return $this->result;
+    }
+
+    /**
+     * Get result.
+     *
+     * @return get string result
+     */
+    public function getEncodedResult(): string
+    {
+        return \json_encode($this->result);
     }
 
     /**
@@ -75,6 +85,6 @@ class Response
 
         $json = json_decode('{}');
         $json->{'error'} = $msg;
-        $this->result = json_encode($json);
+        $this->result = $json;
     }
 }

@@ -97,7 +97,7 @@ final class AuthServiceTest extends TestCase
         $this->assertTrue($result->getCode() === 200);
         $this->assertTrue(null != $result->getResult());
 
-        $user = json_decode($result->getResult());
+        $user = $result->getResult();
 
         $this->assertTrue($user->{'name'} === 'test@example.com');
         $this->assertTrue($user->{'email'} === 'test@example.com');
@@ -114,7 +114,7 @@ final class AuthServiceTest extends TestCase
     {
         $getTokenResponse = $this->service->getToken('test@example.com', 'Sample#123456');
 
-        $user = json_decode($getTokenResponse->getResult());
+        $user = $getTokenResponse->getResult();
 
         $result = $this->service->verifyToken($user->{'token'}, 'editor');
 
@@ -125,7 +125,7 @@ final class AuthServiceTest extends TestCase
     {
         $getTokenResponse = $this->service->getToken('test@example.com', 'Sample#123456');
 
-        $user = json_decode($getTokenResponse->getResult());
+        $user = $getTokenResponse->getResult();
 
         $result = $this->service->verifyToken($user->{'token'} . 'FOOBAR', 'editor');
 
@@ -136,7 +136,7 @@ final class AuthServiceTest extends TestCase
     {
         $getTokenResponse = $this->service->getToken('guest@example.com', 'Sample#123456');
 
-        $user = json_decode($getTokenResponse->getResult());
+        $user = $getTokenResponse->getResult();
 
         $result = $this->service->verifyToken($user->{'token'}, 'editor');
 
@@ -147,7 +147,7 @@ final class AuthServiceTest extends TestCase
     {
         $getTokenResponse = $this->service->getToken('test@example.com', 'Sample#123456');
 
-        $user = json_decode($getTokenResponse->getResult());
+        $user = $getTokenResponse->getResult();
 
         $result = $this->service->verifyToken($user->{'token'}, 'admin');
 
@@ -158,7 +158,7 @@ final class AuthServiceTest extends TestCase
     {
         $getTokenResponse = $this->service->getToken('admin@example.com', 'Sample#123456');
 
-        $user = json_decode($getTokenResponse->getResult());
+        $user = $getTokenResponse->getResult();
 
         $result = $this->service->verifyToken($user->{'token'}, 'editor');
 
@@ -169,7 +169,7 @@ final class AuthServiceTest extends TestCase
     {
         $getTokenResponse = $this->service->getToken('admin@example.com', 'Sample#123456');
 
-        $user = json_decode($getTokenResponse->getResult());
+        $user = $getTokenResponse->getResult();
 
         $result = $this->service->verifyToken($user->{'token'}, 'admin');
 
@@ -180,23 +180,19 @@ final class AuthServiceTest extends TestCase
     {
         $result = $this->service->getToken('test@example.com', 'Sample#1234567');
         $this->assertTrue($result->getCode() === 401);
-        $this->assertTrue($result->getResult() === '{}');
+        $this->assertTrue($result->getEncodedResult() === '{}');
     }
 
     public function testWrongLogin1()
     {
         $result = $this->service->login('test@example.com', 'wrongpass');
-        $this->assertTrue(
-          $result !== null
-        );
+        $this->assertTrue($result !== null);
     }
 
     public function testWrongLogin2()
     {
         $result = $this->service->login('test@example.com', 'Sample#12345');
-        $this->assertTrue(
-          $result !== null
-        );
+        $this->assertTrue($result !== null);
     }
 
 
@@ -204,9 +200,7 @@ final class AuthServiceTest extends TestCase
     public function testResetPasswordWrongUser()
     {
         $this->expectException(\Exception::class);
-        $this->assertTrue(
-          $this->service->resetPassword('FOOBAR@example.com', 'foo')
-        );
+        $this->service->resetPassword('FOOBAR@example.com', 'foo');
     }
 
 

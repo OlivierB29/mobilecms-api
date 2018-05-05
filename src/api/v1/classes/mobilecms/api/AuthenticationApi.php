@@ -130,10 +130,10 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
                     }
                     // @codeCoverageIgnoreEnd
                 } elseif ($this->debugResetPassword) {
-                    $tmpResponse = json_decode($response->getResult());
+                    $tmpResponse = $response->getResult();
                     // test only
                     $tmpResponse->{'notification'} = json_encode($notificationBody);
-                    $response->setResult(json_encode($tmpResponse));
+                    $response->setResult($tmpResponse);
                 }
             }
 
@@ -197,7 +197,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
             );
             if ($createresult === null) {
                 $response->setCode(200);
-                $response->setResult('{}');
+                $response->setResult(new \stdClass);
             } else {
                 $response->setError(400, 'Bad user parameters');
             }
@@ -219,7 +219,7 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     {
         $response = new \mobilecms\utils\Response();
         $response->setCode(200);
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         // @codeCoverageIgnoreStart
         if ($this->enableHeaders) {

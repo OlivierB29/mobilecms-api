@@ -22,9 +22,9 @@ final class CmsAdminApiTest extends AuthApiTest
 
         $response = $this->request('GET', $this->path);
 
-        $result = $response->getResult();
 
-        $this->assertTrue($result != null);
+
+        $this->assertTrue(isset($response));
 
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
@@ -36,9 +36,9 @@ final class CmsAdminApiTest extends AuthApiTest
         $this->path = '/adminapi/v1/content/users/' . $email;
         $response = $this->request('OPTIONS', $this->path);
 
-        $result = $response->getResult();
-        $this->assertTrue($result != null);
-        $this->assertJsonStringEqualsJsonString('{}', $result);
+
+        $this->assertTrue($response != null);
+        $this->assertJsonStringEqualsJsonString('{}', $response->getEncodedResult());
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
     }
@@ -53,11 +53,11 @@ final class CmsAdminApiTest extends AuthApiTest
 
         $response = $this->request('GET', $this->path);
 
-        $result = $response->getResult();
+
 
         $this->assertEquals(401, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
-        $this->assertJsonStringEqualsJsonString('{"error":"Invalid token !"}', $result);
+        $this->assertTrue($response != null);
+        $this->assertJsonStringEqualsJsonString('{"error":"Invalid token !"}', $response->getEncodedResult());
     }
 
     public function testUnauthorizedEditor()
@@ -70,12 +70,12 @@ final class CmsAdminApiTest extends AuthApiTest
         $response = $this->request('GET', $this->path);
 
 
-        $result = $response->getResult();
+
 
 
         $this->assertEquals(403, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
-        $this->assertJsonStringEqualsJsonString('{"error":"wrong role"}', $result);
+        $this->assertTrue($response != null);
+        $this->assertJsonStringEqualsJsonString('{"error":"wrong role"}', $response->getEncodedResult());
     }
     public function testUnauthorizedGuest()
     {
@@ -87,12 +87,12 @@ final class CmsAdminApiTest extends AuthApiTest
         $response = $this->request('GET', $this->path);
 
 
-        $result = $response->getResult();
+
 
 
         $this->assertEquals(403, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
-        $this->assertJsonStringEqualsJsonString('{"error":"wrong role"}', $result);
+        $this->assertTrue($response != null);
+        $this->assertJsonStringEqualsJsonString('{"error":"wrong role"}', $response->getEncodedResult());
     }
 
     public function testGet()
@@ -104,13 +104,13 @@ final class CmsAdminApiTest extends AuthApiTest
         $response = $this->request('GET', $this->path);
 
 
-        $result = $response->getResult();
+
 
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
-        $userObject = json_decode($result);
+        $userObject = $response->getResult();
         $this->assertTrue($userObject->{'name'} === 'editor@example.com');
         $this->assertTrue($userObject->{'email'} === 'editor@example.com');
         $this->assertTrue($userObject->{'role'} === 'editor');
@@ -126,11 +126,11 @@ final class CmsAdminApiTest extends AuthApiTest
         $response = $this->request('GET', $this->path);
 
 
-        $result = $response->getResult();
+
 
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
     }
 
 
@@ -147,10 +147,10 @@ final class CmsAdminApiTest extends AuthApiTest
         $response = $this->request('POST', $this->path);
 
 
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
         $this->assertTrue(file_exists($file));
 
         if (file_exists($file)) {
@@ -175,10 +175,10 @@ final class CmsAdminApiTest extends AuthApiTest
         $response = $this->request('POST', $this->path);
 
 
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
         $this->assertTrue(file_exists($file));
 
         if (file_exists($file)) {
@@ -199,10 +199,10 @@ final class CmsAdminApiTest extends AuthApiTest
         $response = $this->request('DELETE', $this->path);
 
 
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
         $this->assertTrue(!file_exists($file));
     }
 
@@ -217,8 +217,8 @@ final class CmsAdminApiTest extends AuthApiTest
         $response = $this->request('GET', $this->path);
 
         $this->assertEquals(200, $response->getCode());
-        $result = $response->getResult();
-        $this->assertTrue($result != null && $result != '');
+
+        $this->assertTrue($response != null);
     }
     public function testRebuildIndex()
     {
@@ -232,8 +232,8 @@ final class CmsAdminApiTest extends AuthApiTest
 
 
         $this->assertEquals(200, $response->getCode());
-        $result = $response->getResult();
-        $this->assertTrue($result != null && $result != '');
+
+        $this->assertTrue($response != null);
     }
     public function testUpdate()
     {
@@ -254,12 +254,12 @@ final class CmsAdminApiTest extends AuthApiTest
         $this->POST = ['requestbody' => $recordStr];
 
         $response = $this->request('POST', $this->path);
-        
-        $result = $response->getResult();
+
+
 
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
         $this->assertTrue(file_exists($file));
 
         if (file_exists($file)) {

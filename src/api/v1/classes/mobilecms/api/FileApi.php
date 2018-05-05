@@ -114,7 +114,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
                 $uploadResult = $service->getDescriptions($destdir);
                 $response->setCode(200);
 
-                $response->setResult(json_encode($uploadResult));
+                $response->setResult($uploadResult);
             } elseif ($this->requestObject->method === 'POST') {
                 if (array_key_exists(0, $this->requestObject->args)) {
                     //get the full data of a single record
@@ -122,7 +122,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
                     $uploadResult = $this->uploadFiles($this->getParam('type'), $this->getParam('id'));
                     $response->setCode(200);
 
-                    $response->setResult(json_encode($uploadResult));
+                    $response->setResult($uploadResult);
                 }
             }
         }
@@ -198,7 +198,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
     {
         $response = new \mobilecms\utils\Response();
         $response->setCode(200);
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         if ($this->enableHeaders) {
             // @codeCoverageIgnoreStart
@@ -248,7 +248,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
       - error:0
       - size:700
         */
-        $result = json_decode('[]');
+        $result = [];
         // $_FILES
 
         if (!isset($this->files) || count($this->files) === 0) {
@@ -323,7 +323,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $files = json_decode($filesStr);
 
-        $result = json_decode('[]');
+        $result = [];
         foreach ($files as $formKey => $file) {
             $destdir = $this->getRecordDirPath($datatype, $id);
 
@@ -351,7 +351,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             }
         }
 
-        $response->setResult(json_encode($result));
+        $response->setResult($result);
         $response->setCode(200);
 
         return $response;
@@ -406,7 +406,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $files = json_decode($filesStr);
 
-        $result = json_decode('[]');
+        $result = [];
 
         foreach ($files as $formKey => $file) {
             // /var/www/html/media/calendar/1

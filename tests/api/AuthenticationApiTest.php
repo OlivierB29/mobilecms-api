@@ -30,7 +30,7 @@ final class AuthenticationApiTest extends ApiTest
 
 
 
-        $result = $response->getResult();
+
         $this->assertEquals(401, $response->getCode());
     }
 
@@ -42,10 +42,10 @@ final class AuthenticationApiTest extends ApiTest
 
 
 
-        $result = $response->getResult();
 
-        $this->assertTrue($result != null);
-        $this->assertJsonStringEqualsJsonString('{}', $result);
+
+        $this->assertTrue($response != null);
+        $this->assertJsonStringEqualsJsonString('{}', $response->getEncodedResult());
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
     }
@@ -58,10 +58,10 @@ final class AuthenticationApiTest extends ApiTest
 
 
 
-        $result = $response->getResult();
 
-        $this->assertTrue($result != null);
-        $this->assertJsonStringEqualsJsonString('{}', $result);
+
+        $this->assertTrue($response != null);
+        $this->assertJsonStringEqualsJsonString('{}', $response->getEncodedResult());
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
     }
@@ -74,10 +74,10 @@ final class AuthenticationApiTest extends ApiTest
 
 
 
-        $result = $response->getResult();
 
-        $this->assertTrue($result != null);
-        $this->assertJsonStringEqualsJsonString('{}', $result);
+
+        $this->assertTrue($response != null);
+        $this->assertJsonStringEqualsJsonString('{}', $response->getEncodedResult());
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
     }
@@ -89,10 +89,10 @@ final class AuthenticationApiTest extends ApiTest
 
 
 
-        $result = $response->getResult();
 
-        $this->assertTrue($result != null);
-        $this->assertJsonStringEqualsJsonString('{}', $result);
+
+        $this->assertTrue($response != null);
+        $this->assertJsonStringEqualsJsonString('{}', $response->getEncodedResult());
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
     }
@@ -105,9 +105,9 @@ final class AuthenticationApiTest extends ApiTest
 
 
 
-        $result = $response->getResult();
+
         $this->assertEquals(401, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
     }
 
     public function testAuthenticateEmptyBody()
@@ -123,9 +123,9 @@ final class AuthenticationApiTest extends ApiTest
 
 
 
-        $result = $response->getResult();
+
         $this->assertEquals(401, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
     }
 
     public function testLoginByUser()
@@ -140,12 +140,12 @@ final class AuthenticationApiTest extends ApiTest
         $this->POST = ['requestbody' => $recordStr];
         $response = $this->request('POST', $this->path);
 
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
-        $userObject = json_decode($result);
+        $userObject = $response->getResult();
 
         $this->assertTrue($userObject->{'email'} === 'test@example.com');
         $this->assertTrue(strlen($userObject->{'token'}) > 150);
@@ -163,12 +163,12 @@ final class AuthenticationApiTest extends ApiTest
 
         $response = $this->request('POST', $this->path);
 
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
-        $userObject = json_decode($result);
+        $userObject = $response->getResult();
 
         $this->assertTrue($userObject->{'email'} === 'test@example.com');
         $this->assertTrue(strlen($userObject->{'token'}) > 150);
@@ -187,7 +187,7 @@ final class AuthenticationApiTest extends ApiTest
 
         $response = $this->request('POST', $this->path);
 
-        $result = $response->getResult();
+
         $this->assertEquals(401, $response->getCode());
     }
 
@@ -204,7 +204,7 @@ final class AuthenticationApiTest extends ApiTest
 
         $response = $this->request('POST', $this->path);
 
-        $result = $response->getResult();
+
         $this->assertEquals(401, $response->getCode());
     }
 
@@ -221,7 +221,7 @@ final class AuthenticationApiTest extends ApiTest
 
         $response = $this->request('POST', $this->path);
 
-        $result = $response->getResult();
+
         $this->assertEquals(401, $response->getCode());
     }
 
@@ -248,10 +248,10 @@ final class AuthenticationApiTest extends ApiTest
 
         $response = $this->request('POST', $this->path);
 
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
 
         if (file_exists($file)) {
@@ -281,10 +281,10 @@ final class AuthenticationApiTest extends ApiTest
 
         $response = $this->request('POST', $this->path);
 
-        $result = $response->getResult();
+
 
         $this->assertEquals(400, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
     }
 
     public function testResetPassword()
@@ -305,13 +305,13 @@ final class AuthenticationApiTest extends ApiTest
 
         $response = $this->request('POST', $this->path);
 
-        $result = $response->getResult();
+
 
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
-        $userObject = json_decode($result);
+        $userObject = $response->getResult();
 
         $this->assertTrue($userObject->{'name'} === $user);
         $this->assertTrue($userObject->{'clientalgorithm'} === 'none');
@@ -343,10 +343,10 @@ final class AuthenticationApiTest extends ApiTest
 
         $this->POST = ['requestbody' => $recordStr];
         $response = $this->request('POST', $this->path);
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
         // test new password with login
         $loginRecordStr = '{ "email": "' . $user . '", "password":"Foobar!654321"}';
@@ -366,12 +366,12 @@ final class AuthenticationApiTest extends ApiTest
         $this->REQUEST = ['path' => $this->path];
         $this->POST = ['requestbody' => $recordStr];
         $response = $this->request('POST', $this->path);
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
-        $userObject = json_decode($result);
+        $userObject = $response->getResult();
 
         $this->assertTrue($userObject->{'email'} === $user);
         $this->assertTrue(strlen($userObject->{'token'}) > 150);
@@ -388,12 +388,12 @@ final class AuthenticationApiTest extends ApiTest
 
 
 
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
 
-        $userObject = json_decode($result);
+        $userObject = $response->getResult();
 
         $this->assertTrue($userObject->{'name'} === 'editor@example.com');
         $this->assertTrue($userObject->{'clientalgorithm'} === 'hashmacbase64');

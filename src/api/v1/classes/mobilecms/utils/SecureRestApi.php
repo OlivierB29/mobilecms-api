@@ -71,7 +71,7 @@ abstract class SecureRestApi extends RestApi
         switch ($this->requestObject->method) {
             case 'OPTIONS':
                   $response->setCode(200);
-                  $response->setResult('{}');
+                  $response->setResult(new \stdClass);
                 break;
             case 'GET':
             case 'POST':

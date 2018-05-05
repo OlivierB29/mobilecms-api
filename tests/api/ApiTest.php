@@ -42,7 +42,7 @@ abstract class ApiTest extends TestCase
     protected function printError(\mobilecms\utils\Response $response)
     {
         if ($response->getCode() != 200) {
-            echo 'ERROR ' . $response->getResult();
+            echo 'ERROR ' . $response->getEncodedResult();
         }
     }
 

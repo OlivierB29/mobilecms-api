@@ -37,12 +37,12 @@ final class FileApiPdfTest extends AuthApiTest
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);
         $this->API->authorize($this->headers, $this->SERVER);
         $response = $this->API->processAPI();
-        $result = $response->getResult();
+
         $this->printError($response);
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
         $expected = '[{"title":"' . $filename . '","url":"' . $filename . '","size":163452,"mimetype":"application\/pdf"}]';
-        $this->assertJsonStringEqualsJsonString($expected, $result);
+        $this->assertJsonStringEqualsJsonString($expected, $response->getEncodedResult());
 
 
         //
@@ -56,12 +56,11 @@ final class FileApiPdfTest extends AuthApiTest
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
         $this->API->authorize($this->headers, $this->SERVER);
         $response = $this->API->processAPI();
-        $result = $response->getResult();
 
         $this->assertEquals(200, $response->getCode());
-        $this->assertTrue($result != null && $result != '');
+        $this->assertTrue($response != null);
         $expected = '[{"mimetype":"application\/pdf","url":"testupload2.pdf","thumbnails":[{"width":"100","height":"142","url":"testupload2-100.jpg"},{"width":"200","height":"283","url":"testupload2-200.jpg"}]}]';
-        $this->assertJsonStringEqualsJsonString($expected, $result);
+        $this->assertJsonStringEqualsJsonString($expected, $response->getEncodedResult());
         $mediaFile = $this->API->getMediaDirPath() . $record . '/' . $filename;
         $this->assertTrue(file_exists($mediaFile));
         //unlink($mediaFile);

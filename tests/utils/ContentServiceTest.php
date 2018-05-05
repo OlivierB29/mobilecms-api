@@ -19,11 +19,11 @@ final class ContentServiceTest extends TestCase
         $this->assertEquals(200, $response->getCode());
 
         $this->assertTrue(
-          strstr($response->getResult(), '"id":"1"') != ''
+          strstr($response->getEncodedResult(), '"id":"1"') != ''
         );
 
         $this->assertTrue(
-          strstr($response->getResult(), '"id":"2"') != ''
+          strstr($response->getEncodedResult(), '"id":"2"') != ''
         );
     }
 
@@ -35,8 +35,8 @@ final class ContentServiceTest extends TestCase
         $this->assertEquals(200, $response->getCode());
 
         $this->assertJsonStringEqualsJsonString(
-        json_encode(json_decode('    { "id": "1","date": "201509", "activity": "activitya", "title": "some seminar of activity A"}')),
-        $response->getResult()
+        '{ "id": "1","date": "201509", "activity": "activitya", "title": "some seminar of activity A"}',
+        $response->getEncodedResult()
         );
     }
 
@@ -45,7 +45,7 @@ final class ContentServiceTest extends TestCase
         $this->expectException(\Exception::class);
         $recordStr = '{"id":"10","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
-        $response = $service->post('', 'id', $recordStr);
+        $response = $service->post('', 'id', json_decode($recordStr));
     }
 
     public function testPostEmptyKey()
@@ -53,14 +53,14 @@ final class ContentServiceTest extends TestCase
         $this->expectException(\Exception::class);
         $recordStr = '{"id":"10","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
-        $response = $service->post('calendar', '', $recordStr);
+        $response = $service->post('calendar', '', json_decode($recordStr));
     }
 
     public function testPostEmptyRecord()
     {
-        $recordStr = '';
+        $recordStr = '{}';
         $service = new ContentService($this->dir);
-        $response = $service->post('calendar', 'id', $recordStr);
+        $response = $service->post('calendar', 'id', json_decode($recordStr));
 
         $file = $this->dir . '/calendar/10.json';
 
@@ -71,29 +71,25 @@ final class ContentServiceTest extends TestCase
     {
         $recordStr = '{"id":"10","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
-        $response = $service->post('calendar', 'id', $recordStr);
+        $response = $service->post('calendar', 'id', json_decode($recordStr));
 
         $file = $this->dir . '/calendar/10.json';
 
         $this->assertEquals(200, $response->getCode());
 
-        $this->assertJsonStringEqualsJsonFile(
-            $file, $recordStr
-        );
+        $this->assertJsonStringEqualsJsonFile($file, $recordStr);
     }
     public function testUpdate()
     {
         $recordStr = '{"id":"5","type":"calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
-        $response = $service->update('calendar', 'id', $recordStr);
+        $response = $service->update('calendar', 'id', json_decode($recordStr));
 
         $file = $this->dir . '/calendar/5.json';
 
         $this->assertEquals(200, $response->getCode());
 
-        $this->assertJsonStringEqualsJsonFile(
-            $file, $recordStr
-        );
+        $this->assertJsonStringEqualsJsonFile($file, $recordStr);
     }
     public function testPublish()
     {

@@ -12,7 +12,7 @@ class FileService
      */
     public function getDescriptions(string $dir)
     {
-        $result = json_decode('[]');
+        $result = [];
         $scanned_directory = array_diff(scandir($dir), ['..', '.']);
         foreach ($scanned_directory as $key => $value) {
             $filePath = $dir . DIRECTORY_SEPARATOR . $value;
@@ -112,7 +112,7 @@ class FileService
         $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
 
 
-        $result = json_decode('[]');
+        $result = [];
         $utils = new \mobilecms\utils\ImageUtils();
         $utils->setQuality($quality);
         foreach ($files as $formKey => $file) {
@@ -169,7 +169,7 @@ class FileService
             }
         }
 
-        $response->setResult(json_encode($result));
+        $response->setResult($result);
         $response->setCode(200);
 
         return $response;
@@ -185,7 +185,7 @@ class FileService
     {
         $response = new Response();
         $response->setCode(400);
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         return $response;
     }

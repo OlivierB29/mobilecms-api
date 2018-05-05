@@ -59,7 +59,6 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                 $tmpResponse = $service->getRecord($this->getParam('type'), $this->getParam('id'));
                 // basic user fields, without password
                 if ($tmpResponse->getCode() === 200) {
-                    // get the full data of a single record.
                     $response->setCode(200);
                     $response->setResult($this->getUserResponse($tmpResponse->getResult()));
                 }
@@ -68,19 +67,17 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                 // step 1 : update Record
 
                 // update password if needed
-                $userParam = urldecode($this->getRequestBody());
-
-                $user = json_decode($userParam);
+                $user = json_decode(urldecode($this->getRequestBody()));
                 if (isset($user->{'newpassword'})) {
                     $response = $authService->resetPassword($user->{'email'}, $user->{'newpassword'});
                 } else {
                     $putResponse = $service->update(
                         $this->getParam('type'),
                         self::EMAIL,
-                        $this->getUserResponse($userParam)
+                        $this->getUserResponse($user)
                     );
 
-                    $myobjectJson = json_decode($putResponse->getResult());
+                    $myobjectJson = $putResponse->getResult();
                     unset($putResponse);
                     // step 2 : publish to index
                     $id = $myobjectJson->{self::EMAIL};
@@ -127,7 +124,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                     $id = $user->{self::EMAIL};
                     $response = $service->publishById($this->getParam('type'), self::EMAIL, $id);
                     unset($user);
-                    $response->setResult('{}');
+                    $response->setResult(new \stdClass);
                     $response->setCode(200);
                 } else {
                     $response->setError(400, $createresult);
@@ -140,9 +137,9 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         }
 
         // set a timestamp response
-        $tempResponse = json_decode($response->getResult());
-        $tempResponse->{'timestamp'} = '' . time();
-        $response->setResult(json_encode($tempResponse));
+        //$tempResponse = $response->getResult();
+        //$tempResponse->{'timestamp'} = '' . time();
+        //$response->setResult($tempResponse);
 
         return $response;
     }
@@ -156,15 +153,14 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
      *
      * @return \stdClass JSON user string
      */
-    public function getUserResponse($userStr): string
+    public function getUserResponse(\stdClass $user): \stdClass
     {
-        $completeUserObj = json_decode($userStr);
         $responseUser = json_decode('{}');
-        $responseUser->{'name'} = $completeUserObj->{'name'};
-        $responseUser->{'email'} = $completeUserObj->{'email'};
-        $responseUser->{'role'} = $completeUserObj->{'role'};
+        $responseUser->{'name'} = $user->{'name'};
+        $responseUser->{'email'} = $user->{'email'};
+        $responseUser->{'role'} = $user->{'role'};
 
-        return json_encode($responseUser);
+        return $responseUser;
     }
 
 
@@ -180,7 +176,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
     {
         $response = new \mobilecms\utils\Response();
         $response->setCode(200);
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         if ($this->enableHeaders) {
             // @codeCoverageIgnoreStart

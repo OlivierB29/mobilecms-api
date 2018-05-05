@@ -110,8 +110,8 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
                 //  $response = $service->getAllObjects($this->getParam('type'));
                 // step 1 : update Record
-                $putResponse = $service->post($this->getParam('type'), self::ID, urldecode($this->getRequestBody()));
-                $myobjectJson = json_decode($putResponse->getResult());
+                $putResponse = $service->post($this->getParam('type'), self::ID, json_decode(urldecode($this->getRequestBody())));
+                $myobjectJson = $putResponse->getResult();
                 unset($putResponse);
 
                 // step 2 : publish to index
@@ -157,30 +157,17 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
      *
      * @return \mobilecms\utils\Response object
      */
-    protected function file() : \mobilecms\utils\Response
+    protected function metadata() : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
         $this->checkConfiguration();
 
-        $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/cmsapi/v1/metadata/{type}')) {
+            $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
+            $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getMetadataFileName($this->getParam('type'))));
+            $response->setCode(200);
 
-        if ($this->requestObject->method === 'GET') {
-            // eg : /api/v1/file?filename
-            // args contains the remaining path parameters
-            // --> eg : /api/v1/file?file=/calendar/1/foo/bar/sample.json
-
-            if (array_key_exists(self::FILE, $this->getRequest())) {
-                // this
-
-                $filePathResponse = $service->getFilePath($this->getRequest()[self::FILE]);
-                if ($filePathResponse->getCode() === 200) {
-                    $response->setResult(file_get_contents($filePathResponse->getResult()));
-                    $response->setCode(200);
-                } else {
-                    $response = $filePathResponse;
-                }
-            }
         } else {
             throw new \Exception('bad request');
         }
@@ -188,6 +175,23 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         return $response;
     }
 
+    protected function template() : \mobilecms\utils\Response
+    {
+        $response = $this->getDefaultResponse();
+
+        $this->checkConfiguration();
+
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/cmsapi/v1/template/{type}')) {
+            $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
+            $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getTemplateFileName($this->getParam('type'))));
+            $response->setCode(200);
+
+        } else {
+            throw new \Exception('bad request');
+        }
+
+        return $response;
+    }
 
 
 
@@ -211,7 +215,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
     {
         $response = new \mobilecms\utils\Response();
         $response->setCode(200);
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         if ($this->enableHeaders) {
             // @codeCoverageIgnoreStart

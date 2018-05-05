@@ -334,14 +334,20 @@ abstract class RestApi
 
             $responseBody = $response->getResult();
             $status = $response->getCode();
+            unset($response);
         } catch (\Exception $e) {
             $status = 500;
 
             error_log($e->getMessage());
-            $responseBody = json_encode(['error' => 'internal error']);
+            $responseBody = ['error' => 'internal error'];
         } finally {
+            if ($this->enableHeaders) {
+                // @codeCoverageIgnoreStart
+                header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+                // @codeCoverageIgnoreEnd
+            }
             http_response_code($status);
-            echo $responseBody;
+            echo json_encode($responseBody);
             // OWASP security : clear variables, especially on exception
             $this->clearRequestParameters();
         }
@@ -367,7 +373,7 @@ abstract class RestApi
     {
         $response = new Response();
         $response->setCode(400);
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         return $response;
     }

@@ -87,6 +87,20 @@ class ContentService
         return $this->databasedir . '/' . $type . '/index/index_template.json';
     }
 
+    public function getMetadataFileName(string $type) : string
+    {
+        $this->checkType($type);
+
+        return $this->databasedir . '/' . $type . '/index/metadata.json';
+    }
+
+
+    public function getTemplateFileName(string $type) : string
+    {
+        $this->checkType($type);
+
+        return $this->databasedir . '/' . $type . '/index/new.json';
+    }
 
 
     /**
@@ -95,7 +109,7 @@ class ContentService
      * @param string $type     eg: calendar
      * @param string $keyvalue : id value, eg :1
      */
-    public function getRecord(string $type, string $keyvalue)
+    public function getRecord(string $type, string $keyvalue) : \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -104,7 +118,7 @@ class ContentService
 
         // get one element
         if (file_exists($file)) {
-            $response->setResult(file_get_contents($file));
+            $response->setResult(JsonUtils::readJsonFile($file));
             $response->setCode(200);
         } else {
             $response->setError(404, 'not found ' . $type . '/' . $keyvalue);
@@ -205,7 +219,7 @@ class ContentService
             // extract element data
             $existingObject = JsonUtils::getByKey($data, $keyname, $keyvalue);
             if (isset($existingObject)) {
-                $response->setResult(json_encode($existingObject));
+                $response->setResult($existingObject);
                 $response->setCode(200);
             } else {
                 // element not found
@@ -213,7 +227,7 @@ class ContentService
             }
         } else {
             // return all
-            $response->setResult(json_encode($data));
+            $response->setResult($data);
             $response->setCode(200);
         }
 
@@ -247,7 +261,7 @@ class ContentService
             closedir($handle);
         }
 
-        $response->setResult(json_encode($thelist));
+        $response->setResult($thelist);
         $response->setCode(200);
 
         return $response;
@@ -269,7 +283,7 @@ class ContentService
         $data = JsonUtils::readJsonFile($file);
         if (isset($data)) {
             $response->setCode(200);
-            $response->setResult(json_encode($data));
+            $response->setResult($data);
         }
 
         return $response;
@@ -297,26 +311,23 @@ class ContentService
      * @param string $keyname   : primary key inside the file.
      * @param string $recordStr : JSON data
      */
-    public function post(string $type, string $keyname, string $recordStr)
+    public function post(string $type, string $keyname, \stdClass $record)
     {
         $this->checkParams($type, $keyname);
         $response = $this->getDefaultResponse();
 
-        if (!empty($recordStr)) {
-            // Decode JSON
-            $myobjectJson = json_decode($recordStr);
-            $response->setResult($recordStr);
-            unset($recordStr);
+        if (!empty($record) && !empty($record->{$keyname})) {
+            $response->setResult($record);
 
             // detect id
-            $id = $myobjectJson->{$keyname};
+            $id = $record->{$keyname};
 
             // file name
             $file = $this->getItemFileName($type, $id);
 
             // write to file
-            JsonUtils::writeJsonFile($file, $myobjectJson);
-            unset($myobjectJson);
+            JsonUtils::writeJsonFile($file, $record);
+            unset($record);
             $response->setCode(200);
         } else {
             $response->setError(400, 'Bad object parameters');
@@ -330,29 +341,25 @@ class ContentService
      *
      * @param string $type      : object type (eg : calendar)
      * @param string $keyname   : primary key inside the file.
-     * @param string $recordStr : JSON data
+     * @param \stdClass $record : JSON data
      */
-    public function update(string $type, string $keyname, string $recordStr): Response
+    public function update(string $type, string $keyname, \stdClass $record): Response
     {
         $response = $this->getDefaultResponse();
 
-        if (!empty($recordStr)) {
-            // Decode JSON
-            $myobjectJson = json_decode($recordStr);
-            $response->setResult($recordStr);
-            unset($recordStr);
-
+        if (!empty($record)) {
+            $response->setResult($record);
             // detect id
-            $id = $myobjectJson->{$keyname};
+            $id = $record->{$keyname};
             // file name
             $file = $this->getItemFileName($type, $id);
 
             $existing = JsonUtils::readJsonFile($file);
-            JsonUtils::copy($myobjectJson, $existing);
+            JsonUtils::copy($record, $existing);
 
             // write to file
             JsonUtils::writeJsonFile($file, $existing);
-            unset($myobjectJson);
+            unset($record);
             $response->setCode(200);
         } else {
             // @codeCoverageIgnoreStart
@@ -403,9 +410,9 @@ class ContentService
 
         $response->setCode(200);
         // set a timestamp response
-        $tempResponse = json_decode($response->getResult());
-        $tempResponse->{'timestamp'} = '' . time();
-        $response->setResult(json_encode($tempResponse));
+        // $tempResponse = $response->getResult();
+        // $tempResponse->{'timestamp'} = '' . time();
+        // $response->setResult($tempResponse);
 
         return $response;
     }
@@ -475,18 +482,20 @@ class ContentService
      *
      * @return string options value
      */
-    public function options(string $filename): string
+    public function options(string $filename)
     {
         $file = $this->databasedir . '/' . $filename;
 
-        return json_encode(JsonUtils::readJsonFile($file));
+        return JsonUtils::readJsonFile($file);
     }
-    public function adminOptions(string $filename): string
+    public function adminOptions(string $filename)
     {
         $file = $this->databasedir . '/' . $filename;
-        $tmp = json_decode('{}');
-        $tmp->{'list'} = JsonUtils::readJsonFile($file);
-        return json_encode($tmp);
+      //  $tmp = json_decode('{}');
+      //  $tmp->{'list'} = JsonUtils::readJsonFile($file);
+        $tmp = JsonUtils::readJsonFile($file);
+
+        return $tmp;
     }
 
     /**
@@ -498,7 +507,7 @@ class ContentService
     {
         $response = new Response();
         $response->setCode(400);
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         return $response;
     }

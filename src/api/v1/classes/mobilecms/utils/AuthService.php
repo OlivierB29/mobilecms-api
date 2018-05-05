@@ -95,7 +95,7 @@ class AuthService
         // initialize Response
         $response = new Response();
         $response->setCode(401);
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         $loginmsg = 'Wrong login';
 
@@ -129,7 +129,7 @@ class AuthService
 
                 $userResponse->{'token'} = $token;
 
-                $response->setResult(json_encode($userResponse));
+                $response->setResult($userResponse);
                 // success
                 $loginmsg = '';
             }
@@ -156,7 +156,7 @@ class AuthService
         $response = new Response();
         $response->setCode(401);
 
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         $loginmsg = 'Wrong login';
 
@@ -258,7 +258,7 @@ class AuthService
         $response = new Response();
         $response->setCode(401);
 
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         $loginmsg = 'Wrong login';
 
@@ -301,15 +301,17 @@ class AuthService
     public function getPublicInfo($email): Response
     {
         $response = $this->getDefaultResponse();
-
-        $user = $this->service->getJsonUser($email);
-        if (isset($user)) {
-            // do not send private info such as password ...
-            $info = json_decode('{"name":"", "clientalgorithm":"", "newpasswordrequired":""}');
-            JsonUtils::copy($user, $info);
-            $response->setResult(json_encode($info));
-            $response->setCode(200);
+        if (\file_exists($this->service->getJsonUserFile($email))) {
+            $user = $this->service->getJsonUser($email);
+            if (isset($user)) {
+                // do not send private info such as password ...
+                $info = json_decode('{"name":"", "clientalgorithm":"", "newpasswordrequired":""}');
+                JsonUtils::copy($user, $info);
+                $response->setResult($info);
+                $response->setCode(200);
+            }
         }
+
 
         return $response;
     }
@@ -335,7 +337,7 @@ class AuthService
     {
         $response = new Response();
         $response->setCode(400);
-        $response->setResult('{}');
+        $response->setResult(new \stdClass);
 
         return $response;
     }
