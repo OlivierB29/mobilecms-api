@@ -61,7 +61,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
-        if ($this->requestObject->match('/cmsapi/v1/index/{type}')) {
+        if ($this->requestObject->match('/api/v1/cmsapi/index/{type}')) {
             //  $response = $service->getAllObjects($this->getParam('type'));
 
             if ($this->requestObject->method === 'GET') {
@@ -92,7 +92,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
-        if ($this->requestObject->match('/cmsapi/v1/content')) {
+        if ($this->requestObject->match('/api/v1/cmsapi/content')) {
             if ($this->requestObject->method === 'GET') {
                 //return the list of editable types. eg : /api/v1/content/
 
@@ -100,7 +100,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 $response->setCode(200);
             }
         }
-        if ($this->requestObject->match('/cmsapi/v1/content/{type}')) {
+        if ($this->requestObject->match('/api/v1/cmsapi/content/{type}')) {
             if ($this->requestObject->method === 'GET') {
                 $response = $service->getAllObjects($this->getParam('type'));
             }
@@ -121,7 +121,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
             }
         }
 
-        if ($this->requestObject->match('/cmsapi/v1/content/{type}/{id}')) {
+        if ($this->requestObject->match('/api/v1/cmsapi/content/{type}/{id}')) {
             if ($this->requestObject->method === 'GET') {
                 $response = $service->getRecord($this->getParam('type'), $this->getParam('id'));
             }
@@ -163,7 +163,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/cmsapi/v1/metadata/{type}')) {
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/api/v1/cmsapi/metadata/{type}')) {
             $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getMetadataFileName($this->getParam('type'))));
             $response->setCode(200);
@@ -181,7 +181,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/cmsapi/v1/template/{type}')) {
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/api/v1/cmsapi/template/{type}')) {
             $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getTemplateFileName($this->getParam('type'))));
             $response->setCode(200);

@@ -38,10 +38,14 @@ class FileUtils
      */
     public function copydir($source, $dest)
     {
-        mkdir($dest, 0755);
+        if (!file_exists($dest)) {
+            mkdir($dest, 0755);
+        }
         foreach ($iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $item) {
             if ($item->isDir()) {
-                mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+                if (!file_exists($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName())) {
+                    mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+                }
             } else {
                 copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
             }

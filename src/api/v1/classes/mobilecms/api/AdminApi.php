@@ -54,7 +54,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         $authService = new \mobilecms\utils\AuthService($this->getPrivateDirPath() . '/users');
 
 
-        if ($this->requestObject->match('/adminapi/v1/content/{type}/{id}') && 'users' === $this->getParam('type')) {
+        if ($this->requestObject->match('/api/v1/adminapi/content/{type}/{id}') && 'users' === $this->getParam('type')) {
             if ($this->requestObject->method === 'GET') {
                 $tmpResponse = $service->getRecord($this->getParam('type'), $this->getParam('id'));
                 // basic user fields, without password
@@ -98,7 +98,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
             }
         }
 
-        if ($this->requestObject->match('/adminapi/v1/content/{type}')) {
+        if ($this->requestObject->match('/api/v1/adminapi/content/{type}')) {
             if ($this->requestObject->method === 'GET' && 'users' === $this->getParam('type')) {
                 //get all records in directory
                 $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
@@ -130,7 +130,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                     $response->setError(400, $createresult);
                 }
             }
-        } elseif ($this->requestObject->matchRequest('GET', '/adminapi/v1/content')) {
+        } elseif ($this->requestObject->matchRequest('GET', '/api/v1/adminapi/content')) {
             //return the list of editable types. eg : /api/v1/content/
             $response->setResult($service->adminOptions('types.json'));
             $response->setCode(200);
@@ -200,7 +200,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->match('/adminapi/v1/index/{type}')) {
+        if ($this->requestObject->match('/api/v1/adminapi/index/{type}')) {
             $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
 
             // eg : /api/v1/content/calendar

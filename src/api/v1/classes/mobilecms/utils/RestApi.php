@@ -143,8 +143,8 @@ abstract class RestApi
 
     /**
      * Set request URI eg:
-     * /api/v1/content/save
-     * /restapi/v1/recipe/cake/foo/bar.
+     * /api/v1/fileapi/content/save
+     * /api/v1/cmsapi/recipe/cake/foo/bar.
      * http://localhost/restapi/v1/file/?file=news/index/metadata.json.
      *
      * @param string $request uri
@@ -161,6 +161,9 @@ abstract class RestApi
         if (array_key_exists(0, $this->requestObject->args)) {
             $this->requestObject->apiversion = array_shift($this->requestObject->args);
         }
+
+        // eg : fileapi | cmsapi
+        array_shift($this->requestObject->args);
 
         //TODO better parse.
         // issue when restapi/v1/file?file=news/index/metadata.json

@@ -47,4 +47,16 @@ final class UrlUtilsTest extends TestCase
         $this->assertEquals('123', $matches['bar']);
         $this->assertEquals('aaa', $matches['ipsum']);
     }
+
+    public function testUriRegex()
+    {
+        $this->assertTrue(preg_match("/^\/api\/v1\/cmsapi/", "/api/v1/cmsapi") > 0);
+        $this->assertTrue(preg_match("/^\/api\/v1\/cmsapi/", "/api/v1/cmsapi/foobar/123456") > 0);
+        $this->assertTrue(preg_match("/^\/api\/v1\/cmsapi/", "/api/v1/cmsapi/foobar/123456?foo=bar") > 0);
+        $this->assertTrue(preg_match("/^\/api\/v1\/cmsapi/", "/api/v1/cmsapi/foobar/123456?foo=bar&test=123") > 0);
+        $this->assertFalse(preg_match("/^\/api\/v1\/cmsapi/", "/FOOapi/v1/cmsapi") > 0);
+        $this->assertFalse(preg_match("/^\/api\/v1\/cmsapi/", "/api/FOOv1/cmsapi") > 0);
+        $this->assertFalse(preg_match("/^\/api\/v1\/cmsapi/", "/api/v1/FOOcmsapi") > 0);
+    }
+
 }

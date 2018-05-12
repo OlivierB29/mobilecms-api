@@ -20,7 +20,7 @@ final class FileApiPdfTest extends AuthApiTest
     {
         // API request
         $record = '/calendar/3';
-        $this->path = '/fileapi/v1/basicupload' . $record;
+        $this->path = '/api/v1/fileapi/basicupload' . $record;
         $filename = 'testupload2.pdf';
         // mock file
         $mockUploadedFile = realpath('tests-data/fileapi/save/') . 'foobar123.pdf';
@@ -48,7 +48,7 @@ final class FileApiPdfTest extends AuthApiTest
         //
         // THUMBNAILS
         //
-        $this->path = '/fileapi/v1/thumbnails/calendar/3';
+        $this->path = '/api/v1/fileapi/thumbnails/calendar/3';
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => 'POST', 'HTTP_ORIGIN' => 'foobar'];
         $recordStr = '[{ "url": "' . $filename . '", "sizes": ["100", "200"]}]';
         $this->POST = ['requestbody' => $recordStr];

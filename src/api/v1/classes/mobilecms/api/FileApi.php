@@ -102,7 +102,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
 
-        if ($this->requestObject->match('/fileapi/v1/basicupload/{type}/{id}')) {
+        if ($this->requestObject->match('/api/v1/fileapi/basicupload/{type}/{id}')) {
             if ($this->requestObject->method === 'GET') {
                 // create service
                 $service = new \mobilecms\utils\FileService();
@@ -143,7 +143,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
         if ($this->requestObject->method === 'POST') {
-            if ($this->requestObject->match('/fileapi/v1/delete/{type}/{id}')) {
+            if ($this->requestObject->match('/api/v1/fileapi/delete/{type}/{id}')) {
                 $deleteResult = $this->deleteFiles(
                     $this->getParam('type'),
                     $this->getParam('id'),
@@ -172,7 +172,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->match('/fileapi/v1/download/{type}/{id}')) {
+        if ($this->requestObject->match('/api/v1/fileapi/download/{type}/{id}')) {
             $service = new \mobilecms\utils\FileService();
 
             if ($this->requestObject->method === 'POST') {
@@ -458,7 +458,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
         if ($this->requestObject->method === 'POST'
-            && $this->requestObject->match('/fileapi/v1/thumbnails/{type}/{id}')) {
+            && $this->requestObject->match('/api/v1/fileapi/thumbnails/{type}/{id}')) {
             $service = new \mobilecms\utils\FileService();
             $files = json_decode(urldecode($this->getRequestBody()));
             $response = $service->createThumbnails(
