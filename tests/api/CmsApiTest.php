@@ -218,5 +218,4 @@ final class CmsApiTest extends AuthApiTest
 
         $this->assertJsonStringEqualsJsonString($index_data, $response->getEncodedResult());
     }
-
 }
