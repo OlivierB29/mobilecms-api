@@ -150,7 +150,6 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
      */
     protected function publicinfo() : \mobilecms\utils\Response
     {
-
         $response = $this->getDefaultResponse();
 
         //throw error if wrong configuration, such as empty directory
@@ -159,7 +158,6 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
         $service = new \mobilecms\utils\AuthService($this->getPrivateDirPath() . '/users');
 
         if ($this->requestObject->method === 'GET') {
-
             $id = '';
             if (isset($this->requestObject->verb)) {
                 $id = $this->requestObject->verb;
@@ -256,7 +254,6 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
      */
     protected function authenticate() : \mobilecms\utils\Response
     {
-
         $response = $this->getDefaultResponse();
 
         try {

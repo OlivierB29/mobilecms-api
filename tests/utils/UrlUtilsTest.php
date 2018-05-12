@@ -58,5 +58,4 @@ final class UrlUtilsTest extends TestCase
         $this->assertFalse(preg_match("/^\/api\/v1\/cmsapi/", "/api/FOOv1/cmsapi") > 0);
         $this->assertFalse(preg_match("/^\/api\/v1\/cmsapi/", "/api/v1/FOOcmsapi") > 0);
     }
-
 }

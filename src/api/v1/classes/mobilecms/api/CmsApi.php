@@ -167,7 +167,6 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
             $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getMetadataFileName($this->getParam('type'))));
             $response->setCode(200);
-
         } else {
             throw new \Exception('bad request');
         }
@@ -185,7 +184,6 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
             $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getTemplateFileName($this->getParam('type'))));
             $response->setCode(200);
-
         } else {
             throw new \Exception('bad request');
         }
