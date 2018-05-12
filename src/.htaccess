@@ -2,9 +2,5 @@
   RewriteEngine On
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule "cmsapi/v1/(.*)$" api/v1/api.php [QSA,L]
-  RewriteRule "authapi/v1/(.*)$" api/v1/api.php [QSA,L]
-  RewriteRule "fileapi/v1/(.*)$" api/v1/api.php [QSA,L]
-  RewriteRule "adminapi/v1/(.*)$" api/v1/api.php [QSA,L]
   RewriteRule "api/v1/(.*)$" api/v1/api.php [QSA,L]
 </IfModule>

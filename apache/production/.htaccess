@@ -1,0 +1,27 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule "api/v1/(.*)$" api/v1/api.php [QSA,L]
+</IfModule>
+
+
+# Apache 2.4
+<IfModule mod_version.c>
+      <IfModule mod_filter.c>
+        <IfVersion >= 2.4>
+      FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'application/json'"
+			FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'text/plain'"
+			FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'text/html'"
+			FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'text/xml'"
+			FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'text/css'"
+			FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'application/xml'"
+			FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'application/xhtml+xml'"
+			FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'application/rss+xml'"
+			FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'application/javascript'"
+			FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'application/x-javascript'"
+			FilterProvider COMPRESS  DEFLATE "%{Content_Type} = 'image/svg+xml'"
+
+        </IfVersion>
+       </IfModule>
+</IfModule>
