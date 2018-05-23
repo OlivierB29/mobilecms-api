@@ -266,4 +266,22 @@ final class CmsAdminApiTest extends AuthApiTest
             unlink($file);
         }
     }
+
+    public function testGetMetadata()
+    {
+        $this->setAdmin();
+        $this->path = '/api/v1/adminapi/metadata/users';
+
+
+        $response = $this->request('GET', $this->path);
+
+
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+
+        $this->assertTrue($response != null);
+        $index_data = file_get_contents($this->API->getPrivateDirPath() . '/users/index/metadata.json');
+
+        $this->assertJsonStringEqualsJsonString($index_data, $response->getEncodedResult());
+    }
 }

@@ -236,4 +236,26 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
             // @codeCoverageIgnoreEnd
         }
     }
+
+    /**
+     * Get file info.
+     *
+     * @return \mobilecms\utils\Response object
+     */
+    protected function metadata() : \mobilecms\utils\Response
+    {
+        $response = $this->getDefaultResponse();
+
+        $this->checkConfiguration();
+
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/api/v1/adminapi/metadata/{type}')) {
+            $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
+            $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getMetadataFileName($this->getParam('type'))));
+            $response->setCode(200);
+        } else {
+            throw new \Exception('bad request');
+        }
+
+        return $response;
+    }
 }
