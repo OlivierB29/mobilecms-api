@@ -24,9 +24,9 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
      *
 
      */
-    public function setConf()
+    public function initConf()
     {
-        parent::setConf();
+        parent::initConf();
         // Default headers for RESTful API
         if ($this->enableHeaders) {
             // @codeCoverageIgnoreStart
@@ -40,7 +40,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
 
 
     /**
-     * Base API path /api/v1/content.
+     * Base API path /mobilecmsapi/v1/content.
      *
      * @return \mobilecms\utils\Response object
      */
@@ -54,7 +54,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
         $authService = new \mobilecms\utils\AuthService($this->getPrivateDirPath() . '/users');
 
 
-        if ($this->requestObject->match('/api/v1/adminapi/content/{type}/{id}') && 'users' === $this->getParam('type')) {
+        if ($this->requestObject->match('/mobilecmsapi/v1/adminapi/content/{type}/{id}') && 'users' === $this->getParam('type')) {
             if ($this->requestObject->method === 'GET') {
                 $tmpResponse = $service->getRecord($this->getParam('type'), $this->getParam('id'));
                 // basic user fields, without password
@@ -63,7 +63,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                     $response->setResult($this->getUserResponse($tmpResponse->getResult()));
                 }
             } elseif ($this->requestObject->method === 'POST' && 'users' === $this->getParam('type')) {
-                // save a record and update the index. eg : /api/v1/content/calendar
+                // save a record and update the index. eg : /mobilecmsapi/v1/content/calendar
                 // step 1 : update Record
 
                 // update password if needed
@@ -87,18 +87,18 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
             } elseif ($this->requestObject->method === 'PUT') {
             } elseif ($this->requestObject->method === 'DELETE') {
                 // delete a single record.
-                // eg : /api/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
+                // eg : /mobilecmsapi/v1/content/calendar/1/foo/bar --> ['1', 'foo', 'bar']
                 $response = $service->deleteRecord($this->getParam('type'), $this->getParam('id'));
                 if ($response->getCode() === 200) {
                     // rebuild index
                     $response = $service->rebuildIndex($this->getParam('type'), self::EMAIL);
                 }
 
-                // delete a record and update the index. eg : /api/v1/content/calendar/1.json
+                // delete a record and update the index. eg : /mobilecmsapi/v1/content/calendar/1.json
             }
         }
 
-        if ($this->requestObject->match('/api/v1/adminapi/content/{type}')) {
+        if ($this->requestObject->match('/mobilecmsapi/v1/adminapi/content/{type}')) {
             if ($this->requestObject->method === 'GET' && 'users' === $this->getParam('type')) {
                 //get all records in directory
                 $userService = new \mobilecms\utils\UserService($this->getPrivateDirPath() . '/users');
@@ -130,8 +130,8 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
                     $response->setError(400, $createresult);
                 }
             }
-        } elseif ($this->requestObject->matchRequest('GET', '/api/v1/adminapi/content')) {
-            //return the list of editable types. eg : /api/v1/content/
+        } elseif ($this->requestObject->matchRequest('GET', '/mobilecmsapi/v1/adminapi/content')) {
+            //return the list of editable types. eg : /mobilecmsapi/v1/content/
             $response->setResult($service->adminOptions('types.json'));
             $response->setCode(200);
         }
@@ -200,10 +200,10 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->match('/api/v1/adminapi/index/{type}')) {
+        if ($this->requestObject->match('/mobilecmsapi/v1/adminapi/index/{type}')) {
             $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
 
-            // eg : /api/v1/content/calendar
+            // eg : /mobilecmsapi/v1/content/calendar
             if ($this->requestObject->method === 'GET') {
                 $response = $service->getAll($this->getParam('type') . '/index/index.json');
             } elseif ($this->requestObject->method === 'POST') {
@@ -248,7 +248,7 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/api/v1/adminapi/metadata/{type}')) {
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/mobilecmsapi/v1/adminapi/metadata/{type}')) {
             $service = new \mobilecms\utils\ContentService($this->getPrivateDirPath());
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getMetadataFileName($this->getParam('type'))));
             $response->setCode(200);

@@ -74,15 +74,24 @@ abstract class RestApi
     {
         $this->properties = new Properties();
         $this->properties->loadConf($file);
-        $this->setConf($this->properties->getConf());
+        $this->initConf();
     }
+
+    public function setConf(Properties $properties)
+    {
+        $this->properties = $properties;
+
+        $this->initConf();
+    }
+
+
 
     /**
      * Init configuration.
      *
      * @param \stdClass $conf JSON configuration
      */
-    public function setConf()
+    public function initConf()
     {
 
 
@@ -143,8 +152,8 @@ abstract class RestApi
 
     /**
      * Set request URI eg:
-     * /api/v1/fileapi/content/save
-     * /api/v1/cmsapi/recipe/cake/foo/bar.
+     * /mobilecmsapi/v1/fileapi/content/save
+     * /mobilecmsapi/v1/cmsapi/recipe/cake/foo/bar.
      * http://localhost/restapi/v1/file/?file=news/index/metadata.json.
      *
      * @param string $request uri

@@ -45,9 +45,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
      * Init configuration.
      *
      */
-    public function setConf()
+    public function initConf()
     {
-        parent::setConf();
+        parent::initConf();
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {
@@ -102,7 +102,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
 
-        if ($this->requestObject->match('/api/v1/fileapi/basicupload/{type}/{id}')) {
+        if ($this->requestObject->match('/mobilecmsapi/v1/fileapi/basicupload/{type}/{id}')) {
             if ($this->requestObject->method === 'GET') {
                 // create service
                 $service = new \mobilecms\utils\FileService();
@@ -118,7 +118,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
             } elseif ($this->requestObject->method === 'POST') {
                 if (array_key_exists(0, $this->requestObject->args)) {
                     //get the full data of a single record
-                    // eg : /api/v1/file/calendar/1
+                    // eg : /mobilecmsapi/v1/file/calendar/1
                     $uploadResult = $this->uploadFiles($this->getParam('type'), $this->getParam('id'));
                     $response->setCode(200);
 
@@ -143,7 +143,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
         if ($this->requestObject->method === 'POST') {
-            if ($this->requestObject->match('/api/v1/fileapi/delete/{type}/{id}')) {
+            if ($this->requestObject->match('/mobilecmsapi/v1/fileapi/delete/{type}/{id}')) {
                 $deleteResult = $this->deleteFiles(
                     $this->getParam('type'),
                     $this->getParam('id'),
@@ -172,7 +172,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->match('/api/v1/fileapi/download/{type}/{id}')) {
+        if ($this->requestObject->match('/mobilecmsapi/v1/fileapi/download/{type}/{id}')) {
             $service = new \mobilecms\utils\FileService();
 
             if ($this->requestObject->method === 'POST') {
@@ -458,7 +458,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
         if ($this->requestObject->method === 'POST'
-            && $this->requestObject->match('/api/v1/fileapi/thumbnails/{type}/{id}')) {
+            && $this->requestObject->match('/mobilecmsapi/v1/fileapi/thumbnails/{type}/{id}')) {
             $service = new \mobilecms\utils\FileService();
             $files = json_decode(urldecode($this->getRequestBody()));
             $response = $service->createThumbnails(

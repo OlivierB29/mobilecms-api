@@ -32,9 +32,9 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
      *
 
      */
-    public function setConf()
+    public function initConf()
     {
-        parent::setConf();
+        parent::initConf();
 
         $this->debugResetPassword = $this->properties->getBoolean('debugnotifications', true);
         $this->enablemail = $this->properties->getBoolean('enablemail', true);

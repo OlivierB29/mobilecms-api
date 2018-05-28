@@ -1,7 +1,7 @@
 <?php namespace mobilecms\api;
 
 /*
- * /api/v1/content/cake?filter=foobar
+ * /mobilecmsapi/v1/content/cake?filter=foobar
  */
 class CmsApi extends \mobilecms\utils\SecureRestApi
 {
@@ -33,9 +33,9 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
      *
 
      */
-    public function setConf()
+    public function initConf()
     {
-        parent::setConf();
+        parent::initConf();
 
         // Default headers for RESTful API
         if ($this->enableHeaders) {
@@ -61,7 +61,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
-        if ($this->requestObject->match('/api/v1/cmsapi/index/{type}')) {
+        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/index/{type}')) {
             //  $response = $service->getAllObjects($this->getParam('type'));
 
             if ($this->requestObject->method === 'GET') {
@@ -76,7 +76,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
     }
 
     /**
-     * Base API path /api/v1/content.
+     * Base API path /mobilecmsapi/v1/content.
      *
      * @return \mobilecms\utils\Response object
      */
@@ -92,20 +92,20 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
 
-        if ($this->requestObject->match('/api/v1/cmsapi/content')) {
+        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/content')) {
             if ($this->requestObject->method === 'GET') {
-                //return the list of editable types. eg : /api/v1/content/
+                //return the list of editable types. eg : /mobilecmsapi/v1/content/
 
                 $response->setResult($service->options('types.json'));
                 $response->setCode(200);
             }
         }
-        if ($this->requestObject->match('/api/v1/cmsapi/content/{type}')) {
+        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/content/{type}')) {
             if ($this->requestObject->method === 'GET') {
                 $response = $service->getAllObjects($this->getParam('type'));
             }
             if ($this->requestObject->method === 'POST') {
-                // save a record and update the index. eg : /api/v1/content/calendar
+                // save a record and update the index. eg : /mobilecmsapi/v1/content/calendar
 
 
                 //  $response = $service->getAllObjects($this->getParam('type'));
@@ -121,7 +121,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
             }
         }
 
-        if ($this->requestObject->match('/api/v1/cmsapi/content/{type}/{id}')) {
+        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/content/{type}/{id}')) {
             if ($this->requestObject->method === 'GET') {
                 $response = $service->getRecord($this->getParam('type'), $this->getParam('id'));
             }
@@ -144,7 +144,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                     $response = $service->rebuildIndex($this->getParam('type'), self::ID);
                 }
 
-                // delete a record and update the index. eg : /api/v1/content/calendar/1.json
+                // delete a record and update the index. eg : /mobilecmsapi/v1/content/calendar/1.json
             }
         }
 
@@ -163,7 +163,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/api/v1/cmsapi/metadata/{type}')) {
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/mobilecmsapi/v1/cmsapi/metadata/{type}')) {
             $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getMetadataFileName($this->getParam('type'))));
             $response->setCode(200);
@@ -180,7 +180,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/api/v1/cmsapi/template/{type}')) {
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/mobilecmsapi/v1/cmsapi/template/{type}')) {
             $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getTemplateFileName($this->getParam('type'))));
             $response->setCode(200);
