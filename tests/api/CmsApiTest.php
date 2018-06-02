@@ -218,4 +218,16 @@ final class CmsApiTest extends AuthApiTest
 
         $this->assertJsonStringEqualsJsonString($index_data, $response->getEncodedResult());
     }
+
+    public function testStatus()
+    {
+        $this->path = '/mobilecmsapi/v1/cmsapi/status';
+        $this->SERVER = ['REQUEST_URI' => $this->path,    'REQUEST_METHOD' => 'GET', 'HTTP_ORIGIN' => 'foobar'];
+        $response = $this->request('GET', $this->path);
+
+        $this->assertTrue($response != null);
+        $this->assertJsonStringEqualsJsonString('{"result":"true"}', $response->getEncodedResult());
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+    }
 }

@@ -75,6 +75,25 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         return $response;
     }
 
+    protected function status() : \mobilecms\utils\Response
+    {
+        $response = $this->getDefaultResponse();
+
+        $this->checkConfiguration();
+
+        //  $pathId = $this->getParam('id');
+
+        $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
+        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/status')) {
+            if ($this->requestObject->method === 'GET') {
+                $response->setResult(json_decode('{"result":"true"}'));
+                $response->setCode(200);
+            }
+        }
+
+        return $response;
+    }
+
     /**
      * Base API path /mobilecmsapi/v1/content.
      *
