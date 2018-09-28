@@ -103,8 +103,7 @@ class ImageUtils
                     case 'image/jpeg':
                         $image = \imagecreatefromjpeg($fileName);
                         \imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-                        //\imagejpeg($image_p, $thumbFile, $this->quality);
-                        \imagejpeg($image_p, $thumbFile, 100);
+                        \imagejpeg($image_p, $thumbFile, $this->quality);
                         break;
 
                     case 'image/png':
@@ -128,7 +127,9 @@ class ImageUtils
      */
     public function setQuality(int $newval)
     {
-        $this->quality = $newval;
+        if ($newval > 0) {
+            $this->quality = $newval;
+        }        
     }
 
     // ---------------------------------------------------------

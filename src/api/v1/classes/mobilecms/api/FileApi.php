@@ -29,7 +29,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
     private $fileExtensions = [];
 
-    private $imagequality = 0;
+    private $imagequality = 100;
 
     /**
      * Constructor.
@@ -61,7 +61,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         // width 214 * height 82
         $this->pdfthumbnailsizes = [100, 200];
         $this->fileExtensions = $this->getConf()->{'fileextensions'};
-        $this->quality = $this->properties->getInteger('imagequality', 80);
+        $this->imagequality = $this->properties->getInteger('imagequality', 100);
     }
 
     public function setRequest(
