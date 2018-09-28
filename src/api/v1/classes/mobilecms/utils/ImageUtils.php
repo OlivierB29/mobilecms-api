@@ -7,7 +7,7 @@ class ImageUtils
     /**
     * default image quality
     */
-    private $quality = 80;
+    private $quality = 100;
 
     /**
     * Create a list of thumbnails
@@ -103,7 +103,8 @@ class ImageUtils
                     case 'image/jpeg':
                         $image = \imagecreatefromjpeg($fileName);
                         \imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-                        \imagejpeg($image_p, $thumbFile, $this->quality);
+                        //\imagejpeg($image_p, $thumbFile, $this->quality);
+                        \imagejpeg($image_p, $thumbFile, 100);
                         break;
 
                     case 'image/png':
