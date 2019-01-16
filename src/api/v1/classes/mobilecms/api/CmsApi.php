@@ -189,8 +189,6 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
 
         if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/deletelist/{type}')) {
-
-
             if ($this->requestObject->method === 'POST') {
                 // save a record and update the index. eg : /mobilecmsapi/v1/content/calendar
 

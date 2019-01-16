@@ -517,7 +517,6 @@ class ContentService
 
     public function deleteRecords(string $type, array $ids)
     {
-
         $response = $this->getDefaultResponse();
 
         foreach ($ids as $id) {
@@ -540,6 +539,4 @@ class ContentService
 
         return $response;
     }
-
-
 }
