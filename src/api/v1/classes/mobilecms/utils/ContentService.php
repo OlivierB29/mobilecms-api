@@ -153,6 +153,8 @@ class ContentService
         return $response;
     }
 
+
+
     /**
      * Return a filepath from a single filename, only contained in the public databasedir.
      * Valid path :
@@ -511,4 +513,33 @@ class ContentService
 
         return $response;
     }
+
+
+    public function deleteRecords(string $type, array $ids)
+    {
+
+        $response = $this->getDefaultResponse();
+
+        foreach ($ids as $id) {
+
+                // Read the JSON file
+            $file = $this->databasedir . '/' . $type . '/' . $id . '.json';
+
+            if (file_exists($file)) {
+                unlink($file);
+
+                $response->setCode(200);
+            } else {
+                // @codeCoverageIgnoreStart
+                $response->setError(404, 'not found ' . $type . ' : ' . $id);
+                // @codeCoverageIgnoreEnd
+            }
+        }
+
+
+
+        return $response;
+    }
+
+
 }

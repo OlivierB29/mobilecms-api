@@ -150,7 +150,8 @@ final class CmsApiTest extends AuthApiTest
         copy($this->API->getPublicDirPath() . '/calendar/backup/' . $id . '.json', $recordfile);
 
         $fileutils = new \mobilecms\utils\FileUtils();
-        $fileutils->copydir($this->API->getMediaDirPath() . '/calendar/backup/' . $id, $this->API->getMediaDirPath() . '/calendar/' . $id);
+        $mediadir = $this->API->getMediaDirPath() . '/calendar/' . $id;
+        $fileutils->copydir($this->API->getMediaDirPath() . '/calendar/backup/' . $id, $mediadir);
 
         $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar/' . $id;
 
@@ -163,9 +164,43 @@ final class CmsApiTest extends AuthApiTest
         $this->assertTrue($response != null);
 
         $this->assertTrue(!file_exists($recordfile));
+        $this->assertTrue(!is_dir($mediadir));
 
         $this->assertJsonStringEqualsJsonString('{}', $response->getEncodedResult());
     }
+
+    public function testDeleteList()
+    {
+
+
+        //clone backup to directory
+        $ids = ['101', '102', '103'];
+        foreach ($ids as $id) {
+            $recordfile = $this->API->getPublicDirPath() . '/calendar/' . $id . '.json';
+            copy($this->API->getPublicDirPath() . '/calendar/backuplist/' . $id . '.json', $recordfile);
+        }
+
+        $this->path = '/mobilecmsapi/v1/cmsapi/deletelist/calendar';
+
+
+        $this->POST = ['requestbody' => \json_encode($ids)];
+        $response = $this->request('POST', $this->path);
+
+
+        $this->assertEquals(200, $response->getCode());
+        $this->assertTrue($response != null);
+
+        foreach ($ids as $id) {
+            $recordfile = $this->API->getPublicDirPath() . '/calendar/' . $id . '.json';
+            $this->assertTrue(!file_exists($recordfile));
+
+            $mediadir = $this->API->getMediaDirPath() . '/calendar/' . $id;
+            $this->assertTrue(!is_dir($mediadir));
+        }
+
+        $this->assertJsonStringEqualsJsonString('{}', $response->getEncodedResult());
+    }
+
 
 
     public function testGetIndex()

@@ -42,10 +42,13 @@ Assume `www/html/` is the web root context.
 
 When editing the API and live testing to a local web server.
 ### Required : PHP 7.0+
-Basically a hosted PHP should be OK. With a default Ubuntu 16.04, you may need : `sudo apt install libapache2-mod-php php-mcrypt php-gd php-mbstring php-xml php-imagick`
+Basically a hosted PHP should be OK.
 - php-gd : image features
 - php-mbstring php-xml : optional, for PHPUnit
 - php-imagick : preview PDF feature
+
+### Ubuntu 16.04 / 18.04
+With a default Ubuntu, you may need : `sudo apt install php-xdebug libapache2-mod-php php-gd php-mbstring php-xml php-imagick`
 
 ### Dev dependencies (optional)
 - [Composer](https://getcomposer.org/download/)
@@ -85,4 +88,10 @@ In future plans, with the growing data, the database may become useful. For now,
 
 - Q: Can't login and browser debugger prints 404
 - A: Install [mod_rewrite](https://stackoverflow.com/questions/17745310/how-to-enable-mod-rewrite-in-lamp-on-ubuntu#17745379)
-On Ubuntu 16.04, the file is /etc/apache2/sites-available/000-default.conf
+On Ubuntu 16.04, the file path is /etc/apache2/sites-available/000-default.conf
+
+- Q: When running tests : Error: No code coverage driver is available
+- A: Install php-xdebug
+
+- Q : "@ error/constitute.c/ReadImage/412" when running PHPUnit on Ubuntu 18.04
+- A: [Imagick - ImagickException not authorized @ error/constitute.c/ReadImage/412 error](https://stackoverflow.com/questions/52817741/imagick-imagickexception-not-authorized-error-constitute-c-readimage-412-err)

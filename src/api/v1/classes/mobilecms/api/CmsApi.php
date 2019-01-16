@@ -129,7 +129,8 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
                 //  $response = $service->getAllObjects($this->getParam('type'));
                 // step 1 : update Record
-                $putResponse = $service->post($this->getParam('type'), self::ID, json_decode(urldecode($this->getRequestBody())));
+
+                $putResponse = $service->post($this->getParam('type'), self::ID, json_decode($this->getRequestBody()));
                 $myobjectJson = $putResponse->getResult();
                 unset($putResponse);
 
@@ -170,6 +171,48 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         return $response;
     }
 
+
+    /**
+     * Base API path /mobilecmsapi/v1/content.
+     *
+     * @return \mobilecms\utils\Response object
+     */
+    protected function deletelist() : \mobilecms\utils\Response
+    {
+        $response = $this->getDefaultResponse();
+
+        $this->checkConfiguration();
+
+        //  $pathId = $this->getParam('id');
+
+        $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
+
+
+        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/deletelist/{type}')) {
+
+
+            if ($this->requestObject->method === 'POST') {
+                // save a record and update the index. eg : /mobilecmsapi/v1/content/calendar
+
+                //  $response = $service->getAllObjects($this->getParam('type'));
+                // step 1 : update Record
+
+
+                $putResponse = $service->deleteRecords(
+                    $this->getParam('type'),
+                    json_decode($this->getRequestBody())
+                );
+                $myobjectJson = $putResponse->getResult();
+                unset($putResponse);
+                // step 2 : publish to index
+                unset($myobjectJson);
+                $response = $service->rebuildIndex($this->getParam('type'), self::ID);
+            }
+        }
+
+
+        return $response;
+    }
 
     /**
      * Get file info.
