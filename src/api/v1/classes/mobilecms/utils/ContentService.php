@@ -520,10 +520,8 @@ class ContentService
         }
 
         if ($sortAscending) {
-
             usort($data, compareIndex($sortby));
         } else {
-
             usort($data, compareIndexReverse($sortby));
         }
 
@@ -532,7 +530,7 @@ class ContentService
             $cacheTemplate = JsonUtils::readJsonFile($this->getCacheTemplateFileName($type));
             for ($i = 0; $i <= $this->cacheSize; $i++) {
                 $file = $data[$i]->{$keyname};
-                $filename = $this->databasedir . '/' . $type . '/' . $file  . '.json';
+                $filename = $this->databasedir . '/' . $type . '/' . $file . '.json';
                 $record = JsonUtils::readJsonFile($filename);
                 $cacheValue = clone $cacheTemplate;
                 JsonUtils::copy($record, $cacheValue);
