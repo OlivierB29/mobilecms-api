@@ -35,7 +35,7 @@ final class ContentServiceTest extends TestCase
         $this->assertEquals(200, $response->getCode());
 
         $this->assertJsonStringEqualsJsonString(
-        '{ "id": "1","date": "2015-09-01", "activity": "activitya", "title": "some seminar of activity A","description": "","media": []}',
+        '{ "id": "1","date": "2015-09-01", "activity": "activitya", "title": "some seminar of activity A"}',
         $response->getEncodedResult()
         );
     }
