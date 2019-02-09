@@ -1,7 +1,7 @@
 {
         "id" : "4",
         "type" : "calendar",
-        "date": "20161130",
+        "date": "2016-11-30",
         "activity": "activityb",
         "title": "yet another seminar of activity B",
         "organization": "another org",

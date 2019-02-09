@@ -35,7 +35,7 @@ final class ContentServiceTest extends TestCase
         $this->assertEquals(200, $response->getCode());
 
         $this->assertJsonStringEqualsJsonString(
-        '{ "id": "1","date": "201509", "activity": "activitya", "title": "some seminar of activity A"}',
+        '{ "id": "1","date": "2015-09-01", "activity": "activitya", "title": "some seminar of activity A","description": "","media": []}',
         $response->getEncodedResult()
         );
     }
@@ -43,7 +43,7 @@ final class ContentServiceTest extends TestCase
     public function testPostEmptyType()
     {
         $this->expectException(\Exception::class);
-        $recordStr = '{"id":"10","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $recordStr = '{"id":"10","date":"2015-09-01","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
         $response = $service->post('', 'id', json_decode($recordStr));
     }
@@ -51,7 +51,7 @@ final class ContentServiceTest extends TestCase
     public function testPostEmptyKey()
     {
         $this->expectException(\Exception::class);
-        $recordStr = '{"id":"10","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $recordStr = '{"id":"10","date":"2015-09-01","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
         $response = $service->post('calendar', '', json_decode($recordStr));
     }
@@ -69,7 +69,7 @@ final class ContentServiceTest extends TestCase
 
     public function testPost()
     {
-        $recordStr = '{"id":"10","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $recordStr = '{"id":"10","date":"2015-09-01","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
         $response = $service->post('calendar', 'id', json_decode($recordStr));
 
@@ -81,7 +81,7 @@ final class ContentServiceTest extends TestCase
     }
     public function testUpdate()
     {
-        $recordStr = '{"id":"5","type":"calendar","date":"20150901","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $recordStr = '{"id":"5","type":"calendar","date":"2015-09-01","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
         $response = $service->update('calendar', 'id', json_decode($recordStr));
 

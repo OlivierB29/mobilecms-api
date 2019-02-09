@@ -17,6 +17,18 @@ function compareIndex(string $key)
     };
 }
 
+function compareIndexReverse(string $key)
+{
+    /*
+    * compare two object using the $key property
+    * @param a first object to compare
+    * @param b second object to compare
+    */
+    return function (\stdClass $a, \stdClass $b) use ($key) {
+        return strnatcmp($b->{$key}, $a->{$key});
+    };
+}
+
 /**
  * Read and save data from JSON files.
  * Future plans : consider http://stackoverflow.com/questions/13899342/can-we-use-json-as-a-database
@@ -33,6 +45,8 @@ class ContentService
      * Main directory (eg: /opt/foobar/data ).
      */
     private $databasedir;
+
+    private $cacheSize = 3;
 
     /**
      * Constructor.
@@ -78,13 +92,34 @@ class ContentService
      *
      * @param string $type : name of type eg : calendar
      *
-     * @return /foobar/calendar/index.json
+     * @return /foobar/calendar/index_template.json
      */
     private function getIndexTemplateFileName(string $type) : string
     {
         $this->checkType($type);
 
         return $this->databasedir . '/' . $type . '/index/index_template.json';
+    }
+
+    /**
+     * Return a template index cache path.
+     *
+     * @param string $type : name of type eg : calendar
+     *
+     * @return /foobar/calendar/cache_template.json
+     */
+    private function getCacheTemplateFileName(string $type) : string
+    {
+        $this->checkType($type);
+
+        return $this->databasedir . '/' . $type . '/index/cache_template.json';
+    }
+
+    private function getConfFileName(string $type) : string
+    {
+        $this->checkType($type);
+
+        return $this->databasedir . '/' . $type . '/index/conf.json';
     }
 
     public function getMetadataFileName(string $type) : string
@@ -434,6 +469,10 @@ class ContentService
         // file name eg: index.json
 
         $indexFile = $this->getIndexFileName($type);
+        $conf = null;
+        if (\file_exists($this->getConfFileName($type))) {
+            $conf = JsonUtils::readJsonFile($this->getConfFileName($type));
+        }
 
         /*
         Load a template for index.
@@ -443,11 +482,15 @@ class ContentService
 
         $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
+        $cacheTemplate = null;
+
+
         if ($handle = opendir($this->databasedir . '/' . $type)) {
             while (false !== ($file = readdir($handle))) {
                 if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
                     // Read the full JSON record
-                    $record = JsonUtils::readJsonFile($this->databasedir . '/' . $type . '/' . $file);
+                    $filename = $this->databasedir . '/' . $type . '/' . $file;
+                    $record = JsonUtils::readJsonFile($filename);
 
                     //
                     //copy some fields to index
@@ -464,7 +507,39 @@ class ContentService
         }
 
         //sort
-        usort($data, compareIndex($keyname));
+
+        $sortby = $keyname;
+        $sortAscending = false;
+        if ($conf != null) {
+            if ($conf->{'sortby'} != null) {
+                $sortby = $conf->{'sortby'};
+            }
+            if ($conf->{'sortdirection'} != null && $conf->{'sortdirection'} === 'asc') {
+                $sortAscending = true;
+            }
+        }
+
+        if ($sortAscending) {
+
+            usort($data, compareIndex($sortby));
+        } else {
+
+            usort($data, compareIndexReverse($sortby));
+        }
+
+
+        if (\file_exists($this->getCacheTemplateFileName($type))) {
+            $cacheTemplate = JsonUtils::readJsonFile($this->getCacheTemplateFileName($type));
+            for ($i = 0; $i <= $this->cacheSize; $i++) {
+                $file = $data[$i]->{$keyname};
+                $filename = $this->databasedir . '/' . $type . '/' . $file  . '.json';
+                $record = JsonUtils::readJsonFile($filename);
+                $cacheValue = clone $cacheTemplate;
+                JsonUtils::copy($record, $cacheValue);
+                $data[$i] = $cacheValue;
+            }
+        }
+
 
         // write to file
 
