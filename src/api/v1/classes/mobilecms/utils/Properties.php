@@ -60,7 +60,7 @@ class Properties
      * @param string $key : key
      * @param string value
      */
-    public function getString(string $key) : bool
+    public function getString(string $key) : string
     {
         $result = '';
 

@@ -46,7 +46,6 @@ class ContentService
      */
     private $databasedir;
 
-    private $cacheSize = 3;
 
     /**
      * Constructor.
@@ -471,7 +470,9 @@ class ContentService
         $indexFile = $this->getIndexFileName($type);
         $conf = null;
         if (\file_exists($this->getConfFileName($type))) {
-            $conf = JsonUtils::readJsonFile($this->getConfFileName($type));
+            //$conf = JsonUtils::readJsonFile($this->getConfFileName($type));
+            $conf = new Properties();
+            $conf->loadConf($this->getConfFileName($type));
         }
 
         /*
@@ -506,41 +507,46 @@ class ContentService
             closedir($handle);
         }
 
-        //sort
 
+
+        // sorted index by a field, or by id
         $sortby = $keyname;
         $sortAscending = false;
+        $cacheSize = -1;
         if ($conf != null) {
-            if ($conf->{'sortby'} != null) {
-                $sortby = $conf->{'sortby'};
+            if (!empty($conf->getString('sortby'))) {
+                $sortby = $conf->getString('sortby');
             }
-            if ($conf->{'sortdirection'} != null && $conf->{'sortdirection'} === 'asc') {
+            if ('asc' === $conf->getString('sortdirection')) {
                 $sortAscending = true;
             }
+            $cacheSize = $conf->getInteger('cachesize', 0);
         }
 
+        // sort
         if ($sortAscending) {
             usort($data, compareIndex($sortby));
         } else {
             usort($data, compareIndexReverse($sortby));
         }
 
-
+        // create an indexed with cached items
         if (\file_exists($this->getCacheTemplateFileName($type))) {
             $cacheTemplate = JsonUtils::readJsonFile($this->getCacheTemplateFileName($type));
-            for ($i = 0; $i <= $this->cacheSize; $i++) {
+            $i = 0;
+            while ($i < $cacheSize && $i < count($data)) {
                 $file = $data[$i]->{$keyname};
                 $filename = $this->databasedir . '/' . $type . '/' . $file . '.json';
                 $record = JsonUtils::readJsonFile($filename);
                 $cacheValue = clone $cacheTemplate;
                 JsonUtils::copy($record, $cacheValue);
                 $data[$i] = $cacheValue;
+                $i++;
             }
         }
 
 
         // write to file
-
         JsonUtils::writeJsonFile($indexFile, $data);
         unset($data);
         $response->setCode(200);
