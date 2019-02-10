@@ -13,7 +13,11 @@ function compareIndex(string $key)
     * @param b second object to compare
     */
     return function (\stdClass $a, \stdClass $b) use ($key) {
-        return strnatcmp($a->{$key}, $b->{$key});
+        $result = 0;
+        if (!empty($a) && !empty($b) && !empty($a->{$key}) && !empty($b->{$key})) {
+            $result = strnatcmp($a->{$key}, $b->{$key});
+        }
+        return $result;
     };
 }
 
@@ -25,7 +29,11 @@ function compareIndexReverse(string $key)
     * @param b second object to compare
     */
     return function (\stdClass $a, \stdClass $b) use ($key) {
-        return strnatcmp($b->{$key}, $a->{$key});
+        $result = 0;
+        if (!empty($a) && !empty($b) && !empty($a->{$key}) && !empty($b->{$key})) {
+            $result = strnatcmp($b->{$key}, $a->{$key});
+        }
+        return $result;
     };
 }
 
