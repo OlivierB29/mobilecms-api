@@ -9,7 +9,7 @@ final class PropertiesTest extends TestCase
 {
     private $conf;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->conf = new Properties();
         $this->conf->loadConf('tests-data/properties/conf.json');

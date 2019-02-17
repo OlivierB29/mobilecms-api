@@ -9,7 +9,7 @@ final class JwtTokenTest extends TestCase
 {
     private $util;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->util = new JwtToken();
         $this->util->setAlgorithm('sha512');
