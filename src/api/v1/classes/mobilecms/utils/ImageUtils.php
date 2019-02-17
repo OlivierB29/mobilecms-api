@@ -90,7 +90,13 @@ class ImageUtils
             $height = intval(round($width/$ratio_orig, 0, PHP_ROUND_HALF_UP));
 
 
+            // create directory if necessary
 
+            if (!file_exists(dirname($thumbFile))) {
+                // @codeCoverageIgnoreStart
+                mkdir(dirname($thumbFile), 0777, true);
+                // @codeCoverageIgnoreEnd
+            }
 
             // Resample
             $image_p = \imagecreatetruecolor($width, $height);
