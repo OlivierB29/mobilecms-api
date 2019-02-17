@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 final class AuthenticationApiTest extends ApiTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->API=new AuthenticationApi();
@@ -320,10 +320,10 @@ final class AuthenticationApiTest extends ApiTest
 
 
 
-        $this->assertContains('DOCTYPE', $userObject->{'notification'});
-        $this->assertContains('meta charset', $userObject->{'notification'});
-        $this->assertContains('Password', $userObject->{'notification'});
-        $this->assertContains('Connection info', $userObject->{'notification'});
+        $this->assertStringContainsString('DOCTYPE', $userObject->{'notification'});
+        $this->assertStringContainsString('meta charset', $userObject->{'notification'});
+        $this->assertStringContainsString('Password', $userObject->{'notification'});
+        $this->assertStringContainsString('Connection info', $userObject->{'notification'});
 
         // delete file
         unlink($this->API->getPrivateDirPath() . '/users/' . $userFile);

@@ -5,7 +5,7 @@ namespace mobilecms\api;
 
 final class CmsApiTest extends AuthApiTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->API=new CmsApi();

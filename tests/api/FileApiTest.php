@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 final class FileApiTest extends AuthApiTest
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->API=new FileApi();

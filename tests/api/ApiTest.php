@@ -20,7 +20,7 @@ abstract class ApiTest extends TestCase
     protected $API;
 
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->path='';
         $this->headers=[];

@@ -16,7 +16,7 @@ abstract class AuthApiTest extends ApiTest
     protected $admin;
     protected $admintoken;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->memory1 = 0;
