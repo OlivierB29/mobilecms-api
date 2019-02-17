@@ -112,15 +112,12 @@ class ImageUtils
                             $image = new \Imagick($fileName);
 
                             // Resizes to whichever is larger, width or height
-                            if($image->getImageHeight() <= $image->getImageWidth())
-                            {
-                            // Resize image using the lanczos resampling algorithm based on width
-                            $image->resizeImage($maxsize,0,\Imagick::FILTER_LANCZOS,1);
-                            }
-                            else
-                            {
-                            // Resize image using the lanczos resampling algorithm based on height
-                            $image->resizeImage(0,$maxsize,\Imagick::FILTER_LANCZOS,1);
+                            if ($image->getImageHeight() <= $image->getImageWidth()) {
+                                // Resize image using the lanczos resampling algorithm based on width
+                                $image->resizeImage($maxsize, 0, \Imagick::FILTER_LANCZOS, 1);
+                            } else {
+                                // Resize image using the lanczos resampling algorithm based on height
+                                $image->resizeImage(0, $maxsize, \Imagick::FILTER_LANCZOS, 1);
                             }
 
                             // Set to use jpeg compression
@@ -132,8 +129,7 @@ class ImageUtils
                             // Writes resultant image to output directory
                             $image->writeImage($thumbFile);
                             // Destroys \Imagick object, freeing allocated resources in the process
-                            $image->destroy(); 
-
+                            $image->destroy();
                         } else {
                             $image = \imagecreatefromjpeg($fileName);
                             \imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
@@ -169,7 +165,7 @@ class ImageUtils
         }
     }
 
-        /**
+    /**
      * Set quality.
      *
      * @param int $newval set quality
