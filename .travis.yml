@@ -2,7 +2,7 @@ language: php
 php:
   - '7.0'
   - '7.1'
-# imagick issue with 7.2
+  - '7.2'
 before_install:
   - sudo apt-get -qq update
   - yes | pecl install imagick

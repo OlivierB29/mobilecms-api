@@ -1,4 +1,4 @@
-{ "name": "OlivierB29/mobilecms-api",
+{ "name": "olivierb29/mobilecms-api",
   "require-dev": {
       "phpunit/phpunit": "^8",
       "phpunit/php-code-coverage": "^7",
