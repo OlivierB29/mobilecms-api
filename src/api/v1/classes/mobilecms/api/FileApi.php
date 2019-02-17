@@ -31,6 +31,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
     private $imagequality = 100;
 
+    private $imagick = false;
+
+
     /**
      * Constructor.
      *
@@ -62,6 +65,12 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $this->pdfthumbnailsizes = [100, 200];
         $this->fileExtensions = $this->getConf()->{'fileextensions'};
         $this->imagequality = $this->properties->getInteger('imagequality', 100);
+
+        $this->imagick = $this->properties->getBoolean('imagick', false);
+
+
+    
+
     }
 
     public function setRequest(

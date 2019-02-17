@@ -106,7 +106,8 @@ class FileService
         array $defaultsizes,
         int $quality,
         array $defaultPdfsizes,
-        int $pdfQuality
+        int $pdfQuality,
+        bool $imagick = FALSE
     ): \mobilecms\utils\Response {
         $response = $this->getDefaultResponse();
         $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
@@ -115,6 +116,7 @@ class FileService
         $result = [];
         $utils = new \mobilecms\utils\ImageUtils();
         $utils->setQuality($quality);
+        $utils->setImagick($imagick);
         foreach ($files as $formKey => $file) {
             // /var/www/html/media/calendar/1
 

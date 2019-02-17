@@ -9,6 +9,8 @@ class ImageUtils
     */
     private $quality = 100;
 
+    private $imagick = false;
+
     /**
     * Create a list of thumbnails
     * @param string $fileName : file path
@@ -101,9 +103,43 @@ class ImageUtils
 
                 switch ($mime_type) {
                     case 'image/jpeg':
-                        $image = \imagecreatefromjpeg($fileName);
-                        \imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-                        \imagejpeg($image_p, $thumbFile, $this->quality);
+                        if ($this->imagick) {
+                            // https://secure.php.net/manual/en/imagick.thumbnailimage.php
+                            // Max vert or horiz resolution
+                            $maxsize=$width;
+
+                            // create new Imagick object
+                            $image = new \Imagick($fileName);
+
+                            // Resizes to whichever is larger, width or height
+                            if($image->getImageHeight() <= $image->getImageWidth())
+                            {
+                            // Resize image using the lanczos resampling algorithm based on width
+                            $image->resizeImage($maxsize,0,\Imagick::FILTER_LANCZOS,1);
+                            }
+                            else
+                            {
+                            // Resize image using the lanczos resampling algorithm based on height
+                            $image->resizeImage(0,$maxsize,\Imagick::FILTER_LANCZOS,1);
+                            }
+
+                            // Set to use jpeg compression
+                            $image->setImageCompression(\Imagick::COMPRESSION_JPEG);
+                            // Set compression level (1 lowest quality, 100 highest quality)
+                            $image->setImageCompressionQuality($this->quality);
+                            // Strip out unneeded meta data
+                            $image->stripImage();
+                            // Writes resultant image to output directory
+                            $image->writeImage($thumbFile);
+                            // Destroys \Imagick object, freeing allocated resources in the process
+                            $image->destroy(); 
+
+                        } else {
+                            $image = \imagecreatefromjpeg($fileName);
+                            \imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+                            \imagejpeg($image_p, $thumbFile, $this->quality);
+                        }
+
                         break;
 
                     case 'image/png':
@@ -112,6 +148,7 @@ class ImageUtils
                         $image = \imagecreatefrompng($fileName);
                         \imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
                         \imagepng($image_p, $thumbFile);
+
                         break;
                     default:
                 }
@@ -130,6 +167,16 @@ class ImageUtils
         if ($newval > 0) {
             $this->quality = $newval;
         }
+    }
+
+        /**
+     * Set quality.
+     *
+     * @param int $newval set quality
+     */
+    public function setImagick(bool $newval)
+    {
+        $this->imagick = $newval;
     }
 
     // ---------------------------------------------------------
