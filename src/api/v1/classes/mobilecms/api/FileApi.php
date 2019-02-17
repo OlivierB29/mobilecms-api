@@ -67,10 +67,6 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $this->imagequality = $this->properties->getInteger('imagequality', 100);
 
         $this->imagick = $this->properties->getBoolean('imagick', false);
-
-
-    
-
     }
 
     public function setRequest(

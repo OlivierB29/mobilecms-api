@@ -107,7 +107,7 @@ class FileService
         int $quality,
         array $defaultPdfsizes,
         int $pdfQuality,
-        bool $imagick = FALSE
+        bool $imagick = false
     ): \mobilecms\utils\Response {
         $response = $this->getDefaultResponse();
         $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
