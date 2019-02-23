@@ -2,9 +2,20 @@
   RewriteEngine On
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
+# TODO :  change website to enable https
+  RewriteCond %{SERVER_PORT} 80
+#  RewriteRule ^(.*)$ https://example.com/$1 [R,L]
   RewriteRule "mobilecmsapi/v1/(.*)$" api/v1/mobilecmsapi.php [QSA,L]
 </IfModule>
 
+#Etag
+Header unset ETag
+FileETag None
+
+# turn on the module for this directory
+ExpiresActive on
+# set default
+ExpiresDefault "access plus 1 hour"
 
 # Apache 2.4
 <IfModule mod_version.c>
@@ -24,4 +35,19 @@
 
         </IfVersion>
        </IfModule>
+</IfModule>
+
+# https://stackoverflow.com/questions/16385541/content-security-policy-invalid-command#19382957
+# add rule : Google Fonts
+<IfModule mod_headers.c>
+Header unset Content-Security-Policy
+Header add Content-Security-Policy "default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com fonts.gstatic.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com; "
+Header unset X-Content-Security-Policy
+Header add X-Content-Security-Policy "default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com fonts.gstatic.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com;"
+Header unset X-WebKit-CSP
+Header add X-WebKit-CSP "default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com fonts.gstatic.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com;"
+Header set X-Content-Type-Options "nosniff"
+Header set X-XSS-Protection "1; mode=block"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set Strict-Transport-Security "max-age=631138519; includeSubDomains"
 </IfModule>
