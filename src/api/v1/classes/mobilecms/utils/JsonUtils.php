@@ -121,9 +121,9 @@ class JsonUtils
     public static function put(array $data, string $name, \stdClass $item): array
     {
         $existing = self::getIndexByKey($data, $name, $item->{$name});
-
         if ($existing !== -1) {
-            array_splice($data, $existing, 1, $item);
+           array_splice($data, $existing, 1);
+           array_push($data, $item);
         } else {
             array_push($data, $item);
         }

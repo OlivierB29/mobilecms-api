@@ -123,10 +123,10 @@ final class JsonUtilsTest extends TestCase
         $data = JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
 
         $item = json_decode('{"id":"1", "foo":"pub"}');
-        JsonUtils::put($data, 'id', $item);
+        $data = JsonUtils::put($data, 'id', $item);
 
         $this->assertJsonStringEqualsJsonString(
-                '[{"id":"1", "foo":"pub"},{"id":"2", "foo":"bar"}]',
+                '[{"id":"2", "foo":"bar"},{"id":"1", "foo":"pub"}]',
                 json_encode($data)
                 );
     }
