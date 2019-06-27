@@ -83,13 +83,13 @@ class JsonUtils
         return $result;
     }
 
-     /**
-     * Find an index of a JSON object into a JSON array, by key=value.
-     *
-     * @param array  $data  : Array
-     * @param string $name  : eg: id
-     * @param string $value : eg: 123
-     */
+    /**
+    * Find an index of a JSON object into a JSON array, by key=value.
+    *
+    * @param array  $data  : Array
+    * @param string $name  : eg: id
+    * @param string $value : eg: 123
+    */
     public static function getIndexByKey(array $data, string $name, string $value)
     {
         $result = -1;
@@ -101,7 +101,7 @@ class JsonUtils
                     $result = $element;
                     $result = $pos;
                 }
-            $pos++;
+                $pos++;
             }
         }
 
@@ -122,8 +122,8 @@ class JsonUtils
     {
         $existing = self::getIndexByKey($data, $name, $item->{$name});
         if ($existing !== -1) {
-           array_splice($data, $existing, 1);
-           array_push($data, $item);
+            array_splice($data, $existing, 1);
+            array_push($data, $item);
         } else {
             array_push($data, $item);
         }
