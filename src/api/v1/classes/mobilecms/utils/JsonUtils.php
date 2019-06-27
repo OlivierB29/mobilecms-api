@@ -83,6 +83,31 @@ class JsonUtils
         return $result;
     }
 
+     /**
+     * Find a JSON object into a JSON array, by key=value.
+     *
+     * @param array  $data  : Array
+     * @param string $name  : eg: id
+     * @param string $value : eg: 123
+     */
+    public static function getIndexByKey(array $data, string $name, string $value)
+    {
+        $result = -1;
+
+        if (isset($name) && isset($value)) {
+            $pos = 0;
+            foreach ($data as $element) {
+                if ($element->{$name} == $value) {
+                    $result = $element;
+                    $result = $pos;
+                }
+            $pos++;
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * If the JSON array previously contained a mapping for the key,
      * the old value is replaced by the specified value.
@@ -95,10 +120,10 @@ class JsonUtils
      */
     public static function put(array $data, string $name, \stdClass $item): array
     {
-        $existing = self::getByKey($data, $name, $item->{$name});
+        $existing = self::getIndexByKey($data, $name, $item->{$name});
 
-        if (isset($existing)) {
-            self::replace($item, $existing);
+        if ($existing !== -1) {
+            array_splice($data, $existing, 1, $item);
         } else {
             array_push($data, $item);
         }
