@@ -84,7 +84,7 @@ class JsonUtils
     }
 
      /**
-     * Find a JSON object into a JSON array, by key=value.
+     * Find an index of a JSON object into a JSON array, by key=value.
      *
      * @param array  $data  : Array
      * @param string $name  : eg: id
