@@ -432,8 +432,15 @@ class ContentService
         eg :
             { "id": "", "date": "",  "activity": "", "title": "" }
         */
+        $indexValue = null;
+        // create an indexed with cached items
+        if (\file_exists($this->getCacheTemplateFileName($type))) {
+            $indexValue = JsonUtils::readJsonFile($this->getCacheTemplateFileName($type));
+        } else {
+            $indexValue = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
+        }
 
-        $indexValue = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
+        
 
         // Read the full JSON record
         $recordFile = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
@@ -442,7 +449,7 @@ class ContentService
 
         //copy some fields to index
         JsonUtils::copy($record, $indexValue);
-        unset($record);
+       
 
         // get index data
         $data = JsonUtils::readJsonFile($file);
@@ -451,6 +458,9 @@ class ContentService
         // write to file
         JsonUtils::writeJsonFile($file, $data);
         unset($data);
+        unset($record);
+
+
 
         $response->setCode(200);
         // set a timestamp response
