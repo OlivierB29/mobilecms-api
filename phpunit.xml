@@ -18,8 +18,5 @@
     <testsuite name="api">
       <directory>tests/api</directory>
     </testsuite>
-    <testsuite name="misc">
-      <directory>tests/misc</directory>
-    </testsuite>
   </testsuites>
 </phpunit>
