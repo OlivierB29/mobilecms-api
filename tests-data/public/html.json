@@ -1,0 +1,16 @@
+{
+  "id": "html",
+  "type": "calendar",
+  "date": "2015-09-02",
+  "activity": "activitya",
+  "title": "some seminar of activity A",
+  "organization": "Some org",
+  "description":
+"lorem ipsum <button onclick=\"document.getElementById('alert').innerHTML='<strong>MESSAGE</strong>';\" /> dolor sit amet",
+  "url": "",
+  "location": "",
+  "startdate": "",
+  "enddate": "",
+  "updated": "",
+  "updatedby": ""
+}

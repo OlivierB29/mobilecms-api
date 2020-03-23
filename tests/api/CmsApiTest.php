@@ -66,6 +66,46 @@ final class CmsApiTest extends AuthApiTest
         $this->assertTrue($response->getResult() != null && $response->getResult() != '');
     }
 
+    public function testPostHtml()
+    {
+
+        // echo 'testPostSuccess: ' . $this->memory();
+        $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar';
+
+
+        $recordStr = file_get_contents($this->API->getPublicDirPath() . '/html.json');
+        $this->POST = ['requestbody' => $recordStr];
+        unset($recordStr);
+        $response = $this->request('POST', $this->path);
+
+
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+        // echo 'processAPI: ' . $this->memory();
+        $this->assertTrue($response->getResult() != null && $response->getResult() != '');
+
+        //TODO assert result without HTML
+    }
+
+    public function testPostBBCode()
+    {
+
+        // echo 'testPostSuccess: ' . $this->memory();
+        $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar';
+
+
+        $recordStr = file_get_contents($this->API->getPublicDirPath() . '/bbcode.json');
+        $this->POST = ['requestbody' => $recordStr];
+        unset($recordStr);
+        $response = $this->request('POST', $this->path);
+
+
+        $this->printError($response);
+        $this->assertEquals(200, $response->getCode());
+        // echo 'processAPI: ' . $this->memory();
+        $this->assertTrue($response->getResult() != null && $response->getResult() != '');
+    }
+
     public function testEmptyToken()
     {
         $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar';
