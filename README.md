@@ -47,7 +47,7 @@ Basically a hosted PHP should be OK.
 - php-mbstring php-xml : optional, for PHPUnit
 - php-imagick : preview PDF feature
 
-### Ubuntu 16.04 / 18.04
+### Ubuntu 16.04 - 18.04 - 20.04
 With a default Ubuntu, you may need : `sudo apt install php-xdebug libapache2-mod-php php-gd php-mbstring php-xml php-imagick`
 
 ### Dev dependencies (optional)
