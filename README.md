@@ -54,17 +54,9 @@ With a default Ubuntu, you may need : `sudo apt install php-xdebug libapache2-mo
 - [Composer](https://getcomposer.org/download/)
 - [Gulp](https://gulpjs.com/)
 
-### Dev tasks
-`npm install`
-`gulp` Print available gulp tasks
+### Dev server
 
-Configure local directories gulpfile.js
-var serverDeployDir = '/var/www/html';
-var privateDeployDir = '/var/www/private';
-
-Copy code and sample data
-`gulp samplepublic sampleprivate deploy`
-
+Copy code and sample data to web directories '/var/www/html' and '/var/www/private'
 
 ## Build
 - copy src/api to web server to the web directory eg: www/adminapp/api
