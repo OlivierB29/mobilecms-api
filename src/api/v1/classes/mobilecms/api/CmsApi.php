@@ -139,8 +139,8 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 unset($myobjectJson);
                 
                 // issue : sometimes, the index is not refreshed
-                // $response = $service->publishById($this->getParam('type'), self::ID, $id);
-                $response = $service->rebuildIndex($this->getParam('type'), self::ID);
+                $response = $service->publishById($this->getParam('type'), self::ID, $id);
+                // $response = $service->rebuildIndex($this->getParam('type'), self::ID);
             }
         }
 
