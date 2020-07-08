@@ -1,0 +1,16 @@
+{
+  "id": "6",
+  "type": "calendar",
+  "date": "2015-09-02",
+  "activity": "activitya",
+  "title": "update a some bbcode seminar",
+  "organization": "Some org",
+  "description":
+"bbcode lorem [b]ipsum[/b] \n dolor sit amet",
+  "url": "",
+  "location": "",
+  "startdate": "",
+  "enddate": "",
+  "updated": "",
+  "updatedby": ""
+}
