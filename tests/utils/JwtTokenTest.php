@@ -11,7 +11,7 @@ final class JwtTokenTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->util = new JwtToken();
+        $this->util = new \mobilecms\utils\JwtToken();
         $this->util->setAlgorithm('sha512');
     }
 

@@ -1,4 +1,4 @@
-<?php namespace mobilecms\utils;
+<?php namespace mobilecms\services;
 
 /**
  * Function used for sorting.
@@ -66,7 +66,7 @@ class ContentService
     public function __construct(string $databasedir)
     {
         $this->databasedir = $databasedir;
-        $this->logger = new Logger();
+        $this->logger = new \mobilecms\utils\Logger();
     }
 
     /**
@@ -164,7 +164,7 @@ class ContentService
 
         // get one element
         if (file_exists($file)) {
-            $response->setResult(JsonUtils::readJsonFile($file));
+            $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($file));
             $response->setCode(200);
         } else {
             $response->setError(404, 'not found ' . $type . '/' . $keyvalue);
@@ -214,7 +214,7 @@ class ContentService
      *
      * @return Response object
      */
-    public function getFilePath(string $filename): Response
+    public function getFilePath(string $filename): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -252,20 +252,20 @@ class ContentService
      * @param string $keyname   : id
      * @param string $keyvalue  : 1
      *
-     * @return : Response object with a JSON object eg : {"id":"1", "foo":"bar"}
+     * @return : \mobilecms\utils\Response object with a JSON object eg : {"id":"1", "foo":"bar"}
      */
-    public function get(string $filename, string $keyname, string $keyvalue): Response
+    public function get(string $filename, string $keyname, string $keyvalue): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
         $file = $this->databasedir . '/' . $filename;
-        $data = JsonUtils::readJsonFile($file);
+        $data = \mobilecms\utils\JsonUtils::readJsonFile($file);
 
         // get one element
         if (isset($keyvalue)) {
             // extract element data
-            $existingObject = JsonUtils::getByKey($data, $keyname, $keyvalue);
+            $existingObject = \mobilecms\utils\JsonUtils::getByKey($data, $keyname, $keyvalue);
             if (isset($existingObject)) {
                 $response->setResult($existingObject);
                 $response->setCode(200);
@@ -288,9 +288,9 @@ class ContentService
      *
      * @param string $type eg: calendar
      *
-     * @return : Response object with a JSON array
+     * @return : \mobilecms\utils\Response object with a JSON array
      */
-    public function getAllObjects(string $type): Response
+    public function getAllObjects(string $type): \mobilecms\utils\Response
     {
         $this->checkType($type);
         $response = $this->getDefaultResponse();
@@ -320,15 +320,15 @@ class ContentService
      *
      * @param string $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}].
      *
-     * @return : Response object with a JSON array
+     * @return : \mobilecms\utils\Response object with a JSON array
      */
-    public function getAll(string $filename): Response
+    public function getAll(string $filename): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
         $file = $this->databasedir . '/' . $filename;
-        $data = JsonUtils::readJsonFile($file);
+        $data = \mobilecms\utils\JsonUtils::readJsonFile($file);
         if (isset($data)) {
             $response->setCode(200);
             $response->setResult($data);
@@ -374,7 +374,7 @@ class ContentService
             $file = $this->getItemFileName($type, $id);
 
             // write to file
-            JsonUtils::writeJsonFile($file, $record);
+            \mobilecms\utils\JsonUtils::writeJsonFile($file, $record);
             unset($record);
             $response->setCode(200);
         } else {
@@ -391,7 +391,7 @@ class ContentService
      * @param string $keyname   : primary key inside the file.
      * @param \stdClass $record : JSON data
      */
-    public function update(string $type, string $keyname, \stdClass $record): Response
+    public function update(string $type, string $keyname, \stdClass $record): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -402,11 +402,11 @@ class ContentService
             // file name
             $file = $this->getItemFileName($type, $id);
 
-            $existing = JsonUtils::readJsonFile($file);
-            JsonUtils::copy($record, $existing);
+            $existing = \mobilecms\utils\JsonUtils::readJsonFile($file);
+            \mobilecms\utils\JsonUtils::copy($record, $existing);
 
             // write to file
-            JsonUtils::writeJsonFile($file, $existing);
+            \mobilecms\utils\JsonUtils::writeJsonFile($file, $existing);
             unset($record);
             $response->setCode(200);
         } else {
@@ -425,7 +425,7 @@ class ContentService
      * @param string $keyname   : primary key inside the file.
      * @param string $recordStr : JSON data
      */
-    public function publishById(string $type, string $keyname, string $keyvalue): Response
+    public function publishById(string $type, string $keyname, string $keyvalue): \mobilecms\utils\Response
     {
         $this->logger->info('publishById' . $type . ',' . $keyname . ',' . $keyvalue);
         
@@ -441,9 +441,9 @@ class ContentService
         $indexValue = null;
         // create an indexed with cached items
         if (\file_exists($this->getCacheTemplateFileName($type))) {
-            $indexValue = JsonUtils::readJsonFile($this->getCacheTemplateFileName($type));
+            $indexValue = \mobilecms\utils\JsonUtils::readJsonFile($this->getCacheTemplateFileName($type));
         } else {
-            $indexValue = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
+            $indexValue = \mobilecms\utils\JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
         }
 
         
@@ -451,18 +451,18 @@ class ContentService
         // Read the full JSON record
         $recordFile = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
 
-        $record = JsonUtils::readJsonFile($recordFile);
+        $record = \mobilecms\utils\JsonUtils::readJsonFile($recordFile);
 
         //copy some fields to index
-        JsonUtils::copy($record, $indexValue);
+        \mobilecms\utils\JsonUtils::copy($record, $indexValue);
        
 
         // get index data
-        $data = JsonUtils::readJsonFile($file);
-        $data = JsonUtils::put($data, $keyname, $indexValue);
+        $data = \mobilecms\utils\JsonUtils::readJsonFile($file);
+        $data = \mobilecms\utils\JsonUtils::put($data, $keyname, $indexValue);
 
         // write to file
-        JsonUtils::writeJsonFile($file, $data);
+        \mobilecms\utils\JsonUtils::writeJsonFile($file, $data);
         unset($data);
         unset($record);
 
@@ -483,7 +483,7 @@ class ContentService
      * @param string $type    : object type (eg : calendar)
      * @param string $keyname : primary key inside the file.
      */
-    public function rebuildIndex(string $type, string $keyname): Response
+    public function rebuildIndex(string $type, string $keyname): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -494,8 +494,8 @@ class ContentService
         $indexFile = $this->getIndexFileName($type);
         $conf = null;
         if (\file_exists($this->getConfFileName($type))) {
-            //$conf = JsonUtils::readJsonFile($this->getConfFileName($type));
-            $conf = new Properties();
+            //$conf = \mobilecms\utils\JsonUtils::readJsonFile($this->getConfFileName($type));
+            $conf = new \mobilecms\utils\Properties();
             $conf->loadConf($this->getConfFileName($type));
         }
 
@@ -505,7 +505,7 @@ class ContentService
             { "id": "", "date": "",  "activity": "", "title": "" }
         */
 
-        $indexTemplate = JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
+        $indexTemplate = \mobilecms\utils\JsonUtils::readJsonFile($this->getIndexTemplateFileName($type));
 
         $cacheTemplate = null;
 
@@ -515,14 +515,14 @@ class ContentService
                 if ($file != '.' && $file != '..' && strtolower(substr($file, strrpos($file, '.') + 1)) == 'json') {
                     // Read the full JSON record
                     $filename = $this->databasedir . '/' . $type . '/' . $file;
-                    $record = JsonUtils::readJsonFile($filename);
+                    $record = \mobilecms\utils\JsonUtils::readJsonFile($filename);
 
                     //
                     //copy some fields to index
                     //
                     $indexValue = clone $indexTemplate;
 
-                    JsonUtils::copy($record, $indexValue);
+                    \mobilecms\utils\JsonUtils::copy($record, $indexValue);
                     unset($record);
                     array_push($data, $indexValue);
                     unset($indexValue);
@@ -556,14 +556,14 @@ class ContentService
 
         // create an indexed with cached items
         if (\file_exists($this->getCacheTemplateFileName($type))) {
-            $cacheTemplate = JsonUtils::readJsonFile($this->getCacheTemplateFileName($type));
+            $cacheTemplate = \mobilecms\utils\JsonUtils::readJsonFile($this->getCacheTemplateFileName($type));
             $i = 0;
             while ($i < $cacheSize && $i < count($data)) {
                 $file = $data[$i]->{$keyname};
                 $filename = $this->databasedir . '/' . $type . '/' . $file . '.json';
-                $record = JsonUtils::readJsonFile($filename);
+                $record = \mobilecms\utils\JsonUtils::readJsonFile($filename);
                 $cacheValue = clone $cacheTemplate;
-                JsonUtils::copy($record, $cacheValue);
+                \mobilecms\utils\JsonUtils::copy($record, $cacheValue);
                 $data[$i] = $cacheValue;
                 $i++;
             }
@@ -571,7 +571,7 @@ class ContentService
 
 
         // write to file
-        JsonUtils::writeJsonFile($indexFile, $data);
+        \mobilecms\utils\JsonUtils::writeJsonFile($indexFile, $data);
         unset($data);
         $response->setCode(200);
 
@@ -591,14 +591,14 @@ class ContentService
     {
         $file = $this->databasedir . '/' . $filename;
 
-        return JsonUtils::readJsonFile($file);
+        return \mobilecms\utils\JsonUtils::readJsonFile($file);
     }
     public function adminOptions(string $filename)
     {
         $file = $this->databasedir . '/' . $filename;
         //  $tmp = json_decode('{}');
-        //  $tmp->{'list'} = JsonUtils::readJsonFile($file);
-        $tmp = JsonUtils::readJsonFile($file);
+        //  $tmp->{'list'} = \mobilecms\utils\JsonUtils::readJsonFile($file);
+        $tmp = \mobilecms\utils\JsonUtils::readJsonFile($file);
 
         return $tmp;
     }
@@ -608,9 +608,9 @@ class ContentService
      *
      * @return Response object
      */
-    protected function getDefaultResponse() : Response
+    protected function getDefaultResponse() : \mobilecms\utils\Response
     {
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(400);
         $response->setResult(new \stdClass);
 
@@ -643,13 +643,13 @@ class ContentService
         return $response;
     }
 
-    public function getLogger() : Logger
+    public function getLogger() : \mobilecms\utils\Logger
     {
         return $this->logger;
     }
 
 
-    public function setLogger(Logger $logger)
+    public function setLogger(\mobilecms\utils\Logger $logger)
     {
         $this->logger = $logger;
     }

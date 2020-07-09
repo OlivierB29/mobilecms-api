@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-namespace mobilecms\utils;
+namespace mobilecms\services;
 
 use PHPUnit\Framework\TestCase;
 
@@ -11,7 +11,7 @@ final class AuthServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->service = new AuthService('tests-data/userservice');
+        $this->service = new \mobilecms\services\AuthService('tests-data/userservice');
     }
 
 
@@ -217,7 +217,7 @@ final class AuthServiceTest extends TestCase
 
         $oldPassword = 'Sample#123456';
 
-        $service = new AuthService($userdir);
+        $service = new \mobilecms\services\AuthService($userdir);
 
         //change password
         $newPassword = 'somethingnew';
@@ -239,7 +239,7 @@ final class AuthServiceTest extends TestCase
 
         $oldPassword = 'foo';
 
-        $service = new AuthService($userdir);
+        $service = new \mobilecms\services\AuthService($userdir);
 
         //change password
         $newPassword = 'somethingnew';

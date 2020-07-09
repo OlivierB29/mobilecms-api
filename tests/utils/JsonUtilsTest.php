@@ -11,26 +11,26 @@ final class JsonUtilsTest extends TestCase
     {
         $this->assertJsonStringEqualsJsonString(
                 '{}',
-                json_encode(JsonUtils::readJsonFile('tests-data/jsonutils/mini.json'))
+                json_encode(\mobilecms\utils\JsonUtils::readJsonFile('tests-data/jsonutils/mini.json'))
                 );
     }
     public function testDirectoryNotFound()
     {
         $this->expectException(\Exception::class);
-        JsonUtils::writeJsonFile('BAD_PATH/test.json', \json_decode('{}'));
+        \mobilecms\utils\JsonUtils::writeJsonFile('BAD_PATH/test.json', \json_decode('{}'));
     }
 
     public function testWriteException()
     {
         $this->expectException(\Exception::class);
-        JsonUtils::writeJsonFile('/root/test.json', \json_decode('{}'));
+        \mobilecms\utils\JsonUtils::writeJsonFile('/root/test.json', \json_decode('{}'));
     }
 
     public function testGetByKey()
     {
-        $data = JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
+        $data = \mobilecms\utils\JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
 
-        $item = JsonUtils::getByKey($data, 'id', '1');
+        $item = \mobilecms\utils\JsonUtils::getByKey($data, 'id', '1');
 
         $this->assertJsonStringEqualsJsonString(
                 '{"id":"1", "foo":"bar"}',
@@ -41,9 +41,9 @@ final class JsonUtilsTest extends TestCase
 
     public function testUpdateByKey()
     {
-        $data = JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
+        $data = \mobilecms\utils\JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
 
-        $item = JsonUtils::getByKey($data, 'id', '1');
+        $item = \mobilecms\utils\JsonUtils::getByKey($data, 'id', '1');
 
         $item->{'foo'} = 'pub';
 
@@ -60,9 +60,9 @@ final class JsonUtilsTest extends TestCase
 
     public function testCopy()
     {
-        $data = JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
+        $data = \mobilecms\utils\JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
 
-        $item = JsonUtils::getByKey($data, 'id', '1');
+        $item = \mobilecms\utils\JsonUtils::getByKey($data, 'id', '1');
 
         $this->assertJsonStringEqualsJsonString(
                 '{"id":"1", "foo":"bar"}',
@@ -75,7 +75,7 @@ final class JsonUtilsTest extends TestCase
                 $newItem != null
                 );
 
-        JsonUtils::copy($newItem, $item);
+        \mobilecms\utils\JsonUtils::copy($newItem, $item);
 
         $this->assertJsonStringEqualsJsonString(
                 '{"id":"1", "foo":"pub"}',
@@ -90,9 +90,9 @@ final class JsonUtilsTest extends TestCase
 
     public function testReplace()
     {
-        $data = JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
+        $data = \mobilecms\utils\JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
 
-        $item = JsonUtils::getByKey($data, 'id', '1');
+        $item = \mobilecms\utils\JsonUtils::getByKey($data, 'id', '1');
 
         $this->assertJsonStringEqualsJsonString(
                 '{"id":"1", "foo":"bar"}',
@@ -105,7 +105,7 @@ final class JsonUtilsTest extends TestCase
                 $newItem != null
                 );
 
-        JsonUtils::replace($newItem, $item);
+        \mobilecms\utils\JsonUtils::replace($newItem, $item);
 
         $this->assertJsonStringEqualsJsonString(
                 '{"id":"1", "foo":"pub", "hello":"world"}',
@@ -120,10 +120,10 @@ final class JsonUtilsTest extends TestCase
 
     public function testPutExistingItem()
     {
-        $data = JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
+        $data = \mobilecms\utils\JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
 
         $item = json_decode('{"id":"1", "foo":"pub"}');
-        $data = JsonUtils::put($data, 'id', $item);
+        $data = \mobilecms\utils\JsonUtils::put($data, 'id', $item);
 
         $this->assertJsonStringEqualsJsonString(
                 '[{"id":"2", "foo":"bar"},{"id":"1", "foo":"pub"}]',
@@ -133,10 +133,10 @@ final class JsonUtilsTest extends TestCase
 
     public function testPutNewItem()
     {
-        $data = JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
+        $data = \mobilecms\utils\JsonUtils::readJsonFile('tests-data/jsonutils/test.json');
 
         $item = json_decode('{"id":"100", "foo":"bar"}');
-        $data = JsonUtils::put($data, 'id', $item);
+        $data = \mobilecms\utils\JsonUtils::put($data, 'id', $item);
 
         $this->assertJsonStringEqualsJsonString(
                 '[{"id":"1", "foo":"bar"},{"id":"2", "foo":"bar"},{"id":"100", "foo":"bar"}]',

@@ -8,7 +8,7 @@ Back to main page [README.md](https://github.com/OlivierB29/mobilecms-api/tree/m
 - [Xdebug on Ubuntu 16.04](http://www.dieuwe.com/blog/xdebug-ubuntu-1604-php7)
 - `composer install`
 - `vendor/bin/phpunit --configuration phpunit.xml`
-- `vendor/bin/phpunit --filter testPostBBCode tests/api/CmsApiTest.php`
+- `vendor/bin/phpunit --configuration phpunit.xml --filter testPostBBCode`
 
 ## Windows
 - Install [PHP](https://www.php.net/downloads.php)

@@ -11,7 +11,7 @@ final class PropertiesTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->conf = new Properties();
+        $this->conf = new \mobilecms\utils\Properties();
         $this->conf->loadConf('tests-data/properties/conf.json');
     }
 
@@ -23,7 +23,7 @@ final class PropertiesTest extends TestCase
     public function testEmptyConf()
     {
         $this->expectException(\Exception::class);
-        $this->conf = new Properties();
+        $this->conf = new \mobilecms\utils\Properties();
         $this->conf->loadConf('tests/empty.json');
     }
 

@@ -36,7 +36,7 @@ abstract class SecureRestApi extends RestApi
      *
      * @return Response object
      */
-    public function processAPI(): Response
+    public function processAPI(): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -63,7 +63,7 @@ abstract class SecureRestApi extends RestApi
      * @param array $headers : send by test units.
      * @param array $SERVER  : send by test units.
      */
-    public function authorize(array $headers = null, array $SERVER = null): Response
+    public function authorize(array $headers = null, array $SERVER = null): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
         $response->setCode(401);
@@ -133,7 +133,7 @@ abstract class SecureRestApi extends RestApi
             unset($bearerTokenValue);
 
             // verify token
-            $service = new AuthService($this->getPrivateDirPath() . '/users');
+            $service = new \mobilecms\services\AuthService($this->getPrivateDirPath() . '/users');
             $response = $service->verifyToken($tokenValue, $this->role);
 
             unset($service);

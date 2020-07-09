@@ -1,4 +1,4 @@
-<?php namespace mobilecms\utils;
+<?php namespace mobilecms\services;
 
 /*
  * Inspired by http://fr.wikihow.com/cr%C3%A9er-un-script-de-connexion-s%C3%A9curis%C3%A9e-avec-PHP-et-MySQL
@@ -90,10 +90,10 @@ class AuthService
      *
      * @return Response object
      */
-    public function getToken($emailParam, $password): Response
+    public function getToken($emailParam, $password): \mobilecms\utils\Response
     {
         // initialize Response
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(401);
         $response->setResult(new \stdClass);
 
@@ -108,7 +108,7 @@ class AuthService
         // user found
 
         if (password_verify($password, $user->{'password'})) {
-            $jwt = new JwtToken();
+            $jwt = new \mobilecms\utils\JwtToken();
 
             $token = $jwt->createTokenFromUser(
                 $user->{'name'},
@@ -150,10 +150,10 @@ class AuthService
      *
      * @return Response object
      */
-    public function changePassword($emailParam, $password, $newPassword): Response
+    public function changePassword($emailParam, $password, $newPassword): \mobilecms\utils\Response
     {
         // initialize Response
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(401);
 
         $response->setResult(new \stdClass);
@@ -175,7 +175,7 @@ class AuthService
             $user = $this->service->getJsonUser($email);
             $user->{'clientalgorithm'} = 'hashmacbase64';
             $user->{'newpasswordrequired'} = 'false';
-            JsonUtils::writeJsonFile($this->service->getJsonUserFile($email), $user);
+            \mobilecms\utils\JsonUtils::writeJsonFile($this->service->getJsonUserFile($email), $user);
 
             if (empty($updateMsg)) {
                 $response = $this->getPublicInfo($email);
@@ -198,7 +198,7 @@ class AuthService
      *
      * @return Response object
      */
-    public function verifyToken($token, $requiredRole): Response
+    public function verifyToken($token, $requiredRole): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -206,7 +206,7 @@ class AuthService
             throw new \Exception('empty token');
         }
 
-        $jwt = new JwtToken();
+        $jwt = new \mobilecms\utils\JwtToken();
 
         // get payload and convert to JSON
 
@@ -252,10 +252,10 @@ class AuthService
      *
      * @return Response object
      */
-    public function resetPassword($emailParam, $newPassword): Response
+    public function resetPassword($emailParam, $newPassword): \mobilecms\utils\Response
     {
         // initialize Response
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(401);
 
         $response->setResult(new \stdClass);
@@ -276,7 +276,7 @@ class AuthService
             $user = $this->service->getJsonUser($email);
             $user->{'clientalgorithm'} = 'none';
             $user->{'newpasswordrequired'} = 'true';
-            JsonUtils::writeJsonFile($this->service->getJsonUserFile($email), $user);
+            \mobilecms\utils\JsonUtils::writeJsonFile($this->service->getJsonUserFile($email), $user);
 
             if (empty($updateMsg)) {
                 $response = $this->getPublicInfo($email);
@@ -298,7 +298,7 @@ class AuthService
      *
      * @return Response public info
      */
-    public function getPublicInfo($email): Response
+    public function getPublicInfo($email): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
         if (\file_exists($this->service->getJsonUserFile($email))) {
@@ -306,7 +306,7 @@ class AuthService
             if (isset($user)) {
                 // do not send private info such as password ...
                 $info = json_decode('{"name":"", "clientalgorithm":"", "newpasswordrequired":""}');
-                JsonUtils::copy($user, $info);
+                \mobilecms\utils\JsonUtils::copy($user, $info);
                 $response->setResult($info);
                 $response->setCode(200);
             }
@@ -333,9 +333,9 @@ class AuthService
      *
      * @return Response object
      */
-    protected function getDefaultResponse() : Response
+    protected function getDefaultResponse() : \mobilecms\utils\Response
     {
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(400);
         $response->setResult(new \stdClass);
 

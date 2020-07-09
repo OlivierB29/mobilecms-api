@@ -63,7 +63,7 @@ abstract class RestApi
      *
      * @return Response object
      */
-    abstract public function preflight(): Response;
+    abstract public function preflight(): \mobilecms\utils\Response;
 
     /**
      * Constructor.
@@ -71,12 +71,12 @@ abstract class RestApi
     public function __construct()
     {
         $this->urlUtils = new UrlUtils();
-        $this->logger = new Logger();
+        $this->logger = new \mobilecms\utils\Logger();
     }
 
     public function loadConf(string $file)
     {
-        $this->properties = new Properties();
+        $this->properties = new \mobilecms\utils\Properties();
         $this->properties->loadConf($file);
         $this->initConf();
     }
@@ -308,7 +308,7 @@ abstract class RestApi
      *
      * @return Response object
      */
-    public function processAPI(): Response
+    public function processAPI(): \mobilecms\utils\Response
     {
         $apiResponse = $this->getDefaultResponse();
         try {
@@ -388,9 +388,9 @@ abstract class RestApi
      *
      * @return Response object
      */
-    protected function getDefaultResponse() : Response
+    protected function getDefaultResponse() : \mobilecms\utils\Response
     {
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(400);
         $response->setResult(new \stdClass);
 

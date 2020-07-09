@@ -1,4 +1,4 @@
-<?php namespace mobilecms\utils;
+<?php namespace mobilecms\services;
 
 /*
  * Inspired by http://fr.wikihow.com/cr%C3%A9er-un-script-de-connexion-s%C3%A9curis%C3%A9e-avec-PHP-et-MySQL
@@ -31,7 +31,7 @@ class UserService
     }
 
 
-    public function getAllUsers(): Response
+    public function getAllUsers(): \mobilecms\utils\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -95,7 +95,7 @@ class UserService
         // file exists ?
         $file = $this->getJsonUserFile($email);
         if (file_exists($file)) {
-            $jsonUser = JsonUtils::readJsonFile($file);
+            $jsonUser = \mobilecms\utils\JsonUtils::readJsonFile($file);
 
             if (isset($jsonUser->{'name'}) && isset($jsonUser->{'password'})) {
                 $result = $jsonUser;
@@ -143,7 +143,7 @@ class UserService
 
             // Modification
             $file = $this->getJsonUserFile($email);
-            JsonUtils::writeJsonFile($file, $jsonUser);
+            \mobilecms\utils\JsonUtils::writeJsonFile($file, $jsonUser);
             $result = true;
         }
 
@@ -156,9 +156,9 @@ class UserService
      *
      * @return Response object
      */
-    protected function getDefaultResponse() : Response
+    protected function getDefaultResponse() : \mobilecms\utils\Response
     {
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(400);
         $response->setResult(new \stdClass);
 
@@ -191,7 +191,7 @@ class UserService
             $jsonUser->{'role'} = $role;
 
             $file = $this->getJsonUserFile($email);
-            JsonUtils::writeJsonFile($file, $jsonUser);
+            \mobilecms\utils\JsonUtils::writeJsonFile($file, $jsonUser);
         }
     }
 }

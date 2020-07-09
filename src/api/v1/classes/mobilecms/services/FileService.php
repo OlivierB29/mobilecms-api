@@ -1,4 +1,4 @@
-<?php namespace mobilecms\utils;
+<?php namespace mobilecms\services;
 
 /**
  * File utility service.
@@ -36,7 +36,7 @@ class FileService
         $result = $this->getDescriptions($dir);
         foreach ($result as $key => $value) {
             $url = $value->{'url'};
-            $existingFile = JsonUtils::getByKey($existing, 'url', $url);
+            $existingFile = \mobilecms\utils\JsonUtils::getByKey($existing, 'url', $url);
             if (isset($existingFile)) {
                 $value->{'title'} = $existingFile->{'title'};
             }
@@ -183,9 +183,9 @@ class FileService
      *
      * @return Response object
      */
-    protected function getDefaultResponse() : Response
+    protected function getDefaultResponse() : \mobilecms\utils\Response
     {
-        $response = new Response();
+        $response = new \mobilecms\utils\Response();
         $response->setCode(400);
         $response->setResult(new \stdClass);
 

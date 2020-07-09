@@ -110,7 +110,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         if ($this->requestObject->match('/mobilecmsapi/v1/fileapi/basicupload/{type}/{id}')) {
             if ($this->requestObject->method === 'GET') {
                 // create service
-                $service = new \mobilecms\utils\FileService();
+                $service = new \mobilecms\services\FileService();
 
                 // update files description
                 // /var/www/html/media/calendar/1
@@ -178,7 +178,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
         if ($this->requestObject->match('/mobilecmsapi/v1/fileapi/download/{type}/{id}')) {
-            $service = new \mobilecms\utils\FileService();
+            $service = new \mobilecms\services\FileService();
 
             if ($this->requestObject->method === 'POST') {
                 $response = $this->downloadFiles(
@@ -464,7 +464,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
 
         if ($this->requestObject->method === 'POST'
             && $this->requestObject->match('/mobilecmsapi/v1/fileapi/thumbnails/{type}/{id}')) {
-            $service = new \mobilecms\utils\FileService();
+            $service = new \mobilecms\services\FileService();
             $files = json_decode(urldecode($this->getRequestBody()));
             $response = $service->createThumbnails(
                 $this->getMediaDirPath(),
