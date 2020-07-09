@@ -61,7 +61,6 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
         $this->checkConfiguration();
 
         if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/index/{type}')) {
-
             if ($this->requestObject->method === 'GET') {
                 $response = $this->getService()->getAll($this->getParam('type') . '/index/index.json');
             } elseif ($this->requestObject->method === 'POST') {
@@ -222,7 +221,6 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
         $this->checkConfiguration();
 
         if ($this->requestObject->method === 'GET' && $this->requestObject->match('/mobilecmsapi/v1/cmsapi/metadata/{type}')) {
-
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($this->getService()->getMetadataFileName($this->getParam('type'))));
             $response->setCode(200);
         } else {
@@ -239,7 +237,6 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
         $this->checkConfiguration();
 
         if ($this->requestObject->method === 'GET' && $this->requestObject->match('/mobilecmsapi/v1/cmsapi/template/{type}')) {
-
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($this->getService()->getTemplateFileName($this->getParam('type'))));
             $response->setCode(200);
         } else {
@@ -286,13 +283,13 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
     /**
      * Get a service
      */
-    protected function getService(): \mobilecms\services\ContentService {
+    protected function getService(): \mobilecms\services\ContentService
+    {
         if ($this->service == null) {
             $this->service = new \mobilecms\services\ContentService($this->getPublicDirPath());
             $this->service->setLogger($this->logger);
         }
         
         return $this->service;
-
     }
 }
