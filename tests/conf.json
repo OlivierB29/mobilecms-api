@@ -11,6 +11,7 @@
   "debugapiexceptions": "true",
   "postformdata": "true",
   "errorlog": "true",
+  "logfile": "unittests.log",
   "enableheaders": "false",
   "enablemail": "false",
   "mailsender": "sendmail@example.org",

@@ -54,7 +54,10 @@ class ContentService
      */
     private $databasedir;
 
-
+    /**
+     * logger
+     */
+    private $logger;
     /**
      * Constructor.
      *
@@ -63,6 +66,7 @@ class ContentService
     public function __construct(string $databasedir)
     {
         $this->databasedir = $databasedir;
+        $this->logger = new Logger();
     }
 
     /**
@@ -423,6 +427,8 @@ class ContentService
      */
     public function publishById(string $type, string $keyname, string $keyvalue): Response
     {
+        $this->logger->info('publishById' . $type . ',' . $keyname . ',' . $keyvalue);
+        
         $response = $this->getDefaultResponse();
 
         // file name eg: index.json
@@ -635,5 +641,16 @@ class ContentService
 
 
         return $response;
+    }
+
+    public function getLogger() : Logger
+    {
+        return $this->logger;
+    }
+
+
+    public function setLogger(Logger $logger)
+    {
+        $this->logger = $logger;
     }
 }

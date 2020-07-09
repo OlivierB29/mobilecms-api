@@ -49,7 +49,10 @@ abstract class RestApi
     */
     protected $urlUtils ;
 
-
+    /**
+    * logger
+    */
+    protected $logger;
 
     /**
      * Preflight requests are send by client framework, such as Angular
@@ -68,6 +71,7 @@ abstract class RestApi
     public function __construct()
     {
         $this->urlUtils = new UrlUtils();
+        $this->logger = new Logger();
     }
 
     public function loadConf(string $file)
@@ -146,6 +150,9 @@ abstract class RestApi
         }
 
         $this->rootDir = $_SERVER['DOCUMENT_ROOT'];
+
+        // configure log
+        $this->logger->setFile($this->properties->getString('logfile'));
     }
 
 

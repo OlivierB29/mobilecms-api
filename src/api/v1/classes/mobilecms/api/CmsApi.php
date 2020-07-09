@@ -20,6 +20,9 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
     */
     const FILE = 'file';
 
+
+    private $service;
+
     /**
      * Constructor.
      */
@@ -57,17 +60,12 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         $this->checkConfiguration();
 
-
-
-        $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
-
         if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/index/{type}')) {
-            //  $response = $service->getAllObjects($this->getParam('type'));
 
             if ($this->requestObject->method === 'GET') {
-                $response = $service->getAll($this->getParam('type') . '/index/index.json');
+                $response = $this->getService()->getAll($this->getParam('type') . '/index/index.json');
             } elseif ($this->requestObject->method === 'POST') {
-                $response = $service->rebuildIndex($this->getParam('type'), self::ID);
+                $response = $this->getService()->rebuildIndex($this->getParam('type'), self::ID);
             }
         }
 
@@ -83,7 +81,6 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         //  $pathId = $this->getParam('id');
 
-        $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
         if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/status')) {
             if ($this->requestObject->method === 'GET') {
                 $response->setResult(json_decode('{"result":"true"}'));
@@ -109,28 +106,28 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         //  $pathId = $this->getParam('id');
 
-        $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
+
 
         if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/content')) {
             if ($this->requestObject->method === 'GET') {
                 //return the list of editable types. eg : /mobilecmsapi/v1/content/
 
-                $response->setResult($service->options('types.json'));
+                $response->setResult($this->getService()->options('types.json'));
                 $response->setCode(200);
             }
         }
         if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/content/{type}')) {
             if ($this->requestObject->method === 'GET') {
-                $response = $service->getAllObjects($this->getParam('type'));
+                $response = $this->getService()->getAllObjects($this->getParam('type'));
             }
             if ($this->requestObject->method === 'POST') {
                 // save a record and update the index. eg : /mobilecmsapi/v1/content/calendar
+                $this->logger->info('post');
 
 
-                //  $response = $service->getAllObjects($this->getParam('type'));
                 // step 1 : update Record
 
-                $putResponse = $service->post($this->getParam('type'), self::ID, json_decode($this->getRequestBody()));
+                $putResponse = $this->getService()->post($this->getParam('type'), self::ID, json_decode($this->getRequestBody()));
                 $myobjectJson = $putResponse->getResult();
                 unset($putResponse);
 
@@ -139,14 +136,14 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 unset($myobjectJson);
                 
                 // issue : sometimes, the index is not refreshed
-                $response = $service->publishById($this->getParam('type'), self::ID, $id);
-                // $response = $service->rebuildIndex($this->getParam('type'), self::ID);
+                $response = $this->getService()->publishById($this->getParam('type'), self::ID, $id);
+                // $response = $this->getService()->rebuildIndex($this->getParam('type'), self::ID);
             }
         }
 
         if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/content/{type}/{id}')) {
             if ($this->requestObject->method === 'GET') {
-                $response = $service->getRecord($this->getParam('type'), $this->getParam('id'));
+                $response = $this->getService()->getRecord($this->getParam('type'), $this->getParam('id'));
             }
             if ($this->requestObject->method === 'DELETE') {
                 //delete media
@@ -159,12 +156,12 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 }
 
                 //delete record
-                $response = $service->deleteRecord($this->getParam('type'), $this->getParam('id'));
+                $response = $this->getService()->deleteRecord($this->getParam('type'), $this->getParam('id'));
                 // step 1 : update Record
 
                 if ($response->getCode() === 200) {
                     // step 2 : publish to index
-                    $response = $service->rebuildIndex($this->getParam('type'), self::ID);
+                    $response = $this->getService()->rebuildIndex($this->getParam('type'), self::ID);
                 }
 
                 // delete a record and update the index. eg : /mobilecmsapi/v1/content/calendar/1.json
@@ -188,18 +185,16 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
 
         //  $pathId = $this->getParam('id');
 
-        $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
-
 
         if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/deletelist/{type}')) {
             if ($this->requestObject->method === 'POST') {
                 // save a record and update the index. eg : /mobilecmsapi/v1/content/calendar
 
-                //  $response = $service->getAllObjects($this->getParam('type'));
+
                 // step 1 : update Record
 
 
-                $putResponse = $service->deleteRecords(
+                $putResponse = $this->getService()->deleteRecords(
                     $this->getParam('type'),
                     json_decode($this->getRequestBody())
                 );
@@ -207,7 +202,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
                 unset($putResponse);
                 // step 2 : publish to index
                 unset($myobjectJson);
-                $response = $service->rebuildIndex($this->getParam('type'), self::ID);
+                $response = $this->getService()->rebuildIndex($this->getParam('type'), self::ID);
             }
         }
 
@@ -227,8 +222,8 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
         if ($this->requestObject->method === 'GET' && $this->requestObject->match('/mobilecmsapi/v1/cmsapi/metadata/{type}')) {
-            $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
-            $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getMetadataFileName($this->getParam('type'))));
+
+            $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($this->getService()->getMetadataFileName($this->getParam('type'))));
             $response->setCode(200);
         } else {
             throw new \Exception('bad request');
@@ -244,8 +239,8 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         $this->checkConfiguration();
 
         if ($this->requestObject->method === 'GET' && $this->requestObject->match('/mobilecmsapi/v1/cmsapi/template/{type}')) {
-            $service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
-            $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getTemplateFileName($this->getParam('type'))));
+
+            $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($this->getService()->getTemplateFileName($this->getParam('type'))));
             $response->setCode(200);
         } else {
             throw new \Exception('bad request');
@@ -286,5 +281,18 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         }
 
         return $response;
+    }
+
+    /**
+     * Get a service
+     */
+    protected function getService(): \mobilecms\utils\ContentService {
+        if ($this->service == null) {
+            $this->service = new \mobilecms\utils\ContentService($this->getPublicDirPath());
+            $this->service->setLogger($this->logger);
+        }
+        
+        return $this->service;
+
     }
 }
