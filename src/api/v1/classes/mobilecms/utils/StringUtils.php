@@ -2,7 +2,7 @@
 
 define('EMPTYSTR', '');
 /**
- * Java-like StringUtils.
+ * Java-like \mobilecms\utils\StringUtils.
  */
 class StringUtils
 {

@@ -39,21 +39,21 @@ abstract class ApiTest extends TestCase
         return $this->memory2 - $this->memory1;
     }
 
-    protected function printError(\mobilecms\utils\Response $response)
+    protected function printError(\mobilecms\rest\Response $response)
     {
         if ($response->getCode() != 200) {
             echo 'ERROR ' . $response->getEncodedResult();
         }
     }
 
-    protected function request($verb, $path): \mobilecms\utils\Response
+    protected function request($verb, $path): \mobilecms\rest\Response
     {
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => $verb, 'HTTP_ORIGIN' => 'foobar'];
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);
         return $this->API->processAPI();
     }
 
-    protected function authrequest($verb, $path): \mobilecms\utils\Response
+    protected function authrequest($verb, $path): \mobilecms\rest\Response
     {
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => $verb, 'HTTP_ORIGIN' => 'foobar'];
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers);

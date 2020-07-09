@@ -9,7 +9,7 @@ final class UrlUtilsTest extends TestCase
 {
     public function testPathParam()
     {
-        $u = new UrlUtils();
+        $u = new \mobilecms\utils\UrlUtils();
         //
         // $test = preg_match('(\{[-a-zA-Z0-9_]*\})', '{paramvalue}', $matches, PREG_OFFSET_CAPTURE);
         // $this->assertEquals(1, $test);
@@ -24,7 +24,7 @@ final class UrlUtilsTest extends TestCase
     public function testMatch()
     {
         $matches = [];
-        $u = new UrlUtils();
+        $u = new \mobilecms\utils\UrlUtils();
         $test = $u->match('/foo/bar', '/aaaaaaaaa/bar');
         $this->assertFalse($test);
 

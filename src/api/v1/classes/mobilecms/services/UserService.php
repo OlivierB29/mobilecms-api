@@ -31,7 +31,7 @@ class UserService
     }
 
 
-    public function getAllUsers(): \mobilecms\utils\Response
+    public function getAllUsers(): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -156,9 +156,9 @@ class UserService
      *
      * @return Response object
      */
-    protected function getDefaultResponse() : \mobilecms\utils\Response
+    protected function getDefaultResponse() : \mobilecms\rest\Response
     {
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(400);
         $response->setResult(new \stdClass);
 

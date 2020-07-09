@@ -3,7 +3,7 @@
 /**
  * Administration API (users, ...).
  */
-class AdminApi extends \mobilecms\utils\SecureRestApi
+class AdminApi extends \mobilecms\rest\SecureRestApi
 {
     const INDEX_JSON = '/index/index.json';
 
@@ -42,9 +42,9 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
     /**
      * Base API path /mobilecmsapi/v1/content.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function content() : \mobilecms\utils\Response
+    protected function content() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -170,11 +170,11 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
      *
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    public function preflight(): \mobilecms\utils\Response
+    public function preflight(): \mobilecms\rest\Response
     {
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(200);
         $response->setResult(new \stdClass);
 
@@ -191,9 +191,9 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
     /**
      * Get or refresh index.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function index() : \mobilecms\utils\Response
+    protected function index() : \mobilecms\rest\Response
     {
         $userKey = 'email';
         $response = $this->getDefaultResponse();
@@ -240,9 +240,9 @@ class AdminApi extends \mobilecms\utils\SecureRestApi
     /**
      * Get file info.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function metadata() : \mobilecms\utils\Response
+    protected function metadata() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 

@@ -90,10 +90,10 @@ class AuthService
      *
      * @return Response object
      */
-    public function getToken($emailParam, $password): \mobilecms\utils\Response
+    public function getToken($emailParam, $password): \mobilecms\rest\Response
     {
         // initialize Response
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(401);
         $response->setResult(new \stdClass);
 
@@ -108,7 +108,7 @@ class AuthService
         // user found
 
         if (password_verify($password, $user->{'password'})) {
-            $jwt = new \mobilecms\utils\JwtToken();
+            $jwt = new \mobilecms\rest\JwtToken();
 
             $token = $jwt->createTokenFromUser(
                 $user->{'name'},
@@ -150,10 +150,10 @@ class AuthService
      *
      * @return Response object
      */
-    public function changePassword($emailParam, $password, $newPassword): \mobilecms\utils\Response
+    public function changePassword($emailParam, $password, $newPassword): \mobilecms\rest\Response
     {
         // initialize Response
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(401);
 
         $response->setResult(new \stdClass);
@@ -198,7 +198,7 @@ class AuthService
      *
      * @return Response object
      */
-    public function verifyToken($token, $requiredRole): \mobilecms\utils\Response
+    public function verifyToken($token, $requiredRole): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -206,7 +206,7 @@ class AuthService
             throw new \Exception('empty token');
         }
 
-        $jwt = new \mobilecms\utils\JwtToken();
+        $jwt = new \mobilecms\rest\JwtToken();
 
         // get payload and convert to JSON
 
@@ -252,10 +252,10 @@ class AuthService
      *
      * @return Response object
      */
-    public function resetPassword($emailParam, $newPassword): \mobilecms\utils\Response
+    public function resetPassword($emailParam, $newPassword): \mobilecms\rest\Response
     {
         // initialize Response
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(401);
 
         $response->setResult(new \stdClass);
@@ -298,7 +298,7 @@ class AuthService
      *
      * @return Response public info
      */
-    public function getPublicInfo($email): \mobilecms\utils\Response
+    public function getPublicInfo($email): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
         if (\file_exists($this->service->getJsonUserFile($email))) {
@@ -333,9 +333,9 @@ class AuthService
      *
      * @return Response object
      */
-    protected function getDefaultResponse() : \mobilecms\utils\Response
+    protected function getDefaultResponse() : \mobilecms\rest\Response
     {
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(400);
         $response->setResult(new \stdClass);
 

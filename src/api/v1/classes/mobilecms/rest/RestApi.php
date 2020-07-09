@@ -1,4 +1,4 @@
-<?php namespace mobilecms\utils;
+<?php namespace mobilecms\rest;
 
 /*
  * Core REST Api without Authentication or API Key
@@ -63,14 +63,14 @@ abstract class RestApi
      *
      * @return Response object
      */
-    abstract public function preflight(): \mobilecms\utils\Response;
+    abstract public function preflight(): \mobilecms\rest\Response;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->urlUtils = new UrlUtils();
+        $this->urlUtils = new \mobilecms\utils\UrlUtils();
         $this->logger = new \mobilecms\utils\Logger();
     }
 
@@ -308,7 +308,7 @@ abstract class RestApi
      *
      * @return Response object
      */
-    public function processAPI(): \mobilecms\utils\Response
+    public function processAPI(): \mobilecms\rest\Response
     {
         $apiResponse = $this->getDefaultResponse();
         try {
@@ -388,9 +388,9 @@ abstract class RestApi
      *
      * @return Response object
      */
-    protected function getDefaultResponse() : \mobilecms\utils\Response
+    protected function getDefaultResponse() : \mobilecms\rest\Response
     {
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(400);
         $response->setResult(new \stdClass);
 

@@ -318,7 +318,7 @@ final class FileApiTest extends AuthApiTest
         unlink($this->API->getMediaDirPath() . $record . '/thumbnails/tennis-300.jpg');
     }
 
-    protected function filerequest($verb, $path, $files): \mobilecms\utils\Response
+    protected function filerequest($verb, $path, $files): \mobilecms\rest\Response
     {
         $this->SERVER = ['REQUEST_URI' => $this->path, 'REQUEST_METHOD' => $verb, 'HTTP_ORIGIN' => 'foobar'];
         $this->API->setRequest($this->REQUEST, $this->SERVER, $this->GET, $this->POST, $this->headers, $files);

@@ -4,7 +4,7 @@
  * File API with authentication.
  * Basic file upload using _FILES
  */
-class FileApi extends \mobilecms\utils\SecureRestApi
+class FileApi extends \mobilecms\rest\SecureRestApi
 {
     /**
      * Media directory (eg: media ).
@@ -98,9 +98,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
     /**
      * Basic file upload.
      *
-     * @return \mobilecms\utils\Response response
+     * @return \mobilecms\rest\Response response
      */
-    protected function basicupload(): \mobilecms\utils\Response
+    protected function basicupload(): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -139,9 +139,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
     /**
      * Delete file.
      *
-     * @return \mobilecms\utils\Response response
+     * @return \mobilecms\rest\Response response
      */
-    protected function delete(): \mobilecms\utils\Response
+    protected function delete(): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -169,9 +169,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
      * Sample request body :
      * [{ "url": "http://wwww.example.com/foobar.pdf", "title":"Foobar.pdf"}].
      *
-     * @return \mobilecms\utils\Response response
+     * @return \mobilecms\rest\Response response
      */
-    protected function download(): \mobilecms\utils\Response
+    protected function download(): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -197,11 +197,11 @@ class FileApi extends \mobilecms\utils\SecureRestApi
      * Preflight response
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    public function preflight(): \mobilecms\utils\Response
+    public function preflight(): \mobilecms\rest\Response
     {
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(200);
         $response->setResult(new \stdClass);
 
@@ -320,9 +320,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
      * @param string $id       : 123
      * @param string $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      *
-     * @return \mobilecms\utils\Response result
+     * @return \mobilecms\rest\Response result
      */
-    private function downloadFiles(string $datatype, string $id, string $filesStr): \mobilecms\utils\Response
+    private function downloadFiles(string $datatype, string $id, string $filesStr): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -405,7 +405,7 @@ class FileApi extends \mobilecms\utils\SecureRestApi
      * @param string $id       123
      * @param string $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
      */
-    private function deleteFiles($datatype, $id, $filesStr): \mobilecms\utils\Response
+    private function deleteFiles($datatype, $id, $filesStr): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -454,9 +454,9 @@ class FileApi extends \mobilecms\utils\SecureRestApi
      * Sample request body :
      * [{ "url": "foobar.jpg", "sizes": [100, 200, 300]}]
      *
-     * @return \mobilecms\utils\Response response
+     * @return \mobilecms\rest\Response response
      */
-    protected function thumbnails(): \mobilecms\utils\Response
+    protected function thumbnails(): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 

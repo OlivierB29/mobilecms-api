@@ -1,4 +1,4 @@
-<?php namespace mobilecms\utils;
+<?php namespace mobilecms\rest;
 
 /**
  * Secure implementation of a REST api.
@@ -36,7 +36,7 @@ abstract class SecureRestApi extends RestApi
      *
      * @return Response object
      */
-    public function processAPI(): \mobilecms\utils\Response
+    public function processAPI(): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -63,7 +63,7 @@ abstract class SecureRestApi extends RestApi
      * @param array $headers : send by test units.
      * @param array $SERVER  : send by test units.
      */
-    public function authorize(array $headers = null, array $SERVER = null): \mobilecms\utils\Response
+    public function authorize(array $headers = null, array $SERVER = null): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
         $response->setCode(401);

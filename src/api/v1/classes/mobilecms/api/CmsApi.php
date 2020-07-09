@@ -3,7 +3,7 @@
 /*
  * /mobilecmsapi/v1/content/cake?filter=foobar
  */
-class CmsApi extends \mobilecms\utils\SecureRestApi
+class CmsApi extends \mobilecms\rest\SecureRestApi
 {
     /**
      * Index subpath
@@ -52,9 +52,9 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
     /**
      * Get index.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function index() : \mobilecms\utils\Response
+    protected function index() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -73,7 +73,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         return $response;
     }
 
-    protected function status() : \mobilecms\utils\Response
+    protected function status() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -94,9 +94,9 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
     /**
      * Base API path /mobilecmsapi/v1/content.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function content() : \mobilecms\utils\Response
+    protected function content() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -175,9 +175,9 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
     /**
      * Base API path /mobilecmsapi/v1/content.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function deletelist() : \mobilecms\utils\Response
+    protected function deletelist() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -213,9 +213,9 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
     /**
      * Get file info.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function metadata() : \mobilecms\utils\Response
+    protected function metadata() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -232,7 +232,7 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
         return $response;
     }
 
-    protected function template() : \mobilecms\utils\Response
+    protected function template() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -265,11 +265,11 @@ class CmsApi extends \mobilecms\utils\SecureRestApi
      * Preflight response
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    public function preflight(): \mobilecms\utils\Response
+    public function preflight(): \mobilecms\rest\Response
     {
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(200);
         $response->setResult(new \stdClass);
 

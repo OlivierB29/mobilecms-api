@@ -1,4 +1,4 @@
-<?php namespace mobilecms\utils;
+<?php namespace mobilecms\rest;
 
 /**
 * Generic HTTP request data

@@ -96,7 +96,7 @@ class FileService
      * @param string $files : [{ "url": "tennis.jpg", "sizes": [100, 200, 300]}]
      * @param string $defaultsizes : [100, 200, 300, 400, 500]
      *
-     * @return \mobilecms\utils\Response result
+     * @return \mobilecms\rest\Response result
      */
     public function createThumbnails(
         string $mediadir,
@@ -108,7 +108,7 @@ class FileService
         array $defaultPdfsizes,
         int $pdfQuality,
         bool $imagick = false
-    ): \mobilecms\utils\Response {
+    ): \mobilecms\rest\Response {
         $response = $this->getDefaultResponse();
         $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
 
@@ -183,9 +183,9 @@ class FileService
      *
      * @return Response object
      */
-    protected function getDefaultResponse() : \mobilecms\utils\Response
+    protected function getDefaultResponse() : \mobilecms\rest\Response
     {
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(400);
         $response->setResult(new \stdClass);
 

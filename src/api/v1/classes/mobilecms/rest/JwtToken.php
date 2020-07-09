@@ -1,4 +1,4 @@
-<?php namespace mobilecms\utils;
+<?php namespace mobilecms\rest;
 
 /**
  * Utility for creating JWT.

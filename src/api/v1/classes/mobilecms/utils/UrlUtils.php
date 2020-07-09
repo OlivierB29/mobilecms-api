@@ -82,7 +82,7 @@ class UrlUtils
     {
         // return 1 === preg_match('(\{[-a-zA-Z0-9_]*\})', '{paramvalue}');
 
-        return StringUtils::startsWith($value, '{') && StringUtils::endsWith($value, '}');
+        return \mobilecms\utils\StringUtils::startsWith($value, '{') && \mobilecms\utils\StringUtils::endsWith($value, '}');
     }
 
     /**
@@ -94,7 +94,7 @@ class UrlUtils
     {
         $result = null;
 
-        if (StringUtils::startsWith($value, '{') && StringUtils::endsWith($value, '}')) {
+        if (\mobilecms\utils\StringUtils::startsWith($value, '{') && \mobilecms\utils\StringUtils::endsWith($value, '}')) {
             $result = \substr($value, 1, strlen($value) - 2);
         }
 

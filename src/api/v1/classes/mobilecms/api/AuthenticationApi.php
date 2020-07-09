@@ -5,7 +5,7 @@
  * /authapi/v1/auth
  * /authapi/v1/register
  */
-class AuthenticationApi extends \mobilecms\utils\RestApi
+class AuthenticationApi extends \mobilecms\rest\RestApi
 {
     /**
      * Debug feature.
@@ -45,9 +45,9 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     /**
      * Base API path /authapi/v1/changepassword.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function changepassword() : \mobilecms\utils\Response
+    protected function changepassword() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -81,9 +81,9 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     /**
      * Base API path /authapi/v1/resetpassword.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function resetpassword() : \mobilecms\utils\Response
+    protected function resetpassword() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -146,9 +146,9 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     /**
      * Base API path /authapi/v1/publicinfo.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function publicinfo() : \mobilecms\utils\Response
+    protected function publicinfo() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -172,9 +172,9 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     /**
      * /authapi/v1/register.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function register() : \mobilecms\utils\Response
+    protected function register() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -212,11 +212,11 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
      *
      * http://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    public function preflight(): \mobilecms\utils\Response
+    public function preflight(): \mobilecms\rest\Response
     {
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(200);
         $response->setResult(new \stdClass);
 
@@ -250,9 +250,9 @@ class AuthenticationApi extends \mobilecms\utils\RestApi
     /**
      * Base API path /authapi/v1/authenticate.
      *
-     * @return \mobilecms\utils\Response object
+     * @return \mobilecms\rest\Response object
      */
-    protected function authenticate() : \mobilecms\utils\Response
+    protected function authenticate() : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 

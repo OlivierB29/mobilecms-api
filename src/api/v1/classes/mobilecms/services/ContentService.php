@@ -155,7 +155,7 @@ class ContentService
      * @param string $type     eg: calendar
      * @param string $keyvalue : id value, eg :1
      */
-    public function getRecord(string $type, string $keyvalue) : \mobilecms\utils\Response
+    public function getRecord(string $type, string $keyvalue) : \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -214,7 +214,7 @@ class ContentService
      *
      * @return Response object
      */
-    public function getFilePath(string $filename): \mobilecms\utils\Response
+    public function getFilePath(string $filename): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -252,9 +252,9 @@ class ContentService
      * @param string $keyname   : id
      * @param string $keyvalue  : 1
      *
-     * @return : \mobilecms\utils\Response object with a JSON object eg : {"id":"1", "foo":"bar"}
+     * @return : \mobilecms\rest\Response object with a JSON object eg : {"id":"1", "foo":"bar"}
      */
-    public function get(string $filename, string $keyname, string $keyvalue): \mobilecms\utils\Response
+    public function get(string $filename, string $keyname, string $keyvalue): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -288,9 +288,9 @@ class ContentService
      *
      * @param string $type eg: calendar
      *
-     * @return : \mobilecms\utils\Response object with a JSON array
+     * @return : \mobilecms\rest\Response object with a JSON array
      */
-    public function getAllObjects(string $type): \mobilecms\utils\Response
+    public function getAllObjects(string $type): \mobilecms\rest\Response
     {
         $this->checkType($type);
         $response = $this->getDefaultResponse();
@@ -320,9 +320,9 @@ class ContentService
      *
      * @param string $filename : JSON data filename eg: [{"id":"1", "foo":"bar"}, {"id":"2", "foo":"bar2"}].
      *
-     * @return : \mobilecms\utils\Response object with a JSON array
+     * @return : \mobilecms\rest\Response object with a JSON array
      */
-    public function getAll(string $filename): \mobilecms\utils\Response
+    public function getAll(string $filename): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -391,7 +391,7 @@ class ContentService
      * @param string $keyname   : primary key inside the file.
      * @param \stdClass $record : JSON data
      */
-    public function update(string $type, string $keyname, \stdClass $record): \mobilecms\utils\Response
+    public function update(string $type, string $keyname, \stdClass $record): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -425,7 +425,7 @@ class ContentService
      * @param string $keyname   : primary key inside the file.
      * @param string $recordStr : JSON data
      */
-    public function publishById(string $type, string $keyname, string $keyvalue): \mobilecms\utils\Response
+    public function publishById(string $type, string $keyname, string $keyvalue): \mobilecms\rest\Response
     {
         $this->logger->info('publishById' . $type . ',' . $keyname . ',' . $keyvalue);
         
@@ -483,7 +483,7 @@ class ContentService
      * @param string $type    : object type (eg : calendar)
      * @param string $keyname : primary key inside the file.
      */
-    public function rebuildIndex(string $type, string $keyname): \mobilecms\utils\Response
+    public function rebuildIndex(string $type, string $keyname): \mobilecms\rest\Response
     {
         $response = $this->getDefaultResponse();
 
@@ -608,9 +608,9 @@ class ContentService
      *
      * @return Response object
      */
-    protected function getDefaultResponse() : \mobilecms\utils\Response
+    protected function getDefaultResponse() : \mobilecms\rest\Response
     {
-        $response = new \mobilecms\utils\Response();
+        $response = new \mobilecms\rest\Response();
         $response->setCode(400);
         $response->setResult(new \stdClass);
 
