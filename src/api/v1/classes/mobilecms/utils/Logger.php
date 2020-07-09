@@ -58,7 +58,7 @@ class Logger
         } else {
             // log to file
             // message is appended to the file destination. A newline is not automatically added to the end of the message string.
-            error_log($message . \n, 3, $this->file);
+            error_log($message . "\n", 3, $this->file);
         }
         
     }
