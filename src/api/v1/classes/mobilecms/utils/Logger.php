@@ -15,13 +15,13 @@ class Logger
      */
     public function __construct()
     {
-
     }
 
     /**
      * @param string $value : message to log
      */
-    public function info($value) {
+    public function info($value)
+    {
         $level = 'INFO';
         $this->log('INFO', $value);
     }
@@ -32,7 +32,6 @@ class Logger
     */
     public function log($level, $value)
     {
-
         $message = '';
 
         $message .= $level;
@@ -50,10 +49,9 @@ class Logger
                 error_log($message);
             } else {
                 // log to file
-                // cf : message is appended to the file destination. A newline is not automatically added to the end of the message string. 
+                // cf : message is appended to the file destination. A newline is not automatically added to the end of the message string.
                 error_log($message . '\n', 3, $this->file);
             }
-
         }
     }
 
