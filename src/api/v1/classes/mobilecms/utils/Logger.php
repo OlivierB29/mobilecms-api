@@ -6,8 +6,14 @@
  */
 class Logger
 {
+    /**
+     * output file
+     */
     private $file = '';
 
+    /**
+     * log to console
+     */
     private $console = false;
 
     /**
@@ -40,19 +46,21 @@ class Logger
             $message .= ' ';
             $message .= $value;
         }
+
+        // console log enabled
         if ($this->console) {
-            // to console
             echo $message;
-        } else {
-            if (empty($this->file)) {
-                // default log
-                error_log($message);
-            } else {
-                // log to file
-                // cf : message is appended to the file destination. A newline is not automatically added to the end of the message string.
-                error_log($message . '\n', 3, $this->file);
-            }
         }
+
+        if (empty($this->file)) {
+            // default log destination
+            error_log($message);
+        } else {
+            // log to file
+            // message is appended to the file destination. A newline is not automatically added to the end of the message string.
+            error_log($message . \n, 3, $this->file);
+        }
+        
     }
 
     /**
