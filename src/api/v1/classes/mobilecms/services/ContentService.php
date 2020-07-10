@@ -160,7 +160,7 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
+        $file = $this->getItemFileName($type, $keyvalue);
 
         // get one element
         if (file_exists($file)) {
@@ -184,7 +184,7 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->databasedir . '/' . $type . '/' . $keyvalue . '.json';
+        $file = $this->getItemFileName($type, $keyvalue);
 
         if (file_exists($file)) {
             unlink($file);
