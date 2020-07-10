@@ -58,6 +58,8 @@ class ContentService
      * logger
      */
     private $logger;
+
+
     /**
      * Constructor.
      *
@@ -77,14 +79,30 @@ class ContentService
      *
      * @return /foobar/calendar/index.json
      */
-    private function getItemFileName(string $type, string $id) : string
+    private function getItemFileName(string $type, string $id, \stdClass $record) : string
     {
-        return $this->databasedir . '/' . $type . '/' . $id . '.json';
+        $result = $this->databasedir . '/' . $type . '/' ;
+        // conf "organizeby": "year"
+        $conf = $this->getConf($type);
+        if (!empty($conf->getString('organizeby'))) {
+            // get year from date field
+            $recorddate = $record->{$conf->getString('organizefield')};
+            $year = substr($recorddate, 0, 4);
+            // date should be mandatory
+            if (!empty($year)) {
+                $result .=  $year . '/';
+            }
+                        
+        } 
+        $result .= $id . '.json';
+        return $result; 
     }
 
     private function checkParams(string $type, string $id)
     {
         $this->checkType($type);
+
+
         if (empty($id)) {
             throw new \Exception('empty id');
         }
@@ -371,7 +389,7 @@ class ContentService
             $id = $record->{$keyname};
 
             // file name
-            $file = $this->getItemFileName($type, $id);
+            $file = $this->getItemFileName($type, $id, $record);
 
             // write to file
             \mobilecms\utils\JsonUtils::writeJsonFile($file, $record);
@@ -477,6 +495,17 @@ class ContentService
         return $response;
     }
 
+    public function getConf(string $type): \mobilecms\utils\Properties
+    {
+        $conf = null;
+        if (\file_exists($this->getConfFileName($type))) {
+            $conf = new \mobilecms\utils\Properties();
+            $conf->loadConf($this->getConfFileName($type));
+        }
+        
+       return $conf;
+    }
+
     /**
      * Rebuild an index.
      *
@@ -492,12 +521,7 @@ class ContentService
         // file name eg: index.json
 
         $indexFile = $this->getIndexFileName($type);
-        $conf = null;
-        if (\file_exists($this->getConfFileName($type))) {
-            //$conf = \mobilecms\utils\JsonUtils::readJsonFile($this->getConfFileName($type));
-            $conf = new \mobilecms\utils\Properties();
-            $conf->loadConf($this->getConfFileName($type));
-        }
+
 
         /*
         Load a template for index.
@@ -537,14 +561,14 @@ class ContentService
         $sortby = $keyname;
         $sortAscending = false;
         $cacheSize = -1;
-        if ($conf != null) {
-            if (!empty($conf->getString('sortby'))) {
-                $sortby = $conf->getString('sortby');
+        if ($this->getConf() != null) {
+            if (!empty($this->getConf()->getString('sortby'))) {
+                $sortby = $this->getConf()->getString('sortby');
             }
-            if ('asc' === $conf->getString('sortdirection')) {
+            if ('asc' === $this->getConf()->getString('sortdirection')) {
                 $sortAscending = true;
             }
-            $cacheSize = $conf->getInteger('cachesize', 0);
+            $cacheSize = $this->getConf()->getInteger('cachesize', 0);
         }
 
         // sort

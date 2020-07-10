@@ -31,7 +31,8 @@ class JsonUtils
         try {
             $dir = dirname($file);
             if (!file_exists($dir)) {
-                throw new \Exception('No such file or directory' . $dir);
+                //throw new \Exception('No such file or directory' . $dir);
+                mkdir($dir);
             }
             if (file_exists($dir) && !is_writable($dir)) {
                 throw new \Exception('Access error to output dir' . $dir);
