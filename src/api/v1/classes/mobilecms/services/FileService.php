@@ -72,18 +72,34 @@ class FileService
      * Get real path of media files.
      *
      * @param string $mediadir eg: media
-     * @param string $datatype eg: calendar
+     * @param string $type eg: calendar
      * @param string $id       eg: 1
      *
      * @return eg : /var/www/html/media/calendar/1
      */
-    public function getRecordDirectory(string $mediadir, string $datatype, string $id): string
+    public function getRecordDirectory(string $mediadir, string $type, string $id, \stdClass $record): string
     {
-        if (isset($mediadir) && isset($datatype) && isset($id)) {
-            return $mediadir . '/' . $datatype . '/' . $id;
+        if (isset($mediadir) && isset($type) && isset($id)) {
+
+            $result = $mediadir  . '/' . $type . '/' ;
+            // conf "organizeby": "year"
+            $conf = $this->getConf($type);
+            if (!empty($conf->getString('organizeby'))) {
+                // get year from date field
+                $recorddate = $record->{$conf->getString('organizefield')};
+                $year = substr($recorddate, 0, 4);
+                // date should be mandatory
+                if (!empty($year)) {
+                    $result .=  $year . '/';
+                }
+                            
+            } 
+            $result .= $id ;
+            return $result; 
+
         } else {
             // @codeCoverageIgnoreStart
-            throw new \Exception('getMediaDirectory() mediadir ' . $mediadir . ' type ' . $datatype . ' id ' . $id);
+            throw new \Exception('getMediaDirectory() mediadir ' . $mediadir . ' type ' . $type . ' id ' . $id);
             // @codeCoverageIgnoreEnd
         }
     }
