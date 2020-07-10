@@ -1,4 +1,6 @@
 {
     "sortby": "date",
-    "sortdirection": "desc"
+    "sortdirection": "desc",
+    "organizefield": "date",
+    "organizeby": "year"
 }
