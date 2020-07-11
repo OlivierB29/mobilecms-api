@@ -1,14 +1,15 @@
 Back to main page [README.md](https://github.com/OlivierB29/mobilecms-api/tree/master/README.md)
 
+## Code style
+vendor/bin/phpcs --standard=CakePHP src/
 
-
-
-## Unit tests
+# Unit tests
 - Requirements : Composer, Xdebug
 - `composer install`
 - `vendor/bin/phpunit --configuration phpunit.xml`
 - `vendor/bin/phpunit --configuration phpunit.xml --filter testPostBBCode`
 
+# Debug unit tests
 ## Xdebug on Ubuntu 16.04 
 - [Xdebug on Ubuntu 16.04](http://www.dieuwe.com/blog/xdebug-ubuntu-1604-php7)
 
@@ -20,6 +21,8 @@ Back to main page [README.md](https://github.com/OlivierB29/mobilecms-api/tree/m
 xdebug.remote_enable = 1
 xdebug.remote_autostart = 1
 ```
+## VS Code debugging
+[felixfbecker.php-debug](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug)
 
 ## Windows
 - Install [PHP](https://www.php.net/downloads.php)
@@ -43,8 +46,6 @@ extension=exif
 - `Install-PhpExtension imagick`
 - `vendor\bin\phpunit.bat --configuration phpunit.xml`
 
-## Code style
-vendor/bin/phpcs --standard=CakePHP src/
 
 ## Known issues
 ImagickException: not authorized  @ error/constitute.c/ReadImage/412
