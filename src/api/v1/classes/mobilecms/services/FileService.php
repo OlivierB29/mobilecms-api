@@ -84,7 +84,7 @@ class FileService
             $result = $mediadir  . '/' . $type . '/' ;
             // conf "organizeby": "year"
             $conf = $this->getConf($type);
-            if (!empty($conf->getString('organizeby'))) {
+            if (isset($record) && !empty($conf->getString('organizeby'))) {
                 // get year from date field
                 $recorddate = $record->{$conf->getString('organizefield')};
                 $year = substr($recorddate, 0, 4);
@@ -103,6 +103,27 @@ class FileService
             // @codeCoverageIgnoreEnd
         }
     }
+
+    /**
+     * @TODO : replace type by a defined subpath such as news/2015
+     */
+    public function getRecordDirectoryWithoutRecord(string $mediadir, string $type, string $id): string
+    {
+        if (isset($mediadir) && isset($type) && isset($id)) {
+
+            $result = $mediadir  . '/' . $type . '/' ;
+
+
+            $result .= $id ;
+            return $result; 
+
+        } else {
+            // @codeCoverageIgnoreStart
+            throw new \Exception('getMediaDirectory() mediadir ' . $mediadir . ' type ' . $type . ' id ' . $id);
+            // @codeCoverageIgnoreEnd
+        }
+    }
+
 
     /**
      * Create thumbnails files from specified URLs.
@@ -126,7 +147,7 @@ class FileService
         bool $imagick = false
     ): \mobilecms\rest\Response {
         $response = $this->getDefaultResponse();
-        $destdir = $this->getRecordDirectory($mediadir, $datatype, $id);
+        $destdir = $this->getRecordDirectoryWithoutRecord($mediadir, $datatype, $id);
 
 
         $result = [];

@@ -147,7 +147,7 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
             if ($this->requestObject->method === 'DELETE') {
                 //delete media
                 $fileservice = new \mobilecms\services\FileService();
-                $mediadir = $fileservice->getRecordDirectory($this->getMediaDirPath(), $this->getParam('type'), $this->getParam('id'));
+                $mediadir = $fileservice->getRecordDirectoryWithoutRecord($this->getMediaDirPath(), $this->getParam('type'), $this->getParam('id'));
                 unset($fileservice);
                 if (\file_exists($mediadir)) {
                     $fileutils = new \mobilecms\utils\FileUtils();

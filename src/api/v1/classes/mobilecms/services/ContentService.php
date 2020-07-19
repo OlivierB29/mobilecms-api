@@ -98,6 +98,14 @@ class ContentService
         return $result; 
     }
 
+    private function getItemFileNameWithoutRecord(string $type, string $id) : string
+    {
+        $result = $this->databasedir . '/' . $type . '/' ;
+
+        $result .= $id . '.json';
+        return $result; 
+    }
+
     private function checkParams(string $type, string $id)
     {
         $this->checkType($type);
@@ -178,7 +186,7 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->getItemFileName($type, $keyvalue);
+        $file = $this->getItemFileNameWithoutRecord($type, $keyvalue);
 
         // get one element
         if (file_exists($file)) {
@@ -202,7 +210,7 @@ class ContentService
         $response = $this->getDefaultResponse();
 
         // Read the JSON file
-        $file = $this->getItemFileName($type, $keyvalue);
+        $file = $this->getItemFileNameWithoutRecord($type, $keyvalue);
 
         if (file_exists($file)) {
             unlink($file);
@@ -418,7 +426,7 @@ class ContentService
             // detect id
             $id = $record->{$keyname};
             // file name
-            $file = $this->getItemFileName($type, $id);
+            $file = $this->getItemFileName($type, $id, $record);
 
             $existing = \mobilecms\utils\JsonUtils::readJsonFile($file);
             \mobilecms\utils\JsonUtils::copy($record, $existing);
@@ -561,14 +569,14 @@ class ContentService
         $sortby = $keyname;
         $sortAscending = false;
         $cacheSize = -1;
-        if ($this->getConf() != null) {
-            if (!empty($this->getConf()->getString('sortby'))) {
-                $sortby = $this->getConf()->getString('sortby');
+        if ($this->getConf($type) != null) {
+            if (!empty($this->getConf($type)->getString('sortby'))) {
+                $sortby = $this->getConf($type)->getString('sortby');
             }
-            if ('asc' === $this->getConf()->getString('sortdirection')) {
+            if ('asc' === $this->getConf($type)->getString('sortdirection')) {
                 $sortAscending = true;
             }
-            $cacheSize = $this->getConf()->getInteger('cachesize', 0);
+            $cacheSize = $this->getConf($type)->getInteger('cachesize', 0);
         }
 
         // sort
