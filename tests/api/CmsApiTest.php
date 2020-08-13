@@ -73,7 +73,7 @@ final class CmsApiTest extends AuthApiTest
         $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar';
 
 
-        $recordStr = file_get_contents($this->API->getPublicDirPath() . '/html.json');
+        $recordStr = file_get_contents('tests-data/public/html.json');
         $this->POST = ['requestbody' => $recordStr];
         unset($recordStr);
         $response = $this->request('POST', $this->path);
@@ -94,7 +94,7 @@ final class CmsApiTest extends AuthApiTest
         $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar';
 
 
-        $recordStr = file_get_contents($this->API->getPublicDirPath() . '/bbcode.json');
+        $recordStr = file_get_contents('tests-data/public/bbcode.json');
         $this->POST = ['requestbody' => $recordStr];
         unset($recordStr);
         $response = $this->request('POST', $this->path);

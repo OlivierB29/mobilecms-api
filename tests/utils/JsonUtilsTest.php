@@ -14,10 +14,10 @@ final class JsonUtilsTest extends TestCase
                 json_encode(\mobilecms\utils\JsonUtils::readJsonFile('tests-data/jsonutils/mini.json'))
                 );
     }
-    public function testDirectoryNotFound()
+    public function testNewDirectory()
     {
-        $this->expectException(\Exception::class);
-        \mobilecms\utils\JsonUtils::writeJsonFile('BAD_PATH/test.json', \json_decode('{}'));
+        \mobilecms\utils\JsonUtils::writeJsonFile('tests-data/newpath/test.json', \json_decode('{}'));
+        $this->assertTrue(file_exists('tests-data/newpath/test.json'));
     }
 
     public function testWriteException()

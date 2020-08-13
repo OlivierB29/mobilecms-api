@@ -1,6 +1,6 @@
 {
     "sortby": "date",
     "sortdirection": "desc",
-    "organizefield": "date",
-    "organizeby": "year"
+    "organizefield": "",
+    "organizeby": ""
 }
