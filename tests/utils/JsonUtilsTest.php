@@ -10,9 +10,9 @@ final class JsonUtilsTest extends TestCase
     public function testCanRead()
     {
         $this->assertJsonStringEqualsJsonString(
-                '{}',
-                json_encode(\mobilecms\utils\JsonUtils::readJsonFile('tests-data/jsonutils/mini.json'))
-                );
+            '{}',
+            json_encode(\mobilecms\utils\JsonUtils::readJsonFile('tests-data/jsonutils/mini.json'))
+        );
     }
     public function testNewDirectory()
     {
@@ -33,10 +33,9 @@ final class JsonUtilsTest extends TestCase
         $item = \mobilecms\utils\JsonUtils::getByKey($data, 'id', '1');
 
         $this->assertJsonStringEqualsJsonString(
-                '{"id":"1", "foo":"bar"}',
-                json_encode($item)
-
-                );
+            '{"id":"1", "foo":"bar"}',
+            json_encode($item)
+        );
     }
 
     public function testUpdateByKey()
@@ -48,14 +47,14 @@ final class JsonUtilsTest extends TestCase
         $item->{'foo'} = 'pub';
 
         $this->assertJsonStringEqualsJsonString(
-                '{"id":"1", "foo":"pub"}',
-                json_encode($item)
-                );
+            '{"id":"1", "foo":"pub"}',
+            json_encode($item)
+        );
 
         $this->assertJsonStringEqualsJsonString(
-                '[{"id":"1", "foo":"pub"},{"id":"2", "foo":"bar"}]',
-                json_encode($data)
-                );
+            '[{"id":"1", "foo":"pub"},{"id":"2", "foo":"bar"}]',
+            json_encode($data)
+        );
     }
 
     public function testCopy()
@@ -65,27 +64,27 @@ final class JsonUtilsTest extends TestCase
         $item = \mobilecms\utils\JsonUtils::getByKey($data, 'id', '1');
 
         $this->assertJsonStringEqualsJsonString(
-                '{"id":"1", "foo":"bar"}',
-                json_encode($item)
-                );
+            '{"id":"1", "foo":"bar"}',
+            json_encode($item)
+        );
 
         $newItem = json_decode('{"id":"1", "foo":"pub"}');
 
         $this->assertTrue(
-                $newItem != null
-                );
+            $newItem != null
+        );
 
         \mobilecms\utils\JsonUtils::copy($newItem, $item);
 
         $this->assertJsonStringEqualsJsonString(
-                '{"id":"1", "foo":"pub"}',
-                json_encode($item)
-                );
+            '{"id":"1", "foo":"pub"}',
+            json_encode($item)
+        );
 
         $this->assertJsonStringEqualsJsonString(
-                '[{"id":"1", "foo":"pub"},{"id":"2", "foo":"bar"}]',
-                json_encode($data)
-                );
+            '[{"id":"1", "foo":"pub"},{"id":"2", "foo":"bar"}]',
+            json_encode($data)
+        );
     }
 
     public function testReplace()
@@ -95,27 +94,27 @@ final class JsonUtilsTest extends TestCase
         $item = \mobilecms\utils\JsonUtils::getByKey($data, 'id', '1');
 
         $this->assertJsonStringEqualsJsonString(
-                '{"id":"1", "foo":"bar"}',
-                json_encode($item)
-                );
+            '{"id":"1", "foo":"bar"}',
+            json_encode($item)
+        );
 
         $newItem = json_decode('{"id":"1", "foo":"pub" , "hello":"world"}');
 
         $this->assertTrue(
-                $newItem != null
-                );
+            $newItem != null
+        );
 
         \mobilecms\utils\JsonUtils::replace($newItem, $item);
 
         $this->assertJsonStringEqualsJsonString(
-                '{"id":"1", "foo":"pub", "hello":"world"}',
-                json_encode($item)
-                );
+            '{"id":"1", "foo":"pub", "hello":"world"}',
+            json_encode($item)
+        );
 
         $this->assertJsonStringEqualsJsonString(
-                '[{"id":"1", "foo":"pub", "hello":"world"},{"id":"2", "foo":"bar"}]',
-                json_encode($data)
-                );
+            '[{"id":"1", "foo":"pub", "hello":"world"},{"id":"2", "foo":"bar"}]',
+            json_encode($data)
+        );
     }
 
     public function testPutExistingItem()
@@ -126,9 +125,9 @@ final class JsonUtilsTest extends TestCase
         $data = \mobilecms\utils\JsonUtils::put($data, 'id', $item);
 
         $this->assertJsonStringEqualsJsonString(
-                '[{"id":"2", "foo":"bar"},{"id":"1", "foo":"pub"}]',
-                json_encode($data)
-                );
+            '[{"id":"2", "foo":"bar"},{"id":"1", "foo":"pub"}]',
+            json_encode($data)
+        );
     }
 
     public function testPutNewItem()
@@ -139,8 +138,8 @@ final class JsonUtilsTest extends TestCase
         $data = \mobilecms\utils\JsonUtils::put($data, 'id', $item);
 
         $this->assertJsonStringEqualsJsonString(
-                '[{"id":"1", "foo":"bar"},{"id":"2", "foo":"bar"},{"id":"100", "foo":"bar"}]',
-                json_encode($data)
-                );
+            '[{"id":"1", "foo":"bar"},{"id":"2", "foo":"bar"},{"id":"100", "foo":"bar"}]',
+            json_encode($data)
+        );
     }
 }

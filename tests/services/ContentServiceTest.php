@@ -19,11 +19,11 @@ final class ContentServiceTest extends TestCase
         $this->assertEquals(200, $response->getCode());
 
         $this->assertTrue(
-          strstr($response->getEncodedResult(), '"id":"1"') != ''
+            strstr($response->getEncodedResult(), '"id":"1"') != ''
         );
 
         $this->assertTrue(
-          strstr($response->getEncodedResult(), '"id":"2"') != ''
+            strstr($response->getEncodedResult(), '"id":"2"') != ''
         );
     }
 
@@ -35,8 +35,8 @@ final class ContentServiceTest extends TestCase
         $this->assertEquals(200, $response->getCode());
 
         $this->assertJsonStringEqualsJsonString(
-        '{ "id": "1","date": "2015-09-01", "activity": "activitya", "title": "some seminar of activity A"}',
-        $response->getEncodedResult()
+            '{ "id": "1","date": "2015-09-01", "activity": "activitya", "title": "some seminar of activity A"}',
+            $response->getEncodedResult()
         );
     }
 

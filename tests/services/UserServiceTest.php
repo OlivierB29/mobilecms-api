@@ -18,14 +18,14 @@ final class UserServiceTest extends TestCase
     public function testCanRead()
     {
         $this->assertTrue(
-          $this->service->getJsonUser('test@example.com') !== null
+            $this->service->getJsonUser('test@example.com') !== null
         );
     }
 
     public function testUpdateUser()
     {
         $this->assertTrue(
-          $this->service->updateUser('updateuser@example.com', 'updated', 'pass', 'salt', 'admin')
+            $this->service->updateUser('updateuser@example.com', 'updated', 'pass', 'salt', 'admin')
         );
     }
 
