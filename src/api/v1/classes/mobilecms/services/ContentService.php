@@ -92,10 +92,9 @@ class ContentService
             if (!empty($year)) {
                 $result .=  $year . '/';
             }
-                        
-        } 
+        }
         $result .= $id . '.json';
-        return $result; 
+        return $result;
     }
 
     private function getItemFileNameWithoutRecord(string $type, string $id) : string
@@ -103,7 +102,7 @@ class ContentService
         $result = $this->databasedir . '/' . $type . '/' ;
 
         $result .= $id . '.json';
-        return $result; 
+        return $result;
     }
 
     private function checkParams(string $type, string $id)
@@ -511,7 +510,7 @@ class ContentService
             $conf->loadConf($this->getConfFileName($type));
         }
         
-       return $conf;
+        return $conf;
     }
 
     /**

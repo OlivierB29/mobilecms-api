@@ -80,8 +80,7 @@ class FileService
     public function getRecordDirectory(string $mediadir, string $type, string $id, \stdClass $record): string
     {
         if (isset($mediadir) && isset($type) && isset($id)) {
-
-            $result = $mediadir  . '/' . $type . '/' ;
+            $result = $mediadir . '/' . $type . '/' ;
             // conf "organizeby": "year"
             $conf = $this->getConf($type);
             if (isset($record) && !empty($conf->getString('organizeby'))) {
@@ -92,11 +91,9 @@ class FileService
                 if (!empty($year)) {
                     $result .=  $year . '/';
                 }
-                            
-            } 
+            }
             $result .= $id ;
-            return $result; 
-
+            return $result;
         } else {
             // @codeCoverageIgnoreStart
             throw new \Exception('getMediaDirectory() mediadir ' . $mediadir . ' type ' . $type . ' id ' . $id);
@@ -110,13 +107,11 @@ class FileService
     public function getRecordDirectoryWithoutRecord(string $mediadir, string $type, string $id): string
     {
         if (isset($mediadir) && isset($type) && isset($id)) {
-
-            $result = $mediadir  . '/' . $type . '/' ;
+            $result = $mediadir . '/' . $type . '/' ;
 
 
             $result .= $id ;
-            return $result; 
-
+            return $result;
         } else {
             // @codeCoverageIgnoreStart
             throw new \Exception('getMediaDirectory() mediadir ' . $mediadir . ' type ' . $type . ' id ' . $id);
