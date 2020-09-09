@@ -484,7 +484,32 @@ class ContentService
 
         // get index data
         $data = \mobilecms\utils\JsonUtils::readJsonFile($file);
+        // put index data
         $data = \mobilecms\utils\JsonUtils::put($data, $keyname, $indexValue);
+        // sort index
+
+       // issue when using a function. array is copied, not referenced
+       // $this->sortIndex($data, $type, $keyname);
+                   // sorted index by a field, or by id
+                   $sortby = $keyname;
+                   $sortAscending = false;
+                   $cacheSize = -1;
+                   if ($this->getConf($type) != null) {
+                       if (!empty($this->getConf($type)->getString('sortby'))) {
+                           $sortby = $this->getConf($type)->getString('sortby');
+                       }
+                       if ('asc' === $this->getConf($type)->getString('sortdirection')) {
+                           $sortAscending = true;
+                       }
+                       $cacheSize = $this->getConf($type)->getInteger('cachesize', 0);
+                   }
+           
+                   // sort
+                   if ($sortAscending) {
+                       usort($data, compareIndex($sortby));
+                   } else {
+                       usort($data, compareIndexReverse($sortby));
+                   }
 
         // write to file
         \mobilecms\utils\JsonUtils::writeJsonFile($file, $data);
@@ -609,7 +634,35 @@ class ContentService
         return $response;
     }
 
-
+    /**
+     * Sort an array, using a configuration.
+     * @param array $data : index content
+     * @param string $type    : object type (eg : calendar)
+     * @param string $keyname : default sort key, if conf is empty
+     */
+    public function sortIndex(array $data, string $type, string $keyname) {
+                // sorted index by a field, or by id
+                $sortby = $keyname;
+                $sortAscending = false;
+                $cacheSize = -1;
+                if ($this->getConf($type) != null) {
+                    if (!empty($this->getConf($type)->getString('sortby'))) {
+                        $sortby = $this->getConf($type)->getString('sortby');
+                    }
+                    if ('asc' === $this->getConf($type)->getString('sortdirection')) {
+                        $sortAscending = true;
+                    }
+                    $cacheSize = $this->getConf($type)->getInteger('cachesize', 0);
+                }
+        
+                // sort
+                if ($sortAscending) {
+                    usort($data, compareIndex($sortby));
+                } else {
+                    usort($data, compareIndexReverse($sortby));
+                }
+                echo 'zzz';
+    }
 
     /**
      * Options files content.

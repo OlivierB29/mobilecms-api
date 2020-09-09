@@ -220,7 +220,7 @@ final class CmsAdminApiTest extends AuthApiTest
 
         $this->assertTrue($response != null);
     }
-    public function testRebuildIndex()
+    public function testRebuildUserIndex()
     {
         $this->setAdmin();
         $this->path = '/mobilecmsapi/v1/adminapi/index/users' ;
@@ -235,6 +235,8 @@ final class CmsAdminApiTest extends AuthApiTest
 
         $this->assertTrue($response != null);
     }
+
+
     public function testUpdate()
     {
         $this->setAdmin();

@@ -67,7 +67,7 @@ final class ContentServiceTest extends TestCase
         $this->assertEquals(400, $response->getCode());
     }
 
-    public function testPost()
+    public function testBasicPost()
     {
         $recordStr = '{"id":"10","date":"2015-09-01","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
@@ -79,9 +79,41 @@ final class ContentServiceTest extends TestCase
 
         $this->assertJsonStringEqualsJsonFile($file, $recordStr);
     }
+
+    public function testPostWithIndexMostRecent()
+    {
+        $recordStr = '{"id":"210","date":"2020-09-01","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $service = new ContentService('tests-data2/public1');
+        $response = $service->post('calendar', 'id', json_decode($recordStr));
+
+        $file = 'tests-data2/public1' . '/calendar/210.json';
+
+        $this->assertEquals(200, $response->getCode());
+
+        $this->assertJsonStringEqualsJsonFile($file, $recordStr);
+
+
+        $response = $service->publishById('calendar', 'id', '210');
+    }
+
+    public function testPostWithIndexMiddle()
+    {
+        $recordStr = '{"id":"220","date":"2016-11-20","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $service = new ContentService('tests-data2/public2');
+        $response = $service->post('calendar', 'id', json_decode($recordStr));
+
+        $file = 'tests-data2/public2' . '/calendar/220.json';
+
+        $this->assertEquals(200, $response->getCode());
+
+        $this->assertJsonStringEqualsJsonFile($file, $recordStr);
+
+        $response = $service->publishById('calendar', 'id', '220');
+    }
+
     public function testUpdate()
     {
-        $recordStr = '{"id":"5","type":"calendar","date":"2015-09-01","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"<some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
+        $recordStr = '{"id":"5","type":"calendar","date":"2015-09-01","activity":"activitya","title":"some seminar of activity A","organization":"Some org","description":"some infos","url":"","location":"","startdate":"","enddate":"","updated":"","updatedby":""}';
         $service = new ContentService($this->dir);
         $response = $service->update('calendar', 'id', json_decode($recordStr));
 
