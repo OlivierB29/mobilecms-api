@@ -1,0 +1,50 @@
+[
+    {
+        "id": "6",
+        "date": "2018-08-10",
+        "activity": "activitya",
+        "title": "some seminar of activity A",
+        "description": "some infos",
+        "media": [],
+        "images": [],
+        "attachments": []
+    },
+    {
+        "id": "4",
+        "date": "2016-11-30",
+        "activity": "activityb",
+        "title": "yet another seminar of activity B",
+        "description": "foo",
+        "media": [],
+        "images": [],
+        "attachments": []
+    },
+    {
+        "id": "3",
+        "date": "2016-11-17",
+        "activity": "activityb",
+        "title": "another seminar of activity B",
+        "description": "foo",
+        "media": [],
+        "images": [],
+        "attachments": []
+    },
+    {
+        "id": "2",
+        "date": "2015-09-25",
+        "activity": "activitya",
+        "title": "a new seminar of activity A"
+    },
+    {
+        "id": "5",
+        "date": "2015-09-08",
+        "activity": "activitya",
+        "title": "some seminar of activity A"
+    },
+    {
+        "id": "1",
+        "date": "2015-09-01",
+        "activity": "activitya",
+        "title": "some seminar of activity A"
+    }
+]
