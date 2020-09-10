@@ -18,5 +18,8 @@
     <testsuite name="api">
       <directory>tests/api</directory>
     </testsuite>
+    <testsuite name="services">
+      <directory>tests/services</directory>
+    </testsuite>
   </testsuites>
 </phpunit>
