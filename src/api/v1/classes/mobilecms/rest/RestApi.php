@@ -8,6 +8,16 @@
 abstract class RestApi
 {
     /**
+     * Root URI on server
+     */
+    const APIROOT = 'mobilecmsapi';
+
+    /**
+     * API version
+     */
+    const VERSION = 'v1';
+
+    /**
      * If needed : post form data instead of php://input.
      */
     const REQUESTBODY = 'requestbody';
@@ -496,5 +506,15 @@ abstract class RestApi
     protected function getParam($key)
     {
         return $this->requestObject->getParam($key);
+    }
+
+    /**
+     * Get API URI.
+     *
+     * @return string privatedir main privatedir directory
+     */
+    public static function getUri(): string
+    {
+        return '/' . self::APIROOT . '/' . self::VERSION;
     }
 }

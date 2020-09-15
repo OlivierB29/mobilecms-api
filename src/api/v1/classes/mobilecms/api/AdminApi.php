@@ -54,7 +54,7 @@ class AdminApi extends \mobilecms\rest\SecureRestApi
         $authService = new \mobilecms\services\AuthService($this->getPrivateDirPath() . '/users');
 
 
-        if ($this->requestObject->match('/mobilecmsapi/v1/adminapi/content/{type}/{id}') && 'users' === $this->getParam('type')) {
+        if ($this->requestObject->match(self::getUri() . '/adminapi/content/{type}/{id}') && 'users' === $this->getParam('type')) {
             if ($this->requestObject->method === 'GET') {
                 $tmpResponse = $service->getRecord($this->getParam('type'), $this->getParam('id'));
                 // basic user fields, without password
@@ -98,7 +98,7 @@ class AdminApi extends \mobilecms\rest\SecureRestApi
             }
         }
 
-        if ($this->requestObject->match('/mobilecmsapi/v1/adminapi/content/{type}')) {
+        if ($this->requestObject->match(self::getUri() . '/adminapi/content/{type}')) {
             if ($this->requestObject->method === 'GET' && 'users' === $this->getParam('type')) {
                 //get all records in directory
                 $userService = new \mobilecms\services\UserService($this->getPrivateDirPath() . '/users');
@@ -200,7 +200,7 @@ class AdminApi extends \mobilecms\rest\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->match('/mobilecmsapi/v1/adminapi/index/{type}')) {
+        if ($this->requestObject->match(self::getUri() . '/adminapi/index/{type}')) {
             $service = new \mobilecms\services\ContentService($this->getPrivateDirPath());
 
             // eg : /mobilecmsapi/v1/content/calendar
@@ -248,7 +248,7 @@ class AdminApi extends \mobilecms\rest\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/mobilecmsapi/v1/adminapi/metadata/{type}')) {
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match(self::getUri() . '/adminapi/metadata/{type}')) {
             $service = new \mobilecms\services\ContentService($this->getPrivateDirPath());
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($service->getMetadataFileName($this->getParam('type'))));
             $response->setCode(200);

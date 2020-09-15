@@ -5,6 +5,7 @@
  */
 class CmsApi extends \mobilecms\rest\SecureRestApi
 {
+
     /**
      * Index subpath
      * full path, eg : /var/www/html/public/calendar/index/index.json.
@@ -60,7 +61,7 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/index/{type}')) {
+        if ($this->requestObject->match(self::getUri() . '/cmsapi/index/{type}')) {
             if ($this->requestObject->method === 'GET') {
                 $response = $this->getService()->getAll($this->getParam('type') . '/index/index.json');
             } elseif ($this->requestObject->method === 'POST') {
@@ -80,7 +81,7 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
 
         //  $pathId = $this->getParam('id');
 
-        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/status')) {
+        if ($this->requestObject->match(self::getUri() . '/cmsapi/status')) {
             if ($this->requestObject->method === 'GET') {
                 $response->setResult(json_decode('{"result":"true"}'));
                 $response->setCode(200);
@@ -107,7 +108,7 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
 
 
 
-        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/content')) {
+        if ($this->requestObject->match(self::getUri() . '/cmsapi/content')) {
             if ($this->requestObject->method === 'GET') {
                 //return the list of editable types. eg : /mobilecmsapi/v1/content/
 
@@ -115,7 +116,7 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
                 $response->setCode(200);
             }
         }
-        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/content/{type}')) {
+        if ($this->requestObject->match(self::getUri() . '/cmsapi/content/{type}')) {
             if ($this->requestObject->method === 'GET') {
                 $response = $this->getService()->getAllObjects($this->getParam('type'));
             }
@@ -140,7 +141,7 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
             }
         }
 
-        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/content/{type}/{id}')) {
+        if ($this->requestObject->match(self::getUri() . '/cmsapi/content/{type}/{id}')) {
             if ($this->requestObject->method === 'GET') {
                 $response = $this->getService()->getRecord($this->getParam('type'), $this->getParam('id'));
             }
@@ -185,7 +186,7 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
         //  $pathId = $this->getParam('id');
 
 
-        if ($this->requestObject->match('/mobilecmsapi/v1/cmsapi/deletelist/{type}')) {
+        if ($this->requestObject->match(self::getUri() . '/cmsapi/deletelist/{type}')) {
             if ($this->requestObject->method === 'POST') {
                 // save a record and update the index. eg : /mobilecmsapi/v1/content/calendar
 
@@ -220,7 +221,7 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/mobilecmsapi/v1/cmsapi/metadata/{type}')) {
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match(self::getUri() . '/cmsapi/metadata/{type}')) {
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($this->getService()->getMetadataFileName($this->getParam('type'))));
             $response->setCode(200);
         } else {
@@ -236,7 +237,7 @@ class CmsApi extends \mobilecms\rest\SecureRestApi
 
         $this->checkConfiguration();
 
-        if ($this->requestObject->method === 'GET' && $this->requestObject->match('/mobilecmsapi/v1/cmsapi/template/{type}')) {
+        if ($this->requestObject->method === 'GET' && $this->requestObject->match(self::getUri() . '/cmsapi/template/{type}')) {
             $response->setResult(\mobilecms\utils\JsonUtils::readJsonFile($this->getService()->getTemplateFileName($this->getParam('type'))));
             $response->setCode(200);
         } else {
