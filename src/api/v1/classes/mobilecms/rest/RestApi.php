@@ -517,4 +517,24 @@ abstract class RestApi
     {
         return '/' . self::APIROOT . '/' . self::VERSION;
     }
+
+    /**
+     * Get API root URI, without /.
+     *
+     * @return string privatedir main privatedir directory
+     */
+    public static function getRoot(): string
+    {
+        return self::APIROOT;
+    }
+
+    /**
+     * Get API version, without /.
+     *
+     * @return string privatedir main privatedir directory
+     */
+    public static function getVersion(): string
+    {
+        return self::VERSION;
+    }
 }

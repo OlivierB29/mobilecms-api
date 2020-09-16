@@ -3,27 +3,28 @@
 // API endpoint
 require_once 'autoload.php';
 
-$API = null;
+$api = null;
 $uri = $_SERVER['REQUEST_URI'];
 
-if (preg_match("/^\/" . \mobilecms\rest\RestApi::APIROOT . "\/" . \mobilecms\rest\RestApi::VERSION . "\/cmsapi/", $uri) > 0) {
-    $API = new \mobilecms\api\CmsApi();
+if (preg_match("/^\/" . \mobilecms\rest\RestApi::getRoot() . "\/" . \mobilecms\rest\RestApi::getVersion() . "\/cmsapi/", $uri) > 0) {
+    $api = new \mobilecms\api\CmsApi();
 }
 
-if (preg_match("/^\/" . \mobilecms\rest\RestApi::APIROOT . "\/" . \mobilecms\rest\RestApi::VERSION . "\/authapi/", $uri) > 0) {
-    $API = new \mobilecms\api\AuthenticationApi();
+if (preg_match("/^\/" . \mobilecms\rest\RestApi::getRoot() . "\/" . \mobilecms\rest\RestApi::getVersion() . "\/authapi/", $uri) > 0) {
+    $api = new \mobilecms\api\AuthenticationApi();
 }
 
-if (preg_match("/^\/" . \mobilecms\rest\RestApi::APIROOT . "\/" . \mobilecms\rest\RestApi::VERSION . "\/adminapi/", $uri) > 0) {
-    $API = new \mobilecms\api\AdminApi();
+if (preg_match("/^\/" . \mobilecms\rest\RestApi::getRoot() . "\/" . \mobilecms\rest\RestApi::getVersion() . "\/adminapi/", $uri) > 0) {
+    $api = new \mobilecms\api\AdminApi();
 }
 
-if (preg_match("/^\/" . \mobilecms\rest\RestApi::APIROOT . "\/" . \mobilecms\rest\RestApi::VERSION . "\/fileapi/", $uri) > 0) {
-    $API = new \mobilecms\api\FileApi();
+if (preg_match("/^\/" . \mobilecms\rest\RestApi::getRoot() . "\/" . \mobilecms\rest\RestApi::getVersion() . "\/fileapi/", $uri) > 0) {
+    $api = new \mobilecms\api\FileApi();
 }
 
 // run API
-
-$API->loadConf(realpath('../conf/conf.json'));
-$API->execute();
+if (isset($api)) {
+    $api->loadConf(realpath('../conf/conf.json'));
+    $api->execute();
+}
 // @codeCoverageIgnoreEnd
