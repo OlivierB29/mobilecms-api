@@ -1,0 +1,153 @@
+---
+openapi: "3.0.2"
+info:
+  title: "cmsapi"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    name: "OlivierB"
+    url: "https://github.com/OlivierB29/mobilecms-api"
+    email: "olivier_boniteau@yahoo.fr"
+  license:
+    name: "MIT License"
+    url: "https://opensource.org/licenses/MIT"
+  version: "1.0.0"
+servers:
+- url: "/"
+security:
+- Authorization: []
+paths:
+  /content/{type}/{id}:
+    get:
+      parameters:
+      - name: "type"
+        in: "path"
+        description: "article type"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      - name: "id"
+        in: "path"
+        description: "ID to fetch"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        default:
+          description: "unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      parameters:
+      - name: "type"
+        in: "path"
+        description: "article type"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      - name: "id"
+        in: "path"
+        description: "article id"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+        required: true
+      responses:
+        "200":
+          $ref: "#/components/schemas/Article"
+    delete:
+      description: "deletes an article"
+      parameters:
+      - name: "type"
+        in: "path"
+        description: "article type"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      - name: "id"
+        in: "path"
+        description: "ID to delete"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "204":
+          description: "deleted"
+        default:
+          description: "unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /metadata/{type}/: {}
+  /deletelist/{type}:
+    post:
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "Successful response"
+  /preflight:
+    get:
+      responses:
+        "200":
+          description: "Success"
+    options:
+      responses:
+        "200":
+          description: "Success"
+  /template/{type}: {}
+components:
+  schemas:
+    Error:
+      required:
+      - "code"
+      - "message"
+      properties:
+        code:
+          type: "integer"
+          format: "int32"
+        message:
+          type: "string"
+    Article:
+      required:
+      - "title"
+      type: "object"
+      properties:
+        title:
+          type: "string"
+      description: "Article properties"
+  securitySchemes:
+    Authorization:
+      type: "http"
+      scheme: "bearer"

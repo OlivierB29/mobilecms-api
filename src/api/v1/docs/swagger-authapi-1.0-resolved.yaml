@@ -1,0 +1,77 @@
+---
+openapi: "3.0.2"
+info:
+  title: "authenticationapi"
+  version: "1.0"
+servers:
+- url: "https://virtserver.swaggerhub.com/OlivierB29/authenticationapi/1.0"
+  description: "SwaggerHub API Auto Mocking"
+paths:
+  /authenticate:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationBody"
+        required: true
+      responses:
+        "200":
+          description: "Success"
+  /changepassword:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationBody"
+        required: true
+      responses:
+        "200":
+          description: "Success"
+  /preflight:
+    get:
+      responses:
+        "200":
+          description: "Success"
+    options:
+      responses:
+        "200":
+          description: "Success"
+  /resetpassword:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationBody"
+        required: true
+      responses:
+        "200":
+          description: "Success"
+  /publicinfo/{userid}:
+    get:
+      parameters:
+      - name: "userid"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "Succcess"
+components:
+  schemas:
+    AuthenticationBody:
+      title: "Root Type for AuthenticationBody"
+      type: "object"
+      properties:
+        user:
+          type: "string"
+        password:
+          type: "string"
+      example:
+        user: "test@example.com"
+        password: "Sample#123456"
