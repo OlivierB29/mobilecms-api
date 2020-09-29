@@ -1,0 +1,94 @@
+---
+openapi: "3.0.2"
+info:
+  title: "adminapi"
+  version: "1.0"
+servers:
+- url: "https://virtserver.swaggerhub.com/OlivierB29/adminapi/1.0"
+  description: "SwaggerHub API Auto Mocking"
+paths:
+  /preflight:
+    get:
+      responses:
+        "200":
+          description: "Success"
+    options:
+      responses:
+        "200":
+          description: "Success"
+  /index/{type}:
+    get:
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "Success"
+  /content/{type}/{id}:
+    get:
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "ok"
+    post:
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "ok"
+    delete:
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "ok"
+components:
+  securitySchemes:
+    Authorization:
+      type: "http"
+      scheme: "bearer"

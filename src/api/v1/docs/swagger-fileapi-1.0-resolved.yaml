@@ -1,0 +1,102 @@
+---
+openapi: "3.0.2"
+info:
+  title: "fileapi"
+  version: "1.0"
+servers:
+- url: "https://virtserver.swaggerhub.com/OlivierB29/fileapi/1.0"
+  description: "SwaggerHub API Auto Mocking"
+paths:
+  /thumbnails/{type}/{id}:
+    post:
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "Success"
+  /basicupload/{type}/{id}:
+    get:
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "Success"
+    post:
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "Success"
+  /delete/{type}/{id}:
+    post:
+      parameters:
+      - name: "type"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        style: "simple"
+        explode: false
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "Success"
+  /preflight:
+    get:
+      responses:
+        "200":
+          description: "Success"
+    options:
+      responses:
+        "200":
+          description: "Success"
+components:
+  securitySchemes:
+    Authorization:
+      type: "http"
+      scheme: "bearer"
