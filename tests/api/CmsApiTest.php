@@ -5,6 +5,8 @@ namespace mobilecms\api;
 
 final class CmsApiTest extends AuthApiTest
 {
+    protected $requestparams = '?timestamp=1599654646';
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -140,7 +142,7 @@ final class CmsApiTest extends AuthApiTest
 
     public function testGetCalendarList()
     {
-        $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar';
+        $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar' . $this->requestparams;
 
 
         $this->GET = ['requestbody' => '{}'];
@@ -171,7 +173,7 @@ final class CmsApiTest extends AuthApiTest
 
     public function testGetCalendarRecord()
     {
-        $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar/1';
+        $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar/1'. $this->requestparams;
 
 
         $response = $this->request('GET', $this->path);
@@ -264,7 +266,7 @@ final class CmsApiTest extends AuthApiTest
 
     public function testGetIndex()
     {
-        $this->path = '/mobilecmsapi/v1/cmsapi/index/calendar';
+        $this->path = '/mobilecmsapi/v1/cmsapi/index/calendar' . $this->requestparams;
 
 
         $response = $this->request('GET', $this->path);

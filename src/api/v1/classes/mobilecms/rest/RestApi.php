@@ -175,8 +175,17 @@ abstract class RestApi
      *
      * @param string $request uri
      */
-    public function setRequestUri(string $request)
+    public function setRequestUri(string $requestArg)
     {
+        // ignore request parameters
+        // fix issue before migrating to Slim
+        if (strpos($requestArg, "?") !== false) {
+            $request =  substr($requestArg, 0, strpos($requestArg, "?"));
+        } else {
+            $request = $requestArg;
+        }
+        
+
         $this->requestObject->uri = $request;
 
         $this->requestObject->args = explode('/', rtrim(ltrim($request, '/'), '/'));
