@@ -173,7 +173,7 @@ final class CmsApiTest extends AuthApiTest
 
     public function testGetCalendarRecord()
     {
-        $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar/1'. $this->requestparams;
+        $this->path = '/mobilecmsapi/v1/cmsapi/content/calendar/1' . $this->requestparams;
 
 
         $response = $this->request('GET', $this->path);
