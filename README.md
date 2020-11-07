@@ -1,8 +1,19 @@
 # mobilecms-api
+
+deprecated
+
+New version [mobilecms-api-slim](https://github.com/OlivierB29/mobilecms-api-slim)
+
+
+
+
+
+
+
 ## REST API written in PHP, for managing content stored into JSON files.
 
 [![Build Status](https://travis-ci.org/OlivierB29/mobilecms-api.svg?branch=master)](https://travis-ci.org/OlivierB29/mobilecms-api)
-![compatible](https://img.shields.io/badge/PHP%207-Compatible-brightgreen.svg)
+![compatible](https://img.shields.io/badge/PHP%20%3E=7.3-Compatible-brightgreen.svg]
 [![StyleCI](https://styleci.io/repos/86973415/shield?style=flat)](https://styleci.io/repos/86973415)
 
 It is initially intended to manage a sport organization, with such content : News, calendar events, public pages, documents, ...
@@ -85,5 +96,5 @@ On Ubuntu 16.04, the file path is /etc/apache2/sites-available/000-default.conf
 - Q: When running tests : Error: No code coverage driver is available
 - A: Install php-xdebug
 
-- Q : "@ error/constitute.c/ReadImage/412" when running PHPUnit on Ubuntu 18.04
+- Q : "@ error/constitute.c/ReadImage/412" or "Web : ImagickException: attempt to perform an operation not allowed by the security policy `PDF’" when running PHPUnit on Ubuntu 18.04/20.04
 - A: [Imagick - ImagickException not authorized @ error/constitute.c/ReadImage/412 error](https://stackoverflow.com/questions/52817741/imagick-imagickexception-not-authorized-error-constitute-c-readimage-412-err)
