@@ -163,34 +163,6 @@ class FileApi extends \mobilecms\rest\SecureRestApi
         return $response;
     }
 
-    /**
-     * Download an external file and save it in the record structure.
-     *
-     * Sample request body :
-     * [{ "url": "http://wwww.example.com/foobar.pdf", "title":"Foobar.pdf"}].
-     *
-     * @return \mobilecms\rest\Response response
-     */
-    protected function download(): \mobilecms\rest\Response
-    {
-        $response = $this->getDefaultResponse();
-
-        $this->checkConfiguration();
-
-        if ($this->requestObject->match(self::getUri() . '/fileapi/download/{type}/{id}')) {
-            $service = new \mobilecms\services\FileService();
-
-            if ($this->requestObject->method === 'POST') {
-                $response = $this->downloadFiles(
-                    $this->getParam('type'),
-                    $this->getParam('id'),
-                    urldecode($this->getRequestBody())
-                );
-            }
-        }
-
-        return $response;
-    }
 
 
     /**
@@ -313,54 +285,6 @@ class FileApi extends \mobilecms\rest\SecureRestApi
         return $result;
     }
 
-    /**
-     * Download files from specified URLs.
-     *
-     * @param string $datatype : news
-     * @param string $id       : 123
-     * @param string $filesStr : [{ "url": "http://something.com/[...]/foobar.html" }]
-     *
-     * @return \mobilecms\rest\Response result
-     */
-    private function downloadFiles(string $datatype, string $id, string $filesStr): \mobilecms\rest\Response
-    {
-        $response = $this->getDefaultResponse();
-
-        $files = json_decode($filesStr);
-
-        $result = [];
-        foreach ($files as $formKey => $file) {
-            $destdir = $this->getRecordDirPath($datatype, $id);
-
-            // create directory if it doesn't exist
-            if (!file_exists($destdir)) {
-                mkdir($destdir, $this->umask, true);
-                chmod($destdir, $this->umask);
-            }
-
-            // upload
-            if (isset($file->{'url'})) {
-                $current = file_get_contents($file->{'url'});
-                // get foobar.html from http://something.com/[...]/foobar.html
-                $destfile = $destdir . '/' . basename($file->{'url'});
-
-                if (file_put_contents($destfile, $current)) {
-                    chmod($destfile, $this->umask);
-                    $title = $file->{'title'};
-                    $url = basename($file->{'url'});
-                    $fileResult = $this->getFileResponse($destfile, $title, $url);
-                    array_push($result, $fileResult);
-                } else {
-                    throw new \Exception($file['name'] . ' KO');
-                }
-            }
-        }
-
-        $response->setResult($result);
-        $response->setCode(200);
-
-        return $response;
-    }
 
     /**
      * Get file info and build JSON response.
