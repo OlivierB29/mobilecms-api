@@ -5,14 +5,8 @@ deprecated
 New version [mobilecms-api-slim](https://github.com/OlivierB29/mobilecms-api-slim)
 
 
-
-
-
-
-
 ## REST API written in PHP, for managing content stored into JSON files.
 
-[![Build Status](https://travis-ci.org/OlivierB29/mobilecms-api.svg?branch=master)](https://travis-ci.org/OlivierB29/mobilecms-api)
 ![compatible](https://img.shields.io/badge/PHP%20%3E=7.3-Compatible-brightgreen.svg]
 [![StyleCI](https://styleci.io/repos/86973415/shield?style=flat)](https://styleci.io/repos/86973415)
 
