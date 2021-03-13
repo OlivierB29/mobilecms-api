@@ -1,27 +1,13 @@
 language: php
-
-dist: trusty
-
-matrix:
-  include:
-  - php: 7.3
-# imagick fails with 7.4   
-# - php: 7.4
-# - php: 8.0
-    env: ANALYSIS='true'
-
-
-  
+php:
+  - '7.3'
 
 before_install:
   - sudo apt-get -qq update
   - yes | pecl install imagick
   - sudo apt-get install -y ghostscript
   - travis_retry composer self-update
-
-
-before_script:
-- composer install -n
-
+  - composer install
 script:
-- vendor/bin/phpunit --coverage-clover clover.xml
+- vendor/bin/phpunit --configuration phpunit.xml
+- php coverage-checker.php tests/logs/clover.xml 85
