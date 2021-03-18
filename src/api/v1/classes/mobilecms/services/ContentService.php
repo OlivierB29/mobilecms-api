@@ -452,7 +452,7 @@ class ContentService
      */
     public function publishById(string $type, string $keyname, string $keyvalue): \mobilecms\rest\Response
     {
-        $this->logger->info('publishById' . $type . ',' . $keyname . ',' . $keyvalue);
+       // $this->logger->info('publishById' . $type . ',' . $keyname . ',' . $keyvalue);
         
         $response = $this->getDefaultResponse();
 

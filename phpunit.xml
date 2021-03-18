@@ -1,25 +1,13 @@
-<phpunit bootstrap="tests/autoload.php">
-  <filter>
-    <whitelist>
-        <directory suffix=".php">src</directory>
-    </whitelist>
-</filter>
-<logging>
-    <log type="tap" target="tests/logs/report.tap"/>
-    <log type="junit" target="tests/logs/report.junit.xml"/>
-    <log type="coverage-html" target="tests/logs/coverage"/>
-    <log type="coverage-text" target="tests/logs/coverage.txt"/>
-    <log type="coverage-clover" target="tests/logs/clover.xml"/>
-</logging>
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" backupGlobals="false" backupStaticAttributes="false" beStrictAboutTestsThatDoNotTestAnything="true" beStrictAboutChangesToGlobalState="true" beStrictAboutOutputDuringTests="true" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" bootstrap="tests/bootstrap.php">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">./src/</directory>
+    </include>
+  </coverage>
   <testsuites>
-    <testsuite name="utils">
-      <directory>tests/utils</directory>
-    </testsuite>
-    <testsuite name="api">
-      <directory>tests/api</directory>
-    </testsuite>
-    <testsuite name="services">
-      <directory>tests/services</directory>
+    <testsuite name="Test Suite">
+      <directory>./tests/</directory>
     </testsuite>
   </testsuites>
 </phpunit>
