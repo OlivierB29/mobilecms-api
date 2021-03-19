@@ -7,8 +7,6 @@ New version [mobilecms-api-slim](https://github.com/OlivierB29/mobilecms-api-sli
 
 ## REST API written in PHP, for managing content stored into JSON files.
 
-![compatible](https://img.shields.io/badge/PHP%20%3E=7.3-Compatible-brightgreen.svg]
-[![StyleCI](https://styleci.io/repos/86973415/shield?style=flat)](https://styleci.io/repos/86973415)
 
 It is initially intended to manage a sport organization, with such content : News, calendar events, public pages, documents, ...
 
