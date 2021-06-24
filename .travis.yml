@@ -1,0 +1,32 @@
+language: php
+
+dist: trusty
+
+matrix:
+  include:
+  - php: 7.3
+# imagick fails with 7.4   
+# - php: 7.4
+# - php: 8.0
+    env: ANALYSIS='true'
+
+
+  
+
+before_install:
+  - sudo apt-get -qq update
+  - yes | pecl install imagick
+  - sudo apt-get install -y ghostscript
+  - travis_retry composer self-update
+
+
+before_script:
+- composer install -n
+
+script:
+
+- vendor/bin/phpunit --coverage-clover clover.xml
+- if [[ "$ANALYSIS" == 'true' ]]; then vendor/bin/phpstan analyse src ; fi
+
+after_success:
+- if [[ "$ANALYSIS" == 'true' ]]; then vendor/bin/php-coveralls --coverage_clover=clover.xml -v --exclude-no-stmt; fi
